@@ -1,0 +1,458 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de código fuente">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Scene Graph">
+      <UniqueIdentifier>{16a53464-4a56-4650-a5d3-7e27bc2d79b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Actor-Component">
+      <UniqueIdentifier>{dcf8cc7d-c31e-4fda-b5e3-c573de97970c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Scene Graph">
+      <UniqueIdentifier>{b19815b2-26f6-4e59-8115-e7f9396fa4db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Components">
+      <UniqueIdentifier>{b0358c3f-6f15-4e50-9141-0db45cfd664b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Components">
+      <UniqueIdentifier>{415b4665-06ce-46f7-8236-5cf9899be154}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Model">
+      <UniqueIdentifier>{6d26a250-e91a-46f6-9644-0e27b698e0bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Mesh">
+      <UniqueIdentifier>{8c08330f-a8d0-4b4b-a9c9-2d97ec37c1c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Material">
+      <UniqueIdentifier>{e99c640d-c3f7-4d92-b0a0-115be00246b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Mesh">
+      <UniqueIdentifier>{b038a60f-f6f8-4943-8212-ada01f2ab814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Model">
+      <UniqueIdentifier>{318c06f5-127d-4cd0-9aa1-e0c1a5268655}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\GraphicDebugger">
+      <UniqueIdentifier>{f09d5b80-ed1d-4227-8110-46e3dbcb576d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\GraphicDebugger">
+      <UniqueIdentifier>{c2ae98ff-9ae1-4af9-8d86-3deae9cef845}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Animation">
+      <UniqueIdentifier>{f51591d1-d62a-49f2-b7f1-7ce1a727f1da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Animation">
+      <UniqueIdentifier>{9e5e6702-a605-4e5a-acd5-75e1a0e51425}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Camera Manager">
+      <UniqueIdentifier>{6770b8be-3802-4f29-9fa3-b37556b6e5b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Camera Manager">
+      <UniqueIdentifier>{e320c2fb-b646-47e6-906e-0e2334ec01d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Texture">
+      <UniqueIdentifier>{9f061a78-7ea2-477a-81fc-53255644c24b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Texture">
+      <UniqueIdentifier>{88bada97-7dfc-4100-9550-78dff31e5fde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Resource Manager">
+      <UniqueIdentifier>{99d23f24-8e72-45f2-bcc0-d45c488fa879}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\BSP">
+      <UniqueIdentifier>{d1e39131-7fdd-461d-9597-f34ca6b3e548}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Sound Manager">
+      <UniqueIdentifier>{64024094-9d62-41b2-a5c1-f9d85ef59e3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Octree">
+      <UniqueIdentifier>{d46eee41-efbe-4ff3-adda-425e0578d51b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Resource Manager">
+      <UniqueIdentifier>{cba2905b-97a3-4c75-8544-5b397fd73db0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Actor-Component Factory">
+      <UniqueIdentifier>{1f8dfc18-71fc-4a68-a54e-316167838d6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\CubeMap">
+      <UniqueIdentifier>{c5c164ba-59f8-49c1-81b1-ee4c5a3a5916}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\CubeMap">
+      <UniqueIdentifier>{bfce5064-528c-486c-8df0-2d2d55e68f3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Light Manager">
+      <UniqueIdentifier>{bf5b65b6-6d00-4330-b2b1-6419b778b027}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Light Manager">
+      <UniqueIdentifier>{a0210850-2438-4949-a9b9-a1d0354f400e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Sound Manager">
+      <UniqueIdentifier>{c6dfd2a4-ccf3-400d-8e1d-5b2eebf74ec2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Terrain">
+      <UniqueIdentifier>{056d99e7-16f9-4414-b3ce-893ea71c8563}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Terrain">
+      <UniqueIdentifier>{8a0ef0b5-0e72-4b0a-a513-743f724a4fe1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\SkyBox">
+      <UniqueIdentifier>{9866bcd3-a16f-4cc9-904c-deb0e510ac8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\SkyBox">
+      <UniqueIdentifier>{6a3cdac4-d21c-4b5e-976f-92b838f9a85d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Planet">
+      <UniqueIdentifier>{28fbdb35-ab7b-4043-a7dc-e15e3304cae7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Planet">
+      <UniqueIdentifier>{b87bd0b9-064a-493c-8482-a65f69f46ab9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\GameManager">
+      <UniqueIdentifier>{fefce5c1-873c-48e0-9d4b-d5b6ec6eafb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\GameManager">
+      <UniqueIdentifier>{01a1cd15-00da-470d-a767-0c8382c697fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Material">
+      <UniqueIdentifier>{5e071e82-9bb3-435a-a643-de39fcb6e3b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Imgui">
+      <UniqueIdentifier>{ec8a37da-200f-41bf-ac9a-90c5c986e38a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Imgui">
+      <UniqueIdentifier>{018604f5-ea73-4038-919f-b5cd1a56a38e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\RZScene.h">
+      <Filter>Archivos de encabezado\Scene Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZComponentIDs.h">
+      <Filter>Archivos de encabezado\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZModel.h">
+      <Filter>Archivos de encabezado\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZMesh.h">
+      <Filter>Archivos de encabezado\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZMaterial.h">
+      <Filter>Archivos de encabezado\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZModelComponent.h">
+      <Filter>Archivos de encabezado\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZGraphicDebugger.h">
+      <Filter>Archivos de encabezado\GraphicDebugger</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZGraphicDebuggerElement.h">
+      <Filter>Archivos de encabezado\GraphicDebugger</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZGraphicDebuggerLine.h">
+      <Filter>Archivos de encabezado\GraphicDebugger</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZGraphicDebuggerPoint.h">
+      <Filter>Archivos de encabezado\GraphicDebugger</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZGraphicDebuggerCube.h">
+      <Filter>Archivos de encabezado\GraphicDebugger</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSkinnedMesh.h">
+      <Filter>Archivos de encabezado\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZAnimation.h">
+      <Filter>Archivos de encabezado\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSkeleton.h">
+      <Filter>Archivos de encabezado\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSkinnedModel.h">
+      <Filter>Archivos de encabezado\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSkinnedModelComponent.h">
+      <Filter>Archivos de encabezado\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZBone.h">
+      <Filter>Archivos de encabezado\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZKeyFrame.h">
+      <Filter>Archivos de encabezado\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZCameraManager.h">
+      <Filter>Archivos de encabezado\Camera Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZTexture2D.h">
+      <Filter>Archivos de encabezado\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZResourceManager.h">
+      <Filter>Archivos de encabezado\Resource Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZBSP.h">
+      <Filter>Archivos de encabezado\BSP</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSound.h">
+      <Filter>Archivos de encabezado\Sound Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZMusic.h">
+      <Filter>Archivos de encabezado\Sound Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZOctree.h">
+      <Filter>Archivos de encabezado\Octree</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZGeometryNode.h">
+      <Filter>Archivos de encabezado\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZComponent.h">
+      <Filter>Archivos de encabezado\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZActorComponentFactory.h">
+      <Filter>Archivos de encabezado\Actor-Component Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZGameObject.h">
+      <Filter>Archivos de encabezado\Scene Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZCameraComponent.h">
+      <Filter>Archivos de encabezado\Camera Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZCubeMap.h">
+      <Filter>Archivos de encabezado\CubeMap</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZLight.h">
+      <Filter>Archivos de encabezado\Light Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZLightManager.h">
+      <Filter>Archivos de encabezado\Light Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZLightComponent.h">
+      <Filter>Archivos de encabezado\Light Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSimpleMove.h">
+      <Filter>Archivos de encabezado\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZTerrain.h">
+      <Filter>Archivos de encabezado\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZMeshPlane.h">
+      <Filter>Archivos de encabezado\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZHeightMap.h">
+      <Filter>Archivos de encabezado\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZTerrainComponent.h">
+      <Filter>Archivos de encabezado\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZPerlinNoise.h">
+      <Filter>Archivos de encabezado\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSkyBox.h">
+      <Filter>Archivos de encabezado\SkyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZPlanet.h">
+      <Filter>Archivos de encabezado\Planet</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSpaceTravel.h">
+      <Filter>Archivos de encabezado\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSpaceManager.h">
+      <Filter>Archivos de encabezado\Planet</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSpaceComponent.h">
+      <Filter>Archivos de encabezado\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZTerrainPatch.h">
+      <Filter>Archivos de encabezado\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZTexture3D.h">
+      <Filter>Archivos de encabezado\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imconfig.h">
+      <Filter>Archivos de encabezado\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui.h">
+      <Filter>Archivos de encabezado\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZGameManager.h">
+      <Filter>Archivos de encabezado\GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSceneManager.h">
+      <Filter>Archivos de encabezado\Scene Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZEnginePCH.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZEditorGUI.h">
+      <Filter>Archivos de encabezado\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZGameObjectGUI.h">
+      <Filter>Archivos de encabezado\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSceneGraphGUI.h">
+      <Filter>Archivos de encabezado\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZCameraWalk.h">
+      <Filter>Archivos de encabezado\Camera Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZCameraGhost.h">
+      <Filter>Archivos de encabezado\Camera Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZResourcesGUI.h">
+      <Filter>Archivos de encabezado\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZResource.h">
+      <Filter>Archivos de encabezado\Resource Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZBaseWindowGUI.h">
+      <Filter>Archivos de encabezado\Imgui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\RZEnginePCH.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZComponent.cpp">
+      <Filter>Archivos de código fuente\Actor-Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZActorFactory.cpp">
+      <Filter>Archivos de código fuente\Actor-Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZScene.cpp">
+      <Filter>Archivos de código fuente\Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZCameraComponent.cpp">
+      <Filter>Archivos de código fuente\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZModel.cpp">
+      <Filter>Archivos de código fuente\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZMesh.cpp">
+      <Filter>Archivos de código fuente\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZMaterial.cpp">
+      <Filter>Archivos de código fuente\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZModelComponent.cpp">
+      <Filter>Archivos de código fuente\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZGraphicDebugger.cpp">
+      <Filter>Archivos de código fuente\GraphicDebugger</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZGraphicDebuggerElement.cpp">
+      <Filter>Archivos de código fuente\GraphicDebugger</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZGraphicDebuggerLine.cpp">
+      <Filter>Archivos de código fuente\GraphicDebugger</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZGraphicDebuggerPoint.cpp">
+      <Filter>Archivos de código fuente\GraphicDebugger</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZGraphicDebuggerCube.cpp">
+      <Filter>Archivos de código fuente\GraphicDebugger</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZSkinnedMesh.cpp">
+      <Filter>Archivos de código fuente\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZAnimation.cpp">
+      <Filter>Archivos de código fuente\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZSkeleton.cpp">
+      <Filter>Archivos de código fuente\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZSkinnedModel.cpp">
+      <Filter>Archivos de código fuente\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZSkinnedModelComponent.cpp">
+      <Filter>Archivos de código fuente\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZBone.cpp">
+      <Filter>Archivos de código fuente\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZKeyFrame.cpp">
+      <Filter>Archivos de código fuente\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZCameraManager.cpp">
+      <Filter>Archivos de código fuente\Camera Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZTexture2D.cpp">
+      <Filter>Archivos de código fuente\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZResourceManager.cpp">
+      <Filter>Archivos de código fuente\Resource Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZSound.cpp">
+      <Filter>Archivos de código fuente\Sound Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZMusic.cpp">
+      <Filter>Archivos de código fuente\Sound Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZGameObject.cpp">
+      <Filter>Archivos de código fuente\Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZCubeMap.cpp">
+      <Filter>Archivos de código fuente\CubeMap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZLight.cpp">
+      <Filter>Archivos de código fuente\Light Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZLightComponent.cpp">
+      <Filter>Archivos de código fuente\Light Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZLightManager.cpp">
+      <Filter>Archivos de código fuente\Light Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZTerrain.cpp">
+      <Filter>Archivos de código fuente\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZMeshPlane.cpp">
+      <Filter>Archivos de código fuente\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZHeightMap.cpp">
+      <Filter>Archivos de código fuente\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZPerlinNoise.cpp">
+      <Filter>Archivos de código fuente\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZSkyBox.cpp">
+      <Filter>Archivos de código fuente\SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZPlanet.cpp">
+      <Filter>Archivos de código fuente\Planet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZSpaceManager.cpp">
+      <Filter>Archivos de código fuente\Planet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZTerrainPatch.cpp">
+      <Filter>Archivos de código fuente\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZTexture3D.cpp">
+      <Filter>Archivos de código fuente\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui.cpp">
+      <Filter>Archivos de código fuente\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_draw.cpp">
+      <Filter>Archivos de código fuente\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZGameManager.cpp">
+      <Filter>Archivos de código fuente\GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZSceneManager.cpp">
+      <Filter>Archivos de código fuente\Scene Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZEditorGUI.cpp">
+      <Filter>Archivos de código fuente\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZGameObjectGUI.cpp">
+      <Filter>Archivos de código fuente\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZSceneGraphGUI.cpp">
+      <Filter>Archivos de código fuente\Imgui</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nvidia\utils\Camera.cpp">
+      <Filter>NvUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nvidia\utils\DeviceManager11.cpp">
+      <Filter>NvUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="$(VXGI_PATH)\examplecode\GFSDK_NVRHI_D3D11.cpp">
+      <Filter>VXGI Util</Filter>
+    </ClCompile>
+    <ClCompile Include="$(VXGI_PATH)\examplecode\GFSDK_NVRHI_D3D12.cpp">
+      <Filter>VXGI Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nvidia\utils\DeviceManager12.cpp">
+      <Filter>NvUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="$(VXGI_PATH)\examplecode\GFSDK_NVRHI_OpenGL4.cpp">
+      <Filter>VXGI Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\nvidia\utils\DeviceManagerGL4.cpp">
+      <Filter>NvUtils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CLInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </CLInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\nvidia\utils\Camera.h">
+      <Filter>NvUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\nvidia\utils\DeviceManager11.h">
+      <Filter>NvUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="BindingHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\nvidia\utils\DeviceManager12.h">
+      <Filter>NvUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\nvidia\utils\DeviceManagerGL4.h">
+      <Filter>NvUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GIWorks\examplecode\GFSDK_NVRHI_OpenGL4.h">
+      <Filter>VXGI Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GIWorks\examplecode\GFSDK_NVRHI_D3D11.h">
+      <Filter>VXGI Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GIWorks\examplecode\GFSDK_NVRHI_D3D12.h">
+      <Filter>VXGI Util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{7ffac5d5-efb1-4169-a21c-9c41f36258fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{083202c2-2d7d-443c-b01c-e00bdda7b4ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files">
+      <UniqueIdentifier>{5e4fdc89-dbe5-41f9-9a14-c6f50a8109d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{888ae591-bf64-476d-b5b7-6ba3837b0b3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NvUtils">
+      <UniqueIdentifier>{cefd05c5-4d06-4c43-ba32-e07bd791edfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VXGI Util">
+      <UniqueIdentifier>{6a6ea090-c72d-4107-945d-f3da31648eb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files\GL">
+      <UniqueIdentifier>{076ef06a-da18-4347-a04f-07dafb26e11e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="shaders.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="shaders\Shaders.hlsl">
+      <Filter>Shader Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\GL\AttributesPS.glsl">
+      <Filter>Shader Files\GL</Filter>
+    </None>
+    <None Include="shaders\GL\BlitPS.glsl">
+      <Filter>Shader Files\GL</Filter>
+    </None>
+    <None Include="shaders\GL\DefaultVS.glsl">
+      <Filter>Shader Files\GL</Filter>
+    </None>
+    <None Include="shaders\GL\FullScreenQuadVS.glsl">
+      <Filter>Shader Files\GL</Filter>
+    </None>
+    <None Include="shaders\GL\VoxelizationVS.glsl">
+      <Filter>Shader Files\GL</Filter>
+    </None>
+    <None Include="shaders\GL\CompositingPS.glsl">
+      <Filter>Shader Files\GL</Filter>
+    </None>
+  </ItemGroup>
+</Project>

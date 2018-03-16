@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de código fuente">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Text Parser">
+      <UniqueIdentifier>{a14e2616-13b2-49a3-af35-d6fe804fbfe5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Resource Manager">
+      <UniqueIdentifier>{def546b9-0857-467c-99bd-c6faaee8796b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Event Manager">
+      <UniqueIdentifier>{0581fdc3-1fab-433d-b0dd-29f944a95256}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Object">
+      <UniqueIdentifier>{76831d1c-3b09-4d9e-aaca-4bc4c9c881ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Event Manager">
+      <UniqueIdentifier>{485f34fd-2086-4b41-a582-7822394ff329}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Object">
+      <UniqueIdentifier>{4d050df8-d9fe-4e3f-9f9e-873fe217fd10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\App">
+      <UniqueIdentifier>{4dd9698d-3ee5-47e9-b352-321881f630c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\App">
+      <UniqueIdentifier>{4af22318-4bee-48b8-b9a8-2615ed77eb18}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\RZParser.h">
+      <Filter>Archivos de encabezado\Text Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZEventManager.h">
+      <Filter>Archivos de encabezado\Event Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZObject.h">
+      <Filter>Archivos de encabezado\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZKeyEvent.h">
+      <Filter>Archivos de encabezado\Event Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZMouseEvent.h">
+      <Filter>Archivos de encabezado\Event Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZEvent.h">
+      <Filter>Archivos de encabezado\Event Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZApp.h">
+      <Filter>Archivos de encabezado\App</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZAppWindows.h">
+      <Filter>Archivos de encabezado\App</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZAppAndroid.h">
+      <Filter>Archivos de encabezado\App</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZAppVita.h">
+      <Filter>Archivos de encabezado\App</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZCorePCH.h">
+      <Filter>Archivos de encabezado\Text Parser</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\RZCorePCH.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZResource.cpp">
+      <Filter>Archivos de código fuente\Resource Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZObject.cpp">
+      <Filter>Archivos de código fuente\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZEventManager.cpp">
+      <Filter>Archivos de código fuente\Event Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZKeyEvent.cpp">
+      <Filter>Archivos de código fuente\Event Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZAppWindows.cpp">
+      <Filter>Archivos de código fuente\App</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZAppAndroid.cpp">
+      <Filter>Archivos de código fuente\App</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZAppVita.cpp">
+      <Filter>Archivos de código fuente\App</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de código fuente">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado\RacrozRenderer">
+      <UniqueIdentifier>{02e8c586-f0b5-4f1d-9260-024726590b75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\RacrozRenderer">
+      <UniqueIdentifier>{12c12ff5-8ffb-4e9c-a346-726fb5037d1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\ScreenQuad">
+      <UniqueIdentifier>{3ba77526-353d-4bc4-9277-10415007d565}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\ScreenQuad">
+      <UniqueIdentifier>{58810bd4-0fcc-496d-afd6-eb7fa6c990c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes">
+      <UniqueIdentifier>{590e7967-b234-4fe4-bc8f-93cc0b547642}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes\SkyBox">
+      <UniqueIdentifier>{4842a58d-4972-4c1e-b387-aee524c5544c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes\GBuffer">
+      <UniqueIdentifier>{a852025a-ca3e-47e4-9e9d-d511cd9121f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes\Lightning">
+      <UniqueIdentifier>{61529068-415f-424b-b732-a32d477d9308}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes\SSAO">
+      <UniqueIdentifier>{51de21f5-aba6-4eb1-9fda-58b142d670c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes\DepthOfField">
+      <UniqueIdentifier>{7c4fb765-8238-4eea-9f2d-0eb8a6807ba2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Passes">
+      <UniqueIdentifier>{10160b81-a82a-4d00-8c21-dab6baeaab59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Passes\SkyBox">
+      <UniqueIdentifier>{2cc17cf6-2fb6-42a4-af84-d3e1ab936e8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes\PosProcess">
+      <UniqueIdentifier>{d8204663-c1b7-4e1e-970d-7317bec7ebfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Passes\PBR">
+      <UniqueIdentifier>{54b7982d-818b-4f4f-8145-e4ef75f3e68e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Passes\GBuffer">
+      <UniqueIdentifier>{9389da1e-6b6d-4bf2-a31d-b071ad04f75b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes\ColorCorrection">
+      <UniqueIdentifier>{303975e7-73f9-46f9-acce-dc4a4fd4e1da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Passes\ColorCorrection">
+      <UniqueIdentifier>{4bcfd68f-4539-4049-b1a6-39e5fc52af78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes\Blur">
+      <UniqueIdentifier>{cacdf855-8cf8-4a49-bd9b-092560ec9b77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Passes\Blur">
+      <UniqueIdentifier>{2b2553af-0105-4ecc-a795-de968ff1d89b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes\HDR/Bloom">
+      <UniqueIdentifier>{7c9b3479-60b2-46f4-97a8-b0d021b2551a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Passes\HDR/Bloom">
+      <UniqueIdentifier>{0c251276-e1a1-45a8-b84f-e493b3118c31}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\RZRacrozRenderer.h">
+      <Filter>Archivos de encabezado\RacrozRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZScreenQuad.h">
+      <Filter>Archivos de encabezado\ScreenQuad</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZRendererPCH.h" />
+    <ClInclude Include="include\RZPass.h">
+      <Filter>Archivos de encabezado\Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSkyBoxPass.h">
+      <Filter>Archivos de encabezado\Passes\SkyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZGeometryPass.h">
+      <Filter>Archivos de encabezado\Passes\GBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZDisneyPBR.h">
+      <Filter>Archivos de encabezado\Passes\Lightning</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZPBR.h">
+      <Filter>Archivos de encabezado\Passes\Lightning</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZColorCorrection.h">
+      <Filter>Archivos de encabezado\Passes\ColorCorrection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZPBRForward.h">
+      <Filter>Archivos de encabezado\Passes\Lightning</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZTerrainGeometryPass.h">
+      <Filter>Archivos de encabezado\Passes\GBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZGaussBlur.h">
+      <Filter>Archivos de encabezado\Passes\Blur</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZLuminance.h">
+      <Filter>Archivos de encabezado\Passes\HDR/Bloom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZBright.h">
+      <Filter>Archivos de encabezado\Passes\HDR/Bloom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZBloom.h">
+      <Filter>Archivos de encabezado\Passes\HDR/Bloom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZAvgLuminance.h">
+      <Filter>Archivos de encabezado\Passes\HDR/Bloom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZHDRBloom.h">
+      <Filter>Archivos de encabezado\Passes\HDR/Bloom</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\RZRendererPCH.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZPass.cpp">
+      <Filter>Archivos de código fuente\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZRacrozRenderer.cpp">
+      <Filter>Archivos de código fuente\RacrozRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZScreenQuad.cpp">
+      <Filter>Archivos de código fuente\ScreenQuad</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZSkyBoxPass.cpp">
+      <Filter>Archivos de código fuente\Passes\SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZPBR.cpp">
+      <Filter>Archivos de código fuente\Passes\PBR</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZGeometryPass.cpp">
+      <Filter>Archivos de código fuente\Passes\GBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZColorCorrection.cpp">
+      <Filter>Archivos de código fuente\Passes\ColorCorrection</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZPBRForward.cpp">
+      <Filter>Archivos de código fuente\Passes\PBR</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZTerrainGeometryPass.cpp">
+      <Filter>Archivos de código fuente\Passes\GBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZGaussBlur.cpp">
+      <Filter>Archivos de código fuente\Passes\Blur</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZLuminance.cpp">
+      <Filter>Archivos de código fuente\Passes\HDR/Bloom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZBright.cpp">
+      <Filter>Archivos de código fuente\Passes\HDR/Bloom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZBloom.cpp">
+      <Filter>Archivos de código fuente\Passes\HDR/Bloom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZAvgLuminance.cpp">
+      <Filter>Archivos de código fuente\Passes\HDR/Bloom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZHDRBloom.cpp">
+      <Filter>Archivos de código fuente\Passes\HDR/Bloom</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

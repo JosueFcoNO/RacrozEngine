@@ -1,0 +1,54 @@
+\hypertarget{classrcz_engine_1_1_matrix3}{}\section{rcz\+Engine\+:\+:Matrix3 Class Reference}
+\label{classrcz_engine_1_1_matrix3}\index{rcz\+Engine\+::\+Matrix3@{rcz\+Engine\+::\+Matrix3}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classrcz_engine_1_1_matrix3_a2cc2027c9cdc491236ea33d5302867d6}{}{\bfseries Matrix3} (\hyperlink{classrcz_engine_1_1_vector3}{Vector3} top, \hyperlink{classrcz_engine_1_1_vector3}{Vector3} mid, \hyperlink{classrcz_engine_1_1_vector3}{Vector3} bottom)\label{classrcz_engine_1_1_matrix3_a2cc2027c9cdc491236ea33d5302867d6}
+
+\item 
+\hypertarget{classrcz_engine_1_1_matrix3_aeb7ea1157f18db03720d8a0ee6a39f59}{}void {\bfseries Transpose} ()\label{classrcz_engine_1_1_matrix3_aeb7ea1157f18db03720d8a0ee6a39f59}
+
+\item 
+\hypertarget{classrcz_engine_1_1_matrix3_abc65f59e937791e6845c567882a7f0e1}{}\hyperlink{classrcz_engine_1_1_matrix3}{Matrix3} {\bfseries Get\+Transposed} () const \label{classrcz_engine_1_1_matrix3_abc65f59e937791e6845c567882a7f0e1}
+
+\item 
+\hypertarget{classrcz_engine_1_1_matrix3_ae029e0de4010d1995f872ee565838c11}{}float {\bfseries Determinant} () const \label{classrcz_engine_1_1_matrix3_ae029e0de4010d1995f872ee565838c11}
+
+\item 
+\hypertarget{classrcz_engine_1_1_matrix3_afb9f640799a1b05ab6633fdc772336d7}{}\hyperlink{classrcz_engine_1_1_matrix3}{Matrix3} {\bfseries Rotate3\+D} (\hyperlink{classrcz_engine_1_1_degree}{Degree} deg, rcz\+A\+X\+I\+S axis)\label{classrcz_engine_1_1_matrix3_afb9f640799a1b05ab6633fdc772336d7}
+
+\item 
+\hypertarget{classrcz_engine_1_1_matrix3_aff30cfe0c8abfd1f6fa45bfbdd69ce9a}{}\hyperlink{classrcz_engine_1_1_matrix3}{Matrix3} {\bfseries operator$\ast$} (const float \&scalar) const \label{classrcz_engine_1_1_matrix3_aff30cfe0c8abfd1f6fa45bfbdd69ce9a}
+
+\item 
+\hypertarget{classrcz_engine_1_1_matrix3_a6649157a4c67212e6fde107617e5312f}{}\hyperlink{classrcz_engine_1_1_matrix3}{Matrix3} {\bfseries operator$\ast$} (const \hyperlink{classrcz_engine_1_1_matrix3}{Matrix3} \&M) const \label{classrcz_engine_1_1_matrix3_a6649157a4c67212e6fde107617e5312f}
+
+\item 
+\hypertarget{classrcz_engine_1_1_matrix3_ab9124cd86df0ea89e373a76724e40da7}{}\hyperlink{classrcz_engine_1_1_vector3}{Vector3} {\bfseries operator$\ast$} (const \hyperlink{classrcz_engine_1_1_vector3}{Vector3} \&V) const \label{classrcz_engine_1_1_matrix3_ab9124cd86df0ea89e373a76724e40da7}
+
+\item 
+\hypertarget{classrcz_engine_1_1_matrix3_ab53e27fbd7c33496ec8e4b3e2e7d8614}{}void {\bfseries operator$\ast$=} (const float \&scalar)\label{classrcz_engine_1_1_matrix3_ab53e27fbd7c33496ec8e4b3e2e7d8614}
+
+\item 
+\hypertarget{classrcz_engine_1_1_matrix3_ad158045c4a94b3045f19050279f826cf}{}void {\bfseries operator$\ast$=} (const \hyperlink{classrcz_engine_1_1_matrix3}{Matrix3} \&M)\label{classrcz_engine_1_1_matrix3_ad158045c4a94b3045f19050279f826cf}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classrcz_engine_1_1_matrix3_ac8e71533bbdf9b91be4e06081eed43f0}{}\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+union \{\\
+\>\hyperlink{classrcz_engine_1_1_vector3}{Vector3} {\bfseries m\_rows} \mbox{[}3\mbox{]}\\
+\>float {\bfseries m\_matrix} \mbox{[}3\mbox{]}\mbox{[}3\mbox{]}\\
+\>float {\bfseries m\_linear} \mbox{[}9\mbox{]}\\
+\}; \label{classrcz_engine_1_1_matrix3_ac8e71533bbdf9b91be4e06081eed43f0}
+\\
+
+\end{tabbing}\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+R\+Z\+Utility\+Lib/include/R\+Z\+Matrix3\+D.\+h\item 
+R\+Z\+Utility\+Lib/src/R\+Z\+Matrix3\+D.\+cpp\end{DoxyCompactItemize}

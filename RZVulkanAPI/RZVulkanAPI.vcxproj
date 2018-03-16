@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D8086649-B35F-40FF-AD8C-869EEB67A70B}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>RZDirectXAPI</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>RZVulkanAPI</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
+    <IncludePath>$(SolutionDir)RZUtilityLib\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(IncludePath);$(SolutionDir)RZEngine\include\;$(SolutionDir)Plug-Ins/DirectXTK/Inc/;</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(LibraryPath);$(SolutionDir)Plug-Ins/Bin/DirectXTK/Desktop_2015/$(Platform)/$(Configuration)/</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
+    <IncludePath>$(SolutionDir)Plug-Ins/assimp-master/include/;$(SolutionDir)RZUtilityLib\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include\;$(VK_SDK_PATH)\Include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(SolutionDir)Plug-Ins\assimp-master\$(Platform)\$(Configuration)\;$(SolutionDir)Plug-Ins\FW1FontWrapper\$(Platform)\;$(VULKAN_SDK)\Lib\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <IncludePath>$(SolutionDir)RZUtilityLib\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(IncludePath);$(SolutionDir)RZEngine\include\;$(SolutionDir)Plug-Ins/DirectXTK/Inc/;</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform);$(LibraryPath);$(SolutionDir)Plug-Ins/DirectXTK/Bin/Desktop_2015/$(Platform)/$(Configuration)/</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
+    <IncludePath>$(SolutionDir)Plug-Ins/assimp-master/include/;$(SolutionDir)RZUtilityLib\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include\;$(VK_SDK_PATH)\Include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(SolutionDir)Plug-Ins\assimp-master\$(Platform)\$(Configuration)\;$(SolutionDir)Plug-Ins\FW1FontWrapper\$(Platform)\;$(VULKAN_SDK)\Lib\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;RZ_UTILITY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeaderFile>RZDirectXPCH.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>./include/</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProfileGuidedDatabase>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).pgd</ProfileGuidedDatabase>
+      <ImportLibrary>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).lib</ImportLibrary>
+      <AdditionalDependencies>assimp.lib;RZCore.lib;RZUtilityLib.lib;dxgi.lib;d3d11.lib;d3dcompiler.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;RZ_UTILITY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeaderFile>RZVulkanPCH.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>./include/</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProfileGuidedDatabase>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).pgd</ProfileGuidedDatabase>
+      <ImportLibrary>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).lib</ImportLibrary>
+      <AdditionalDependencies>vulkan-1.lib;assimp-vc140-mt.lib;RZDirectInput.lib;RZCore.lib;RZUtilityLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;RZ_UTILITY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeaderFile>RZDirectXPCH.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>./include/</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProfileGuidedDatabase>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).pgd</ProfileGuidedDatabase>
+      <ImportLibrary>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).lib</ImportLibrary>
+      <AdditionalDependencies>assimp.lib;RZCore.lib;RZUtilityLib.lib;dxgi.lib;d3d11.lib;d3dcompiler.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;RZ_UTILITY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeaderFile>RZVulkanPCH.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>./include/</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProfileGuidedDatabase>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).pgd</ProfileGuidedDatabase>
+      <ImportLibrary>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).lib</ImportLibrary>
+      <AdditionalDependencies>vulkan-1.lib;assimp-vc140-mt.lib;RZDirectInput.lib;RZCore.lib;RZUtilityLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="include\DDSTextureLoader.h" />
+    <ClInclude Include="include\RZAPIConstants.h" />
+    <ClInclude Include="include\RZBlendState.h" />
+    <ClInclude Include="include\RZCamera.h" />
+    <ClInclude Include="include\RZConstantBuffer.h" />
+    <ClInclude Include="include\RZCubeMapCore.h" />
+    <ClInclude Include="include\RZDepthStencyl.h" />
+    <ClInclude Include="include\RZDepthStencylView.h" />
+    <ClInclude Include="include\RZDomainShader.h" />
+    <ClInclude Include="include\RZFontRender.h" />
+    <ClInclude Include="include\RZGeometryShader.h" />
+    <ClInclude Include="include\RZHullShader.h" />
+    <ClInclude Include="include\RZIndexBuffer.h" />
+    <ClInclude Include="include\RZBuffer.h" />
+    <ClInclude Include="include\rzgraphicsapi.h" />
+    <ClInclude Include="include\RZInputLayout.h" />
+    <ClInclude Include="include\RZInputLayoutManager.h" />
+    <ClInclude Include="include\RZMeshAPI.h" />
+    <ClInclude Include="include\RZPixelShader.h" />
+    <ClInclude Include="include\RZRasterizerState.h" />
+    <ClInclude Include="include\RZRenderTarget.h" />
+    <ClInclude Include="include\RZRenderTargetView.h" />
+    <ClInclude Include="include\RZSamplerState.h" />
+    <ClInclude Include="include\RZShader.h" />
+    <ClInclude Include="include\RZTextureCore2D.h" />
+    <ClInclude Include="include\RZTextureCore3D.h" />
+    <ClInclude Include="include\RZVertexBuffer.h" />
+    <ClInclude Include="include\RZVertexShader.h" />
+    <ClInclude Include="include\RZVulkanPCH.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\DDSTextureLoader.cpp" />
+    <ClCompile Include="src\RZBlendState.cpp" />
+    <ClCompile Include="src\RZCamera.cpp" />
+    <ClCompile Include="src\RZConstantBuffer.cpp" />
+    <ClCompile Include="src\RZCubeMapCore.cpp" />
+    <ClCompile Include="src\RZDepthStencyl.cpp" />
+    <ClCompile Include="src\RZDepthStencylView.cpp" />
+    <ClCompile Include="src\RZDomainShader.cpp" />
+    <ClCompile Include="src\RZFontRender.cpp" />
+    <ClCompile Include="src\RZGeometryShader.cpp" />
+    <ClCompile Include="src\RZHullShader.cpp" />
+    <ClCompile Include="src\RZIndexBuffer.cpp" />
+    <ClCompile Include="src\RZBuffer.cpp" />
+    <ClCompile Include="src\RZGraphicsAPI.cpp" />
+    <ClCompile Include="src\RZInputLayout.cpp" />
+    <ClCompile Include="src\RZMeshAPI.cpp" />
+    <ClCompile Include="src\RZPixelShader.cpp" />
+    <ClCompile Include="src\RZRasterizerState.cpp" />
+    <ClCompile Include="src\RZRenderTarget.cpp" />
+    <ClCompile Include="src\RZRenderTargetView.cpp" />
+    <ClCompile Include="src\RZSamplerState.cpp" />
+    <ClCompile Include="src\RZShader.cpp" />
+    <ClCompile Include="src\RZTextureCore2D.cpp" />
+    <ClCompile Include="src\RZTextureCore3D.cpp" />
+    <ClCompile Include="src\RZVertexBuffer.cpp" />
+    <ClCompile Include="src\RZVertexShader.cpp" />
+    <ClCompile Include="src\RZVulkanPCH.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

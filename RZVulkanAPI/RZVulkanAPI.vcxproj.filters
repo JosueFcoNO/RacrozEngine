@@ -1,0 +1,269 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de código fuente">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Buffers">
+      <UniqueIdentifier>{e1ecfe81-c268-4036-a7ff-c51d786a69af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Buffers">
+      <UniqueIdentifier>{ab61a754-e44c-493d-9472-e5610042f1f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\GraphicAPI">
+      <UniqueIdentifier>{071abd65-ffbf-4352-971f-2cd0c540c060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\GraphicAPI">
+      <UniqueIdentifier>{23bd0ed9-1d45-4c45-8200-f79cc8c8f3a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Shader">
+      <UniqueIdentifier>{e013c152-b56a-4324-ac00-2285865dd220}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Shader">
+      <UniqueIdentifier>{23700547-4575-48af-8e45-0d38ff7434b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\InputLayout">
+      <UniqueIdentifier>{0c040dde-6be5-4a62-879f-afa27d87be52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\InputLayout">
+      <UniqueIdentifier>{b856e211-5756-4728-b719-df757cc8eccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Sampler State">
+      <UniqueIdentifier>{ed7f7ce0-bb95-4035-aa9d-ff8542a549e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Rasterizer State">
+      <UniqueIdentifier>{e1585357-4a28-4b02-957c-4df48ec64178}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Rasterizer State">
+      <UniqueIdentifier>{6541eb44-86ea-4815-8073-47ffbfca7eb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Sampler State">
+      <UniqueIdentifier>{3860d797-8972-4edb-b093-1e26f303abfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Camera">
+      <UniqueIdentifier>{deca312f-8a16-4cbf-873e-3d2f08411ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Camera">
+      <UniqueIdentifier>{0dc41a2d-fb49-4913-9eaf-8c19e8803407}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\MeshAPI">
+      <UniqueIdentifier>{783a627a-912d-4500-9076-4e6a61370ddf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\MeshAPI">
+      <UniqueIdentifier>{ce231c31-1558-486c-8508-c9c5e23905b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\TextureCore">
+      <UniqueIdentifier>{2339b929-9025-4991-9ef6-320aab0155a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\TextureCore">
+      <UniqueIdentifier>{1c49989f-05db-4b36-8315-22e3a34a15ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Render Target/Depth Stencyl">
+      <UniqueIdentifier>{a62b239d-92bc-4541-ba6d-bf61b8082bd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Render Target/Depth Stencyl">
+      <UniqueIdentifier>{ee18ae15-9350-4de9-af9c-a771614104d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\CubeMap">
+      <UniqueIdentifier>{96aa10b3-6e62-4a8b-8360-8ba75208c05c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\CubeMap">
+      <UniqueIdentifier>{3269cd76-d35d-4b19-91cf-0291bb23c3d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\DDS Loader">
+      <UniqueIdentifier>{9c1d777a-f4b2-4dc1-8cf0-df0f0bdc9c8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\DDS Loader">
+      <UniqueIdentifier>{939a2010-acd1-4e76-8695-5d107dd63dd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Font System">
+      <UniqueIdentifier>{191dc954-2dd9-44cc-9668-e009fcb1d88a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Font System">
+      <UniqueIdentifier>{86ce33b3-cb1d-4525-841e-fad815cbd656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Blend State">
+      <UniqueIdentifier>{365b4259-401d-492f-bdff-acb3b8e6b87d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Blend State">
+      <UniqueIdentifier>{ac91afc4-a699-4770-ac3c-ddd3ef9f3eeb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\RZBuffer.h">
+      <Filter>Archivos de encabezado\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZAPIConstants.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZVertexBuffer.h">
+      <Filter>Archivos de encabezado\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZIndexBuffer.h">
+      <Filter>Archivos de encabezado\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZConstantBuffer.h">
+      <Filter>Archivos de encabezado\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rzgraphicsapi.h">
+      <Filter>Archivos de encabezado\GraphicAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZInputLayoutManager.h">
+      <Filter>Archivos de encabezado\InputLayout</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZInputLayout.h">
+      <Filter>Archivos de encabezado\InputLayout</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZVertexShader.h">
+      <Filter>Archivos de encabezado\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZPixelShader.h">
+      <Filter>Archivos de encabezado\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSamplerState.h">
+      <Filter>Archivos de encabezado\Sampler State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZRasterizerState.h">
+      <Filter>Archivos de encabezado\Rasterizer State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZCamera.h">
+      <Filter>Archivos de encabezado\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZMeshAPI.h">
+      <Filter>Archivos de encabezado\MeshAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZTextureCore2D.h">
+      <Filter>Archivos de encabezado\TextureCore</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZShader.h">
+      <Filter>Archivos de encabezado\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZRenderTarget.h">
+      <Filter>Archivos de encabezado\Render Target/Depth Stencyl</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZRenderTargetView.h">
+      <Filter>Archivos de encabezado\Render Target/Depth Stencyl</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZDepthStencyl.h">
+      <Filter>Archivos de encabezado\Render Target/Depth Stencyl</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZDepthStencylView.h">
+      <Filter>Archivos de encabezado\Render Target/Depth Stencyl</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZCubeMapCore.h">
+      <Filter>Archivos de encabezado\CubeMap</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DDSTextureLoader.h">
+      <Filter>Archivos de encabezado\DDS Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZFontRender.h">
+      <Filter>Archivos de encabezado\Font System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZBlendState.h">
+      <Filter>Archivos de encabezado\Blend State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZHullShader.h">
+      <Filter>Archivos de encabezado\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZDomainShader.h">
+      <Filter>Archivos de encabezado\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZGeometryShader.h">
+      <Filter>Archivos de encabezado\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZTextureCore3D.h">
+      <Filter>Archivos de encabezado\TextureCore</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZVulkanPCH.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\RZBuffer.cpp">
+      <Filter>Archivos de código fuente\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZGraphicsAPI.cpp">
+      <Filter>Archivos de código fuente\GraphicAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZIndexBuffer.cpp">
+      <Filter>Archivos de código fuente\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZVertexBuffer.cpp">
+      <Filter>Archivos de código fuente\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZConstantBuffer.cpp">
+      <Filter>Archivos de código fuente\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZVertexShader.cpp">
+      <Filter>Archivos de código fuente\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZPixelShader.cpp">
+      <Filter>Archivos de código fuente\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZInputLayout.cpp">
+      <Filter>Archivos de código fuente\InputLayout</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZSamplerState.cpp">
+      <Filter>Archivos de código fuente\Sampler State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZRasterizerState.cpp">
+      <Filter>Archivos de código fuente\Rasterizer State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZCamera.cpp">
+      <Filter>Archivos de código fuente\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZMeshAPI.cpp">
+      <Filter>Archivos de código fuente\MeshAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZTextureCore2D.cpp">
+      <Filter>Archivos de código fuente\TextureCore</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZShader.cpp">
+      <Filter>Archivos de código fuente\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZRenderTarget.cpp">
+      <Filter>Archivos de código fuente\Render Target/Depth Stencyl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZRenderTargetView.cpp">
+      <Filter>Archivos de código fuente\Render Target/Depth Stencyl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZDepthStencyl.cpp">
+      <Filter>Archivos de código fuente\Render Target/Depth Stencyl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZDepthStencylView.cpp">
+      <Filter>Archivos de código fuente\Render Target/Depth Stencyl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZCubeMapCore.cpp">
+      <Filter>Archivos de código fuente\CubeMap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DDSTextureLoader.cpp">
+      <Filter>Archivos de código fuente\DDS Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZFontRender.cpp">
+      <Filter>Archivos de código fuente\Font System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZBlendState.cpp">
+      <Filter>Archivos de código fuente\Blend State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZHullShader.cpp">
+      <Filter>Archivos de código fuente\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZDomainShader.cpp">
+      <Filter>Archivos de código fuente\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZGeometryShader.cpp">
+      <Filter>Archivos de código fuente\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZTextureCore3D.cpp">
+      <Filter>Archivos de código fuente\TextureCore</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZVulkanPCH.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

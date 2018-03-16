@@ -1,0 +1,571 @@
+﻿#pragma once
+
+///Define PI, 2PI and HALFPI
+#undef PI
+#define PI (3.1415926535897932f)
+#define PI2 2*(3.1415926535897932f)
+#define HALFPI (3.1415926535897932f)/2
+
+namespace rczEngine
+{
+	///General Math Functions Class
+	class RZ_UTILITY_EXPORT Math
+	{
+	public:
+		///Multiplication by 2 using bit shifts
+		static FORCEINLINE int32 MulX2(int32 V) { return V << 1; };
+
+		///Division by 2 using bit shifts
+		static FORCEINLINE int32 DivX2(int32 V) { return V >> 1; };
+
+		///Truncate float to int
+		static FORCEINLINE int32 Truncate(float F) { return (int32)F; };
+		///Truncate float to float as int
+		static FORCEINLINE float TruncateF(float F) { return (float)((int32)F); };
+		///Floor a float
+		static FORCEINLINE float Floor(float F) { return TruncateF(floorf(F)); };
+		///Round a float
+		static FORCEINLINE float Round(float F) { return Floor(F + 0.5f); };
+		///Ceil a float
+		static FORCEINLINE float Ceil(float F) { return TruncateF(F) + 1.0f; };
+
+		static FORCEINLINE Vector3 PosToPolar3D(Vector3 pos)
+		{
+			Vector3 ret;
+			ret.m_x = pos.Magnitude();
+			ret.m_y = aCos(pos.m_z / ret.m_x);
+			ret.m_z = aTan2(pos.m_y, pos.m_x);
+
+			return ret;
+		};
+
+		static FORCEINLINE Vector2 PolarToPos2D(Vector3 polar)
+		{
+			float u = atan2(polar.m_x, polar.m_z) / (PI2)+0.5f;
+			float v = asin(-polar.m_y) / PI + 0.5f;
+
+			return Vector2(u, v);
+		};
+
+		static FORCEINLINE Vector3 PosToPolar2D(Vector2 pos)
+		{
+			float x = cos(PI*(0.5f - pos.m_y))*sin(PI2*(pos.m_x - 0.5f));
+			float y = sin(PI*(0.5f - pos.m_y));
+			float z = cos(PI*(0.5f - pos.m_y))*cos(PI2*(pos.m_x - 0.5f));
+			return Vector3(x, y, z);
+		}
+
+		static FORCEINLINE Vector3 PolarToPos3D(Vector3 polar)
+		{
+			float x = polar.m_x * sin(polar.m_y) * cos(polar.m_z);
+			float y = polar.m_x * sin(polar.m_y) * sin(polar.m_z);
+			float z = polar.m_x * polar.m_y;
+
+			return Vector3(x, y, z);
+		};
+
+		static Vector3 cubify(const Vector3& s)
+		{
+			const float isqrt2 = 0.70710676908493042;
+
+			float xx2 = s.m_x * s.m_x * 2.0f;
+			float yy2 = s.m_y * s.m_y * 2.0f;
+
+			Vector2 v = Vector2(xx2 - yy2, yy2 - xx2);
+
+			float ii = v.m_y - 3.0f;
+			ii *= ii;
+
+			float isqrt = -sqrt(ii - 12.0f * xx2) + 3.0f;
+
+			v.m_x = sqrt(fmax(v.m_x + isqrt, 0.0f));
+			v.m_y = sqrt(fmax(v.m_y + isqrt, 0.0f));
+
+			v *= isqrt2;
+
+			return Vector3(v.m_x, v.m_y, 1.0f) * Sign(s);
+		}
+
+		static Vector3 SphereToCubePoint(const Vector3& spherePoint)
+		{
+			Vector3 f = (spherePoint);
+			f.m_x = fabs(f.m_x);
+			f.m_y = fabs(f.m_y);
+			f.m_z = fabs(f.m_z);
+
+			bool a = f.m_y >= f.m_x && f.m_y >= f.m_z;
+			bool b = f.m_x >= f.m_z;
+
+			f = spherePoint;
+
+			float temp;
+
+			if (a)
+			{
+				temp = f.m_y;
+				f.m_y = f.m_z;
+				f.m_z = temp;
+
+				f = cubify(f);
+
+				temp = f.m_y;
+				f.m_y = f.m_z;
+				f.m_z = temp;
+			}
+			else if (b)
+			{
+				float xx = f.m_x;
+				float yy = f.m_y;
+				float zz = f.m_z;
+
+				f.m_x = yy;
+				f.m_y = zz;
+				f.m_z = xx;
+
+				f = cubify(f);
+
+				xx = f.m_x;
+				yy = f.m_y;
+				zz = f.m_z;
+
+				f.m_x = zz;
+				f.m_y = xx;
+				f.m_z = yy;
+			}
+			else
+			{
+				f = cubify(f);
+			}
+
+			return f;
+		}
+
+		///Elevate a float to ipow
+		static FORCEINLINE float Pow(float V, float ipow) { return std::pow(V, ipow); };
+		///Float module
+		static FORCEINLINE float fMod(float X, float Y) { return std::fmodf(X, Y); };
+		///Float absolute value
+		static FORCEINLINE float fAbs(float V) { return std::fabsf(V); };
+		///Float Logaritmic
+		static FORCEINLINE float Log(float V) { return std::log(V); };
+
+		///Float Factorial
+		static FORCEINLINE float Factorial(float N) {
+			float Temp = 1;
+
+			for (int i = 1; i <= N; i++)
+			{
+				Temp *= i;
+			}
+
+			return Temp;
+		};
+
+		///Exp of a float
+		static FORCEINLINE float Exp(float V) { return (float)std::exp(V); };
+		///Checks if it's not a number
+		static FORCEINLINE bool IsNan(float A) { return ((*(uint32*)&A) & 0x7FFFFFFF) > 0xF8000000; }
+		///Degrees To Radian
+		static FORCEINLINE float DegreesToRad(float F) { return F*(PI / 180.0f); };
+		///Radian to Degrees
+		static FORCEINLINE float RadiansToDegrees(float F) { return F*(180.0f / PI); };
+
+		///Trig Sin
+		static FORCEINLINE float Sin(float angle) { return sinf(angle); };
+		///Trig Cos
+		static FORCEINLINE float Cos(float angle) { return cosf(angle); };
+		///Trig Tan
+		static FORCEINLINE float Tan(float angle) { return tanf(angle); };
+
+		///Trig arcSin
+		static FORCEINLINE float aSin(float rad) { return asinf(rad); };
+		///Trig arccos
+		static FORCEINLINE float aCos(float rad) { return acosf(rad); };
+		///Trig arctan
+		static FORCEINLINE float aTan(float rad) { return atanf(rad); };
+
+		///Square root of a float
+		static FORCEINLINE float Sqrt(float F)
+		{
+			return std::sqrtf(F);
+		};
+
+		///Fast Sin function using taylor series, fastest
+		static FORCEINLINE float FastSin0(float angle)
+		{
+			float sin = 0;
+
+			///if the angle is not on the accepted range
+			if (angle < 0 || angle > HALFPI)
+			{
+				return sinf(angle);
+			}
+			else
+			{
+				sin = 1 - 0.16605f*angle*angle + 0.00761f*angle*angle*angle*angle;
+				sin *= angle;
+
+				return sin;
+			}
+
+
+		}
+
+		///Fast Sin function using taylor series, most accurate
+		static FORCEINLINE float FastSin1(float angle)
+		{
+			float sin = 0;
+
+			///if the angle is not on the accepted range
+			if (angle < 0 || angle > HALFPI)
+			{
+				return sinf(angle);
+			}
+			else
+			{
+				sin = 1 - 0.1666666664f*Pow(angle, 2) + 0.0083333315f*Pow(angle, 4) - 0.0001984090f*Pow(angle, 6) + 0.0000027526f*Pow(angle, 8) - 0.0000000239f*Pow(angle, 10);
+				sin *= angle;
+
+				return sin;
+			}
+
+		}
+
+		///Fast Cos function using taylor series, fastest
+		static FORCEINLINE float FastCos0(float angle)
+		{
+			float cos = 0;
+
+			///if the angle is not on the accepted range
+			if (angle < 0 || angle > HALFPI)
+			{
+				return cosf(angle);
+			}
+			else
+			{
+				for (float i = 0; i < 3; i++)
+				{
+					cos += (powf(-1, i) / rczEngine::Math::Factorial(2 * i))*(powf(angle, (2 * i)));
+				}
+
+				return cos;
+			}
+
+		}
+
+		///Fast Sin function using taylor series, most accurate
+		static FORCEINLINE float FastCos1(float angle)
+		{
+			float cos = 0;
+
+			///if the angle is not on the accepted range
+			if (angle < 0 || angle > HALFPI)
+			{
+				return cosf(angle);
+			}
+			else
+			{
+				cos = 1 - 0.4999999963f* Pow(angle, 2) + 0.0416666418f*Pow(angle, 4) - 0.0013888397f* Pow(angle, 6) + 0.0000247609f*Pow(angle, 8) - 0.0000002605f*Pow(angle, 10);
+
+
+				return cos;
+			}
+
+		}
+
+		static FORCEINLINE float Sign(float x)
+		{
+			return (x >= 0.0f) ? 1.0f : -1.0f;
+		};
+
+		static FORCEINLINE int Sign(int x)
+		{
+			return (x >= 0) ? 1 : -1;
+		};
+
+		static FORCEINLINE Vector2 Sign(Vector2 x)
+		{
+			Vector2 ret;
+			ret.m_x = (x.m_x >= 0) ? 1.0f : -1.0f;
+			ret.m_y = (x.m_y >= 0) ? 1.0f : -1.0f;
+
+			return ret;
+		};
+
+		static FORCEINLINE Vector2I Sign(Vector2I x)
+		{
+			Vector2I ret;
+			ret.m_x = (x.m_x >= 0) ? 1 : -1;
+			ret.m_y = (x.m_y >= 0) ? 1 : -1;
+
+			return ret;
+		};
+
+		static FORCEINLINE Vector3 Sign(Vector3 x)
+		{
+			Vector3 ret;
+			ret.m_x = (x.m_x >= 0) ? 1.0f : -1.0f;
+			ret.m_y = (x.m_y >= 0) ? 1.0f : -1.0f;
+			ret.m_z = (x.m_z >= 0) ? 1.0f : -1.0f;
+
+			return ret;
+		};
+
+		static FORCEINLINE Vector4 Sign(Vector4 x)
+		{
+			Vector4 ret;
+			ret.m_x = (x.m_x >= 0) ? 1.0f : -1.0f;
+			ret.m_y = (x.m_y >= 0) ? 1.0f : -1.0f;
+			ret.m_z = (x.m_z >= 0) ? 1.0f : -1.0f;
+			ret.m_w = (x.m_w >= 0) ? 1.0f : -1.0f;
+
+			return ret;
+		};
+
+		///Fast Tan function using taylor series, fastest
+		static FORCEINLINE float FastTan0(float angle)
+		{
+			float tan = 0;
+
+
+
+			///if the angle is not on the accepted range
+			if (angle < 0 || angle > HALFPI / 2)
+			{
+				return tanf(angle);
+			}
+			else
+			{
+				tan = 1 + 0.31755f*angle*angle + 0.20330f*angle*angle*angle*angle;
+				tan *= angle;
+
+				return tan;
+			}
+		}
+
+		///Fast Tan function using taylor series, most accurate
+		static FORCEINLINE float FastTan1(float angle)
+		{
+			float tan = 0;
+
+
+			///if the angle is not on the accepted range
+			if (angle < 0 || angle > HALFPI)
+			{
+				return tanf(angle);
+			}
+			else
+			{
+				tan = 1 + 0.3333314036f*Pow(angle, 2) + 0.1333923995f*Pow(angle, 4) + 0.0533740603f*Pow(angle, 6)
+					+ 0.0245650893f*Pow(angle, 8) + 0.0029005250f*Pow(angle, 10)
+					+ 0.0095168091f*Pow(angle, 12);
+				tan *= angle;
+
+				return tan;
+			}
+
+		}
+
+		///Fast arcSin function using taylor series, fastest
+		static FORCEINLINE float FastASin0(float angle)
+		{
+			float asin = 0;
+
+			///if the angle is not on the accepted range
+			if (angle < 0 || angle > 1)
+			{
+				return asinf(angle);
+			}
+			else
+			{
+				asin = PI / 2 - Sqrt(1 - angle)*(1.5707288f - 0.2121144f*angle
+					+ 0.0742610f*Pow(angle, 2) - 0.0187293f*Pow(angle, 3));
+
+				return asin;
+			}
+		}
+
+		///Fast arcSin function using taylor series, most accurate
+		static FORCEINLINE float FastASin1(float angle)
+		{
+			float asin = 0;
+
+
+
+			///if the angle is not on the accepted range
+			if (angle < 0 || angle > 1)
+			{
+				return asinf(angle);
+			}
+			else
+			{
+				asin = HALFPI - Sqrt(1 - angle)*(1.5707963050f - 0.2145988016f*angle + 0.0889789874f* Pow(angle, 2)
+					- 0.0501743046f*Pow(angle, 3) + 0.0308918810f*Pow(angle, 4) - 0.01708812556f*Pow(angle, 5)
+					+ 0.0066700901f*Pow(angle, 6) - 0.0012624911f*Pow(angle, 7));
+
+				return asin;
+			}
+
+		}
+
+		///Fast aCos function using taylor series, fastest
+		static FORCEINLINE float FastACos0(float angle)
+		{
+			float acos = 0;
+
+
+			///if the angle is not on the accepted range
+			if (angle < 0 || angle > 1)
+			{
+				return acosf(angle);
+			}
+			else
+			{
+				acos = PI / 2 - FastASin0(angle);
+
+				return acos;
+			}
+
+		}
+
+		///Fast aCos function using taylor series, most accurate
+		static FORCEINLINE float FastACos1(float angle)
+		{
+			float acos = 0;
+
+
+			///if the angle is not on the accepted range
+			if (angle < 0 || angle > 1)
+			{
+				return acosf(angle);
+			}
+			else
+			{
+				acos = PI / 2 - FastASin1(angle);
+
+				return acos;
+			}
+
+		}
+
+		///Fast aTan function using taylor series, fastest
+		static FORCEINLINE float FastATan0(float angle)
+		{
+			float atan = 0;
+
+
+
+			///if the angle is not on the accepted range
+			if (angle < -1 || angle > 1)
+			{
+				return atanf(angle);
+			}
+			else
+			{
+				atan = 0.9998660f*angle - 0.3302995f*Pow(angle, 3) + 0.1801410f* Pow(angle, 5) - 0.0851330f*Pow(angle, 7)
+					+ 0.0208351f*Pow(angle, 9);
+
+				return atan;
+			}
+
+		}
+
+		///Fast aTan function using taylor series, most accurate
+		static FORCEINLINE float FastATan1(float angle)
+		{
+			float atan = 0;
+
+
+
+			///if the angle is not on the accepted range
+			if (angle < -1 || angle > 1)
+			{
+				return atanf(angle);
+			}
+			else
+			{
+				atan = 1 - 0.3333314528f*Pow(angle, 2) + 0.1999355085f*Pow(angle, 4) - 0.1420889944f*Pow(angle, 6)
+					+ 0.1065626393f*Pow(angle, 8) - 0.0752896400f*Pow(angle, 10) + 0.0429096138f*Pow(angle, 12)
+					- 0.0161657367f*Pow(angle, 14) + 0.0028662257f*Pow(angle, 16);
+				atan *= angle;
+
+				return atan;
+			}
+
+		}
+
+		///Trig Atan2
+		static FORCEINLINE float aTan2(float Y, float X) { return atan2f(Y, X); };
+
+		///Transforms the Degree to its 0-360° range equivalent
+		static float UnwindDegree(float f);
+
+		///Transforms the Radian to its 0-2PI range equivalent
+		static float UnwindRadian(float f);
+
+		const float small_number = (1.e-8f);
+		const float float_small_number = (1.e-6f);
+		const float kinda_small_number = (1.e-4f);
+		const float big_number = (3.4e+38f);
+
+		const float delta = 0.00001f;
+		const float epsilon = std::numeric_limits<float>::epsilon();
+
+		///Lerp the value
+		template <class T, class U>
+		static FORCEINLINE T Lerp(const T& A, const T& B, const U& Alpha)
+		{
+			return (T)(A + (B - A)*Alpha);
+		}
+
+		///returns the Square of any var type
+		template <class T>
+		static FORCEINLINE T Square(const T A)
+		{
+			return A*A;
+		}
+
+		///return the min between two vars
+		template <class T>
+		static FORCEINLINE T Min(const T A, const T B)
+		{
+			return (A <= B) ? A : B;
+		}
+
+		///returns the max between two vars
+		template < class T>
+		static FORCEINLINE T Max(const T A, const T B)
+		{
+			return (A >= B) ? A : B;
+		}
+
+		///returns the min between 3 vars
+		template <class T>
+		static FORCEINLINE T Min3(const T A, const T B, const T C)
+		{
+			return Min(Min(A, B), C);
+		}
+
+		///returns the max between 3 vars
+		template <class T>
+		static FORCEINLINE T Max3(const T A, const T B, const T C)
+		{
+			return Max(Max(A, B), C);
+		}
+
+		///Clamps the val between min and max
+		template <class T>
+		static FORCEINLINE T Clamp(const T val, const T min, const T max)
+		{
+			return Min(Max(val, min), max);
+		}
+
+		///Clamps the val between 0 and 1
+		template <typename T>
+		static FORCEINLINE T Clamp01(T val)
+		{
+			return Max(Min(val, (T)1), (T)0);
+		}
+	};
+};
+

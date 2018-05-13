@@ -7,9 +7,9 @@ namespace rczEngine
 	{
 	public:
 		///Opens a text File and returns true on success. Receives File name, and FileManager::f_File* flags
-		void OpenFile(char* pszFileName, uint32 fileFlags);
+		void OpenFile(const char* pszFileName, uint32 fileFlags);
 		///Opens a file as binary and returns true on success.
-		void OpenBinaryFile(char* pszFileName, uint32 fileFlags);
+		void OpenBinaryFile(const char* pszFileName, uint32 fileFlags);
 		///Writes chars into the file
 		void WriteTextInFile(char* pszTextIn);
 		//Writes binary into the file

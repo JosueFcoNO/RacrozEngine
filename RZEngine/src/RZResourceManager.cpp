@@ -70,8 +70,6 @@ namespace rczEngine
 
 	void ResVault::InitResourceManager()
 	{
-		auto ptr2 = Gfx::GfxCore::Pointer();
-
 		m_WhiteTex = LoadResource("RacrozEngineAssets/WhiteTex.tga", "WhiteTex");
 		m_BlackTex = LoadResource("RacrozEngineAssets/BlackTex.tga", "BlackTex");
 		m_GreyTex = LoadResource("RacrozEngineAssets/GreyTex.tga", "GreyTex");
@@ -82,6 +80,7 @@ namespace rczEngine
 		m_ModelSphere = LoadResource("RacrozEngineAssets/Showcase.fbx", "assetSphere");
 
 		m_CubeMapDefault = LoadResource("CubeMaps/Enviroment.dds", "assetCubeMap");
+
 	};
 
 	void ResVault::Destroy()
@@ -97,7 +96,7 @@ namespace rczEngine
 		///Look for the Resource to see if it is already loaded and if it is, return that.
 		for (auto it = m_ResourceMap.begin(); it != m_ResourceMap.end(); ++it)
 		{
-			if (it->second->m_FilePath == filePath)
+			if (it->second->GetFilePath() == filePath)
 			{
 				return it->second->GetHandle();
 			}
@@ -118,13 +117,11 @@ namespace rczEngine
 			ResName = resName;
 		}
 
-		///The main handle is the handle of the resource loaded. 
-		ResourceHandle newResHandle = m_iResourceIndex;
+		StrPtr<Resource> NewRes;
 
-		Resource* NewRes;
 		bool textures = false, animations = false, bones = false;
-		ResourceType type;
-		bool fileExists = FileExists(filePath);
+
+		bool fileExists = Path::FileExists(filePath);
 
 		///Make the extension lower case.
 		std::transform(fileExtension.begin(), fileExtension.end(), fileExtension.begin(), ::tolower);
@@ -139,8 +136,8 @@ namespace rczEngine
 				return m_CubeMapDefault;
 			}
 
-			NewRes = new CubeMap;
-			((CubeMap*)(NewRes))->LoadCubeMapFromDDS(filePath, (char*)ResName, true);
+			NewRes = std::make_shared<CubeMap>();
+			CastStaticPtr<CubeMap>(NewRes)->LoadCubeMapFromDDS(filePath, (char*)ResName);
 			break;
 
 		case RES_3DMODEL:
@@ -154,13 +151,13 @@ namespace rczEngine
 
 			if (bones)
 			{
-				NewRes = new SkinnedModel;
-				NewRes->Load(filePath, (char*)ResName, true);
+				NewRes = std::make_shared<SkinnedModel>();
+				NewRes->Load(filePath, ResName);
 			}
 			else
 			{
-				NewRes = new Model;
-				NewRes->Load(filePath, (char*)ResName, true);
+				NewRes = std::make_shared<Model>();
+				NewRes->Load(filePath, ResName);
 			}
 			break;
 
@@ -170,15 +167,15 @@ namespace rczEngine
 				return m_WhiteTex;
 			}
 
-			NewRes = new Texture2D;
-			NewRes->Load(filePath, (char*)ResName, true);
+			NewRes = std::make_shared<Texture2D>();
+			NewRes->Load(filePath, (char*)ResName);
 			break;
 
 		case RES_UNKNOWN:
 			break;
 		}
 
-		return newResHandle;
+		return NewRes->GetHandle();
 	};
 
 	void ResVault::FreeResource(ResourceHandle handleToDelete)
@@ -186,12 +183,12 @@ namespace rczEngine
 		m_ResourceMap.erase(handleToDelete);
 	}
 
-	ResourceHandle ResVault::InsertResource(Resource * newRes)
+	ResourceHandle ResVault::InsertResource(StrPtr<Resource> newRes)
 	{
-		newRes->SetHandle(m_iResourceIndex);
-		m_ResourceMap[m_iResourceIndex].reset(newRes);
+		ResourceHandle handle = newRes->GetHandle();
+		m_ResourceMap[handle] = newRes;
 
-		return m_iResourceIndex++;
+		return handle;
 	}
 
 	ResourceType ResVault::QueryModel(const char* filePath, bool& out_hasBones, bool& out_hasTextures, bool& out_hasAnimations)
@@ -269,12 +266,11 @@ namespace rczEngine
 		}
 		else
 		{
-			switch (CommDlgExtendedError())
-			{
-			default: std::cout << "You cancelled.\n";
-			}
+			std::cout << "You cancelled.\n";
 		}
 
 		return INVALID_RESOURCE;
 	}
+
+
 };

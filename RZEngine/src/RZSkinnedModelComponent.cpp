@@ -4,8 +4,12 @@ namespace rczEngine
 {
 	void SkinnedModelRenderer::Update(float deltaTime)
 	{
-		auto Res = ResVault::Pointer();
+		if (m_Model == -1)
+		{
+			return;
+		}
 
+		auto Res = ResVault::Pointer();
 
 		WeakPtr<SkinnedModel> Model = Res->GetResource<SkinnedModel>(m_Model);
 		WeakPtr<Animation> Anim;

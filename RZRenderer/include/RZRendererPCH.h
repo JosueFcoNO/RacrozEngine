@@ -10,6 +10,7 @@
 #include "RZTerrainGeometryPass.h"
 #include "RZPBR.h"
 #include "RZPBRForward.h"
+#include "RZPBRTransparent.h"
 
 #include "RZGaussBlur.h"
 
@@ -18,6 +19,8 @@
 #include "RZBloom.h"
 #include "RZAvgLuminance.h"
 #include "RZHDRBloom.h"
+
+#include "RZMotionBlur.h"
 
 #include "RZColorCorrection.h"
 

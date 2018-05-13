@@ -77,20 +77,20 @@ namespace rczEngine
 	}
 
 	template <typename t1, typename t2>
-	StrPtr<t1> CastStaticPtr(t2 other)
+	StrPtr<t1> CastStaticPtr(StrPtr<t2> other)
 	{
-		return std::static_pointer_cast<t1, t2>(StrPtr<t2> other);
+		return std::static_pointer_cast<t1, t2>(other);
 	}
 
 	template <typename t1, typename t2>
-	StrPtr<t1> CastDynamicPtr(t2 other)
+	StrPtr<t1> CastDynamicPtr(StrPtr<t2> other)
 	{
-		return std::dynamic_pointer_cast<t1, t2>(StrPtr<t2> other);
+		return std::dynamic_pointer_cast<t1, t2>(other);
 	}
 
 	template <typename t1, typename t2>
-	StrPtr<t1> CastConstPtr(t2 other)
+	StrPtr<t1> CastConstPtr(StrPtr<t2> other)
 	{
-		return std::const_pointer_cast<t1, t2>(StrPtr<t2> other);
+		return std::const_pointer_cast<t1, t2>(other);
 	}
 };

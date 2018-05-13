@@ -63,6 +63,9 @@
     <Filter Include="Archivos de encabezado\Serializable">
       <UniqueIdentifier>{bb4eac4e-dddd-43f3-9167-b247c847794f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\Serializable">
+      <UniqueIdentifier>{db0bdd0e-04ed-4006-9876-45fbd2b43219}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZUtilityPCH.h">
@@ -182,6 +185,12 @@
     <ClInclude Include="include\RZSerializer.h">
       <Filter>Archivos de encabezado\Serializable</Filter>
     </ClInclude>
+    <ClInclude Include="include\RZPath.h">
+      <Filter>Archivos de encabezado\File Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZParser.h">
+      <Filter>Archivos de encabezado\File Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZUtilityPCH.cpp">
@@ -261,6 +270,12 @@
     </ClCompile>
     <ClCompile Include="src\RZProfilerEvent.cpp">
       <Filter>Archivos de código fuente\Profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZSerializer.cpp">
+      <Filter>Archivos de código fuente\Serializable</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZPath.cpp">
+      <Filter>Archivos de código fuente\File Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

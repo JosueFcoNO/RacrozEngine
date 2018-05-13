@@ -3,7 +3,7 @@
 namespace rczEngine
 {
 	typedef Vector<KeyFrame> KeyFrameVector;
-	typedef Map<String, KeyFrameVector> AnimationTimeline;
+	typedef Map<String, KeyFrameVector> AnimationTimeline; //TODO: turn animationTimeline into a class of its own?
 
 	class RZ_UTILITY_EXPORT Animation : public Resource
 	{
@@ -13,8 +13,11 @@ namespace rczEngine
 		KeyFrame GetKeyFrame(String& boneName, float time);
 		KeyFrame GetNextKeyFrame(String& boneName, float time);
 
-		virtual void Load(const char* filePath, const char* resName, bool addToResourceManager = true);
+		virtual void Load(const char* filePath, const char* resName);
 		virtual void Release() { m_Timeline.clear(); };
+
+		virtual void Serialize();
+		virtual void DeSerialize();
 
 #ifndef RZ_EDITOR
 		virtual void RenderResourceGUI()

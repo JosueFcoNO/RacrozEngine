@@ -8,7 +8,7 @@ namespace rczEngine
 	{
 	public:
 		void AddTimeEntry(double time);
-		void SaveResults(const char* loggerFile, double timeParent);
+		void SaveResults(const char* loggerFile);
 
 	private:
 		uint16 m_CurrentEntry = 0;

@@ -6,7 +6,7 @@ namespace rczEngine
 	{
 		///Load the LUT.
 		m_LUT = std::make_shared<Texture2D>();
-		m_LUT->Load("RacrozEngineAssets/BRDF LUT.png", "LUT", false);
+		m_LUT->Load("RacrozEngineAssets/BRDF LUT.png", "LUT");
 
 		m_gfx->CompileAndCreatePixelShader(m_PBRShader, L"Shaders/PBRGeneral.hlsl");
 
@@ -15,23 +15,14 @@ namespace rczEngine
 		config.AmbientLightIntensity = 1.0f;
 		config.LightIntensity = 1.0f;
 		config.ReflectionIntensity = 1.0f;
-		config.Metallic = 0.5f;
-		config.OverrideAlbedo = 0.0f;
-		config.OverrideMetallic = 0.0f;
-		config.OverrideNormal = 0.0f;
-		config.OverrideRoughness = 0.0f;
-		config.OverrideSpecular = 0.0f;
-		config.Roughness = 0.5f;
-		config.UserAlbedo.Set(0.0f, 0.0f, 0.0f, 0.0f);
-		config.UserSpecular.Set(0.0f, 0.0f, 0.0f);
 		config.Wireframe = false;
-		config.TesselationFactor = 1;
-		config.RenderTex = 0;
-		config.R = config.G = config.B = config.A = 1;
+		config.R = config.G = config.B = 1;
 
-		UserDisney.CreateConstantBuffer(sizeof(UserConfig), Gfx::USAGE_DEFAULT, m_gfx);
+		UserDisney.CreateConstantBuffer(sizeof(RendererConfig), Gfx::USAGE_DEFAULT, m_gfx);
 		UserDisney.UpdateConstantBuffer(&config, m_gfx);
 		UserDisney.SetBufferInPS(6, m_gfx);
+
+		UseDepth = false;
 	}
 
 	void PBR_Pass::PreRenderPass()
@@ -43,7 +34,7 @@ namespace rczEngine
 		UserDisney.UpdateConstantBuffer(&config, m_gfx);
 		UserDisney.SetBufferInPS(6, m_gfx);
 
-		m_gfx->ClearDepthTargetView();
+		//m_gfx->ClearDepthTargetView();
 
 		SetRenderTargetsInPipeline();
 		SetTexturesInPipeline();

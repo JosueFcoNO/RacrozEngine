@@ -20,7 +20,7 @@ namespace rczEngine
 		{
 			auto mat = Res->GetResource<Material>(materials->at(m_VectorMeshes[i].m_Material)).lock();
 
-			if (mat->m_MatType == matType | matType == MAT_ANY)
+			if (mat->m_MatType == matType || matType == MAT_ANY)
 			{
 				mat->SetThisMaterial(gfx, Res);
 				m_VectorMeshes[i].Draw(gfx);
@@ -28,7 +28,7 @@ namespace rczEngine
 		}
 	}
 
-	void SkinnedModel::Load(const char* filePath, const char* resName, bool addToResourceManager)
+	void SkinnedModel::Load(const char* filePath, const char* resName)
 	{
 		ResVault* rsc = ResVault::Pointer();
 		Gfx::GfxCore* gfx = Gfx::GfxCore::Pointer();
@@ -38,14 +38,7 @@ namespace rczEngine
 		m_FilePath = filePath;
 		m_Name = resName;
 
-		if (addToResourceManager)
-		{
-			rsc->InsertResource(this);
-		}
-		else
-		{
-			m_Handle = INVALID_RESOURCE;
-		}
+		rsc->InsertResource(shared_from_this());
 
 		///Clear the index and vertex buffer's lists
 		m_IndexBuffer.ClearIndexList();
@@ -68,36 +61,17 @@ namespace rczEngine
 
 		for (uint32 k = 0; k < Scene->mNumMaterials; ++k)
 		{
-			Material* Temp = new Material;
+			StrPtr<Material> Temp = std::make_shared<Material>();
 			aiMaterial* aimatTemp = Scene->mMaterials[k];
-
-			aiColor3D Color = { 0,0,0 };
-			aimatTemp->Get(AI_MATKEY_COLOR_DIFFUSE, Color);
-			Temp->m_core.m_Diffuse.m_x = Color.r;
-			Temp->m_core.m_Diffuse.m_y = Color.g;
-			Temp->m_core.m_Diffuse.m_z = Color.b;
-
-			aimatTemp->Get(AI_MATKEY_COLOR_AMBIENT, Color);
-			Temp->m_core.m_Ambient.m_x = Color.r;
-			Temp->m_core.m_Ambient.m_y = Color.g;
-			Temp->m_core.m_Ambient.m_z = Color.b;
-
-			aimatTemp->Get(AI_MATKEY_COLOR_SPECULAR, Color);
-			Temp->m_core.m_Specular.m_x = Color.r;
-			Temp->m_core.m_Specular.m_y = Color.g;
-			Temp->m_core.m_Specular.m_z = Color.b;
-
-			Temp->m_core.m_SpecularStrength = 0;
-			aimatTemp->Get(AI_MATKEY_SHININESS_STRENGTH, Temp->m_core.m_SpecularStrength);
 
 			///Get the material's name
 			aiString name;
 			aimatTemp->Get(AI_MATKEY_NAME, name);
-			Temp->m_Name = name.C_Str();
+			Temp->SetName(name.C_Str());
 
 			ResourceHandle tempHandle = rsc->InsertResource(Temp);
 
-			m_MaterialMap.insert(Pair<String, ResourceHandle>(Temp->m_Name, tempHandle));
+			m_MaterialMap.insert(Pair<String, ResourceHandle>(Temp->GetName(), tempHandle));
 
 			if (k == 0)
 			{
@@ -306,7 +280,7 @@ namespace rczEngine
 		///Set the real root Node to its parent
 		if (RealRootNode->mParent)
 		{
-			RealRootNode = RealRootNode->mParent;
+			//RealRootNode = RealRootNode->mParent;
 			//
 			//do
 			//{
@@ -337,7 +311,7 @@ namespace rczEngine
 		TempRoot.m_Name = RealRootNode->mName.C_Str();
 		TempRoot.m_OffsetMatrix.Identity();
 		TempRoot.m_JointMatrix.Identity();
-		TempRoot.m_TransformMatrix.Identity();
+		memcpy(&TempRoot.m_TransformMatrix, &RealRootNode->mTransformation, sizeof(Matrix4));
 		TempRoot.m_AccumulatedTransform.Identity();
 
 		TempRoot.SetParent(NULL);
@@ -357,7 +331,7 @@ namespace rczEngine
 			Bone* BoneTemp = &m_MeshSkeleton.m_Bones[BoneNames[i]];
 			
 			////Esto no tiene sentido, pero lo tenía cuando funcionaba bien.
-			memcpy(&BoneTemp->m_JointMatrix, &Temp->mTransformation, sizeof(Matrix4));
+			//memcpy(&BoneTemp->m_JointMatrix, &Temp->mTransformation, sizeof(Matrix4));
 
 			Matrix4 PreRotation(INIT_UNIT);
 			Matrix4 Rotation(INIT_UNIT);
@@ -405,13 +379,15 @@ namespace rczEngine
 						{
 							Matrix4 Tempi(INIT_NONE);
 							memcpy(&BoneTemp->m_TransformMatrix, &Temp->mTransformation, sizeof(Matrix4));
-							//BoneTemp->m_TransformMatrix = (Scale*Rotation*Translation*PreRotation);
+							BoneTemp->m_TransformMatrix = (Scale*Rotation*Translation*PreRotation);
+							BoneTemp->m_JointIsTransform = false;
 							break;
 						}
 					}
 				}
 				else
 				{
+					BoneTemp->m_JointIsTransform = true;
 					memcpy(&BoneTemp->m_TransformMatrix, &Temp->mTransformation, sizeof(Matrix4));
 				}
 
@@ -463,7 +439,7 @@ namespace rczEngine
 					NoBone.m_JointMatrix.Identity();
 					NoBone.m_OffsetMatrix.Identity();
 					NoBone.m_AccumulatedTransform.Identity();
-					NoBone.m_BoneIndex = m_MeshSkeleton.m_Bones.size();
+					NoBone.m_BoneIndex = BoneNames.size();
 					NoBone.SetParent(BoneTemp);
 					
 
@@ -479,8 +455,8 @@ namespace rczEngine
 	}
 
 		///Create a tempAnim pointer
-		Animation* TempAnim = new Animation;
-		TempAnim->Load(filePath, "Anim", false);
+		StrPtr<Animation> TempAnim = std::make_shared<Animation>();
+		TempAnim->Load(filePath, "Anim");
 		m_SetAnimation = rsc->InsertResource(TempAnim);
 
 		///Create the vertex and index buffers
@@ -493,10 +469,20 @@ namespace rczEngine
 		return;
 	}
 
-	Vector<Animation*> SkinnedModel::LoadAnimations(char * filePath)
+	void SkinnedModel::Serialize()
+	{
+
+	}
+
+	void SkinnedModel::DeSerialize()
+	{
+
+	}
+
+	Vector<StrPtr<Animation>> SkinnedModel::LoadAnimations(char * filePath)
 	{
 		///Create a vector of Animation pointer to return.
-		Vector<Animation*> returnVector;
+		Vector<StrPtr<Animation>> returnVector;
 
 		///Load the scene
 		Assimp::Importer B;
@@ -512,7 +498,7 @@ namespace rczEngine
 			for (int32 i = 0; i < Scene->mNumAnimations; ++i)
 			{
 				///Allocate a new animation in TempAnim
-				TempAnim = new Animation;
+				StrPtr<Animation> TempAnim = std::make_shared<Animation>();
 
 				///Set the duration, ticksPerSecond and CurrentTime
 				aiAnimation* CurrentAnim = Scene->mAnimations[i];

@@ -18,8 +18,11 @@ namespace rczEngine
 				m_AccumulatedMatrix = m_JointMatrix;
 			}
 
+			if (!m_JointIsTransform)
+				matrixPalette[m_BoneIndex] = (m_AccumulatedMatrix)*m_OffsetMatrix;
+			else
+				matrixPalette[m_BoneIndex] = m_AccumulatedMatrix*m_OffsetMatrix;
 
-			matrixPalette[m_BoneIndex] = (m_AccumulatedMatrix)*m_OffsetMatrix;
 		}
 
 		UpdateChildren(matrixPalette);
@@ -58,9 +61,14 @@ namespace rczEngine
 		Vector3 newScale = Math::Lerp(k0.m_Scale, k1.m_Scale, currentTime);
 		Quaternion newRot = Quaternion::Slerp(k0.m_Rotation, k1.m_Rotation, currentTime);
 
+		if (m_JointIsTransform);
+			newPos.Set(0, 0, 0);
+
 		///Create the new local joint matrix for the bone.
 		m_JointMatrix = newRot.GetAsMatrix4()*Matrix4::Scale3D(newScale.m_x, newScale.m_y, newScale.m_z)*Matrix4::Translate3D(newPos.m_x, newPos.m_y, newPos.m_z);
 		m_JointMatrix.Transpose();
+
+		m_JointMatrix = m_TransformMatrix*m_JointMatrix;
 	}
 
 	void Bone::InterpolateBoneWithAnim(float time, WeakPtr<Animation> anim)

@@ -2,19 +2,6 @@
 
 namespace rczEngine
 {
-	enum ResourceType
-	{
-		RES_UNKNOWN,
-		RES_3DMODEL,
-		RES_SKINNEDMODEL,
-		RES_TEXTURE,
-		RES_AUDIO,
-		RES_MATERIAL,
-		RES_ANIMATION,
-		RES_CUBEMAP,
-		RES_MISSING
-	};
-
 	class RZ_UTILITY_EXPORT ResVault
 	{
 	private:
@@ -37,9 +24,9 @@ namespace rczEngine
 		template <class type>
 		WeakPtr<type> GetResource(ResourceHandle requestedHandle)
 		{
-			int handle;
+			size_t handle;
 
-			if (requestedHandle == -1)
+			if (requestedHandle == NULL)
 			{
 				handle = m_ModelCube;
 			}
@@ -71,15 +58,7 @@ namespace rczEngine
 			return res;
 		}
 
-		ResourceHandle InsertResource(Resource* newRes);
-
-		bool FileExists(const char *fileName)
-		{
-			std::ifstream infile(fileName);
-			bool FileExists = infile.good();
-			infile.close();
-			return FileExists;
-		}
+		ResourceHandle InsertResource(StrPtr<Resource> newRes);
 
 		ResourceHandle m_UIMat;
 

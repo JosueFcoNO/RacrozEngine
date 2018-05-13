@@ -37,15 +37,22 @@ namespace rczEngine
 
 	void CameraManager::AddCamera(StrPtr<CameraCmp> cameraPtr)
 	{
-		Pair<String, StrPtr<CameraCmp>> value;
+		Pair<ComponentId, StrPtr<CameraCmp>> value;
 		value.second = cameraPtr;
-		value.first = value.second->GetOwner().lock()->GetName();
+		value.first = cameraPtr->m_ID;
 		m_Cameras.insert(value);
+
+		m_ActiveCamera = cameraPtr;
 	}
 
-	void CameraManager::RemoveCamera(char* name)
+	void CameraManager::RemoveCamera(ComponentId id)
 	{
-		m_Cameras.erase(name);
+		m_Cameras.erase(id);
+
+		if (m_ActiveCamera->m_ID == id)
+		{
+			m_ActiveCamera = m_Cameras.begin()->second;
+		}
 	}
 
 	WeakPtr<CameraCmp> CameraManager::GetActiveCamera()
@@ -53,29 +60,38 @@ namespace rczEngine
 		return m_ActiveCamera;
 	}
 
-	void CameraManager::SetActiveCamera(char* name, Gfx::GfxCore* gfx)
+	void CameraManager::SetActiveCamera(ComponentId id, Gfx::GfxCore * gfx)
 	{
-		auto i = m_Cameras.find(name);
-		if (i != m_Cameras.end())
+		auto it = m_Cameras.find(id);
+		if (it != m_Cameras.end())
 		{
-			m_ActiveCamera = i->second;
+			m_ActiveCamera = it->second;
 		}
 	}
 
 	void CameraManager::UpdateAndSetCameraBuffer(Gfx::GfxCore * gfx, int32 vertexShaderSlot, int32 PixelShaderSlot)
 	{
-		m_ActiveCameraData.FarPlane.m_x = m_ActiveCamera->GetFarPlane();
-		m_ActiveCameraData.NearPlane.m_x = m_ActiveCamera->GetNearPlane();
-		m_ActiveCameraData.ProjectionMatrix = m_ActiveCamera->GetProjMatrix().GetTransposed();
-		m_ActiveCameraData.ViewMatrix = m_ActiveCamera->GetViewMatrix().GetTransposed();
-		m_ActiveCameraData.ViewPosition = m_ActiveCamera->GetPosition();
-		m_ActiveCameraData.ViewDirection = m_ActiveCamera->GetOrientation();
+		if (m_ActiveCamera)
+		{
+			m_ActiveCameraData.FarPlane.m_x = m_ActiveCamera->GetFarPlane();
+			m_ActiveCameraData.NearPlane.m_x = m_ActiveCamera->GetNearPlane();
 
-		m_CameraBuffer.UpdateConstantBuffer(&m_ActiveCameraData, gfx);
-		m_CameraBuffer.SetBufferInPS(PixelShaderSlot, gfx);
-		m_CameraBuffer.SetBufferInVS(vertexShaderSlot, gfx);
-		m_CameraBuffer.SetBufferInDS(vertexShaderSlot, gfx);
-		m_CameraBuffer.SetBufferInHS(vertexShaderSlot, gfx);
+			m_ActiveCameraData.PreviousProjectionMatrix = m_ActiveCameraData.ProjectionMatrix;
+			m_ActiveCameraData.ProjectionMatrix = m_ActiveCamera->GetProjMatrix().GetTransposed();
+
+			m_ActiveCameraData.PreviousViewMatrix = m_ActiveCameraData.ViewMatrix;
+			m_ActiveCameraData.ViewMatrix = m_ActiveCamera->GetViewMatrix().GetTransposed();
+
+			m_ActiveCameraData.ViewPosition = m_ActiveCamera->GetPosition();
+			m_ActiveCameraData.ViewDirection = m_ActiveCamera->GetOrientation();
+
+
+			m_CameraBuffer.UpdateConstantBuffer(&m_ActiveCameraData, gfx);
+			m_CameraBuffer.SetBufferInPS(PixelShaderSlot, gfx);
+			m_CameraBuffer.SetBufferInVS(vertexShaderSlot, gfx);
+			m_CameraBuffer.SetBufferInDS(vertexShaderSlot, gfx);
+			m_CameraBuffer.SetBufferInHS(vertexShaderSlot, gfx);
+		}
 
 	}
 	

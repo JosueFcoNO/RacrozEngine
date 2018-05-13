@@ -11,6 +11,8 @@ namespace rczEngine
 		Vector4 FarPlane;
 		Matrix4 ViewMatrix;
 		Matrix4 ProjectionMatrix;
+		Matrix4 PreviousViewMatrix;
+		Matrix4 PreviousProjectionMatrix;
 	};
 
 	///A Camera Manager Class that holds pointers to all cameras in the Scene and can change between them.
@@ -33,17 +35,17 @@ namespace rczEngine
 		///Adds a Camera Cmp to the Manager
 		void AddCamera(StrPtr<CameraCmp> cameraPtr);
 		///Removes a Camera By Name
-		void RemoveCamera(char* name);
+		void RemoveCamera(ComponentId id);
 		///Returns a weak pointer to the active camera's component
 		WeakPtr<CameraCmp> GetActiveCamera();
 		///Sets the Active Camera By Name
-		void SetActiveCamera(char* name, Gfx::GfxCore* gfx);
+		void SetActiveCamera(ComponentId id, Gfx::GfxCore* gfx);
 		///Updates the Camera Buffer With the Active Camera's data and sets it on the VS and PS specified slots.
 		void UpdateAndSetCameraBuffer(Gfx::GfxCore* gfx, int32 vertexShaderSlot, int32 PixelShaderSlot);
 
 	private:
 		///A Map of Camera Component Ptrs with String as key values
-		Map<String, StrPtr<CameraCmp>> m_Cameras;
+		Map<ComponentId, StrPtr<CameraCmp>> m_Cameras;
 		///The Active Camera's pointer
 		StrPtr<CameraCmp> m_ActiveCamera;
 		///A constant Buffer to hold Camera Data

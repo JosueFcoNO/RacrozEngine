@@ -12,7 +12,7 @@ namespace rczEngine
 		static const uint32 f_FileAppend = std::ios_base::app;
 	};
 
-	void FileManager::OpenFile(char * pszFileName, uint32 fileFlags)
+	void FileManager::OpenFile(const char * pszFileName, uint32 fileFlags)
 	{
 		m_fFlags = fileFlags;
 		File.open(pszFileName, fileFlags);
@@ -21,7 +21,7 @@ namespace rczEngine
 		m_iFileIndex = 0;
 	}
 
-	void FileManager::OpenBinaryFile(char * pszFileName, uint32 fileFlags)
+	void FileManager::OpenBinaryFile(const char * pszFileName, uint32 fileFlags)
 	{
 		return OpenFile(pszFileName, fileFlags | FileFlags::f_FileBinary);
 	}

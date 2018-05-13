@@ -9,7 +9,6 @@ namespace rczEngine
 		///////////////////////
 		////// Matrix3 Constructors
 		///////////////////////
-
 		Matrix3() {};
 
 		///Int Constructor, can INIT_ZERO and INIT_ONE
@@ -18,6 +17,17 @@ namespace rczEngine
 		Matrix3(const Matrix4& m4);
 		///Vector Constructor: Takes 3 Vector3. Top, Middle and Bottom Row. 
 		Matrix3(const Vector3& top, const Vector3& mid, const Vector3& bottom);
+
+		Matrix3(const Matrix3& other)
+		{
+			m_elements = other.m_elements;
+		};
+
+		Matrix3& operator=(const Matrix3& other) 
+		{ 
+			m_elements = other.m_elements; 
+			return *this;
+		};
 
 		///////////////////////
 		////// Matrix Operations
@@ -87,8 +97,8 @@ namespace rczEngine
 			float m_linear[9];
 			struct {
 				float m00, m01, m02,
-					  m10, m11, m12,
-					  m20, m21, m22;
+					m10, m11, m12,
+					m20, m21, m22;
 			} m_elements;
 		};
 

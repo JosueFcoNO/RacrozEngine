@@ -185,7 +185,7 @@ namespace rczEngine
 			{
 				auto ptr = (MouseSub*)(*it);
 
-				ptr->CheckAndCallbackMouse(MOUSE_LEFT, mouseData.x, mouseData.y);
+				ptr->CheckAndCallbackMouse(MOUSE_LEFT, (int32)mouseData.x, (int32)mouseData.y);
 			}
 		}
 
@@ -195,7 +195,7 @@ namespace rczEngine
 			{
 				auto ptr = (MouseSub*)(*it);
 
-				ptr->CheckAndCallbackMouse(MOUSE_LEFT, mouseData.x, mouseData.y);
+				ptr->CheckAndCallbackMouse(MOUSE_LEFT, (int32)mouseData.x, (int32)mouseData.y);
 			}
 		}
 
@@ -205,7 +205,7 @@ namespace rczEngine
 			{
 				auto ptr = (MouseSub*)(*it);
 
-				ptr->CheckAndCallbackMouse(MOUSE_LEFT, mouseData.x, mouseData.y);
+				ptr->CheckAndCallbackMouse(MOUSE_LEFT, (int32)mouseData.x, (int32)mouseData.y);
 			}
 		}
 
@@ -215,7 +215,7 @@ namespace rczEngine
 			{
 				auto ptr = (MouseSub*)(*it);
 
-				ptr->CheckAndCallbackMouse(-1, mouseData.x, mouseData.y);
+				ptr->CheckAndCallbackMouse(-1, (int32)mouseData.x, (int32)mouseData.y);
 			}
 		}
 
@@ -227,7 +227,7 @@ namespace rczEngine
 		///If the key is a digit from 1 to 9
 		if (key >= KEY_1 && key <= KEY_9)
 		{
-			m_KeyBuffer += key + 47;
+			m_KeyBuffer += key + (char)47;
 			return;
 		}
 

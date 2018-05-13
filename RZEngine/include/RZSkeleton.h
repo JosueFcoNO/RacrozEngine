@@ -25,7 +25,7 @@ namespace rczEngine
 		Bone* m_RootBone;
 
 		///The number of bones in the skeleton
-		int32 m_NumBones;
+		uint32 m_NumBones;
 		///A Vector of the final bone transform matrices.
 		Vector<Matrix4> m_BoneFinalMatrixVector;
 		///A Map of Bones

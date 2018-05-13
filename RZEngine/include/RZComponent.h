@@ -4,13 +4,13 @@ namespace rczEngine
 {
 	typedef uint16 ComponentId;
 
-	class RZ_UTILITY_EXPORT Component : public Object
+	class RZ_UTILITY_EXPORT Component : public Object, public Serializable
 	{
 	public:
 		virtual ~Component() {};
 
 		virtual void Init() {};
-		virtual void Update(float deltaTime) = 0;
+		virtual void Update(float deltaTime) {};
 		virtual void Render(Gfx::GfxCore* gfx, ResVault* res, Scene* scene) {};
 
 		ComponentId m_ID;

@@ -75,10 +75,11 @@ namespace rczEngine
 		return Temp;
 	}
 
-	void Animation::Load(const char* filePath, const char* resName, bool addToResourceManager)
+	void Animation::Load(const char* filePath, const char* resName)
 	{
 		///Change the m_Name to the resource name
 		m_Name = resName;
+		m_FilePath = filePath + String(" | ") + resName;
 
 		///Load the scene.
 		Assimp::Importer B;
@@ -87,16 +88,8 @@ namespace rczEngine
 		///If the scene has animations
 		if (Scene->HasAnimations())
 		{
-			///If addToResourceManager is true, i do it.
-			if (addToResourceManager)
-			{
-				ResVault::Pointer()->InsertResource(this);
-			}
-			else ///If it isn't set the Handle to Invalid
-			{
-				m_Handle = INVALID_RESOURCE;
-			}
-
+			ResVault::Pointer()->InsertResource(shared_from_this());
+			
 			///Iterate through the animations
 			for (uint32 i = 0; i < Scene->mNumAnimations; ++i)
 			{
@@ -207,6 +200,77 @@ namespace rczEngine
 					}
 				}
 
+			}
+		}
+	}
+
+	void Animation::Serialize()
+	{
+		auto ser = Serializer::Pointer();
+
+		//Save the serial of the animation
+		ser->SetNextObjectSerial(SERIAL_ANIMATION);
+
+		//Save the duration float
+		ser->WriteData(&m_Duration, sizeof(float));
+
+		//Save the Ticks Per Seconds
+		ser->WriteData(&m_TicksPerSecond, sizeof(float));
+
+		//Write the size of the animation timeline.
+		int32 size = m_Timeline.size();
+		ser->WriteData(&size, sizeof(size));
+
+		//Write the whole animation timeline.
+		for (auto it = m_Timeline.begin(); it != m_Timeline.end(); ++it)
+		{
+			//Write the key for this timeline
+			ser->SerializeString(it->first);
+
+			//Write the size of the vector of keyframes
+			size = it->second.size();
+			ser->WriteData(&size, sizeof(size));
+
+			//Write the vector of keyframes
+			for (int32 i = 0; i < size; ++i)
+			{
+				it->second[i].Serialize();
+			}
+		}
+	}
+
+	void Animation::DeSerialize()
+	{
+		auto ser = Serializer::Pointer();
+
+		//Read the duration float
+		ser->ReadData(&m_Duration, sizeof(float));
+
+		//Save the Ticks Per Seconds
+		ser->ReadData(&m_TicksPerSecond, sizeof(float));
+
+		//Read the size of the animation timeline.
+		int32 sizeTimeline;
+		ser->ReadData(&sizeTimeline, sizeof(sizeTimeline));
+
+		String Temp;
+
+		//Write the whole animation timeline.
+		for (int32 i = 0; i < sizeTimeline; ++i)
+		{
+			//Read the key for this timeline
+			ser->DeSerializeString(Temp);
+
+			//Write the size of the vector of keyframes
+			int32 sizeKeyframes;
+			ser->ReadData(&sizeKeyframes, sizeof(sizeKeyframes));
+
+			//Write the vector of keyframes
+			for (int32 i = 0; i < sizeKeyframes; ++i)
+			{
+				KeyFrame tempKeyframe;
+				tempKeyframe.DeSerialize();
+				m_Timeline[Temp].push_back(tempKeyframe);
 			}
 		}
 	}

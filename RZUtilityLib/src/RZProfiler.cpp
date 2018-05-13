@@ -57,7 +57,7 @@ namespace rczEngine
 		for (auto it = m_GameEvents.begin(); it != m_GameEvents.end(); ++it)
 		{
 			logger->LogMessage(LoggerFile.c_str(), String("+Event: "+(it->first)));
-			it->second.SaveResults(LoggerFile.c_str(), m_AverageFrameTime);
+			it->second.SaveResults(LoggerFile.c_str());
 		}
 
 		///Log every Gfx Event
@@ -65,7 +65,7 @@ namespace rczEngine
 		for (auto it = m_GfxEvents.begin(); it != m_GfxEvents.end(); ++it)
 		{
 			logger->LogMessage(LoggerFile.c_str(), String("+Event: " + (it->first)));
-			it->second.SaveResults(LoggerFile.c_str(), m_AverageFrameTime);
+			it->second.SaveResults(LoggerFile.c_str());
 		}
 
 		logger->CloseLog(LoggerFile.c_str());

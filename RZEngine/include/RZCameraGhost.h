@@ -2,11 +2,13 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT CameraGhost : public Component, public IKeyHandler, public IMouseHandler
+	class RZ_UTILITY_EXPORT CameraGhost : public CameraCmp, public IKeyHandler, public IMouseHandler
 	{
 	public:
-		void InitCameraGhost(Camera* camera, ResVault* res, EventManager* evnt)
+		void InitCameraGhost()
 		{
+			EventManager* evnt = EventManager::Pointer();
+
 			evnt->SubscribeToEvent((IKeyHandler*)this, EVENT_KEY_DOWN, KEY_W);
 			evnt->SubscribeToEvent((IKeyHandler*)this, EVENT_KEY_UP, KEY_W);
 
@@ -33,8 +35,6 @@ namespace rczEngine
 
 			evnt->SubscribeToEvent((IMouseHandler*)this, EVENT_MOUSE_MOVED, -1);
 
-			m_Camera = camera;
-
 			m_EventMng = evnt;
 		};
 
@@ -42,24 +42,24 @@ namespace rczEngine
 		{
 			auto speed = 15;
 
-			m_Camera->MoveRight(deltaTime*-m_xAxis*speed);
-			m_Camera->MoveForward(deltaTime*m_zAxis*speed);
-			m_Camera->MoveUp(deltaTime*m_yAxis*speed);
+			m_CameraCore.MoveRight(deltaTime*-m_xAxis*speed);
+			m_CameraCore.MoveForward(deltaTime*m_zAxis*speed);
+			m_CameraCore.MoveUp(deltaTime*m_yAxis*speed);
 
 			auto m = Input::Pointer()->GetMouseData();
 
 			if (m_Orbiting)
 			{
-				m_Camera->Orbit(Vector3(0.0f, -m.dx * 0.25f, 0.0f));
-				m_Camera->Orbit(Vector3(m.dy*0.25f, 0.0f, 0.0f));
+				m_CameraCore.Orbit(Vector3(0.0f, -m.dx * 0.25f, 0.0f));
+				m_CameraCore.Orbit(Vector3(m.dy*0.25f, 0.0f, 0.0f));
 			}
 			else if (m_Rotating)
 			{
-				m_Camera->Rotate(Vector3(0.0f, m.dx*0.25f, 0.0f));
-				m_Camera->Rotate(Vector3(-m.dy*0.25f, 0.0f, 0.0f));
+				m_CameraCore.Rotate(Vector3(0.0f, m.dx*0.25f, 0.0f));
+				m_CameraCore.Rotate(Vector3(-m.dy*0.25f, 0.0f, 0.0f));
 			}
 
-			m_Owner.lock()->SetPosition(m_Camera->GetPosition());
+			m_Owner.lock()->SetPosition(m_CameraCore.GetPosition());
 
 		};
 
@@ -129,15 +129,6 @@ namespace rczEngine
 			}
 		};
 
-		/////MOUSE INTERFACE
-		virtual void OnClick(int32 mb, int32 mx, int32 my) {};
-		virtual void OnHold(int32 mb, int32 mx, int32 my) {};
-		virtual void OnReleased(int32 mb, int32 mx, int32 my) {};
-		virtual void OnMoved(int32 mb, int32 mx, int32 my)
-		{
-
-		};
-
 	private:
 		float m_xAxis = 0.0f;
 		float m_yAxis = 0.0f;
@@ -148,8 +139,6 @@ namespace rczEngine
 
 		bool m_Orbiting = false;
 		bool m_Rotating = false;
-
-		Camera* m_Camera = NULL;
 
 		EventManager* m_EventMng = NULL;
 	};

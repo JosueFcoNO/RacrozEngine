@@ -8,10 +8,10 @@ namespace rczEngine
 	class RZ_UTILITY_EXPORT IMouseHandler : public IEventHandler
 	{
 	public:
-		virtual void OnClick(int32 mb, int32 mx, int32 my) = 0;
-		virtual void OnHold(int32 mb, int32 mx, int32 my) = 0;
-		virtual void OnReleased(int32 mb, int32 mx, int32 my) = 0;
-		virtual void OnMoved(int32 mb, int32 mx, int32 my) = 0;
+		virtual void OnClick(int32 mb, int32 mx, int32 my) {};
+		virtual void OnHold(int32 mb, int32 mx, int32 my) {};
+		virtual void OnReleased(int32 mb, int32 mx, int32 my) {};
+		virtual void OnMoved(int32 mb, int32 mx, int32 my) {};
 		EVENT_HANDLER GetEventHandlerType() { return EVENT_HANDLER::HANDLER_MOUSE; };
 
 	};

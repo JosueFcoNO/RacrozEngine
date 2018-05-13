@@ -937,7 +937,19 @@ namespace rczEngine
 			BufferDesc.Usage = (D3D11_USAGE)usage;
 			BufferDesc.BindFlags = bindflags;
 			BufferDesc.ByteWidth = sizeOfElement*numOfElements;
-			BufferDesc.CPUAccessFlags = usage == USAGE_DYNAMIC ? CPU_WRITE : 0;
+
+			if (usage == USAGE_DYNAMIC)
+			{
+				BufferDesc.CPUAccessFlags = CPU_WRITE;
+			}
+			else if (usage == USAGE_STAGING)
+			{
+				BufferDesc.CPUAccessFlags = CPU_READ | CPU_WRITE;
+			}
+			else
+			{
+				BufferDesc.CPUAccessFlags = 0;
+			}
 
 			out_Buffer.m_Usage = usage;
 
@@ -999,6 +1011,89 @@ namespace rczEngine
 			return true;
 		}
 
+		void * GfxCore::GetBufferData(BasicBuffer & buffer)
+		{
+			//Create the new Staging buffer.
+			Gfx::BasicBuffer tempBuffer;
+			tempBuffer.Create(buffer.m_SizeOfElement, buffer.m_NumOfElements, NULL, 
+				buffer.m_ElementsPitch, buffer.m_ElementSlice, USAGE_STAGING, (eBIND_FLAGS)NULL, this);
+
+			//Copy the resource.
+			m_DeviceContext->CopyResource(tempBuffer.m_Buffer, buffer.m_Buffer);
+
+			//Allocate the memory.
+			uint32 size = buffer.m_SizeOfElement * buffer.m_NumOfElements;
+			void* ptr = malloc(size);
+
+			//Create the mappedResource
+			D3D11_MAPPED_SUBRESOURCE mappedResource;
+			ZeroMemory(&mappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+			//Map the tempBuffer resource to the mapped Resource.
+			m_DeviceContext->Map(tempBuffer.m_Buffer, 0, D3D11_MAP_READ, 0, &mappedResource);
+			//Copy the buffer's data to the pointer.
+			memcpy(ptr, mappedResource.pData, size);
+			//	Reenable GPU access to the vertex buffer data.
+			m_DeviceContext->Unmap(tempBuffer.m_Buffer, 0);
+
+			tempBuffer.Destroy();
+
+			return ptr;
+		}
+
+		void * GfxCore::GetTexture2DData(TextureCore2D & texture)
+		{
+			TextureCore2D tempCore;
+
+			D3D11_SUBRESOURCE_DATA SubData;
+			ZeroMemory(&SubData, sizeof(SubData));
+			SubData.pSysMem = NULL;
+			SubData.SysMemPitch = texture.m_TextureBytePitch;
+			SubData.SysMemSlicePitch = 1;
+
+			DXGI_SAMPLE_DESC SamplerDesc;
+			ZeroMemory(&SamplerDesc, sizeof(SamplerDesc));
+			SamplerDesc.Count = 1;
+			SamplerDesc.Quality = 0;
+
+			D3D11_TEXTURE2D_DESC Descriptor;
+			ZeroMemory(&Descriptor, sizeof(Descriptor));
+			Descriptor.ArraySize = 1;
+			Descriptor.BindFlags = NULL;
+			Descriptor.CPUAccessFlags = CPU_READ;
+			Descriptor.Format = (DXGI_FORMAT)texture.m_Format;
+			Descriptor.Height = texture.m_Height;
+			Descriptor.Width = texture.m_Width;
+			Descriptor.MipLevels = 0;
+			Descriptor.Usage = (D3D11_USAGE)USAGE_STAGING;
+			Descriptor.SampleDesc = SamplerDesc;
+			Descriptor.MiscFlags = 0;
+
+			HRESULT result = m_Device->CreateTexture2D(&Descriptor, NULL, &tempCore.m_Texture);
+
+			//Copy the resource.
+			m_DeviceContext->CopyResource(tempCore.m_Texture, texture.m_Texture);
+
+			//Allocate the memory.
+			uint32 size = texture.m_TextureBytes;
+			void* ptr = malloc(size);
+
+			//Create the mappedResource
+			D3D11_MAPPED_SUBRESOURCE mappedResource;
+			ZeroMemory(&mappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+			//Map the tempBuffer resource to the mapped Resource.
+			m_DeviceContext->Map(tempCore.m_Texture, 0, D3D11_MAP_READ, 0, &mappedResource);
+			//Copy the buffer's data to the pointer.
+			memcpy(ptr, mappedResource.pData, size);
+			//	Reenable GPU access to the vertex buffer data.
+			m_DeviceContext->Unmap(tempCore.m_Texture, 0);
+
+			tempCore.m_Texture->Release();
+
+			return ptr;
+		}
+
 #pragma endregion
 
 #pragma region =	| Texture Functions |
@@ -1045,6 +1140,14 @@ namespace rczEngine
 			Descriptor.SampleDesc = SamplerDesc;
 			Descriptor.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
+			out_Texture.m_TextureBytePitch = SubData.SysMemPitch;
+			out_Texture.m_TextureBytes = SubData.SysMemPitch*Height;
+			out_Texture.m_Format = FORMAT_R8G8B8A8_UNORM;
+			out_Texture.m_Height = Height;
+			out_Texture.m_Width = Width;
+			out_Texture.m_BindFlags = (Gfx::eBIND_FLAGS)Descriptor.BindFlags;
+			out_Texture.m_AccessFlags = cpu_access_flags;
+
 			HRESULT result = m_Device->CreateTexture2D(&Descriptor, NULL, &out_Texture.m_Texture);
 
 			D3D11_BOX box;
@@ -1071,7 +1174,6 @@ namespace rczEngine
 			SRV.Texture2D.MipLevels = 0;
 
 			result = m_Device->CreateShaderResourceView(out_Texture.m_Texture, NULL, &out_Texture.m_ShaderResource);
-			//m_DeviceContext->CopyResource(out_Texture.m_Texture, out_Texture.m_Texture);
 			STBI_FREE(Data);
 			GenerateMipMaps(&out_Texture);
 
@@ -1138,25 +1240,51 @@ namespace rczEngine
 			D3D11_TEXTURE2D_DESC Descriptor;
 			ZeroMemory(&Descriptor, sizeof(Descriptor));
 			Descriptor.ArraySize = 1;
-			Descriptor.BindFlags = bind_flags;
+			Descriptor.BindFlags = bind_flags | D3D11_BIND_RENDER_TARGET;
 			Descriptor.CPUAccessFlags = cpu_access_flags;
 			Descriptor.Format = (DXGI_FORMAT)format;
 			Descriptor.Height = height;
 			Descriptor.Width = width;
-			Descriptor.MipLevels = 1;
+			Descriptor.MipLevels = 0;
 			Descriptor.Usage = (D3D11_USAGE)usage;
 			Descriptor.SampleDesc = SamplerDesc;
+			Descriptor.MiscFlags = (usage != USAGE_STAGING) ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0;
 
-			HRESULT result = m_Device->CreateTexture2D(&Descriptor, &SubData, &out_Texture.m_Texture);
+			out_Texture.m_TextureBytePitch = SubData.SysMemPitch;
+			out_Texture.m_TextureBytes = SubData.SysMemPitch*height;
+			out_Texture.m_Format = FORMAT_R8G8B8A8_UNORM;
+			out_Texture.m_Height = height;
+			out_Texture.m_Width = width;
+			out_Texture.m_BindFlags = (Gfx::eBIND_FLAGS)Descriptor.BindFlags;
+			out_Texture.m_AccessFlags = cpu_access_flags;
+
+			HRESULT result = m_Device->CreateTexture2D(&Descriptor, NULL, &out_Texture.m_Texture);
+
+			D3D11_BOX box;
+			box.left = 0;
+			box.right = width;
+			box.bottom = height;
+			box.top = 0;
+			box.front = 0;
+			box.back = 1;
+
+			m_DeviceContext->UpdateSubresource(
+				out_Texture.m_Texture,
+				0,
+				&box,
+				memory,
+				width * 4,
+				0
+			);
 
 			D3D11_SHADER_RESOURCE_VIEW_DESC SRV;
 			ZeroMemory(&SRV, sizeof(SRV));
-			SRV.Format = (DXGI_FORMAT)format;
+			SRV.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 			SRV.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-			SRV.Texture2D.MostDetailedMip = 0;
-			SRV.Texture2D.MipLevels = 1;
+			SRV.Texture2D.MipLevels = 0;
 
-			result = m_Device->CreateShaderResourceView(out_Texture.m_Texture, &SRV, &out_Texture.m_ShaderResource);
+			result = m_Device->CreateShaderResourceView(out_Texture.m_Texture, NULL, &out_Texture.m_ShaderResource);
+			GenerateMipMaps(&out_Texture);
 
 			return (S_OK(result));
 		}

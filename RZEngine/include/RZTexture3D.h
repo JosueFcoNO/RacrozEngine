@@ -8,6 +8,7 @@ namespace rczEngine
 	class RZ_UTILITY_EXPORT Texture3D : public Resource
 	{
 	public:
+		Texture3D() { m_Type = ResourceType::RES_TEXTURE; };
 		virtual ~Texture3D() { Release(); };
 
 		uint32 Width() { return 1; };
@@ -20,9 +21,11 @@ namespace rczEngine
 
 		void LoadTexture3D(char* filepath1, char* filepath2, char* filepath3, char* filepath4, char*resName, bool addToResourceManager = true);
 
-		virtual void Load(const char* filePath, const char* resName, bool addToResourceManager = true) {};
+		virtual void Load(const char* filePath, const char* resName) {};
 		virtual void Release() { m_TextureCore.m_ShaderResource->Release(); m_TextureCore.m_Texture->Release(); };
 
+		virtual void Serialize();
+		virtual void DeSerialize();
 
 #ifndef RZ_EDITOR
 		virtual void RenderResourceGUI()

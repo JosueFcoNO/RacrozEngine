@@ -9,9 +9,7 @@ namespace rczEngine
 		///////////////////////
 		////// Vector4 Constructors
 		///////////////////////
-
 		Vector4() {};
-
 		Vector4(eINIT init);
 
 		Vector4(Vector3 v3);

@@ -14,6 +14,10 @@ namespace rczEngine
 	private:
 		bool Quit = false;
 		Timer Time;
+
+		Gfx::GfxCore* m_gfx;
+		RacrozRenderer* m_renderer;
+		SceneManager* m_scnManager;
 		
 #if RZ_PLATFORM == RZ_PLATFORM_WINDOWS
 		HACCEL hAccelTable;

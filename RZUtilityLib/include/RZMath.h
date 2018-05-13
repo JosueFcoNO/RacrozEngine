@@ -29,7 +29,7 @@ namespace rczEngine
 		///Ceil a float
 		static FORCEINLINE float Ceil(float F) { return TruncateF(F) + 1.0f; };
 
-		static FORCEINLINE Vector3 PosToPolar3D(Vector3 pos)
+		static Vector3 PosToPolar3D(Vector3 pos)
 		{
 			Vector3 ret;
 			ret.m_x = pos.Magnitude();
@@ -39,7 +39,7 @@ namespace rczEngine
 			return ret;
 		};
 
-		static FORCEINLINE Vector2 PolarToPos2D(Vector3 polar)
+		static Vector2 PolarToPos2D(Vector3 polar)
 		{
 			float u = atan2(polar.m_x, polar.m_z) / (PI2)+0.5f;
 			float v = asin(-polar.m_y) / PI + 0.5f;
@@ -47,7 +47,7 @@ namespace rczEngine
 			return Vector2(u, v);
 		};
 
-		static FORCEINLINE Vector3 PosToPolar2D(Vector2 pos)
+		static Vector3 PosToPolar2D(Vector2 pos)
 		{
 			float x = cos(PI*(0.5f - pos.m_y))*sin(PI2*(pos.m_x - 0.5f));
 			float y = sin(PI*(0.5f - pos.m_y));
@@ -55,7 +55,7 @@ namespace rczEngine
 			return Vector3(x, y, z);
 		}
 
-		static FORCEINLINE Vector3 PolarToPos3D(Vector3 polar)
+		static Vector3 PolarToPos3D(Vector3 polar)
 		{
 			float x = polar.m_x * sin(polar.m_y) * cos(polar.m_z);
 			float y = polar.m_x * sin(polar.m_y) * sin(polar.m_z);
@@ -283,7 +283,7 @@ namespace rczEngine
 			return (x >= 0) ? 1 : -1;
 		};
 
-		static FORCEINLINE Vector2 Sign(Vector2 x)
+		static Vector2 Sign(Vector2 x)
 		{
 			Vector2 ret;
 			ret.m_x = (x.m_x >= 0) ? 1.0f : -1.0f;
@@ -292,7 +292,7 @@ namespace rczEngine
 			return ret;
 		};
 
-		static FORCEINLINE Vector2I Sign(Vector2I x)
+		static Vector2I Sign(Vector2I x)
 		{
 			Vector2I ret;
 			ret.m_x = (x.m_x >= 0) ? 1 : -1;
@@ -301,7 +301,7 @@ namespace rczEngine
 			return ret;
 		};
 
-		static FORCEINLINE Vector3 Sign(Vector3 x)
+		static Vector3 Sign(Vector3 x)
 		{
 			Vector3 ret;
 			ret.m_x = (x.m_x >= 0) ? 1.0f : -1.0f;
@@ -311,9 +311,9 @@ namespace rczEngine
 			return ret;
 		};
 
-		static FORCEINLINE Vector4 Sign(Vector4 x)
+		static Vector4 Sign(Vector4 x)
 		{
-			Vector4 ret;
+			Vector4 ret(INIT_NONE);
 			ret.m_x = (x.m_x >= 0) ? 1.0f : -1.0f;
 			ret.m_y = (x.m_y >= 0) ? 1.0f : -1.0f;
 			ret.m_z = (x.m_z >= 0) ? 1.0f : -1.0f;
@@ -565,6 +565,11 @@ namespace rczEngine
 		static FORCEINLINE T Clamp01(T val)
 		{
 			return Max(Min(val, (T)1), (T)0);
+		}
+
+		static FORCEINLINE bool Equals(float n1, float n2, float precision)
+		{
+			return (n1 - precision >= n2 && n1 + precision <= n2);
 		}
 	};
 };

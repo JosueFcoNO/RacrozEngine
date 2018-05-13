@@ -11,14 +11,17 @@ namespace rczEngine
 			Destroy();
 		}; 
 
-		void InitScene();
+		void InitScene(const char* name);
+		void ClearScene();
 		void Update(float deltaTime);
 		void Destroy();
 
-		WeakGameObjectPtr CreateActor(char* name = "GameObj", GameObject* parent = NULL, Vector3 position = { 0,0,0 }, Vector3 orientation = { 0,0,0 }, Vector3 scale = { 1,1,1 });
+		WeakGameObjectPtr CreateActor(const char* name = "GameObj", GameObject* parent = NULL, Vector3 position = { 0,0,0 }, Vector3 orientation = { 0,0,0 }, Vector3 scale = { 1,1,1 });
+		StrCmpPtr CreateComponent(eCOMPONENT_ID type, GameObjectID owner);
+		StrCmpPtr CreateComponent(eCOMPONENT_ID type, StrGameObjectPtr owner);
 
 		WeakGameObjectPtr FindActor(GameObjectID id);
-		WeakGameObjectPtr FindActor(char* name);
+		WeakGameObjectPtr FindActor(const char* name);
 
 		void AddRootNodeChild(StrGameObjectPtr node);
 		void RemoveChild(GameObjectID actorId);
@@ -36,7 +39,7 @@ namespace rczEngine
 		StrGameObjectPtr m_RootNode;
 
 	private:
-		ActorComponentFactory m_ActFactory;
+		String m_Name;
 	};
 
 }

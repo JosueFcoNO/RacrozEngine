@@ -35,9 +35,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\RZParser.h">
-      <Filter>Archivos de encabezado\Text Parser</Filter>
-    </ClInclude>
     <ClInclude Include="include\RZEventManager.h">
       <Filter>Archivos de encabezado\Event Manager</Filter>
     </ClInclude>

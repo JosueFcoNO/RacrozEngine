@@ -20,7 +20,7 @@ namespace rczEngine
 			break;
 		}
 
-		m_LightViewBuffer.CreateConstantBuffer(sizeof(Matrix4), Gfx::USAGE_DEFAULT, gfx);
+		m_LightViewBuffer.CreateConstantBuffer(sizeof(Matrix4::m_elements), Gfx::USAGE_DEFAULT, gfx);
 		m_LightViewBuffer.UpdateConstantBuffer(&m_Light->GetLightViewProjMatrix(), gfx);
 	}
 

@@ -187,6 +187,8 @@
     <ClInclude Include="include\RZMatrix4D.h" />
     <ClInclude Include="include\RZMemoryAllocators.h" />
     <ClInclude Include="include\RZModule.h" />
+    <ClInclude Include="include\RZParser.h" />
+    <ClInclude Include="include\RZPath.h" />
     <ClInclude Include="include\RZPlane.h" />
     <ClInclude Include="include\RZPlatformTypes.h" />
     <ClInclude Include="include\RZProfiler.h" />
@@ -223,6 +225,7 @@
     <ClCompile Include="src\RZMatrix3D.cpp" />
     <ClCompile Include="src\RZMatrix4D.cpp" />
     <ClCompile Include="src\RZMemoryAllocators.cpp" />
+    <ClCompile Include="src\RZPath.cpp" />
     <ClCompile Include="src\RZPlane.cpp" />
     <ClCompile Include="src\RZProfiler.cpp" />
     <ClCompile Include="src\RZProfilerEvent.cpp" />
@@ -233,6 +236,7 @@
     <ClCompile Include="src\RZRect2D.cpp" />
     <ClCompile Include="src\RZRect2Di.cpp" />
     <ClCompile Include="src\RZRect3D.cpp" />
+    <ClCompile Include="src\RZSerializer.cpp" />
     <ClCompile Include="src\RZSphere.cpp" />
     <ClCompile Include="src\RZTimer.cpp" />
     <ClCompile Include="src\RZUtilityPCH.cpp">

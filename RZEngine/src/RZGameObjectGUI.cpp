@@ -11,37 +11,32 @@ namespace rczEngine
 	{
 		ImGui::Begin("GameObject");
 		{
-			if (ImGui::InputText("Name", m_Name, 20, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
+			if (ImGui::InputText("Name", m_Name, 50, ImGuiInputTextFlags_::ImGuiInputTextFlags_EnterReturnsTrue))
 			{
 				m_ActiveObject->SetName(m_Name);
 			}
 
 			if (m_ActiveObject)
 			{
-				Vector3 vec3 = m_ActiveObject->GetPosition();
 
-				if (ImGui::InputFloat3("Position", (float*)&vec3))
+				if (ImGui::InputFloat3("Position", (float*)&m_ActiveObject->m_Position))
 				{
-					m_ActiveObject->SetPosition(vec3);
+					m_ActiveObject->m_DirtyLocalMatrix = true;
 				}
 
-				vec3 = m_ActiveObject->GetOrientation();
-
-				if (ImGui::InputFloat3("Orientation", (float*)&vec3))
+				if (ImGui::InputFloat3("Orientation", (float*)&m_ActiveObject->m_Orientation))
 				{
-					m_ActiveObject->SetOrientation(vec3);
+					m_ActiveObject->m_DirtyLocalMatrix = true;
 				}
 
-				vec3 = m_ActiveObject->GetScale();
-
-				if (ImGui::InputFloat3("Scale", (float*)&vec3))
+				if (ImGui::InputFloat3("Scale", (float*)&m_ActiveObject->m_Scale))
 				{
-					m_ActiveObject->SetScale(vec3);
+					m_ActiveObject->m_DirtyLocalMatrix = true;
 				}
 
 				static int comboint = 0;
 				static bool AddComponentMenu = false;
-				static int componentIds[3] = { 3, 4, 6 };
+				static int componentIds[5] = { 3, 4, 5, 6, 10 };
 
 				if (ImGui::Button("AddComponent"))
 				{
@@ -52,11 +47,12 @@ namespace rczEngine
 				{
 					ImGui::Begin("PopUp");
 					{
-						ImGui::Combo("Components", &comboint, "Model Renderer \0Skinned Model Renderer \0Move");
+						ImGui::Combo("Components", &comboint, "Model Renderer \0Skinned Model Renderer\0Light \0Move \0Space Manager");
 						if (ImGui::Button("Add"))
 						{
-							m_ActiveObject->AddComponent((eCOMPONENT_ID)componentIds[comboint]).lock()->Init();
+							SceneManager::Pointer()->GetActiveScene()->CreateComponent((eCOMPONENT_ID)componentIds[comboint], m_ActiveObject->GetID());
 							AddComponentMenu = false;
+							return;
 						}
 					}
 				}
@@ -68,7 +64,7 @@ namespace rczEngine
 
 	void GUIGameObject::SetNewGameObject(StrGameObjectPtr obj)
 	{
-		strcpy(m_Name, obj->GetName().c_str());
+		strcpy_s(m_Name, obj->GetName().c_str());
 		m_ActiveObject = obj;
 	}
 

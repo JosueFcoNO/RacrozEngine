@@ -56,7 +56,7 @@ namespace rczEngine
 		if (m_RenderTargets[0] != NULL)
 		{
 			m_gfx->SetNumberOfRenderTargets(i);
-			m_gfx->SetRenderTargets();
+			m_gfx->SetRenderTargets(UseDepth);
 		}
 	}
 

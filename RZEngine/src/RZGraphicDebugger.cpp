@@ -30,7 +30,7 @@ namespace rczEngine
 		m_ColorCB.CreateConstantBuffer(sizeof(Vector4), Gfx::USAGE_DEFAULT, gfx);
 		m_LinesRS.Init(Gfx::eFILL_MODE::FILL_WIREFRAME);
 		m_SolidRS.Init(Gfx::eFILL_MODE::FILL_SOLID);
-		m_WorldMatrixCB.CreateConstantBuffer(sizeof(Matrix4), Gfx::USAGE_DEFAULT, gfx);
+		m_WorldMatrixCB.CreateConstantBuffer(sizeof(Matrix4::m_elements), Gfx::USAGE_DEFAULT, gfx);
 		ResVault::Pointer()->LoadResource("EsferaLowPoly.fbx", "DebuggerSphere");
 	}
 

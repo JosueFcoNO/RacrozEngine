@@ -235,4 +235,5 @@ namespace rczEngine
 	{
 		return Math::Sqrt((Math::Square(m_x) + Math::Square(m_y) + Math::Square(m_z) + Math::Square(m_w)));
 	}
+
 }

@@ -17,12 +17,14 @@ namespace rczEngine
 		TERRAIN_GEOMETRY_PASS,
 		PBR,
 		PBR_FORWARD,
+		PBR_TRANSPARENT,
 		COLOR_CORRECTION,
 		LUMINANCE,
 		BRIGHT,
 		BLOOM,
 		AVG_LUMINANCE,
-		HDR_BLOOM
+		HDR_BLOOM,
+		MOTION_BLUR
 	};
 
 	enum TEXTURES_PASS
@@ -81,6 +83,8 @@ namespace rczEngine
 
 			m_Passes["SkyBox"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 5);
 			m_Passes["PBR"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 3);
+			m_Passes["Transparent"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 5);
+
 		}
 
 		///Draws the sceneGraph
@@ -123,41 +127,6 @@ namespace rczEngine
 		Map<String, StrPtr<Pass>> m_Passes;
 
 		GaussPass m_BlurPass;
-
-		/*
-
-		Pass passShadowMap; ///Shadow Pass
-		Pass passShadowFinal; ///Shadow Mapping Pass
-		Pass passSSAO; ///SSAO
-		SSAOsettings m_SSAO_Set;
-		Gfx::ConstantBuffer m_SSAOBuffer;
-
-		///Glow Passes
-		Pass passLuminance;
-		Pass passBright;
-		Pass passAvgLuminance;
-		Gfx::ConstantBuffer m_MiddleGrey;
-
-		///PBR PASS
-		Pass passPBRLight;
-
-		///HDR Passes
-		Pass passBrightAdd;
-		Pass passPBRBloom;
-
-		///Fog Pass
-		Pass passFog;
-		Gfx::ConstantBuffer FogBuffer;
-		Vector4 m_FogAmount;
-
-		///FXAA Pass
-		Pass passFXAA;
-
-		///Depth of Field Pass
-		Pass passDOF;
-
-		///Planet Pass
-		Pass passTerrain;*/
 
 		///Screen Width
 		int m_Width;

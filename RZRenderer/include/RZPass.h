@@ -53,6 +53,8 @@ namespace rczEngine
 		static const char MAX_TEXTURES_PASS = 10;
 		static const char MAX_RENDER_TARGETS = 8;
 
+		bool UseDepth = true;
+
 		Gfx::GfxCore* m_gfx = Gfx::GfxCore::Pointer();
 		ResVault* m_res = ResVault::Pointer();
 

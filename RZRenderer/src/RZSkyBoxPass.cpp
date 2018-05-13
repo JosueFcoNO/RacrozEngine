@@ -16,7 +16,7 @@ namespace rczEngine
 
 		m_gfx->CompileAndCreatePixelShader(m_PShader, L"Shaders/SkyBoxShader.hlsl");
 
-		m_SkyBoxBuffer.CreateConstantBuffer(sizeof(Matrix4), Gfx::USAGE_DEFAULT, m_gfx);
+		m_SkyBoxBuffer.CreateConstantBuffer(sizeof(Matrix4::m_elements), Gfx::USAGE_DEFAULT, m_gfx);
 
 		m_SkyMatrix.Identity();
 	}
@@ -46,7 +46,7 @@ namespace rczEngine
 
 	void SkyBoxPass::RenderPass()
 	{
-		m_Cube.lock()->DrawModel(m_gfx, m_res, NULL);
+		m_res->GetResource<Model>(m_res->m_ModelCube).lock()->DrawModel(m_gfx, m_res, NULL);
 	}
 
 	void SkyBoxPass::PostRenderPass()

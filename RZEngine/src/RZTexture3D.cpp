@@ -17,15 +17,20 @@ namespace rczEngine
 		m_FilePath = filepath1;
 		m_Name = resName;
 
-		if (addToResourceManager)
-		{
-			ResVault::Pointer()->InsertResource(this);
-		}
-		else
-		{
-			m_Handle = INVALID_RESOURCE;
-		}
+		//ResVault::Pointer()->InsertResource(shared_from_this());
+
 		//TODO: Change this to more than 4 images.
 		Gfx::GfxCore::Pointer()->CreateTexture3DFromFile(filepath1, filepath2, filepath3, filepath4, m_TextureCore, Gfx::USAGE_DEFAULT, Gfx::BIND_SHADER_RESOURCE, Gfx::CPU_DEFAULT);
+	}
+
+	void Texture3D::Serialize()
+	{
+		///TODO:
+		auto ser = Serializer::Pointer();
+		ser->SetNextObjectSerial(SERIAL_TEXTURE3D);
+	}
+
+	void Texture3D::DeSerialize()
+	{
 	}
 }

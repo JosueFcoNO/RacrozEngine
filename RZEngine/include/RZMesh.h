@@ -3,17 +3,17 @@
 namespace rczEngine
 {
 	////////////////MESH
-	///A class Mesh that contains Gfx::Vertex and Index buffers.
-	class RZ_UTILITY_EXPORT Mesh
+	///A class Mesh that contains the material name of the mesh. 
+	class RZ_UTILITY_EXPORT Mesh : public Serializable
 	{
 	public:
 		Mesh() {};
 		Mesh(Gfx::MeshAPI meshCore);
 
-		virtual ~Mesh() { Destroy(); };
-
-		void Destroy() {};
 		void Draw(Gfx::GfxCore* gfx);
+
+		virtual void Serialize();
+		virtual void DeSerialize();
 
 		Gfx::MeshAPI m_MeshCore;
 		

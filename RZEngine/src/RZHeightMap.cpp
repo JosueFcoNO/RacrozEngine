@@ -4,7 +4,6 @@ namespace rczEngine
 {
 	void HeightMap::LoadHeightMap(ResVault * res)
 	{
-		//m_HeightMapTexture = Editor::LoadFile("Load HeightMap", "HeightMap", res);
 	}
 
 	void HeightMap::SetHeightMapInPipeline(Gfx::GfxCore * gfx, ResVault* res)

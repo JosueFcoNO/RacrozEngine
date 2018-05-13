@@ -1,10 +1,9 @@
 #pragma once
-#define INVALID_RESOURCE -1
-#define MISSING_RESOURCE -2
+#define INVALID_RESOURCE NULL
 
 namespace rczEngine
 {
-	typedef int32 ResourceHandle;
+	typedef size_t ResourceHandle;
 	typedef int32 ObjectID;
 
 	class RZ_UTILITY_EXPORT Object

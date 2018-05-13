@@ -19,6 +19,8 @@ namespace rczEngine
 		void SaveScene(const char* filePath);
 
 	private:
+		StrPtr<Resource> getNewResource(SERIALS serials);
+
 		StrPtr<Scene> m_ActiveScene;
 		Vector<StrPtr<Scene>> m_SavedScenes;
 

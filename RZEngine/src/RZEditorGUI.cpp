@@ -320,34 +320,20 @@ namespace rczEngine
 		m_Hwnd = (HWND)0;
 	}
 
-	void GUIEditor::RenderEditor(UserConfig * user)
+	void GUIEditor::RenderEditor(RendererConfig * user)
 	{
 		NewFrame(m_gfx);
 
 		{
 			ImGui::Text("PBR Config");
 
-			ImGui::SliderFloat("Roughness", &user->Roughness, 0.0f, 1.0f);
-			ImGui::SliderFloat("Override Roughness", &user->OverrideRoughness, 0.0f, 1.0f);
-
-			ImGui::SliderFloat("Metallic", &user->Metallic, 0.0f, 1.0f);
-			ImGui::SliderFloat("Override Metallic", &user->OverrideMetallic, 0.0f, 1.0f);
-
-			ImGui::ColorEdit4("Albedo Color", (float*)&user->UserAlbedo);
-			ImGui::SliderFloat("Override Albedo", &user->OverrideAlbedo, 0.0f, 1.0f);
-
 			ImGui::SliderFloat("Light", &user->LightIntensity, 0.0f, 1.0f);
 			ImGui::SliderFloat("Ambient", &user->AmbientLightIntensity, 0.0f, 1.0f);
 			ImGui::SliderFloat("Reflection", &user->ReflectionIntensity, 0.0f, 1.0f);
 
-			ImGui::SliderInt("Tesselation Factor", &user->TesselationFactor, 1, 64);
-
-			ImGui::SliderInt("Render Texture", &user->RenderTex, 0, 15);
-
 			ImGui::SliderInt("R", &user->R, 0, 1);
 			ImGui::SliderInt("G", &user->G, 0, 1);
 			ImGui::SliderInt("B", &user->B, 0, 1);
-			ImGui::SliderInt("A", &user->A, 0, 1);
 
 			ImGui::Checkbox("Wireframe", &user->Wireframe);
 
@@ -355,11 +341,6 @@ namespace rczEngine
 
 			ImGui::SliderInt("Correction Mode:", &ColorMode, 0, 3);
 			ImGui::SliderFloat("Exposure", &Exposure, 0.1f, 5.0f);
-			
-			if (ImGui::Button("SkyBox", ImVec2(30, 25)))
-			{
-				//rczEngine::
-			}
 		}
 
 		ImGui::Begin("Play Mode");

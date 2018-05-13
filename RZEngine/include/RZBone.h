@@ -31,7 +31,7 @@ namespace rczEngine
 		Matrix4 m_JointMatrix;
 		Matrix4 m_TransformMatrix;
 		Matrix4 m_AccumulatedTransform;
-
+		bool m_JointIsTransform = false;
 
 	private:
 		Matrix4 m_AccumulatedMatrix;

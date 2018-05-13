@@ -24,7 +24,7 @@ namespace rczEngine
 		for (int32 y = 0; y < MAX_GRAD_Y; ++y)
 			for (int32 x = 0; x < MAX_GRAD_X; ++x)
 			{
-				char index = int((m_rnd.GetRandomNumberN() + 3.0f) / 6.0f * 4);
+				char index = char((m_rnd.GetRandomNumberN() + 3.0f) / 6.0f * 4);
 				index = Math::Clamp(index, (char)0, (char)3);
 
 				m_Core.GradientGrid[y][x] = index;
@@ -62,13 +62,12 @@ namespace rczEngine
 		for (int32 y = 0; y < h; ++y)
 			for (int32 x = 0; x < w; ++x)
 			{
-				float noise = Math::Clamp01(OctaveNoise(float(x) / w * MAX_GRAD_X, float(y) / h * MAX_GRAD_Y, 6, 1));
-				float noise2 = Math::Clamp01(OctaveNoise(float(x) / w * MAX_GRAD_X, float(y) / h * MAX_GRAD_Y, 1, 1));
+				float noise = Math::Clamp01(OctaveNoise(float(x) / w * MAX_GRAD_X, float(y) / h * MAX_GRAD_Y, octaves, 1));
 				Vector4 FinalColor = Math::Lerp(planetColor1, planetColor2, noise);
 				Result.push_back(FinalColor);
 			}
 
-		Texture2D* tex = new Texture2D;
+		StrPtr<Texture2D> tex = std::make_shared<Texture2D>();
 		gfx->CreateTexture(&Result[0], w * sizeof(Vector4), 1, *tex->GetTextureCore(), w, h, Gfx::BIND_SHADER_RESOURCE, Gfx::FORMAT_R32G32B32A32_FLOAT, 1, Gfx::USAGE_DEFAULT, Gfx::CPU_DEFAULT);
 		m_HeightMapTexture = res->InsertResource(tex);
 
@@ -93,7 +92,7 @@ namespace rczEngine
 		for (int32 y = 0; y < h; ++y)
 			for (int32 x = 0; x < w; ++x)
 			{
-				float noise = Math::Clamp01(OctaveNoise(float(x) / w * MAX_GRAD_X, float(y) / h * MAX_GRAD_Y, 5, 0.7f));
+				float noise = Math::Clamp01(OctaveNoise(float(x) / w * MAX_GRAD_X, float(y) / h * MAX_GRAD_Y, octaves, 0.7f));
 				//float noise2 = Math::Clamp01(OctaveNoise(float(x) / w * MAX_GRAD_X, float(y) / h * MAX_GRAD_Y, 2, 1));
 				//Vector4 FinalColor = Math::Lerp(planetColor1, planetColor2, noise);
 
@@ -101,7 +100,7 @@ namespace rczEngine
 
 			}
 
-		Texture2D* tex = new Texture2D;
+		StrPtr<Texture2D> tex = std::make_shared<Texture2D>();
 		gfx->CreateTexture(&Result[0], w * sizeof(unsigned char), 1, *tex->GetTextureCore(), w, h, Gfx::BIND_SHADER_RESOURCE, Gfx::FORMAT_R8_UNORM, 1, Gfx::USAGE_DEFAULT, Gfx::CPU_DEFAULT);
 		m_HeightMapTexture = res->InsertResource(tex);
 
@@ -160,13 +159,12 @@ namespace rczEngine
 		float amplitude = 1;
 		float maxValue = 0;
 
-		float pers = 0.4f;
 		for (int i = 0; i < octaves; i++) {
 			total += Noise(x * frequency, y * frequency) * amplitude;
 
 			maxValue += amplitude;
 
-			amplitude *= pers;
+			amplitude *= persistence;
 			frequency *= 2;
 		}
 

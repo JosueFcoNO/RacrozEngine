@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	void Skeleton::UpdateSkeleton(WeakPtr<Animation> anim, float animationTime)
 	{
-		m_NumBones = m_Bones.size();
+		m_NumBones = (uint32)m_Bones.size();
 
 		if (!anim.expired())
 		{
@@ -50,7 +50,7 @@ namespace rczEngine
 	void Skeleton::InitSkeletonBuffer(Gfx::GfxCore* gfx)
 	{
 		///Create the constant buffer for the FinalBoneMatrix
-		m_BoneMatrices.CreateConstantBuffer(m_Bones.size()*sizeof(Matrix4), Gfx::USAGE_DEFAULT, gfx);
+		m_BoneMatrices.CreateConstantBuffer(int(m_Bones.size()) * sizeof(Matrix4::m_elements), Gfx::USAGE_DEFAULT, gfx);
 	}
 
 	void Skeleton::SetSkeletonBuffers(Gfx::GfxCore* gfx)

@@ -16,15 +16,16 @@ namespace rczEngine
 		if (init == INIT_NONE)
 		{
 			return;
-		} else
-		if (init == INIT_UNIT)
-		{
-			*this = IDENTITY;
-		} 
-		else
-		{
-			*this = ZERO;
 		}
+		else
+			if (init == INIT_UNIT)
+			{
+				*this = IDENTITY;
+			}
+			else
+			{
+				*this = ZERO;
+			}
 	}
 
 	Matrix4::Matrix4(const Matrix3& matrix)
@@ -32,7 +33,7 @@ namespace rczEngine
 		m_rows[0] = Vector4(matrix.m_rows[0]);
 		m_rows[0] = Vector4(matrix.m_rows[1]);
 		m_rows[0] = Vector4(matrix.m_rows[2]);
-		m_rows[0] = Vector4(0,0,0,1);
+		m_rows[0] = Vector4(0, 0, 0, 1);
 	}
 
 	Matrix4::Matrix4(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33)

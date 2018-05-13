@@ -17,7 +17,7 @@ namespace rczEngine
 			///Creates a vertex buffer with the specified usage from the internal vertex list.
 			bool CreateVertexBuffer(eBUFFER_USAGE usage, bool clearVertexList, GfxCore* gfx)
 			{
-				bool b = Create(sizeof(t), uint32(m_VertexList.size()), &m_VertexList[0], 0, 0, usage, eBIND_FLAGS::BIND_VERTEX_BUFFER, gfx);
+				bool b = Create(sizeof(t), uint32(m_VertexList.size()), &m_VertexList[0], sizeof(t)* uint32(m_VertexList.size()), 1, usage, eBIND_FLAGS::BIND_VERTEX_BUFFER, gfx);
 
 				if (clearVertexList)
 				{
@@ -45,6 +45,21 @@ namespace rczEngine
 			{
 				m_VertexList.clear();
 			};
+
+			///Slooow.
+			void RefillVertexList()
+			{
+				auto gfx = Gfx::GfxCore::Pointer();
+
+				t* vertexData = gfx->GetBufferData(this);
+
+				for (int32 i = 0; i < m_NumOfElements; ++i)
+				{
+					AddVertex(vertexData[i]);
+				}
+
+				free(vertexData);
+			}
 
 			///Returns the number of vertices
 			uint32 GetSize() { return m_VertexNumber; };

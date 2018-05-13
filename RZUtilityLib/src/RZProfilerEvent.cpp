@@ -18,7 +18,7 @@ namespace rczEngine
 		m_AverageTime = (m_AverageTime + time) / 2.0f;
 	}
 
-	void ProfilerEvent::SaveResults(const char * loggerFile, double timeParent)
+	void ProfilerEvent::SaveResults(const char * loggerFile)
 	{
 		auto logg = Logger::Pointer();
 

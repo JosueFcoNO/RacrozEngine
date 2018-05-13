@@ -38,7 +38,7 @@ namespace rczEngine
 
 
 
-		Texture2D* TexNoise = new Texture2D;
+		StrPtr<Texture2D> TexNoise = std::make_shared<Texture2D>();
 		m_gfx->CreateTexture(m_NoisePatch, HEIGHTMAP_RES * sizeof(float), 1, TexNoise->m_TextureCore, HEIGHTMAP_RES, HEIGHTMAP_RES, Gfx::BIND_SHADER_RESOURCE, Gfx::FORMAT_R32_FLOAT);
 		HeightMap = m_res->InsertResource(TexNoise);
 		
@@ -154,16 +154,16 @@ namespace rczEngine
 		auto size = m_MeshBuffer.Size;
 
 #pragma omp parallel for
-		for (int32 i = 0; i < m_VertexBuffer.GetSize(); ++i)
+		for (uint32 i = 0; i < m_VertexBuffer.GetSize(); ++i)
 		{
 			TempVertex = &m_VertexBuffer.GetVertex(i);
 
 			int32 x = i / size;
 			int32 y = i % size;
 
-			TempVertex->VertexPosition.m_x = m_MeshBuffer.distVertex*x;
+			TempVertex->VertexPosition.m_x = float(m_MeshBuffer.distVertex*x);
 			TempVertex->VertexPosition.m_y = 1.0f;
-			TempVertex->VertexPosition.m_z = m_MeshBuffer.distVertex*y;
+			TempVertex->VertexPosition.m_z = float(m_MeshBuffer.distVertex*y);
 
 			TempVertex->TextureCoordinates.m_x = float(y) / m_MeshBuffer.Size;
 			TempVertex->TextureCoordinates.m_y = float(x) / m_MeshBuffer.Size;
@@ -176,7 +176,7 @@ namespace rczEngine
 	{
 		//Le saco normales a todo.
 #pragma omp parallel for
-		for (int32 i = 0; i < m_IndexBuffer->GetSize(); i += 3)
+		for (uint32 i = 0; i < m_IndexBuffer->GetSize(); i += 3)
 		{
 			auto index1 = m_IndexBuffer->GetIndex(i);
 			auto index2 = m_IndexBuffer->GetIndex(i + 1);
@@ -205,7 +205,7 @@ namespace rczEngine
 
 		//Le saco normales suaves ya a todo.
 #pragma omp parallel for
-		for (int32 i = 0; i < m_VertexBuffer.GetSize(); ++i)
+		for (uint32 i = 0; i < m_VertexBuffer.GetSize(); ++i)
 		{
 			Gfx::Vertex* ThisVertex = &m_VertexBuffer.GetVertex(i);
 
@@ -275,9 +275,9 @@ namespace rczEngine
 
 			}
 
-			normalAvg /= VerticesUsed + 1;
-			binormalAvg /= VerticesUsed + 1;
-			TangentAvg /= VerticesUsed + 1;
+			normalAvg   /= float(VerticesUsed + 1);
+			binormalAvg /= float(VerticesUsed + 1);
+			TangentAvg  /= float(VerticesUsed + 1);
 
 			ThisVertex->VertexNormals = normalAvg;
 			ThisVertex->BiNormals = binormalAvg;

@@ -299,6 +299,9 @@ namespace rczEngine
 			///Creates an input layout. It needs the Shader object to get the vertex shader blob.
 			bool CreateInputLayout(InputLayout& out_ILayout, const VertexShader& vertexShader);
 
+			void* GetBufferData(BasicBuffer& buffer);
+
+			void* GetTexture2DData(TextureCore2D& texture);
 #pragma endregion
 
 #pragma region =	| Texture Functions |

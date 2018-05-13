@@ -1,10 +1,20 @@
 #pragma once
-#define MAX_PLANET_SIZE 2000
-#define MAX_PLANET_DIST 1000
+#define PERMUTATION_TABLE_SIZE 256
 
 namespace rczEngine
 {
 	class RZ_UTILITY_EXPORT SpaceManager;
+
+	class RZ_UTILITY_EXPORT PlanetVertex
+	{
+	public:
+		Vector3 VertexPosition;
+		Vector2 TextureCoordinates;
+		Vector3 VertexNormals;
+		Vector3 Tangents;
+		Vector3 BiNormals;
+		int Gradient[4];
+	};
 
 	class RZ_UTILITY_EXPORT Planet
 	{
@@ -13,8 +23,6 @@ namespace rczEngine
 		void RenderPlanet(float scale);
 
 		void CreateMaterial();
-
-		PerlinNoise m_Perlin;
 
 		FORCEINLINE Vector3 GetSpacePosition() { return m_SpacePosition; };
 
@@ -25,20 +33,26 @@ namespace rczEngine
 		float m_SpaceDist = 0.0f;
 		float m_RealDist = 0.0f;
 
-		MemBuffer m_CLDataBuffer;
-		MemBuffer m_CLGradBuffer;
-		MemBuffer m_CLGradIndexBuffer;
-
 		ResourceHandle m_Materials;
+		Vector4 m_HeightScale;
 
 	private:
+		void LoadAndProcessModel();
+
 		bool m_OnLand = false;
 
-		Model m_PlanetModel;
-		SpaceManager* m_Space;
+		StrPtr<Model> m_Planet;
+
+		SpaceManager* m_SpaceMng;
+		Gfx::GfxCore* m_GfxCore;
+		StrPtr<Scene> m_CurrentScene;
+
+		Gfx::ConstantBuffer m_GradientCB;
+		Gfx::ConstantBuffer m_GradientsReal;
+		Gfx::ConstantBuffer m_ScaleCB;
+		
+		Vector4 PermutationTable[PERMUTATION_TABLE_SIZE];
 
 		Vector3 m_SpacePosition;
-
-		
 	};
 }

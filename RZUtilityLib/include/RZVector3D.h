@@ -56,7 +56,6 @@ namespace rczEngine {
 
 		float Magnitude();
 
-
 		float m_x, m_y, m_z;
 
 		static const Vector3 ZERO;

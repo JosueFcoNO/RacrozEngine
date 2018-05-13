@@ -13,5 +13,6 @@ namespace rczEngine
 
 	private:
 		Vector<String> m_SceneGameObjects;
+		String m_SceneFileName;
 	};
 };

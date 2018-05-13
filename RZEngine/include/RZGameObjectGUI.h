@@ -11,7 +11,7 @@ namespace rczEngine
 		void SetNewGameObject(StrGameObjectPtr obj);
 		
 	private:
-		char m_Name[20];
+		char m_Name[50];
 		StrGameObjectPtr m_ActiveObject;
 	};
 }

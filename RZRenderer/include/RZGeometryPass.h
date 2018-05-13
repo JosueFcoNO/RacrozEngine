@@ -26,10 +26,13 @@ namespace rczEngine
 		Gfx::HullShader   m_Hshader;
 
 		Gfx::PixelShader  m_PixelMetRough;
-		Gfx::PixelShader  m_PixelSpecSmooth;
-		Gfx::PixelShader  m_PixelSpecSmoothAlpha;
 
+		Gfx::VertexShader m_PlanetVshader;
+		Gfx::DomainShader m_PlanetDshader;
+		Gfx::HullShader   m_PlanetHshader;
+		Gfx::PixelShader  m_PlanetPshader;
 
+		StrPtr<Scene> m_ActiveScene;
 
 	};
 

@@ -134,15 +134,17 @@ namespace rczEngine
 	{
 		///Create Render targets and textures for Position,  Normals, Color, Metallic and Roughness, Tangents and Binormals.
 		///This also inserts the render targets and the textures into the RenderTarget and Texture2D Maps.
-		m_RTs["ColorAO"] = CreateRenderTargetAndTexture_XYScales("ColorAO", m_Textures["ColorAO"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
+		m_RTs["ColorAO"] = CreateRenderTargetAndTexture_XYScales("ColorAO", m_Textures["ColorAO"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
 		m_RTs["Position"] = CreateRenderTargetAndTexture_XYScales("Position", m_Textures["Position"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32B32A32_FLOAT);
 		m_RTs["NormalsMR"] = CreateRenderTargetAndTexture_XYScales("Normals", m_Textures["NormalsMR"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32B32A32_FLOAT);
 		m_RTs["Emmisive"] = CreateRenderTargetAndTexture_XYScales("EmmisiveTex", m_Textures["Emmisive"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
-		m_RTs["Specular"] = CreateRenderTargetAndTexture_XYScales("Specular", m_Textures["Specular"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
+		m_RTs["Velocity"] = CreateRenderTargetAndTexture_XYScales("Velocity", m_Textures["Velocity"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32_FLOAT);
 
 		m_RTs["ColorCorrection"] = CreateRenderTargetAndTexture_XYScales("ColorCorrection", m_Textures["ColorCorrection"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
 		
 		m_RTs["PBR"] = CreateRenderTargetAndTexture_XYScales("PBR", m_Textures["PBR"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32B32A32_FLOAT);
+
+		m_RTs["MotionBlur"] = CreateRenderTargetAndTexture_XYScales("MotionBlur", m_Textures["MotionBlur"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32B32A32_FLOAT);
 
 		m_RTs["Luminance"] = CreateRenderTargetAndTexture_XYScales("Luminance", m_Textures["Luminance"], 11, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
 		m_RTs["Bright"] = CreateRenderTargetAndTexture_XYScales("Bright", m_Textures["Bright"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
@@ -173,7 +175,7 @@ namespace rczEngine
 		passGeometry->AddRenderTarget(m_RTs["Position"].get(), 1);
 		passGeometry->AddRenderTarget(m_RTs["NormalsMR"].get(), 2);
 		passGeometry->AddRenderTarget(m_RTs["Emmisive"].get(), 3);
-		passGeometry->AddRenderTarget(m_RTs["Specular"].get(), 4);
+		passGeometry->AddRenderTarget(m_RTs["Velocity"].get(), 4);
 
 		m_PassesOrder.push_back("Geometry");
 	
@@ -182,15 +184,15 @@ namespace rczEngine
 		///////////////////
 
 		///Create the geometry pass
-		auto passTerrainGeometry = CreatePass("Terrain", PASSES::TERRAIN_GEOMETRY_PASS, m_CurrentRenderingMode);
-
-		passTerrainGeometry->AddRenderTarget(m_RTs["ColorAO"].get(), 0);
-		passTerrainGeometry->AddRenderTarget(m_RTs["Position"].get(), 1);
-		passTerrainGeometry->AddRenderTarget(m_RTs["NormalsMR"].get(), 2);
-		passTerrainGeometry->AddRenderTarget(m_RTs["Emmisive"].get(), 3);
-		passTerrainGeometry->AddRenderTarget(m_RTs["Specular"].get(), 4);
-
-		m_PassesOrder.push_back("Terrain");
+		//auto passTerrainGeometry = CreatePass("Terrain", PASSES::TERRAIN_GEOMETRY_PASS, m_CurrentRenderingMode);
+		//
+		//passTerrainGeometry->AddRenderTarget(m_RTs["ColorAO"].get(), 0);
+		//passTerrainGeometry->AddRenderTarget(m_RTs["Position"].get(), 1);
+		//passTerrainGeometry->AddRenderTarget(m_RTs["NormalsMR"].get(), 2);
+		//passTerrainGeometry->AddRenderTarget(m_RTs["Emmisive"].get(), 3);
+		//passTerrainGeometry->AddRenderTarget(m_RTs["Velocity"].get(), 4);
+		//
+		//m_PassesOrder.push_back("Terrain");
 
 
 		///Start the post processing.
@@ -210,9 +212,35 @@ namespace rczEngine
 		passPBR->AddTexture2D(m_Textures["Position"].get(), 2);
 		//passPBRLight.AddTexture2D(BlurVTex, 5); //Final SSAO Blur
 		//passPBRLight.AddTexture2D(ShadowFinalTex, 6);
-		passPBR->AddTexture2D(m_Textures["Specular"].get(), 8);
 
 		m_PassesOrder.push_back("PBR");
+
+		///////////////////
+		///Transparent PASS///
+		///////////////////
+
+		///Create the geometry pass
+		auto passTransparent = CreatePass("Transparent", PASSES::PBR_TRANSPARENT, m_CurrentRenderingMode);
+
+		passTransparent->AddRenderTarget(m_RTs["PBR"].get(), 0);
+
+		m_PassesOrder.push_back("Transparent");
+
+		m_PassesOrder.push_back("PostProcess");
+
+		/////////////////
+		///MOTION BLUR///
+		/////////////////
+
+		///Create the PBR pass
+		auto passMotionBlur = CreatePass("MotionBlur", PASSES::MOTION_BLUR, m_CurrentRenderingMode);
+
+		passMotionBlur->AddRenderTarget(m_RTs["MotionBlur"].get(), 0);
+
+		passMotionBlur->AddTexture2D(m_Textures["PBR"].get(), 0);
+		passMotionBlur->AddTexture2D(m_Textures["Velocity"].get(), 1);
+
+		m_PassesOrder.push_back("MotionBlur");
 
 		///////////////
 		///LUMINANCE///
@@ -224,7 +252,7 @@ namespace rczEngine
 		auto passLuminance = CreatePass("Luminance", PASSES::LUMINANCE, m_CurrentRenderingMode);
 
 		passLuminance->AddRenderTarget(m_RTs["Luminance"].get(), 0);
-		passLuminance->AddTexture2D(m_Textures["PBR"].get(), 0);
+		passLuminance->AddTexture2D(m_Textures["MotionBlur"].get(), 0);
 
 		m_PassesOrder.push_back("Luminance");
 
@@ -289,7 +317,7 @@ namespace rczEngine
 
 		passHDRBloom->AddRenderTarget(m_RTs["HDRBloom"].get(), 0);
 
-		passHDRBloom->AddTexture2D(m_Textures["PBR"].get(), 0);
+		passHDRBloom->AddTexture2D(m_Textures["MotionBlur"].get(), 0);
 		passHDRBloom->AddTexture2D(m_Textures["Bloom"].get(), 1);
 		passHDRBloom->AddTexture2D(m_Textures["AvgLuminance"].get(), 2);
 
@@ -395,7 +423,7 @@ namespace rczEngine
 		}
 		else
 		{
-			for (auto it = ObjectMap.rend(); it != ObjectMap.rbegin(); --it)
+			for (auto it = ObjectMap.rbegin(); it != ObjectMap.rend(); ++it)
 			{
 				(*it).second.lock()->PreRender(sceneGraph);
 				(*it).second.lock()->Render(sceneGraph, componentID, matType);
@@ -418,7 +446,7 @@ namespace rczEngine
 	{
 		m_ScreenQuad.SetScreenQuadBuffers(m_gfx);
 		m_ScreenQuadVS.SetThisVertexShaderAndInputLayout(m_gfx);
-		m_gfx->ClearDepthTargetView();
+		//m_gfx->ClearDepthTargetView();
 	}
 
 	StrPtr<Gfx::RenderTarget> RacrozRenderer::CreateRenderTargetAndTexture_XYScales(const char* name, StrPtr<Texture2D>& out_Texture, int mipMaps, float screenWidthScale, float screenHeightScale, Gfx::eFORMAT format)
@@ -453,8 +481,6 @@ namespace rczEngine
 		out_Texture = std::make_shared<Texture2D>();
 		out_Texture->CreateFromRenderTarget(*renderTarget);
 
-		m_res->InsertResource(out_Texture.get());
-
 		return renderTarget;
 	}
 
@@ -482,6 +508,9 @@ namespace rczEngine
 		case PASSES::PBR_FORWARD:
 			returnPass = m_Passes[name] = std::make_shared<PBR_Forward_Pass>();
 			break;
+		case PASSES::PBR_TRANSPARENT:
+			returnPass = m_Passes[name] = std::make_shared<PBR_Transparent_Pass>();
+			break;
 		case PASSES::LUMINANCE:
 			returnPass = m_Passes[name] = std::make_shared<LuminancePass>();
 			break;
@@ -496,6 +525,9 @@ namespace rczEngine
 			break;
 		case PASSES::HDR_BLOOM:
 			returnPass = m_Passes[name] = std::make_shared<HDRBloomPass>();
+			break;
+		case PASSES::MOTION_BLUR:
+			returnPass = m_Passes[name] = std::make_shared<MotionBlurPass>();
 			break;
 		}
 

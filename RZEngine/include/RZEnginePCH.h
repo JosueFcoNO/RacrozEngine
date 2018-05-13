@@ -10,6 +10,10 @@
 
 #include "imgui.h"
 
+#include "../../Plug-Ins/stb-master/stb_image.h"
+#include "RZTextureLoader.h"
+
+
 #include "RZTexture2D.h"
 #include "RZTexture3D.h"
 #include "RZCubeMap.h"
@@ -30,6 +34,7 @@
 
 #include "RZMesh.h"
 #include "RZSkinnedMesh.h"
+
 #include "RZModel.h"
 #include "RZSkinnedModel.h"
 
@@ -38,6 +43,10 @@
 #include "RZSceneManager.h"
 #include "RZGameObject.h"
 #include "RZComponent.h"
+
+#include "RZModelLoader.h"
+#include "RZFbxLoader.h"
+#include "RZAssimpLoader.h"
 
 #include "RZBaseWindowGUI.h"
 #include "RZSceneGraphGUI.h"

@@ -123,15 +123,6 @@ namespace rczEngine
 			}
 		};
 
-		/////MOUSE INTERFACE
-		virtual void OnClick(int32 mb, int32 mx, int32 my) {};
-		virtual void OnHold(int32 mb, int32 mx, int32 my) {};
-		virtual void OnReleased(int32 mb, int32 mx, int32 my) {};
-		virtual void OnMoved(int32 mb, int32 mx, int32 my)
-		{
-
-		};
-		
 		Camera* m_Camera = NULL;
 
 	private:

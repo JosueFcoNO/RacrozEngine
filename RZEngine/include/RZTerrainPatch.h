@@ -6,7 +6,7 @@ namespace rczEngine
 	{
 	public:
 		void GeneratePatch(MeshPlane* left, MeshPlane* right, MeshPlane* down, MeshPlane* rightDown, Gfx::GfxCore* gfx);
-		void Render(Gfx::GfxCore* gfx, ResVault* res);
+		void Render(Gfx::GfxCore* gfx);
 
 	private:
 		Gfx::VertexBuffer<Gfx::Vertex> m_Mesh;

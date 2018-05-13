@@ -5,14 +5,14 @@ namespace rczEngine
 	enum { INVALID_ID = -1 };
 
 	///The class GameObject from the Scene Graph, it's also the actor, has a transform and components.
-	class RZ_UTILITY_EXPORT GameObject : public std::enable_shared_from_this<GameObject>
+	class RZ_UTILITY_EXPORT GameObject : public std::enable_shared_from_this<GameObject>, public Serializable
 	{
 	public:
 		///Calls Destroy()
 		~GameObject() { Destroy(); };
 
 		///The Node constructor takes an id and a name. There can't be a game object without a name.
-		GameObject(GameObjectID actorID = INVALID_ID, String actorName = "GameObj") : m_Position(INIT_NONE), m_Orientation(INIT_NONE), m_Scale(INIT_NONE), m_ToWorld(INIT_NONE), m_ToLocal(INIT_NONE)
+		GameObject(GameObjectID actorID = INVALID_ID, String actorName = "GameObj") : m_Position(INIT_NONE), m_Orientation(INIT_NONE), m_Scale(INIT_NONE), m_ToLocal(INIT_NONE)
 		{
 			m_GameObjectID = actorID;
 			m_Name = actorName;
@@ -30,16 +30,31 @@ namespace rczEngine
 		///Renders the gameobject
 		void Render(Scene* scene, ComponentType cmpType, MATERIAL_TYPE mat = MAT_ANY);
 		
-		FORCEINLINE void SetParent(StrGameObjectPtr parent) { m_ParentNode = parent; };
+		FORCEINLINE void SetParent(StrGameObjectPtr parent) { m_ParentNode = parent; m_ParentID = m_ParentNode.lock()->GetID(); };
 		///Returns the parent of the node
 		FORCEINLINE WeakGameObjectPtr GetParent() { return m_ParentNode; };
 		///Returns a pointer to the GameObjectVector Containing the children of this node
 		FORCEINLINE GameObjectVector GetChildren() { return m_ChildrenVector; };
 
 		///Adds a new node child
-		FORCEINLINE void AddChild(WeakGameObjectPtr babyNode) { m_ChildrenVector.push_back(babyNode); babyNode.lock()->SetParent(shared_from_this()); };
+		void AddChild(WeakGameObjectPtr babyNode) 
+		{ 
+			m_ChildrenVector.push_back(babyNode); 
+			m_ChildrenIDs.push_back(babyNode.lock()->GetID()); 
+			babyNode.lock()->SetParent(shared_from_this()); 
+		};
 		///Removes a child node
-		FORCEINLINE void RemoveChild(GameObjectID orphanActorId) { for (int32 i = 0; i < m_ChildrenVector.size(); ++i) { if (m_ChildrenVector[i].lock()->GetID() == orphanActorId) m_ChildrenVector.erase(m_ChildrenVector.begin() + i); } };
+		void RemoveChild(GameObjectID orphanActorId) 
+		{ 
+			for (int32 i = 0; i < m_ChildrenVector.size(); ++i) 
+			{ 
+				if (m_ChildrenVector[i].lock()->GetID() == orphanActorId)
+				{
+					m_ChildrenVector.erase(m_ChildrenVector.begin() + i);
+					m_ChildrenIDs.erase(m_ChildrenIDs.begin() + i);
+				}
+			} 
+		};
 
 		///Returns the node's id
 		FORCEINLINE const GameObjectID& GetID() { return m_GameObjectID; };
@@ -73,36 +88,18 @@ namespace rczEngine
 		///Returns the position of the Node.
 		FORCEINLINE Vector3 GetPosition() { return m_Position; };
 		///Returns the world position.
-		FORCEINLINE Vector3 GetAccumulatedPosition() { return m_ToWorld*m_Position; };
+		FORCEINLINE Vector3 GetAccumulatedPosition() { return m_ToWorld[0]*m_Position; };
 		///Returns the orientation of the node.
 		FORCEINLINE Vector3 GetOrientation() { return m_Orientation; };
 		///Returns the node's scale.
 		FORCEINLINE Vector3 GetScale() { return m_Scale; };
 		///Returns the WorldMatrix for this node.
-		FORCEINLINE Matrix4 GetToWorldMatrix() { return m_ToWorld; };
+		FORCEINLINE Matrix4 GetToWorldMatrix() { return m_ToWorld[0]; };
 
 		void UpdateWorldMatrix();
 
 		///Adds a component of ComponenType to the node
-		template <class CType>
-		WeakPtr<CType> AddComponent()
-		{
-			StrCmpPtr C(new CType);
-			Pair<ComponentType, StrCmpPtr> P(C->GetComponentType(), C);
-
-			m_Components.insert(P);
-			P.second->SetOwner(SceneManager::Pointer()->GetActiveScene()->FindActor(m_GameObjectID).lock());
-
-			StrPtr<CType> ret;
-			ret = std::dynamic_pointer_cast<CType, Component>(C);
-
-			P.second->Init();
-
-			return ret;
-		}
-
-		///Adds a component of ComponenType to the node
-		WeakCmpPtr AddComponent(eCOMPONENT_ID cmp);
+		WeakCmpPtr AddComponent(eCOMPONENT_ID cmp, StrCmpPtr ptr);
 
 		///Returns a strPtr to a component given its id.
 		template <class CType>
@@ -132,11 +129,17 @@ namespace rczEngine
 		}
 
 		///The handle for the node's material
-		ResourceHandle m_Material = INVALID_RESOURCE;
+		ResourceHandle m_Material = NULL;
 
 #ifndef RZ_EDITOR
 		void RenderComponents();
+
+		friend class GUIGameObject;
 #endif
+
+		void Serialize();
+		void DeSerialize();
+		void GetGraphPointers(int idOffset);
 
 	protected:
 		///The name of the GameObject
@@ -148,8 +151,13 @@ namespace rczEngine
 		///A pointer to the parent
 		WeakGameObjectPtr m_ParentNode;
 
-		///A GameObject vector containing strong pointer to the children
+		GameObjectID m_ParentID;
+
+		///A GameObject vector containing weak pointer to the children
 		GameObjectVector m_ChildrenVector;
+
+		//A GameObject vector
+		Vector<GameObjectID> m_ChildrenIDs;
 
 		///The map for the component
 		ComponentMap m_Components;
@@ -162,7 +170,7 @@ namespace rczEngine
 		Vector3 m_Scale;
 
 		///The Accumulated Matrix
-		Matrix4 m_ToWorld;
+		Matrix4 m_ToWorld[2];
 
 		///The Local Matrix
 		Matrix4 m_ToLocal;

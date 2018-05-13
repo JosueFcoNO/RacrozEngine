@@ -7,7 +7,7 @@ namespace rczEngine
 		m_gfx = gfx;
 		m_res = res;
 
-		Material* mat = new Material;
+		StrPtr<Material> mat = std::make_shared<Material>();
 		mat->InitMaterial(MAT_PBR_MetRough, gfx);
 
 		m_Mesh.InitMeshPlane(64, 512.0f, Capi, true);

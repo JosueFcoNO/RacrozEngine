@@ -37,9 +37,6 @@ namespace rczEngine
 		GUIEditor::Start();
 		GUIEditor::Pointer()->InitEditor(platformData);
 
-		RacrozRenderer::Start();
-		RacrozRenderer::Pointer()->InitRenderer();
-
 		GraphicDebugger::Start();
 		GraphicDebugger::Pointer()->Init();
 
@@ -49,14 +46,25 @@ namespace rczEngine
 		LightManager::Start();
 		LightManager::Pointer()->InitLightManager();
 
+		ActorComponentFactory::Start();
+
 		SceneManager::Start();
 		SceneManager::Pointer()->CreateScene("Default");
 
+		RacrozRenderer::Start();
+		RacrozRenderer::Pointer()->InitRenderer();
+
 		StrPtr<SkyBox> Sky = std::make_shared<SkyBox>();
-		Sky->InitSkyBox("CubeMaps/Space.dds", "Env", Gfx::GfxCore::Pointer(), ResVault::Pointer());
+		Sky->InitSkyBox("CubeMaps/Restaurant.dds", "Env", Gfx::GfxCore::Pointer(), ResVault::Pointer());
 		RacrozRenderer::Pointer()->ChangeSkyBox(Sky);
 
 		Time.StartTimer();
+
+		m_gfx = Gfx::GfxCore::Pointer();
+		m_renderer = RacrozRenderer::Pointer();
+		m_scnManager = SceneManager::Pointer();
+		//FbxLoader loader;
+		//loader.LoadModel();
 	}
 
 	void EditorCore::RunEditor()
@@ -67,9 +75,9 @@ namespace rczEngine
 			float deltaTime = (float)Time.GetFrameTime();
 
 			EventManager::Pointer()->CheckEvents();
-			SceneManager::Pointer()->GetActiveScene()->Update(deltaTime);
+			m_scnManager->GetActiveScene()->Update(deltaTime);
 
-			RacrozRenderer::Pointer()->Render(SceneManager::Pointer()->GetActiveScene().get(), GUIEditor::Pointer());
+			m_renderer->Render(m_scnManager->GetActiveScene().get(), GUIEditor::Pointer());
 
 			// Bucle principal de mensajes:
 			if (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -87,6 +95,8 @@ namespace rczEngine
 	void EditorCore::DestroyEditor()
 	{
 		SceneManager::ShutDown();
+
+		ActorComponentFactory::ShutDown();
 
 		ResVault::ShutDown();
 

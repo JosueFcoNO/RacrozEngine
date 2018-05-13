@@ -108,12 +108,6 @@
     <Filter Include="Archivos de código fuente\SkyBox">
       <UniqueIdentifier>{6a3cdac4-d21c-4b5e-976f-92b838f9a85d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de encabezado\Planet">
-      <UniqueIdentifier>{28fbdb35-ab7b-4043-a7dc-e15e3304cae7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Archivos de código fuente\Planet">
-      <UniqueIdentifier>{b87bd0b9-064a-493c-8482-a65f69f46ab9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de código fuente\GameManager">
       <UniqueIdentifier>{fefce5c1-873c-48e0-9d4b-d5b6ec6eafb1}</UniqueIdentifier>
     </Filter>
@@ -128,6 +122,12 @@
     </Filter>
     <Filter Include="Archivos de código fuente\Imgui">
       <UniqueIdentifier>{018604f5-ea73-4038-919f-b5cd1a56a38e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Planet Generation">
+      <UniqueIdentifier>{b87bd0b9-064a-493c-8482-a65f69f46ab9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Planet Generation">
+      <UniqueIdentifier>{28fbdb35-ab7b-4043-a7dc-e15e3304cae7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -255,13 +255,13 @@
       <Filter>Archivos de encabezado\SkyBox</Filter>
     </ClInclude>
     <ClInclude Include="include\RZPlanet.h">
-      <Filter>Archivos de encabezado\Planet</Filter>
+      <Filter>Archivos de encabezado\Planet Generation</Filter>
     </ClInclude>
     <ClInclude Include="include\RZSpaceTravel.h">
       <Filter>Archivos de encabezado\Components</Filter>
     </ClInclude>
     <ClInclude Include="include\RZSpaceManager.h">
-      <Filter>Archivos de encabezado\Planet</Filter>
+      <Filter>Archivos de encabezado\Planet Generation</Filter>
     </ClInclude>
     <ClInclude Include="include\RZSpaceComponent.h">
       <Filter>Archivos de encabezado\Components</Filter>
@@ -310,6 +310,18 @@
     </ClInclude>
     <ClInclude Include="include\RZBaseWindowGUI.h">
       <Filter>Archivos de encabezado\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZModelLoader.h">
+      <Filter>Archivos de encabezado\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZFbxLoader.h">
+      <Filter>Archivos de encabezado\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZAssimpLoader.h">
+      <Filter>Archivos de encabezado\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZTextureLoader.h">
+      <Filter>Archivos de encabezado\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -422,10 +434,10 @@
       <Filter>Archivos de código fuente\SkyBox</Filter>
     </ClCompile>
     <ClCompile Include="src\RZPlanet.cpp">
-      <Filter>Archivos de código fuente\Planet</Filter>
+      <Filter>Archivos de código fuente\Planet Generation</Filter>
     </ClCompile>
     <ClCompile Include="src\RZSpaceManager.cpp">
-      <Filter>Archivos de código fuente\Planet</Filter>
+      <Filter>Archivos de código fuente\Planet Generation</Filter>
     </ClCompile>
     <ClCompile Include="src\RZTerrainPatch.cpp">
       <Filter>Archivos de código fuente\Terrain</Filter>
@@ -453,6 +465,15 @@
     </ClCompile>
     <ClCompile Include="src\RZSceneGraphGUI.cpp">
       <Filter>Archivos de código fuente\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZFbxLoader.cpp">
+      <Filter>Archivos de código fuente\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZAssimpLoader.cpp">
+      <Filter>Archivos de código fuente\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZTextureLoader.cpp">
+      <Filter>Archivos de código fuente\Texture</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

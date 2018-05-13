@@ -193,7 +193,6 @@
     <ClInclude Include="include\RZKeyEvent.h" />
     <ClInclude Include="include\RZMouseEvent.h" />
     <ClInclude Include="include\RZObject.h" />
-    <ClInclude Include="include\RZParser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZAppAndroid.cpp" />

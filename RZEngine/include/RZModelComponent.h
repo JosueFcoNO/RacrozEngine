@@ -18,6 +18,7 @@ namespace rczEngine
 
 			SetModel(resVault->m_ModelCube, resVault);
 		};
+
 		void Update(float deltaTime) {};
 
 		void Render(Gfx::GfxCore* gfx, ResVault* res, Scene* scene, MATERIAL_TYPE matType = MAT_ANY) 
@@ -45,6 +46,9 @@ namespace rczEngine
 			m_Materials[materialName] = material;
 		}
 
+		virtual void Serialize();
+		virtual void DeSerialize();
+
 #ifndef RZ_EDITOR
 		virtual void RenderComponent()
 		{
@@ -52,7 +56,7 @@ namespace rczEngine
 			ImGui::Text("Model Renderer");
 
 			auto ModelObj = ResVault::Pointer()->GetResource<Model>(m_Model).lock();
-			ImGui::Text("Current Model: %s", ModelObj->m_Name.c_str());
+			ImGui::Text("Current Model: %s", ModelObj->GetName());
 
 			if (ImGui::Button("Change Model"))
 			{
@@ -65,7 +69,7 @@ namespace rczEngine
 		virtual ComponentType GetComponentType() { return ModelRenderer::s_ComponentType; };
 		virtual ComponentId GetComponentID() { return m_ID; };
 
-		ResourceHandle m_Model = -1;
+		ResourceHandle m_Model = NULL;
 
 		Map<String, ResourceHandle> m_Materials;
 	};

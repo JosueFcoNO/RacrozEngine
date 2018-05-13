@@ -16,7 +16,7 @@ namespace rczEngine
 
 		///Unbinds the render targets.
 		virtual void PostRenderPass();
-		UserConfig config;
+		RendererConfig config;
 
 	private:
 		StrPtr<Texture2D> m_LUT;

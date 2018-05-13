@@ -6,13 +6,17 @@ namespace rczEngine
 	class RZ_UTILITY_EXPORT SkinnedModel : public Resource
 	{
 	public:
-		SkinnedModel() {};
+		SkinnedModel() { m_Type = ResourceType::RES_SKINNEDMODEL; };
 		~SkinnedModel() { Release(); };
 
 		void DrawModel(Gfx::GfxCore* gfx, void* res, Map<String, ResourceHandle>* materialOverride, MATERIAL_TYPE matType = MAT_ANY);
 
-		void Load(const char* filePath, const char* resName, bool addToResourceManager = true);
+		void Load(const char* filePath, const char* resName);
 		void Release() { m_MeshSkeleton.DestroySkeletonBuffers(); m_VertexBuffer.Destroy(); m_IndexBuffer.Destroy(); };
+
+		virtual void Serialize();
+		virtual void DeSerialize();
+
 
 #ifndef RZ_EDITOR
 		virtual void RenderResourceGUI()
@@ -34,7 +38,7 @@ namespace rczEngine
 	private:
 		Vector<Texture2D*> LoadTextures(char* filePath);
 
-		Vector<Animation*> LoadAnimations(char* filePath);
+		Vector<StrPtr<Animation>> LoadAnimations(char* filePath);
 
 		Vector<Material*> LoadMaterials(char* filePath);
 	};

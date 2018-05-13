@@ -312,7 +312,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			}
 		}
 
-		auto pln2 = aPlanet->GetComponent<SpaceComponent>(CMP_SPACE);
+		auto pln2 = aPlanet->GetComponent<SpaceComponent>(CMP_SPACE_MANAGER);
 
 
 		//Edit.m_GameObjectProps->UpdatePoint(V);

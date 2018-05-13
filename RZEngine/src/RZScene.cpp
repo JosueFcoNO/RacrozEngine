@@ -2,8 +2,10 @@
 
 namespace rczEngine
 {
-	void Scene::InitScene()
+	void Scene::InitScene(const char* name)
 	{
+		m_Name = name;
+
 		m_gfx = Gfx::GfxCore::Pointer();
 		m_res = ResVault::Pointer();
 
@@ -14,7 +16,20 @@ namespace rczEngine
 		m_RootNode->Scale(Vector3(1.0f, 1.0f, 1.0f));
 		m_RootNode->Rotate(Vector3(0.0f, 0.0f, 0.0f));
 
-		m_WorldMatrix.CreateConstantBuffer(sizeof(Matrix4), Gfx::eBUFFER_USAGE::USAGE_DEFAULT, m_gfx);
+		m_WorldMatrix.CreateConstantBuffer(sizeof(Matrix4::m_elements)*2, Gfx::eBUFFER_USAGE::USAGE_DEFAULT, m_gfx);
+	}
+
+	void Scene::ClearScene()
+	{
+		m_RootNode = std::make_shared<GameObject>(0, "RootNode");
+		m_RootNode->Init();
+
+		m_RootNode->SetScale(1.0f, 1.0f, 1.0f);
+		m_RootNode->SetPosition(0, 0, 0);
+		m_RootNode->SetOrientation(0, 0, 0);		
+	
+		m_SceneActorMap.clear();
+		ActorComponentFactory::Pointer()->Reset();
 	}
 
 	void Scene::Update(float deltaTime)
@@ -31,9 +46,9 @@ namespace rczEngine
 	}
 
 	
-	WeakGameObjectPtr Scene::CreateActor(char * name, GameObject * parent, Vector3 position, Vector3 orientation, Vector3 scale)
+	WeakGameObjectPtr Scene::CreateActor(const char * name, GameObject * parent, Vector3 position, Vector3 orientation, Vector3 scale)
 	{
-		auto ptr = m_ActFactory.CreateActor(name, position, orientation, scale);
+		auto ptr = ActorComponentFactory::Pointer()->CreateActor(name, position, orientation, scale);
 		AddActor(ptr);
 		if (parent)
 		{
@@ -45,6 +60,16 @@ namespace rczEngine
 		}
 
 		return ptr;
+	}
+
+	StrCmpPtr Scene::CreateComponent(eCOMPONENT_ID type, GameObjectID owner)
+	{
+		return ActorComponentFactory::Pointer()->CreateComponent(type, m_SceneActorMap[owner]);
+	}
+
+	StrCmpPtr Scene::CreateComponent(eCOMPONENT_ID type, StrGameObjectPtr owner)
+	{
+		return ActorComponentFactory::Pointer()->CreateComponent(type, owner);
 	}
 
 	WeakGameObjectPtr Scene::FindActor(GameObjectID id)
@@ -60,7 +85,7 @@ namespace rczEngine
 		return it->second;
 	}
 
-	WeakGameObjectPtr Scene::FindActor(char * name)
+	WeakGameObjectPtr Scene::FindActor(const char * name)
 	{
 		auto it = m_SceneActorMap.begin();
 		for (; it != m_SceneActorMap.end(); ++it)

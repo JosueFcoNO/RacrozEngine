@@ -11,10 +11,9 @@ namespace rczEngine
 		///////////////////////
 
 		Matrix4() {};
-
 		///Inits the matrix with either an Identity Matrix or a Zero Matrix
 		Matrix4(eINIT init);
-		
+
 		///Inits the matrix with another 3x3 matrix, the last row is added as (0,0,0,1)
 		Matrix4(const Matrix3& matrix);
 
@@ -27,6 +26,18 @@ namespace rczEngine
 
 		///Vector4 Constructor. Receives Vector4s as its 4 rows.
 		Matrix4(const Vector4& row0, const Vector4& row1, const Vector4& row2, const Vector4& row3);
+
+		Matrix4(const Matrix4& other)
+		{
+			m_elements = other.m_elements;
+
+		};
+		Matrix4& operator =(const Matrix4& other)
+		{
+			m_elements = other.m_elements;
+
+			return *this;
+		};
 
 		///////////////////////
 		////// Matrix Operations

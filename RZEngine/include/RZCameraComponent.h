@@ -9,9 +9,19 @@ namespace rczEngine
 		{
 		};
 
+		virtual ~CameraCmp()
+		{
+			Destroy();
+		};
+
+		void Destroy();
+
 		static const ComponentType s_ComponentType = CMP_CAMERA;
 		virtual ComponentType GetComponentType() { return CameraCmp::s_ComponentType; };
 		virtual ComponentId GetComponentID() { return m_ID; };
+		
+		virtual void Serialize();
+		virtual void DeSerialize();
 
 		Matrix4 GetViewMatrix();
 		Matrix4 GetProjMatrix();

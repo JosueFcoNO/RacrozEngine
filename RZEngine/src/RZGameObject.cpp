@@ -28,15 +28,18 @@ namespace rczEngine
 
 	void GameObject::Destroy()
 	{
-
 		m_ToDestroy = true;
 	}
 
 	void GameObject::PreRender(Scene * scene)
 	{
-		scene->m_WorldMatrix.UpdateConstantBuffer(&m_ToWorld.GetTransposed(), scene->m_gfx);
+		m_ToWorld[0].Transpose();
+
+		scene->m_WorldMatrix.UpdateConstantBuffer(m_ToWorld, scene->m_gfx);
 		scene->m_WorldMatrix.SetBufferInVS(2, scene->m_gfx);
 		scene->m_WorldMatrix.SetBufferInDS(2, scene->m_gfx);
+
+		m_ToWorld[0].Transpose();
 	}
 
 	void GameObject::Render(Scene * scene, ComponentType cmpType, MATERIAL_TYPE mat)
@@ -69,45 +72,37 @@ namespace rczEngine
 				component.lock()->Render(scene->m_gfx, scene->m_res, scene);
 			}
 		}
+		else if (cmpType == CMP_SPACE_MANAGER)
+		{
+			auto component = GetComponent<SpaceComponent>(CMP_SPACE_MANAGER);
+
+			if (component.lock())
+			{
+				component.lock()->Render(scene->m_gfx, scene->m_res, scene);
+			}
+		}
 	}
 
 	void GameObject::UpdateWorldMatrix()
 	{
+		m_ToWorld[1] = m_ToWorld[0].GetTransposed();
+
 		if (m_ParentNode.lock())
 		{
-			m_ToWorld = GetLocalMatrix()*m_ParentNode.lock()->m_ToWorld;
+			m_ToWorld[0] = GetLocalMatrix()*m_ParentNode.lock()->m_ToWorld[0];
 		}
 		else
 		{
-			m_ToWorld = GetLocalMatrix(false);
+			m_ToWorld[0] = GetLocalMatrix(false);
 		}
 	}
 
-	WeakCmpPtr GameObject::AddComponent(eCOMPONENT_ID cmp)
+	WeakCmpPtr GameObject::AddComponent(eCOMPONENT_ID cmp, StrCmpPtr ptr)
 	{
-		StrCmpPtr P;
+		m_Components[cmp] = ptr;
+		ptr->Init();
 
-		switch (cmp)
-		{
-		case CMP_MODEL_RENDERER:
-			P = std::make_shared<ModelRenderer>();
-			break;
-
-		case CMP_SKINNED_MODEL_RENDERER:
-			P = std::make_shared<SkinnedModelRenderer>();
-			break;
-
-		case CMP_MOVE:
-			P = std::make_shared<SimpleMove>();
-			break;
-		}
-
-		m_Components[cmp] = P;
-		P->SetOwner(SceneManager::Pointer()->GetActiveScene()->FindActor(m_GameObjectID).lock());
-
-		P->Init();
-
-		return P;
+		return ptr;
 	}
 
 #ifndef RZ_EDITOR
@@ -121,6 +116,151 @@ namespace rczEngine
 
 	}
 #endif
+
+	void GameObject::Serialize()
+	{
+		auto ser = Serializer::Pointer();
+		ser->SetNextObjectSerial(SERIAL_ACTOR);
+
+		//ID
+		ser->WriteData(&m_GameObjectID, sizeof(m_GameObjectID));
+
+		//Name
+		char name[32];
+		m_Name.shrink_to_fit();
+		for (int i = 0; i < m_Name.size(); ++i)
+		{
+			name[i] = m_Name[i];
+		}
+		ser->WriteData(name, 32);
+
+		//Position
+		ser->WriteData(&m_Position.m_x, sizeof(float));
+		ser->WriteData(&m_Position.m_y, sizeof(float));
+		ser->WriteData(&m_Position.m_z, sizeof(float));
+
+		//Rotation
+		ser->WriteData(&m_Orientation.m_x, sizeof(float));
+		ser->WriteData(&m_Orientation.m_y, sizeof(float));
+		ser->WriteData(&m_Orientation.m_z, sizeof(float));
+
+		//Scaling
+		ser->WriteData(&m_Scale.m_x, sizeof(float));
+		ser->WriteData(&m_Scale.m_y, sizeof(float));
+		ser->WriteData(&m_Scale.m_z, sizeof(float));
+
+		//ParentID
+		int id = m_ParentID;
+		ser->WriteData(&id, sizeof(id));
+
+		//Child number
+		id = m_ChildrenIDs.size();
+		ser->WriteData(&id, sizeof(id));
+
+		//Child Ids
+		for (int i = 0; i < m_ChildrenIDs.size(); ++i)
+		{
+			id = m_ChildrenIDs[i];
+			ser->WriteData(&id, sizeof(id));
+		}
+
+		//Has Components
+		ser->SetNextObjectSerial(SERIAL_COMPONENT);
+
+		//Number Of Components
+		id = m_Components.size();
+		ser->WriteData(&id, sizeof(id));
+
+		if (id)
+			for (auto it = m_Components.begin(); it != m_Components.end(); ++it)
+			{
+				it->second->Serialize();
+			}
+	}
+
+	void GameObject::DeSerialize()
+	{
+		auto ser = Serializer::Pointer();
+
+		//ID
+		ser->ReadData(&m_GameObjectID, sizeof(m_GameObjectID));
+
+		//Name
+		char name[32];
+		ser->ReadData(name, 32);
+		m_Name = name;
+
+		//Position
+		ser->ReadData(&m_Position.m_x, sizeof(float));
+		ser->ReadData(&m_Position.m_y, sizeof(float));
+		ser->ReadData(&m_Position.m_z, sizeof(float));
+
+		//Rotation
+		ser->ReadData(&m_Orientation.m_x, sizeof(float));
+		ser->ReadData(&m_Orientation.m_y, sizeof(float));
+		ser->ReadData(&m_Orientation.m_z, sizeof(float));
+
+		//Scaling
+		ser->ReadData(&m_Scale.m_x, sizeof(float));
+		ser->ReadData(&m_Scale.m_y, sizeof(float));
+		ser->ReadData(&m_Scale.m_z, sizeof(float));
+
+		//ParentID
+		ser->ReadData(&m_ParentID, sizeof(m_ParentID));
+
+		//Child number
+		int size;
+		ser->ReadData(&size, sizeof(size));
+
+		//Child Ids
+		for (int i = 0; i < size; ++i)
+		{
+			int id;
+			ser->ReadData(&id, sizeof(id));
+
+			m_ChildrenIDs.push_back(id);
+		}
+
+		//Has Components
+		ser->GetNextObjectSerial();
+
+		int nComponents;
+
+		//Number Of Components
+		ser->ReadData(&nComponents, sizeof(int));
+
+		auto scenePtr = SceneManager::Pointer()->GetActiveScene();
+
+		for (int32 i = 0; i < nComponents; ++i)
+		{
+			eCOMPONENT_ID cmpType = (eCOMPONENT_ID)(ser->GetNextObjectSerial() - SERIAL_COMPONENT_OFFSET);
+			scenePtr->CreateComponent(cmpType, shared_from_this())->DeSerialize();
+		}
+	}
+
+	void GameObject::GetGraphPointers(int idOffset)
+	{
+		auto sceneMng = SceneManager::Pointer();
+		auto scene = sceneMng->GetActiveScene();
+
+		m_GameObjectID += idOffset;
+
+		if (m_ParentID == 0)
+		{
+			scene->m_RootNode->AddChild(shared_from_this());
+		}
+		else
+		{
+			m_ParentID += idOffset;
+			m_ParentNode = scene->FindActor(m_ParentID);
+		}
+
+		for (int i = 0; i < m_ChildrenIDs.size(); ++i)
+		{
+			m_ChildrenIDs[i] += idOffset;
+			m_ChildrenVector.push_back(scene->FindActor(m_ChildrenIDs[i]));
+		}
+	}
 
 	Matrix4 GameObject::GetLocalMatrix(bool HasParent)
 	{

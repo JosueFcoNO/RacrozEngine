@@ -48,9 +48,6 @@
     <Filter Include="Archivos de encabezado\Passes\PosProcess">
       <UniqueIdentifier>{d8204663-c1b7-4e1e-970d-7317bec7ebfa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de código fuente\Passes\PBR">
-      <UniqueIdentifier>{54b7982d-818b-4f4f-8145-e4ef75f3e68e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de código fuente\Passes\GBuffer">
       <UniqueIdentifier>{9389da1e-6b6d-4bf2-a31d-b071ad04f75b}</UniqueIdentifier>
     </Filter>
@@ -71,6 +68,15 @@
     </Filter>
     <Filter Include="Archivos de código fuente\Passes\HDR/Bloom">
       <UniqueIdentifier>{0c251276-e1a1-45a8-b84f-e493b3118c31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes\Motion Blur">
+      <UniqueIdentifier>{812df656-f14b-4611-a76c-6ee6d369bd6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Passes\Motion Blur">
+      <UniqueIdentifier>{0a37ba23-fc16-404c-8769-d58ae2e3d85e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Passes\Lightning">
+      <UniqueIdentifier>{54b7982d-818b-4f4f-8145-e4ef75f3e68e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +129,12 @@
     <ClInclude Include="include\RZHDRBloom.h">
       <Filter>Archivos de encabezado\Passes\HDR/Bloom</Filter>
     </ClInclude>
+    <ClInclude Include="include\RZMotionBlur.h">
+      <Filter>Archivos de encabezado\Passes\Motion Blur</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZPBRTransparent.h">
+      <Filter>Archivos de encabezado\Passes\Lightning</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZRendererPCH.cpp">
@@ -141,7 +153,7 @@
       <Filter>Archivos de código fuente\Passes\SkyBox</Filter>
     </ClCompile>
     <ClCompile Include="src\RZPBR.cpp">
-      <Filter>Archivos de código fuente\Passes\PBR</Filter>
+      <Filter>Archivos de código fuente\Passes\Lightning</Filter>
     </ClCompile>
     <ClCompile Include="src\RZGeometryPass.cpp">
       <Filter>Archivos de código fuente\Passes\GBuffer</Filter>
@@ -150,7 +162,7 @@
       <Filter>Archivos de código fuente\Passes\ColorCorrection</Filter>
     </ClCompile>
     <ClCompile Include="src\RZPBRForward.cpp">
-      <Filter>Archivos de código fuente\Passes\PBR</Filter>
+      <Filter>Archivos de código fuente\Passes\Lightning</Filter>
     </ClCompile>
     <ClCompile Include="src\RZTerrainGeometryPass.cpp">
       <Filter>Archivos de código fuente\Passes\GBuffer</Filter>
@@ -172,6 +184,12 @@
     </ClCompile>
     <ClCompile Include="src\RZHDRBloom.cpp">
       <Filter>Archivos de código fuente\Passes\HDR/Bloom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZMotionBlur.cpp">
+      <Filter>Archivos de código fuente\Passes\Motion Blur</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZPBRTransparent.cpp">
+      <Filter>Archivos de código fuente\Passes\Lightning</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

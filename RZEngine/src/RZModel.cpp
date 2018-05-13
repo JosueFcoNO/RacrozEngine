@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	void Model::DrawModel(Gfx::GfxCore* gfx, void* res, Map<String, ResourceHandle>* materialOverride, MATERIAL_TYPE matType)
 	{
-		//TODO: Pasarle el material override ya me hace sucio.
+		//TODO: Pasarle el material override ya me hace sucio o no?
 		ResVault* Res = (ResVault*)res;
 
 		///Sets his own buffers
@@ -17,15 +17,134 @@ namespace rczEngine
 		{
 			auto mat = Res->GetResource<Material>(materials->at(m_VectorMeshes[i].m_Material)).lock();
 
-			if (mat->m_MatType == matType | matType == MAT_ANY)
+			if (mat->m_MatType == matType || matType == MAT_ANY)
 			{
+				if (mat->m_MatType != MAT_PLANET)
 				mat->SetThisMaterial(gfx, Res);
 				m_VectorMeshes[i].Draw(gfx);
 			}
 		}
 	}
 
-	void Model::Load(const char * fileName, const char* resName, bool addToResourceManager)
+	void Model::Serialize()
+	{
+		auto ser = Serializer::Pointer();
+		auto gfx = Gfx::GfxCore::Pointer();
+		ser->SetNextObjectSerial(SERIAL_MODEL);
+
+		ser->SerializeString(m_Name);
+
+		m_FilePath.Serialize();
+
+		//Write the number of vertices.
+		int32 tempInt = m_VertexBuffer.m_NumOfElements;
+		ser->WriteData(&tempInt, sizeof(int32));
+
+		//Write the vertices.
+		void* ptr = gfx->GetBufferData(m_VertexBuffer);
+		ser->WriteData(ptr, m_VertexBuffer.m_NumOfElements*m_VertexBuffer.m_SizeOfElement);
+		free(ptr);
+
+		//Write the number of indices.
+		tempInt = m_IndexBuffer.m_NumOfElements;
+		ser->WriteData(&tempInt, sizeof(int32));
+
+		//Write the indices.
+		ptr = gfx->GetBufferData(m_IndexBuffer);
+		ser->WriteData(ptr, m_IndexBuffer.m_NumOfElements*m_IndexBuffer.m_SizeOfElement);
+		free(ptr);
+
+		//Write the number of meshes
+		tempInt = m_VectorMeshes.size();
+		ser->WriteData(&tempInt, sizeof(int32));
+
+		//Write the meshes.
+		for (int32 i = 0; i < tempInt; ++i)
+		{
+			m_VectorMeshes[i].Serialize();
+		}
+
+		//Write the number of materials in the map
+		tempInt = m_MaterialMap.size();
+		ser->WriteData(&tempInt, sizeof(int32));
+
+		//Write the materials name and the handle.
+		for (auto it = m_MaterialMap.begin(); it != m_MaterialMap.end(); ++it)
+		{
+			//Serialize the material name.
+			ser->SerializeString(it->first);
+			//Serialize the resource handle.
+			ser->WriteData(&it->second, sizeof(ResourceHandle));
+		}
+
+	}
+
+	void Model::DeSerialize()
+	{
+		auto ser = Serializer::Pointer();
+		auto gfx = Gfx::GfxCore::Pointer();
+
+		ser->DeSerializeString(m_Name);
+
+		m_FilePath.DeSerialize();
+
+		//Read the number of vertices.
+		int32 tempInt;
+		ser->ReadData(&tempInt, sizeof(int32));
+
+		Gfx::Vertex TempVertex;
+		//Fill the vertices vector.
+		for (int32 i = 0; i < tempInt; ++i)
+		{
+			m_VertexBuffer.AddVertex(TempVertex);
+		}
+
+		//Read and overwrite the vertex buffers size;
+		ser->ReadData(m_VertexBuffer.GetVectorPtr(), tempInt * sizeof(Gfx::Vertex));
+
+		m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, true, gfx);
+
+		//Read the number of indices.
+		ser->ReadData(&tempInt, sizeof(int32));
+
+		//Fill the vertices vector.
+		for (int32 i = 0; i < tempInt; ++i)
+		{
+			m_IndexBuffer.AddIndex(0);
+		}
+
+		//Read and overwrite the index buffers size;
+		ser->ReadData(m_IndexBuffer.GetVectorStart(), tempInt * sizeof(uint32));
+
+		m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, gfx);
+
+		//Read the number of meshes
+		ser->ReadData(&tempInt, sizeof(int32));
+
+		Mesh tempMesh;
+		//Read the meshes.
+		for (int32 i = 0; i < tempInt; ++i)
+		{
+			tempMesh.DeSerialize();
+			m_VectorMeshes.push_back(tempMesh);
+		}
+
+		//Read the number of materials in the map
+		ser->ReadData(&tempInt, sizeof(int32));
+
+		Pair<String, ResourceHandle> TempPair;
+		for (int32 i = 0; i < tempInt; ++i)
+		{
+			//Read the string of the material name.
+			ser->DeSerializeString(TempPair.first);
+			//Read the resource handle
+			ser->ReadData(&TempPair.second, sizeof(ResourceHandle));
+			//Insert it to the material map.
+			m_MaterialMap.insert(TempPair);
+		}
+	}
+
+	void Model::Load(const char * fileName, const char* resName)
 	{
 		ResVault* rsc = ResVault::Pointer();
 		Gfx::GfxCore* gfx = Gfx::GfxCore::Pointer();
@@ -33,14 +152,7 @@ namespace rczEngine
 		m_FilePath = fileName;
 		m_Name = resName;
 
-		if (addToResourceManager)
-		{
-			rsc->InsertResource(this);
-		}
-		else
-		{
-			m_Handle = INVALID_RESOURCE;
-		}
+		rsc->InsertResource(shared_from_this());
 
 		///Clear the index and vertex buffer's lists
 		m_IndexBuffer.ClearIndexList();
@@ -57,46 +169,21 @@ namespace rczEngine
 		uint32 IndexOffset = 0;
 		uint32 IndexCount = 0;
 
-		///Adds the materials
-		int32 materialIndexOffset = 0;
-	
 		for (uint32 k = 0; k < Scene->mNumMaterials; ++k)
 		{
-			Material* Temp = new Material;
 			aiMaterial* aimatTemp = Scene->mMaterials[k];
-
-			aiColor3D Color = { 0,0,0 };
-			aimatTemp->Get(AI_MATKEY_COLOR_DIFFUSE, Color);
-			Temp->m_core.m_Diffuse.m_x = Color.r;
-			Temp->m_core.m_Diffuse.m_y = Color.g;
-			Temp->m_core.m_Diffuse.m_z = Color.b;
-
-			aimatTemp->Get(AI_MATKEY_COLOR_AMBIENT, Color);
-			Temp->m_core.m_Ambient.m_x = Color.r;
-			Temp->m_core.m_Ambient.m_y = Color.g;
-			Temp->m_core.m_Ambient.m_z = Color.b;
-
-			aimatTemp->Get(AI_MATKEY_COLOR_SPECULAR, Color);
-			Temp->m_core.m_Specular.m_x = Color.r;
-			Temp->m_core.m_Specular.m_y = Color.g;
-			Temp->m_core.m_Specular.m_z = Color.b;
-
-			Temp->m_core.m_SpecularStrength = 0;
-			aimatTemp->Get(AI_MATKEY_SHININESS_STRENGTH, Temp->m_core.m_SpecularStrength);
 
 			///Get the material's name
 			aiString name;
 			aimatTemp->Get(AI_MATKEY_NAME, name);
-			Temp->m_Name = name.C_Str();
+
+			StrPtr<Material> Temp = std::make_shared<Material>();
+			Temp->SetName(name.C_Str());
+			Temp->SetFilePath(fileName + String(" | ") + name.C_Str());
 
 			ResourceHandle tempHandle = rsc->InsertResource(Temp);
 
-			m_MaterialMap.insert(Pair<String, ResourceHandle>(Temp->m_Name, tempHandle));
-
-			if (k == 0)
-			{
-				materialIndexOffset = tempHandle;
-			}
+			m_MaterialMap.insert(Pair<String, ResourceHandle>(Temp->GetName(), tempHandle));
 
 			Temp->InitMaterial(MAT_PBR_MetRough, gfx);
 		}

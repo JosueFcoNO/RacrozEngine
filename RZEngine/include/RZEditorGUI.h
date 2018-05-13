@@ -2,26 +2,12 @@
 
 namespace rczEngine
 {
-	struct UserConfig
+	struct RendererConfig
 	{
-		float Roughness;
-		float Metallic;
-		int TesselationFactor;
-		int RenderTex;
-
-		Vector4 UserAlbedo;
-
-		float OverrideAlbedo;
-		float OverrideNormal;
-		float OverrideMetallic;
-		float OverrideRoughness;
-
-		Vector3 UserSpecular;
-		float OverrideSpecular;
-
 		float LightIntensity;
 		float AmbientLightIntensity;
 		float ReflectionIntensity;
+		float pad0;
 
 		bool Wireframe;
 		bool pad1;
@@ -31,8 +17,6 @@ namespace rczEngine
 		int R;
 		int G;
 		int B;
-		int A;
-			
 	};
 
 	struct ScreenChannel
@@ -85,7 +69,7 @@ namespace rczEngine
 		void InitEditor(PlatformData* platformData);
 		void PreRender(ImDrawData* draw_data);
 		void DestroyEditor();
-		void RenderEditor(UserConfig* user);
+		void RenderEditor(RendererConfig* user);
 
 		int ColorMode = 0;
 		float Exposure = 1.0f;

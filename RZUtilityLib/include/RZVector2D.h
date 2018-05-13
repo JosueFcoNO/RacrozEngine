@@ -52,9 +52,7 @@ namespace rczEngine {
 
 		float Magnitude();
 
-
 		float m_x, m_y;
-
 	};
 
 }

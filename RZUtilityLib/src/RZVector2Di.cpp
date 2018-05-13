@@ -208,4 +208,5 @@ namespace rczEngine
 	{
 		return Math::Sqrt((float)(Math::Square(m_x) + Math::Square(m_y)));
 	}
+
 }

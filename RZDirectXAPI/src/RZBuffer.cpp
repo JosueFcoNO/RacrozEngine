@@ -19,6 +19,12 @@ namespace rczEngine
 
 		bool BasicBuffer::Create(uint32 sizeOfElement, uint32 numOfElements, void* arrayOfElements, uint32 elementsPitch, uint32 elementsSlice, eBUFFER_USAGE usage, eBIND_FLAGS bindflags, GfxCore* gfx)
 		{
+			m_BindFlags = bindflags;
+			m_SizeOfElement = sizeOfElement;
+			m_NumOfElements = numOfElements;
+			m_ElementSlice = elementsSlice;
+			m_ElementsPitch = elementsPitch;
+
 			return gfx->CreateBuffer(*this, sizeOfElement, numOfElements, arrayOfElements, elementsPitch, elementsSlice, usage, bindflags);
 		}
 

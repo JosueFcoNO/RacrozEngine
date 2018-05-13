@@ -81,8 +81,8 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)RZUtilityLib\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZComputeAPI/include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/assimp-master\include\;$(SolutionDir)RZDirectInput\include\;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(IncludePath)</IncludePath>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(SolutionDir)Plug-Ins\assimp-master\$(Platform)\$(Configuration)\;$(SolutionDir)Plug-Ins/fmod/</LibraryPath>
+    <IncludePath>$(SolutionDir)RZUtilityLib\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZComputeAPI/include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/assimp-master\include\;$(SolutionDir)RZDirectInput\include\;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(FBXSDK)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(SolutionDir)Plug-Ins\assimp-master\$(Platform)\$(Configuration)\;$(SolutionDir)Plug-Ins/fmod/;$(FBXSDK)lib\$(Platform)\$(Configuration)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -95,8 +95,8 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)RZUtilityLib\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZComputeAPI/include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/assimp-master\include\;$(SolutionDir)RZDirectInput\include\;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(IncludePath)</IncludePath>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(SolutionDir)Plug-Ins\assimp-master\$(Platform)\$(Configuration)\;$(SolutionDir)Plug-Ins/fmod/</LibraryPath>
+    <IncludePath>$(SolutionDir)RZUtilityLib\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZComputeAPI/include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/assimp-master\include\;$(SolutionDir)RZDirectInput\include\;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(FBXSDK)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(SolutionDir)Plug-Ins\assimp-master\$(Platform)\$(Configuration)\;$(SolutionDir)Plug-Ins/fmod/;$(FBXSDK)lib\$(Platform)\$(Configuration)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -133,7 +133,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProfileGuidedDatabase>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>assimp-vc140-mt.lib;RZDirectInput.lib;RZUtilityLib.lib;RZCore.lib;RZDirectXAPI.lib;RZComputeAPI.lib;RZfmodSound.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk.lib;assimp-vc140-mt.lib;RZDirectInput.lib;RZUtilityLib.lib;RZCore.lib;RZDirectXAPI.lib;RZComputeAPI.lib;RZfmodSound.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -179,7 +179,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProfileGuidedDatabase>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>assimp-vc140-mt.lib;RZDirectInput.lib;RZUtilityLib.lib;RZCore.lib;RZDirectXAPI.lib;RZComputeAPI.lib;RZfmodSound.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk.lib;assimp-vc140-mt.lib;RZDirectInput.lib;RZUtilityLib.lib;RZCore.lib;RZDirectXAPI.lib;RZComputeAPI.lib;RZfmodSound.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -187,6 +187,7 @@
     <ClInclude Include="include\imgui.h" />
     <ClInclude Include="include\RZActorComponentFactory.h" />
     <ClInclude Include="include\RZAnimation.h" />
+    <ClInclude Include="include\RZAssimpLoader.h" />
     <ClInclude Include="include\RZBaseWindowGUI.h" />
     <ClInclude Include="include\RZBone.h" />
     <ClInclude Include="include\RZBSP.h" />
@@ -199,6 +200,7 @@
     <ClInclude Include="include\RZCubeMap.h" />
     <ClInclude Include="include\RZEditorGUI.h" />
     <ClInclude Include="include\RZEnginePCH.h" />
+    <ClInclude Include="include\RZFbxLoader.h" />
     <ClInclude Include="include\RZGameManager.h" />
     <ClInclude Include="include\RZGameObjectGUI.h" />
     <ClInclude Include="include\RZGeometryNode.h" />
@@ -217,6 +219,7 @@
     <ClInclude Include="include\RZMeshPlane.h" />
     <ClInclude Include="include\RZModelComponent.h" />
     <ClInclude Include="include\RZModel.h" />
+    <ClInclude Include="include\RZModelLoader.h" />
     <ClInclude Include="include\RZMusic.h" />
     <ClInclude Include="include\RZOctree.h" />
     <ClInclude Include="include\RZPerlinNoise.h" />
@@ -243,12 +246,14 @@
     <ClInclude Include="include\RZTerrainPatch.h" />
     <ClInclude Include="include\RZTexture2D.h" />
     <ClInclude Include="include\RZTexture3D.h" />
+    <ClInclude Include="include\RZTextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\imgui.cpp" />
     <ClCompile Include="src\imgui_draw.cpp" />
     <ClCompile Include="src\RZActorFactory.cpp" />
     <ClCompile Include="src\RZAnimation.cpp" />
+    <ClCompile Include="src\RZAssimpLoader.cpp" />
     <ClCompile Include="src\RZBone.cpp" />
     <ClCompile Include="src\RZCameraComponent.cpp" />
     <ClCompile Include="src\RZCameraManager.cpp" />
@@ -261,6 +266,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\RZFbxLoader.cpp" />
     <ClCompile Include="src\RZGameManager.cpp" />
     <ClCompile Include="src\RZGameObjectGUI.cpp" />
     <ClCompile Include="src\RZGraphicDebugger.cpp" />
@@ -297,6 +303,7 @@
     <ClCompile Include="src\RZTerrainPatch.cpp" />
     <ClCompile Include="src\RZTexture2D.cpp" />
     <ClCompile Include="src\RZTexture3D.cpp" />
+    <ClCompile Include="src\RZTextureLoader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -9,6 +9,8 @@
 #include "RZMemoryAllocators.h"
 #include "RZModule.h"
 
+#include "RZParser.h"
+
 #include "RZFileCoder.h"
 
 #include "RZSerializable.h"
@@ -53,3 +55,4 @@
 #include "RZProfilerEvent.h"
 #include "RZProfiler.h"
 
+#include "RZPath.h"

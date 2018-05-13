@@ -9,6 +9,20 @@ namespace rczEngine
 		Quaternion(float x, float  y, float  z, float  w);
 		Quaternion(Vector3 V, float w);
 
+		Quaternion(const Quaternion& other)
+		{
+			m_v = other.m_v;
+			m_w = other.m_w;
+		};
+
+		Quaternion& operator=(const Quaternion& other)
+		{
+			m_v = other.m_v;
+			m_w = other.m_w;
+
+			return *this;
+		};
+
 		float Magnitude();
 		void Negate();
 		void Conjugate();

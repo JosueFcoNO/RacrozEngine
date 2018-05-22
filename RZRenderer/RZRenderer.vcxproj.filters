@@ -78,6 +78,15 @@
     <Filter Include="Archivos de código fuente\Passes\Lightning">
       <UniqueIdentifier>{54b7982d-818b-4f4f-8145-e4ef75f3e68e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\Passes\Planet">
+      <UniqueIdentifier>{a1ee1094-7a18-43a2-97e3-248eea14d47e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Passes\Planet">
+      <UniqueIdentifier>{2659cb54-1392-46ff-a679-85f654c73a89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\EditorWindows">
+      <UniqueIdentifier>{1d6cee51-98ff-4686-856c-684c34ac1fbc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZRacrozRenderer.h">
@@ -135,6 +144,12 @@
     <ClInclude Include="include\RZPBRTransparent.h">
       <Filter>Archivos de encabezado\Passes\Lightning</Filter>
     </ClInclude>
+    <ClInclude Include="include\RZPlanetPass.h">
+      <Filter>Archivos de encabezado\Passes\Planet</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSpaceMngWindow.h">
+      <Filter>Archivos de encabezado\EditorWindows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZRendererPCH.cpp">
@@ -190,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="src\RZPBRTransparent.cpp">
       <Filter>Archivos de código fuente\Passes\Lightning</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZPlanetPass.cpp">
+      <Filter>Archivos de código fuente\Passes\Planet</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

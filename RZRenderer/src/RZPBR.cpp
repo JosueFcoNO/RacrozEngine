@@ -8,7 +8,7 @@ namespace rczEngine
 		m_LUT = std::make_shared<Texture2D>();
 		m_LUT->Load("RacrozEngineAssets/BRDF LUT.png", "LUT");
 
-		m_gfx->CompileAndCreatePixelShader(m_PBRShader, L"Shaders/PBRGeneral.hlsl");
+		m_gfx->CompileAndCreatePixelShader(m_PBRShader, L"Shaders/PBR_Deferred.hlsl");
 
 		AddTexture2D(m_LUT.get(), 7);
 

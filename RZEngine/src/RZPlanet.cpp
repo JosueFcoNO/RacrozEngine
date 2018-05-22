@@ -72,22 +72,28 @@ namespace rczEngine
 		m_GfxCore->SetRSStateDefault();
 	}
 
+	void Planet::RenderPlanetWater(float scale)
+	{
+		ResVault::Pointer()->GetResource<Material>(Water).lock()->SetThisMaterial();
+		m_Planet->DrawModel(m_GfxCore, ResVault::Pointer(), NULL);
+	}
+
 	void Planet::CreateMaterial()
 	{
 		StrPtr<Texture3D> tex3D = std::make_shared<Texture3D>();
-		tex3D->LoadTexture3D("Models/PBR/grass/a.png", "Models/PBR/Cliff/a.png", "Models/PBR/crater/a.png", "Models/PBR/Slate/a.png", "TexA", true);
+		tex3D->LoadTexture3D("Models/PBR/Sand/a.png", "Models/PBR/grass/a.png", "Models/PBR/Slate/a.png", "Models/PBR/Snow/a.jpg", "TexA", true);
 		
 		StrPtr<Texture3D> tex3Dao = std::make_shared<Texture3D>();
-		tex3Dao->LoadTexture3D("Models/PBR/grass/ao.png", "Models/PBR/Cliff/ao.png", "Models/PBR/crater/ao.png", "Models/PBR/Slate/ao.png", "TexAO", true);
+		tex3Dao->LoadTexture3D("Models/PBR/Sand/ao.png", "Models/PBR/grass/ao.png", "Models/PBR/Slate/ao.png", "Models/PBR/Snow/ao.jpg", "TexAO", true);
 		
 		StrPtr<Texture3D> tex3Dr = std::make_shared<Texture3D>();
-		tex3Dr->LoadTexture3D("Models/PBR/grass/r.png", "Models/PBR/Cliff/r.png", "Models/PBR/crater/r.png", "Models/PBR/Slate/r.png", "TexR", true);
+		tex3Dr->LoadTexture3D("Models/PBR/Sand/r.png", "Models/PBR/grass/r.png", "Models/PBR/Slate/r.png", "Models/PBR/Snow/r.jpg", "TexR", true);
 		
 		StrPtr<Texture3D> tex3Dm = std::make_shared<Texture3D>();
-		tex3Dm->LoadTexture3D("Models/PBR/grass/m.png", "Models/PBR/Cliff/m.png", "Models/PBR/crater/m.png", "Models/PBR/Slate/m.png", "TexM", true);
+		tex3Dm->LoadTexture3D("Models/PBR/Sand/m.png", "Models/PBR/grass/m.png", "Models/PBR/Slate/m.png", "Models/PBR/Snow/m.png", "TexM", true);
 		
 		StrPtr<Texture3D> tex3Dn = std::make_shared<Texture3D>();
-		tex3Dn->LoadTexture3D("Models/PBR/grass/n.png", "Models/PBR/Cliff/n.png", "Models/PBR/crater/n.png", "Models/PBR/Slate/n.png", "TexN", true);
+		tex3Dn->LoadTexture3D("Models/PBR/Sand/n.png", "Models/PBR/grass/n.png", "Models/PBR/Slate/n.png", "Models/PBR/Snow/n.jpg", "TexN", true);
 		
 		//StrPtr<Texture3D> tex3Dh = std::make_shared<Texture3D>();
 		//tex3Dh->LoadTexture3D("Models/PBR/grass/h.png", "Models/PBR/Cliff/h.png", "Models/PBR/crater/h.png", "Models/PBR/Slate/h.png", "TexH", true);
@@ -107,6 +113,11 @@ namespace rczEngine
 		m_Materials = ResVault::Pointer()->InsertResource(mat);
 
 		m_Planet->m_MaterialMap["DefaultMaterial"] = m_Materials;
+
+		//mat = std::make_shared<Material>();
+		//mat->InitMaterial(MAT_PBR_MetRough, Gfx::GfxCore::Pointer());
+		//mat->SetFilePath("PlanetMaterialWater");
+		//Water = res->InsertResource(mat);
 	}
 
 	Vector3 CubeToSphere(const Vector3 cubepoint)
@@ -135,6 +146,6 @@ namespace rczEngine
 	void Planet::LoadAndProcessModel()
 	{
 		m_Planet = std::make_shared<Model>();
-		m_Planet->Load("Models/PlanetNew.dae", "PlanetModel");
+		m_Planet->Load("Models/Planet/PlanetSurface.dae", "PlanetModel");
 	}
 }

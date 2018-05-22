@@ -11,6 +11,7 @@
 #include "RZPBR.h"
 #include "RZPBRForward.h"
 #include "RZPBRTransparent.h"
+#include "RZPlanetPass.h"
 
 #include "RZGaussBlur.h"
 
@@ -23,5 +24,7 @@
 #include "RZMotionBlur.h"
 
 #include "RZColorCorrection.h"
+
+#include "RZSpaceMngWindow.h"
 
 #include "RZRacrozRenderer.h"

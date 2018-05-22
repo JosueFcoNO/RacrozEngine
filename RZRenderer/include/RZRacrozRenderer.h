@@ -24,7 +24,8 @@ namespace rczEngine
 		BLOOM,
 		AVG_LUMINANCE,
 		HDR_BLOOM,
-		MOTION_BLUR
+		MOTION_BLUR,
+		PLANET_PASS
 	};
 
 	enum TEXTURES_PASS
@@ -84,6 +85,7 @@ namespace rczEngine
 			m_Passes["SkyBox"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 5);
 			m_Passes["PBR"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 3);
 			m_Passes["Transparent"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 5);
+			m_Passes["Planet"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 5);
 
 		}
 

@@ -879,7 +879,7 @@ namespace rczEngine
 			Version = version;
 			EntryPoint = entryPoint;
 
-			result = D3DCompileFromFile(pszShaderFile, 0, 0, EntryPoint.c_str(), Version.c_str(), D3DCOMPILE_DEBUG, 0, &out_ShaderObj.m_ShaderBlob, &errorBuffer);
+			result = D3DCompileFromFile(pszShaderFile, 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, EntryPoint.c_str(), Version.c_str(), D3DCOMPILE_DEBUG, 0, &out_ShaderObj.m_ShaderBlob, &errorBuffer);
 
 			if (FAILED(result))
 			{

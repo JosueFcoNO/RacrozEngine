@@ -21,6 +21,7 @@ namespace rczEngine
 	public:
 		void InitPlanet(int32 seed, float x, float y, float z, SpaceManager* spaceMng);
 		void RenderPlanet(float scale);
+		void RenderPlanetWater(float scale);
 
 		void CreateMaterial();
 
@@ -54,5 +55,7 @@ namespace rczEngine
 		Vector4 PermutationTable[PERMUTATION_TABLE_SIZE];
 
 		Vector3 m_SpacePosition;
+
+		ResourceHandle Water;
 	};
 }

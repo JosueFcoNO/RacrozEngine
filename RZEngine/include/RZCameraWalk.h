@@ -46,13 +46,13 @@ namespace rczEngine
 
 		virtual void Update(float deltaTime)
 		{
-			m_CameraCore.MoveRight(-deltaTime*m_xAxis*30);
+			m_CameraCore.MoveRight(-deltaTime*m_xAxis*Speed);
 
 			auto VectorDir = m_CameraCore.GetTarget() - m_CameraCore.GetPosition();
 			VectorDir.m_y = 0.0f;
 			VectorDir.Normalize();
 
-			m_CameraCore.MoveForward(deltaTime*m_zAxis*1);
+			m_CameraCore.MoveForward(deltaTime*m_zAxis*Speed);
 
 			if (m_Jumping)
 			{
@@ -158,6 +158,22 @@ namespace rczEngine
 			}
 		};
 
+#ifndef RZ_EDITOR
+		virtual void RenderComponent()
+		{
+			ImGui::Separator();
+			ImGui::Text("Camera Component");
+
+			ImGui::DragFloat("FOV", &m_CameraCore.m_Fov, 1.0f, 10.0f, 180.0f);
+			ImGui::DragFloat("Aspect Ratio", &m_CameraCore.m_AspectRatio, 0.05f);
+			ImGui::DragFloat("Far Clip", &m_CameraCore.m_FarClip, 10.0f, 1.0f, 1000.0f);
+			ImGui::DragFloat("Near Clip", &m_CameraCore.m_NearClip, 10.0f, 1.0f, 1000.0f);
+
+			ImGui::DragFloat("Speed", &Speed, 0.1f, 0.01f, 100.0f);
+
+		}
+#endif
+
 	private:
 		float m_xAxis = 0.0f;
 		float m_zAxis = 0.0f;
@@ -166,6 +182,8 @@ namespace rczEngine
 
 		float m_SpinY = 0.0f;
 		float m_SpinX = 0.0f;
+
+		float Speed = 30.0f;
 
 		bool m_Jumping = false;
 		bool m_Mouse = false;

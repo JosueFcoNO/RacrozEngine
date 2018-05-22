@@ -8,8 +8,15 @@ namespace rczEngine
 {
 	class RZ_UTILITY_EXPORT SpaceManager
 	{
+	private:
+		static SpaceManager*& _Instance();
+
 	public:
-		void InitSpaceManager(GameObject* owner);
+		static void Start();
+		static SpaceManager* Pointer();
+		static void ShutDown();
+
+		void InitSpaceManager();
 		void Update(float deltaTime);
 		void Render();
 

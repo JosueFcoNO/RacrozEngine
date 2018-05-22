@@ -22,12 +22,6 @@ namespace rczEngine
 		m_VTessShader.ReflectLayout(m_gfx);
 		m_gfx->CompileAndCreateDomainShader(m_Dshader, L"Shaders/Tess/TessDS.hlsl");
 
-		m_gfx->CompileAndCreateHullShader(m_PlanetHshader, L"Shaders/ProcGen/Planet/PlanetHullShader.hlsl");
-		m_gfx->CompileAndCreateVertexShader(m_PlanetVshader, L"Shaders/ProcGen/Planet/PlanetVertexShader.hlsl");
-		m_gfx->CompileAndCreatePixelShader(m_PlanetPshader, L"Shaders/ProcGen/Planet/PlanetPixelShader.hlsl");
-		m_gfx->CompileAndCreateDomainShader(m_PlanetDshader, L"Shaders/ProcGen/Planet/PlanetDomainShader.hlsl");
-		m_PlanetVshader.ReflectLayout(m_gfx);
-
 	}
 
 	void GeometryPass::PreRenderPass()
@@ -51,24 +45,6 @@ namespace rczEngine
 
 	void GeometryPass::RenderPass()
 	{
-		if (Input::Pointer()->CheckKeyboardState(KEY_NUMPAD2))
-		{
-			m_PlanetPshader.Destroy();
-			m_gfx->CompileAndCreatePixelShader(m_PlanetPshader, L"Shaders/ProcGen/Planet/PlanetPixelShader.hlsl");
-		}
-
-		if (Input::Pointer()->CheckKeyboardState(KEY_NUMPAD1))
-		{
-			m_PlanetDshader.Destroy();
-			m_gfx->CompileAndCreateDomainShader(m_PlanetDshader, L"Shaders/ProcGen/Planet/PlanetDomainShader.hlsl");
-		}
-
-		if (Input::Pointer()->CheckKeyboardState(KEY_NUMPAD3))
-		{
-			m_PlanetHshader.Destroy();
-			m_gfx->CompileAndCreateHullShader(m_PlanetHshader, L"Shaders/ProcGen/Planet/PlanetHullShader.hlsl");
-		}
-
 		auto activeScene = m_ActiveScene.get();
 
 		///NORMAL MATERIALS
@@ -81,16 +57,7 @@ namespace rczEngine
 		//m_Hshader.SetThisHullShader(m_gfx);
 		//m_Dshader.SetThisDomainShader(m_gfx);
 		//RacrozRenderer::RenderScene(activeScene, CMP_MODEL_RENDERER, MAT_PBR_TESS, true);
-		
-		m_PlanetHshader.SetThisHullShader(m_gfx);
-		m_PlanetDshader.SetThisDomainShader(m_gfx);
-		m_PlanetVshader.SetThisVertexShaderAndInputLayout(m_gfx);
-		m_PlanetPshader.SetThisPixelShader(m_gfx);
-		RacrozRenderer::RenderScene(activeScene, CMP_SPACE_MANAGER, MAT_PBR_MetRough, true);
-		
-		m_gfx->RemoveDomainShader();
-		m_gfx->RemoveHullShader();
-		
+
 		//m_PixelMetRough.SetThisPixelShader(m_gfx);
 		//m_SkinnedVshader.SetThisVertexShaderAndInputLayout(m_gfx);
 		//RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_SKINNED_MODEL_RENDERER, MAT_PBR_MetRough, true);

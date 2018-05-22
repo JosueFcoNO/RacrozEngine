@@ -2,19 +2,42 @@
 
 namespace rczEngine
 {
-	void SpaceManager::InitSpaceManager(GameObject* owner)
+	SpaceManager*& SpaceManager::_Instance()
+	{
+		static SpaceManager* instance = nullptr;
+		return instance;
+	}
+
+	void SpaceManager::Start()
+	{
+		(_Instance()) = new SpaceManager;
+	}
+
+	SpaceManager* SpaceManager::Pointer()
+	{
+		return _Instance();
+	}
+
+	void SpaceManager::ShutDown()
+	{
+		delete _Instance();
+	}
+
+	void SpaceManager::InitSpaceManager()
 	{
 		m_capi = ComputeAPI::Pointer();
 		m_gfx = Gfx::GfxCore::Pointer();
 		m_res = ResVault::Pointer();
 		m_scene = SceneManager::Pointer()->GetActiveScene();
 		//m_Traveller = NULL; //TODO: Arreglar esto
-		m_Owner = owner;
+		//m_Owner = owner;
 
 		surfaceScale = 100.0f;
 
 		CreatePlanet(123123, 0, 0, 200.0f);
 		m_CurrentPlanet = m_Planets[0];
+
+		m_OnLand = false;
 
 	}
 

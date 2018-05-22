@@ -7,7 +7,7 @@ namespace rczEngine
 		///Load the LUT.
 		m_LUT = m_res->GetResource<Texture2D>(m_res->LoadResource("RacrozEngineAssets/BRDF LUT.png", "LUT")).lock();
 		
-		m_gfx->CompileAndCreatePixelShader(m_PBRShader, L"Shaders/DisneyBRDF_Fwd_Bueno.hlsl");
+		m_gfx->CompileAndCreatePixelShader(m_PBRShader, L"Shaders/PBR_Forward.hlsl");
 
 		m_gfx->CompileAndCreateVertexShader(m_GeometryPBRShader, L"Shaders/GeometryPass.hlsl");
 		m_GeometryPBRShader.ReflectLayout(m_gfx);

@@ -197,10 +197,12 @@
     <ClInclude Include="include\RZPass.h" />
     <ClInclude Include="include\RZPBRForward.h" />
     <ClInclude Include="include\RZPBRTransparent.h" />
+    <ClInclude Include="include\RZPlanetPass.h" />
     <ClInclude Include="include\RZRacrozRenderer.h" />
     <ClInclude Include="include\RZRendererPCH.h" />
     <ClInclude Include="include\RZScreenQuad.h" />
     <ClInclude Include="include\RZSkyBoxPass.h" />
+    <ClInclude Include="include\RZSpaceMngWindow.h" />
     <ClInclude Include="include\RZTerrainGeometryPass.h" />
   </ItemGroup>
   <ItemGroup>
@@ -217,6 +219,7 @@
     <ClCompile Include="src\RZPBR.cpp" />
     <ClCompile Include="src\RZPBRForward.cpp" />
     <ClCompile Include="src\RZPBRTransparent.cpp" />
+    <ClCompile Include="src\RZPlanetPass.cpp" />
     <ClCompile Include="src\RZRacrozRenderer.cpp" />
     <ClCompile Include="src\RZRendererPCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

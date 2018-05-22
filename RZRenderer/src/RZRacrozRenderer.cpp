@@ -97,7 +97,7 @@ namespace rczEngine
 			}
 
 			auto pass = m_Passes[m_PassesOrder[i]];
-			
+
 			pass->PreRenderPass();
 			pass->RenderPass();
 			pass->PostRenderPass();
@@ -115,7 +115,30 @@ namespace rczEngine
 			{
 				StrPtr<SkyBox> Sky = std::make_shared<SkyBox>();
 				Sky->InitSkyBox(LoadFile("SkyBox", "Sky", ResVault::Pointer()), Gfx::GfxCore::Pointer(), ResVault::Pointer());
-				RacrozRenderer::Pointer()->ChangeSkyBox(Sky);
+				ChangeSkyBox(Sky);
+			}
+		};
+
+		ImGui::Begin("Space");
+		{
+			if (SpaceManager::Pointer())
+			{
+				ImGui::Text("Space Manager Active");
+
+
+			}
+			else
+			{
+				if (ImGui::Button("Start Space"))
+				{
+					StrPtr<SkyBox> Sky = std::make_shared<SkyBox>();
+					Sky->InitSkyBox(ResVault::Pointer()->LoadResource("Cubemaps/OldSpace.dds"), Gfx::GfxCore::Pointer(), ResVault::Pointer());
+					ChangeSkyBox(Sky);
+
+					SpaceManager::Start();
+
+					SpaceManager::Pointer()->InitSpaceManager();
+				}
 			}
 		};
 
@@ -141,7 +164,7 @@ namespace rczEngine
 		m_RTs["Velocity"] = CreateRenderTargetAndTexture_XYScales("Velocity", m_Textures["Velocity"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32_FLOAT);
 
 		m_RTs["ColorCorrection"] = CreateRenderTargetAndTexture_XYScales("ColorCorrection", m_Textures["ColorCorrection"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
-		
+
 		m_RTs["PBR"] = CreateRenderTargetAndTexture_XYScales("PBR", m_Textures["PBR"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32B32A32_FLOAT);
 
 		m_RTs["MotionBlur"] = CreateRenderTargetAndTexture_XYScales("MotionBlur", m_Textures["MotionBlur"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32B32A32_FLOAT);
@@ -150,7 +173,7 @@ namespace rczEngine
 		m_RTs["Bright"] = CreateRenderTargetAndTexture_XYScales("Bright", m_Textures["Bright"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
 		m_RTs["Bloom"] = CreateRenderTargetAndTexture_XYScales("Bloom", m_Textures["Bloom"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
 		m_RTs["AvgLuminance"] = CreateRenderTargetAndTexture_XYScales("AvgLuminance", m_Textures["AvgLuminance"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
-		
+
 		m_RTs["HDRBloom"] = CreateRenderTargetAndTexture_XYScales("HDRBloom", m_Textures["HDRBloom"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
 
 		/////////////////
@@ -178,13 +201,13 @@ namespace rczEngine
 		passGeometry->AddRenderTarget(m_RTs["Velocity"].get(), 4);
 
 		m_PassesOrder.push_back("Geometry");
-	
+
 		///////////////////
 		///TERRAIN GEOMETRY PASS///
 		///////////////////
 
 		///Create the geometry pass
-		//auto passTerrainGeometry = CreatePass("Terrain", PASSES::TERRAIN_GEOMETRY_PASS, m_CurrentRenderingMode);
+		//auto passTerrainGeometry = CreatePass("Planet", PASSES::PLANET_PASS, m_CurrentRenderingMode);
 		//
 		//passTerrainGeometry->AddRenderTarget(m_RTs["ColorAO"].get(), 0);
 		//passTerrainGeometry->AddRenderTarget(m_RTs["Position"].get(), 1);
@@ -193,9 +216,11 @@ namespace rczEngine
 		//passTerrainGeometry->AddRenderTarget(m_RTs["Velocity"].get(), 4);
 		//
 		//m_PassesOrder.push_back("Terrain");
+		//
+		//
+		/////Start the post processing.
 
-
-		///Start the post processing.
+		///Create the geometry pass
 		m_PassesOrder.push_back("PostProcess");
 
 		/////////
@@ -215,17 +240,29 @@ namespace rczEngine
 
 		m_PassesOrder.push_back("PBR");
 
-		///////////////////
+		//////////////////////
 		///Transparent PASS///
-		///////////////////
+		//////////////////////
 
 		///Create the geometry pass
 		auto passTransparent = CreatePass("Transparent", PASSES::PBR_TRANSPARENT, m_CurrentRenderingMode);
 
 		passTransparent->AddRenderTarget(m_RTs["PBR"].get(), 0);
 
-		m_PassesOrder.push_back("Transparent");
+		//m_PassesOrder.push_back("Transparent");
 
+		///////////////////
+		///PLANET PASS/////
+		///////////////////
+
+		auto passPlanet = CreatePass("Planet", PASSES::PLANET_PASS, m_CurrentRenderingMode);
+
+		passPlanet->AddRenderTarget(m_RTs["PBR"].get(), 0);
+		passPlanet->AddRenderTarget(m_RTs["Position"].get(), 1);
+		passPlanet->AddRenderTarget(m_RTs["NormalsMR"].get(), 2);
+
+		m_PassesOrder.push_back("Planet");
+		
 		m_PassesOrder.push_back("PostProcess");
 
 		/////////////////
@@ -278,7 +315,7 @@ namespace rczEngine
 
 		//Receives the Bright pass and blurs it 4 times to generate bloom and glow.
 
-		StrPtr<BloomPass> passBloom = std::static_pointer_cast<BloomPass,Pass>(CreatePass("Bloom", PASSES::BLOOM, m_CurrentRenderingMode));
+		StrPtr<BloomPass> passBloom = std::static_pointer_cast<BloomPass, Pass>(CreatePass("Bloom", PASSES::BLOOM, m_CurrentRenderingMode));
 
 		passBloom->AddRenderTarget(m_RTs["Bloom"].get(), 0);
 
@@ -458,7 +495,7 @@ namespace rczEngine
 	{
 		///Allocate a new RenderTarget Object
 		auto renderTarget = std::make_shared<Gfx::RenderTarget>();
-		
+
 		///Save the Pointer on the RenderTarget Vector.
 		m_RTs[name] = (renderTarget);
 
@@ -498,6 +535,9 @@ namespace rczEngine
 			break;
 		case PASSES::TERRAIN_GEOMETRY_PASS:
 			returnPass = m_Passes[name] = std::make_shared<TerrainGeometryPass>();
+			break;
+		case PASSES::PLANET_PASS:
+			returnPass = m_Passes[name] = std::make_shared<PlanetPass>();
 			break;
 		case PASSES::PBR:
 			returnPass = m_Passes[name] = std::make_shared<PBR_Pass>();

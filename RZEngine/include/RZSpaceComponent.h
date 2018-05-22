@@ -16,7 +16,7 @@ namespace rczEngine
 
 		virtual void Init()
 		{
-			m_Space.InitSpaceManager(GetOwner().lock().get());
+			m_Space.InitSpaceManager();
 		};
 		virtual void Update(float deltaTime) { m_Space.Update(deltaTime); };
 		virtual void Render(Gfx::GfxCore* gfx, ResVault* res, Scene* scene)

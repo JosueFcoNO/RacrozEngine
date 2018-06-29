@@ -20,6 +20,7 @@ cbuffer cbChangeOnResize : register(b1)
 cbuffer cbChangeEveryFrame : register(b2)
 {
     matrix worldMatrix;
+	matrix inverseWorldMatrix;
 };
 
 struct Light
@@ -55,6 +56,11 @@ cbuffer cbCamera : register(b5)
     matrix ProjectionMatrix;
 };
 
+cbuffer Planet : register(b6)
+{
+	float4 PosView;
+};
+
 struct VS_Input
 {
 	float3 pos : POSITION;
@@ -67,22 +73,15 @@ struct VS_Input
 struct HS_INPUT
 {
 	float3 pos : POSITION;
-	float2 tex0 : TEXCOORD0;
-	float3 normal : NORMAL;
-	float3 tangent : TEXCOORD1;
-    float3 binormal : TEXCOORD2;
+	float MagToView : TEXCOORD3;
 };
 
 HS_INPUT VS_Main(VS_Input vertex)
 {
     HS_INPUT vsOut = (HS_INPUT) 0;
-	vsOut.tex0 = vertex.tex0;
 
     vsOut.pos = vertex.pos;
-
-    vsOut.normal = vertex.normal;
-    vsOut.tangent = vertex.tangent;
-    vsOut.binormal = vertex.binormal;
+	vsOut.MagToView = length(PosView - vertex.pos) * 200.0f;
 
 	return vsOut;
 }

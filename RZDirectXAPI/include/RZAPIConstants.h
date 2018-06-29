@@ -19,6 +19,17 @@ namespace rczEngine
 			Vector3 BiNormals;
 		};
 
+		///The Vertex structure
+		class RZ_UTILITY_EXPORT PlanetVertex
+		{
+		public:
+			PlanetVertex() : VertexPosition(INIT_ZERO)
+			{
+			};
+
+			Vector3 VertexPosition;
+		};
+
 		class RZ_UTILITY_EXPORT SkinnedVertex
 		{
 		public:

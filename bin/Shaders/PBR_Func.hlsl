@@ -31,9 +31,9 @@ cbuffer cbRendererConfig : register(b6)
 
 	int pad;
 
-	int R;
-	int G;
-	int B;
+	int Rc;
+	int Gc;
+	int Bc;
 };
 
 //-----------------Disney BRDFHelpers----------------------------

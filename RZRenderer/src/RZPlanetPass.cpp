@@ -10,7 +10,7 @@ namespace rczEngine
 		m_gfx->CompileAndCreateVertexShader(m_PlanetVshader, L"Shaders/ProcGen/Planet/PlanetVertexShader.hlsl");
 		m_gfx->CompileAndCreatePixelShader(m_PlanetPshader, L"Shaders/ProcGen/Planet/PlanetPixelShader.hlsl");
 		m_gfx->CompileAndCreateDomainShader(m_PlanetDshader, L"Shaders/ProcGen/Planet/PlanetDomainShader.hlsl");
-		m_PlanetVshader.ReflectLayout(m_gfx);
+		m_PlanetVshader.ReflectLayout(0, m_gfx);
 
 	}
 

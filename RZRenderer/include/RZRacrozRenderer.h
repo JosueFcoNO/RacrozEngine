@@ -25,7 +25,9 @@ namespace rczEngine
 		AVG_LUMINANCE,
 		HDR_BLOOM,
 		MOTION_BLUR,
-		PLANET_PASS
+		PLANET_PASS,
+		ATMOS_SCATTER_PASS,
+		PERLIN3D
 	};
 
 	enum TEXTURES_PASS
@@ -88,6 +90,8 @@ namespace rczEngine
 			m_Passes["Planet"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 5);
 
 		}
+
+		ResourceHandle CreateCubeMap(const char* name, Scene* sceneGraph, Vector<String>& RenderPasses, int width, int height);
 
 		///Draws the sceneGraph
 		static void RenderScene(Scene * sceneGraph, eCOMPONENT_ID componentID, MATERIAL_TYPE matType, bool Forward);

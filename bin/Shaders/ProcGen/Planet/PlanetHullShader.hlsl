@@ -2,47 +2,48 @@ sampler Sampler_ : register(s0);
 
 cbuffer TessellationBuffer : register(b0)
 {
-    float tessellationAmount;
-    float3 padding;
+	float tessellationAmount;
+	float3 padding;
 };
 
 cbuffer world : register(b1)
 {
-    matrix worldMatrix;
+	matrix worldMatrix;
 };
 
 cbuffer cbCamera : register(b5)
 {
-    float4 ViewPosition;
-    float4 ViewDirection;
-    float4 NearPlane;
-    float4 FarPlane;
-    matrix ViewMatrix;
-    matrix ProjectionMatrix;
+	float4 ViewPosition;
+	float4 ViewDirection;
+	float4 NearPlane;
+	float4 FarPlane;
+	matrix ViewMatrix;
+	matrix ProjectionMatrix;
 };
 
 struct HS_INPUT
 {
-    float3 pos : POSITION;
-    float2 tex0 : TEXCOORD0;
-    float3 normal : NORMAL;
-    float3 tangent : TEXCOORD1;
-    float3 binormal : TEXCOORD2;
+	float3 pos : POSITION;
+	float MagToView : TEXCOORD3;
 };
 
-struct HS_OUTPUT
+struct DS_INPUT
 {
 	float3 Position : COLOR1;
-	float2 tex0 : TEXCOORD0;
-	float3 normal : NORMAL;
-	float3 tangent : TEXCOORD1;
-	float3 binormal : TEXCOORD2;
+	float MagToView : COLOR2;
 };
 
 struct ConstantOutputType
 {
-    float edges[3] : SV_TessFactor;
-    float inside : SV_InsideTessFactor;
+	float edges[3] : SV_TessFactor;
+	float inside : SV_InsideTessFactor;
+	float factor : TEXCOORD1;
+	float factor2 : TEXCOORD2;
+};
+
+float Quintic(float t)
+{
+	return t * t * t * (t * (t * 6 - 15) + 10);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,54 +51,42 @@ struct ConstantOutputType
 ////////////////////////////////////////////////////////////////////////////////
 ConstantOutputType ColorPatchConstantFunction(InputPatch<HS_INPUT, 3> inputPatch, uint patchId : SV_PrimitiveID)
 {
-	ConstantOutputType output;
+	ConstantOutputType output = (ConstantOutputType)0.0f;
 
-	//float3 one = (inputPatch[0].pos - inputPatch[1].pos);
-	//float magone = length(one)/2.0f;
-	//one = inputPatch[1].pos+normalize(one)*magone;
+	float dot0 = dot(normalize(inputPatch[0].pos *200.0f - ViewPosition.xyz), ViewDirection.xyz);
+	float dot1 = dot(normalize(inputPatch[1].pos *200.0f - ViewPosition.xyz), ViewDirection.xyz);
+	float dot2 = dot(normalize(inputPatch[2].pos *200.0f - ViewPosition.xyz), ViewDirection.xyz);
 
-	//float3 two = (inputPatch[1].pos - inputPatch[2].pos);
-	//float magtwo = length(two) / 2.0f;
-	//two = inputPatch[2].pos+normalize(two)*magtwo;
+	float avg = max(dot0, max(dot1, dot2));
 
-	//float3 three=(inputPatch[2].pos - inputPatch[0].pos);
-	//float magthree = length(three) / 2.0f;
-	//three = inputPatch[0].pos+normalize(three)*magthree;
+	if (avg < 0.5f) return output;
 
-	//float3 pos = normalize(inputPatch[0].pos + inputPatch[1].pos + inputPatch[2].pos);
-	//pos = mul(float4(pos, 1), worldMatrix).xyz - ViewPosition.xyz;
+	float mag1 = (inputPatch[0].MagToView + inputPatch[1].MagToView) / 2.0f;
+	float mag2 = (inputPatch[1].MagToView + inputPatch[2].MagToView) / 2.0f;
+	float mag3 = (inputPatch[2].MagToView + inputPatch[0].MagToView) / 2.0f;
 
-	float3 V1 = mul(float4(inputPatch[0].pos, 1), worldMatrix).xyz - ViewPosition.xyz;
-	float3 V2 = mul(float4(inputPatch[1].pos, 1), worldMatrix).xyz - ViewPosition.xyz;
-	float3 V3 = mul(float4(inputPatch[2].pos, 1), worldMatrix).xyz - ViewPosition.xyz;
+	float cull = floor(saturate(mag2 / 400.0f));
 
-	float mag1 = length(V1);
-	float mag2 = length(V2);
-	float mag3 = length(V3);
+	float factor1 = pow(1.0f - saturate(mag2 / 32.0f), 2);
+	float factor2 = pow(1.0f - saturate(mag3 / 32.0f), 2);
+	float factor3 = pow(1.0f - saturate(mag1 / 32.0f), 2);
 
-	float factor;
+	float TessReal1 = factor1 * 64.0f + 1.0f - cull;
+	float TessReal2 = factor2 * 64.0f + 1.0f - cull;
+	float TessReal3 = factor3 * 64.0f + 1.0f - cull;
 
-	if (mag1 < mag2 && mag1 < mag3)
-	{
-		factor = (1.0f - saturate(mag1 / 15.0f)) * 32.0f + 1;
-	}
-	else if (mag2 < mag1 && mag2 < mag3)
-	{
-		factor = (1.0f - saturate(mag2 / 15.0f)) * 32.0f + 1;
-	}
-	else
-	{
-		factor = (1.0f - saturate(mag3 / 15.0f)) * 32.0f + 1;
-	}
+	output.edges[0] = TessReal1;
+	output.edges[1] = TessReal2;
+	output.edges[2] = TessReal3;
 
-	output.edges[0] = factor;
-	output.edges[1] = factor;
-	output.edges[2] = factor;
+	// Set the tessellation factor for tessallating inside the triangle.
+	output.inside = (TessReal1 + TessReal2 + TessReal3) / 3.0f;
 
-    // Set the tessellation factor for tessallating inside the triangle.
-	output.inside = factor;
+	output.factor = saturate(factor1);
 
-    return output;
+	output.factor2 = max(output.inside - 32.0f, 0.0f);
+
+	return output;
 }
 
 [domain("tri")]
@@ -105,17 +94,10 @@ ConstantOutputType ColorPatchConstantFunction(InputPatch<HS_INPUT, 3> inputPatch
 [outputtopology("triangle_cw")]
 [outputcontrolpoints(3)]
 [patchconstantfunc("ColorPatchConstantFunction")]
-HS_OUTPUT HS_Main(InputPatch<HS_INPUT, 3> patch, uint pointId : SV_OutputControlPointID, uint patchId : SV_PrimitiveID)
+DS_INPUT HS_Main(InputPatch<HS_INPUT, 3> patch, uint pointId : SV_OutputControlPointID, uint patchId : SV_PrimitiveID)
 {
-    HS_OUTPUT output;
-
-    output.Position = patch[pointId].pos;
-
-    output.tex0 = patch[pointId].tex0;
-
-    output.tangent = patch[pointId].tangent;
-    output.binormal = patch[pointId].binormal;
-    output.normal = patch[pointId].normal; 
-
-    return output;
+	DS_INPUT output;
+	output.Position = patch[pointId].pos;
+	output.MagToView = patch[pointId].MagToView;
+	return output;
 }

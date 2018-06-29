@@ -73,7 +73,7 @@ namespace rczEngine
 
 			///Set the Framem Index and Gfx::Vertex Buffer ont the pipeline
 			m_FrameIndexBuffer.SetThisIndexBuffer(graphicsapi_instance);
-			m_FrameVertexBuffer.SetThisVertexBuffer(graphicsapi_instance);
+			m_FrameVertexBuffer.SetThisVertexBuffer(graphicsapi_instance, 0);
 
 			///Iterate through the frame objects, render and delete them
 			for (int i = 0; i < m_FrameObjs.size(); i++)
@@ -111,7 +111,7 @@ namespace rczEngine
 
 			///Set them int the Gfx::Vertex and Index Buffer in pipeline
 			m_StaticIndexBuffer.SetThisIndexBuffer(graphicsapi_instance);
-			m_StaticVertexBuffer.SetThisVertexBuffer(graphicsapi_instance);
+			m_StaticVertexBuffer.SetThisVertexBuffer(graphicsapi_instance, 0);
 
 			///Iterate through the Static Objs and Draw Them
 			for (int i = 0; i < m_StaticObjs.size(); i++)

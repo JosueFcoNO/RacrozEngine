@@ -183,6 +183,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\RZAtmosScatterPass.h" />
     <ClInclude Include="include\RZAvgLuminance.h" />
     <ClInclude Include="include\RZBloom.h" />
     <ClInclude Include="include\RZBright.h" />
@@ -197,6 +198,7 @@
     <ClInclude Include="include\RZPass.h" />
     <ClInclude Include="include\RZPBRForward.h" />
     <ClInclude Include="include\RZPBRTransparent.h" />
+    <ClInclude Include="include\RZPerlinPlanetPass.h" />
     <ClInclude Include="include\RZPlanetPass.h" />
     <ClInclude Include="include\RZRacrozRenderer.h" />
     <ClInclude Include="include\RZRendererPCH.h" />
@@ -206,6 +208,7 @@
     <ClInclude Include="include\RZTerrainGeometryPass.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\RZAtmosScatterPass.cpp" />
     <ClCompile Include="src\RZAvgLuminance.cpp" />
     <ClCompile Include="src\RZBloom.cpp" />
     <ClCompile Include="src\RZBright.cpp" />
@@ -219,6 +222,7 @@
     <ClCompile Include="src\RZPBR.cpp" />
     <ClCompile Include="src\RZPBRForward.cpp" />
     <ClCompile Include="src\RZPBRTransparent.cpp" />
+    <ClCompile Include="src\RZPerlinPlanetPass.cpp" />
     <ClCompile Include="src\RZPlanetPass.cpp" />
     <ClCompile Include="src\RZRacrozRenderer.cpp" />
     <ClCompile Include="src\RZRendererPCH.cpp">

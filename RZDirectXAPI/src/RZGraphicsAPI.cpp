@@ -41,7 +41,7 @@ namespace rczEngine
 			CreateDevice(width, height, 1, 60, 1, 0, isWindowed);
 			GetBackBufferInterface();
 			SetRenderTargetViewAndDepthStencil();
-			SetViewPort();
+			SetViewPortDefault();
 		}
 
 		void GfxCore::Destroy()
@@ -164,7 +164,7 @@ namespace rczEngine
 			return true;
 		}
 
-		bool GfxCore::SetViewPort()
+		bool GfxCore::SetViewPortDefault()
 		{
 #ifdef LOGGING
 			Logger::Pointer()->LogMessage("Gfx",  "Setting View Port.");
@@ -184,6 +184,27 @@ namespace rczEngine
 
 			m_DefaultRS.Init();
 			m_DefaultRS.CreateRasterizerState(this);
+
+			return true;
+		}
+
+		bool GfxCore::SetViewPort(int32 width, int32 height)
+		{
+#ifdef LOGGING
+			Logger::Pointer()->LogMessage("Gfx", "Setting View Port.");
+#endif
+
+			///Create the viewport
+			D3D11_VIEWPORT ViewPort;
+			///Set its Width and height to the ones stored on this object.
+			ViewPort.Width = (float)width;
+			ViewPort.Height = (float)height;
+			ViewPort.TopLeftX = 0;
+			ViewPort.TopLeftY = 0;
+			ViewPort.MaxDepth = 1.0f;
+			ViewPort.MinDepth = 0.0f;
+			///Set the viewport on the context.
+			m_DeviceContext->RSSetViewports(1, &ViewPort);
 
 			return true;
 		}
@@ -209,7 +230,7 @@ namespace rczEngine
 				GetBackBufferInterface();
 				//m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_BackBuffer);
 				SetRenderTargetViewAndDepthStencil();
-				SetViewPort();
+				SetViewPortDefault();
 
 				return;
 			}
@@ -298,6 +319,9 @@ namespace rczEngine
 			TexDesc.ArraySize = 1;
 
 			out_renderTarget.m_Name = name;
+			auto core = out_renderTarget.GetTextureCore();
+			core->m_Height = height;
+			core->m_Width = width;
 
 			if (height != -1)
 			{
@@ -1455,6 +1479,73 @@ namespace rczEngine
 			SRV.Texture2D.MipLevels = 9;
 
 			result = m_Device->CreateShaderResourceView(*textures, &SRV, &out_Cubemap.m_ShaderResource);
+
+			if (S_OK(result))
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		bool GfxCore::CreateCubeMapFrom6Tex2DCore(TextureCore2D & front, TextureCore2D & back, TextureCore2D & left, TextureCore2D & right, TextureCore2D & top, TextureCore2D & bottom, TextureCore2D & out_Cubemap, eFORMAT format, eBUFFER_USAGE usage, eBIND_FLAGS bind_flags, eCPU_ACCESS_FLAGS cpu_access_flags)
+		{
+			int Width, Height;
+			Width = front.m_Width;
+			Height = front.m_Height;
+
+			D3D11_TEXTURE2D_DESC Descriptor;
+			ZeroMemory(&Descriptor, sizeof(Descriptor));
+			Descriptor.ArraySize = 6;
+			Descriptor.BindFlags = bind_flags | D3D11_BIND_RENDER_TARGET;
+			Descriptor.CPUAccessFlags = cpu_access_flags;
+			Descriptor.Format = (DXGI_FORMAT)format;
+			Descriptor.Height = Height;
+			Descriptor.Width = Width;
+			Descriptor.MipLevels = 1;
+			Descriptor.Usage = (D3D11_USAGE)usage;
+
+			Descriptor.SampleDesc.Count = 1;
+			Descriptor.SampleDesc.Quality = 0;
+
+			ID3D11Texture2D* textures[6];
+
+			textures[1] = front.m_Texture;
+			textures[0] = back.m_Texture;
+			textures[4] = left.m_Texture;
+			textures[5] = right.m_Texture;
+			textures[2] = top.m_Texture;
+			textures[3] = bottom.m_Texture;
+
+			HRESULT result;
+
+			Descriptor.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+
+			result = m_Device->CreateTexture2D(&Descriptor, NULL, &out_Cubemap.m_Texture);
+
+			D3D11_BOX box;
+			box.left = 0;
+			box.right = Width;
+			box.top = 0;
+			box.bottom = Height;
+			box.front = 0;
+			box.back = 1;
+
+			m_DeviceContext->CopySubresourceRegion(out_Cubemap.m_Texture, 0, 0, 0, 0, textures[0], 0, &box);
+			m_DeviceContext->CopySubresourceRegion(out_Cubemap.m_Texture, 1, 0, 0, 0, textures[1], 0, &box);
+			m_DeviceContext->CopySubresourceRegion(out_Cubemap.m_Texture, 2, 0, 0, 0, textures[2], 0, &box);
+			m_DeviceContext->CopySubresourceRegion(out_Cubemap.m_Texture, 3, 0, 0, 0, textures[3], 0, &box);
+			m_DeviceContext->CopySubresourceRegion(out_Cubemap.m_Texture, 4, 0, 0, 0, textures[4], 0, &box);
+			m_DeviceContext->CopySubresourceRegion(out_Cubemap.m_Texture, 5, 0, 0, 0, textures[5], 0, &box);
+
+			D3D11_SHADER_RESOURCE_VIEW_DESC SRV;
+			ZeroMemory(&SRV, sizeof(SRV));
+			SRV.Format = (DXGI_FORMAT)format;
+			SRV.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+			SRV.TextureCube.MostDetailedMip = 0;
+			SRV.TextureCube.MipLevels = 1;
+
+			result = m_Device->CreateShaderResourceView(out_Cubemap.m_Texture, &SRV, &out_Cubemap.m_ShaderResource);
 
 			if (S_OK(result))
 			{

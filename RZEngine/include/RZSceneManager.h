@@ -12,7 +12,8 @@ namespace rczEngine
 		static SceneManager* Pointer();
 		static void ShutDown();
 
-		StrPtr<Scene> CreateScene(const char* name);
+		StrPtr<Scene> CreateDefaultScene(const char* name);
+		StrPtr<Scene> CreateEmptyScene(const char* name);
 		StrPtr<Scene> GetActiveScene();
 
 		StrPtr<Scene> LoadScene(const char* filePath);

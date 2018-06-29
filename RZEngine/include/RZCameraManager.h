@@ -32,13 +32,17 @@ namespace rczEngine
 		void Init(Gfx::GfxCore* gfx);
 		///Destroys the Camera Manager and all buffers.
 		void Destroy();
+
+
 		///Adds a Camera Cmp to the Manager
-		void AddCamera(StrPtr<CameraCmp> cameraPtr);
+		ComponentId AddCamera(StrPtr<CameraCmp> cameraPtr);
 		///Removes a Camera By Name
 		void RemoveCamera(ComponentId id);
 		///Returns a weak pointer to the active camera's component
 		WeakPtr<CameraCmp> GetActiveCamera();
-		///Sets the Active Camera By Name
+
+
+		///Sets the Active Camera By idd
 		void SetActiveCamera(ComponentId id, Gfx::GfxCore* gfx);
 		///Updates the Camera Buffer With the Active Camera's data and sets it on the VS and PS specified slots.
 		void UpdateAndSetCameraBuffer(Gfx::GfxCore* gfx, int32 vertexShaderSlot, int32 PixelShaderSlot);

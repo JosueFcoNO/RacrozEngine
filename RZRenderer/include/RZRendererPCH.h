@@ -8,10 +8,13 @@
 #include "RZSkyBoxPass.h"
 #include "RZGeometryPass.h"
 #include "RZTerrainGeometryPass.h"
+
 #include "RZPBR.h"
 #include "RZPBRForward.h"
 #include "RZPBRTransparent.h"
+
 #include "RZPlanetPass.h"
+#include "RZAtmosScatterPass.h"
 
 #include "RZGaussBlur.h"
 
@@ -24,6 +27,8 @@
 #include "RZMotionBlur.h"
 
 #include "RZColorCorrection.h"
+
+#include "RZPerlinPlanetPass.h"
 
 #include "RZSpaceMngWindow.h"
 

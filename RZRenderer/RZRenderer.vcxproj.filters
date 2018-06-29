@@ -87,6 +87,12 @@
     <Filter Include="Archivos de encabezado\EditorWindows">
       <UniqueIdentifier>{1d6cee51-98ff-4686-856c-684c34ac1fbc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\Passes\Perlin">
+      <UniqueIdentifier>{cf3a0970-33d1-493b-bf6a-9898d50103c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes\Perlin">
+      <UniqueIdentifier>{0aca650f-cf5a-4b6b-b53a-b97078128f29}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZRacrozRenderer.h">
@@ -150,6 +156,12 @@
     <ClInclude Include="include\RZSpaceMngWindow.h">
       <Filter>Archivos de encabezado\EditorWindows</Filter>
     </ClInclude>
+    <ClInclude Include="include\RZAtmosScatterPass.h">
+      <Filter>Archivos de encabezado\Passes\Planet</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZPerlinPlanetPass.h">
+      <Filter>Archivos de encabezado\Passes\Perlin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZRendererPCH.cpp">
@@ -208,6 +220,12 @@
     </ClCompile>
     <ClCompile Include="src\RZPlanetPass.cpp">
       <Filter>Archivos de código fuente\Passes\Planet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZAtmosScatterPass.cpp">
+      <Filter>Archivos de código fuente\Passes\Planet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZPerlinPlanetPass.cpp">
+      <Filter>Archivos de código fuente\Passes\Perlin</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

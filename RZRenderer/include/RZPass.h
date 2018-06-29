@@ -40,6 +40,8 @@ namespace rczEngine
 		///Adds a BlendState for this pass to use. If there's not one set, it will use the default blend state.
 		void AddBlendState(Gfx::BlendState* blendState, int32 slot);
 
+		bool UseDefaultRenderTarget = true;
+
 	protected:
 		///Sets the rasterizer state.
 		void SetRasterizerState();

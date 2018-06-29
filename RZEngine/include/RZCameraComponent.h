@@ -5,7 +5,7 @@ namespace rczEngine
 	class RZ_UTILITY_EXPORT CameraCmp : public Component, public std::enable_shared_from_this<CameraCmp>
 	{
 	public:
-		CameraCmp() 
+		CameraCmp()
 		{
 		};
 
@@ -14,12 +14,16 @@ namespace rczEngine
 			Destroy();
 		};
 
+		virtual void Init()
+		{
+			CreateCamera();
+		}
 		void Destroy();
 
 		static const ComponentType s_ComponentType = CMP_CAMERA;
 		virtual ComponentType GetComponentType() { return CameraCmp::s_ComponentType; };
 		virtual ComponentId GetComponentID() { return m_ID; };
-		
+
 		virtual void Serialize();
 		virtual void DeSerialize();
 
@@ -44,9 +48,10 @@ namespace rczEngine
 		}
 #endif
 
+		Camera m_CameraCore;
+
 	protected:
 		void CreateCamera();
 
-		Camera m_CameraCore;
 	};
 }

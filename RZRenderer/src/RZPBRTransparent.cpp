@@ -10,7 +10,7 @@ namespace rczEngine
 		m_gfx->CompileAndCreatePixelShader(m_PBRShader, L"Shaders/PBR_Forward.hlsl");
 
 		m_gfx->CompileAndCreateVertexShader(m_GeometryPBRShader, L"Shaders/GeometryPass.hlsl");
-		m_GeometryPBRShader.ReflectLayout(m_gfx);
+		m_GeometryPBRShader.ReflectLayout(0, m_gfx);
 
 		AddTexture2D(m_LUT.get(), 7);
 
@@ -20,9 +20,9 @@ namespace rczEngine
 		config.Wireframe = false;
 		config.R = config.G = config.B = 1;
 
-		UserDisney.CreateConstantBuffer(sizeof(RendererConfig), Gfx::USAGE_DEFAULT, m_gfx);
-		UserDisney.UpdateConstantBuffer(&config, m_gfx);
-		UserDisney.SetBufferInPS(6, m_gfx);
+		//UserDisney.CreateConstantBuffer(sizeof(RendererConfig), Gfx::USAGE_DEFAULT, m_gfx);
+		//UserDisney.UpdateConstantBuffer(&config, m_gfx);
+		//UserDisney.SetBufferInPS(6, m_gfx);
 
 		Transparent.InitBlendState();
 		Transparent.CreateBlendState(m_gfx);
@@ -45,8 +45,8 @@ namespace rczEngine
 
 		m_PBRShader.SetThisPixelShader(m_gfx);
 
-		UserDisney.UpdateConstantBuffer(&config, m_gfx);
-		UserDisney.SetBufferInPS(6, m_gfx);
+		//UserDisney.UpdateConstantBuffer(&config, m_gfx);
+		//UserDisney.SetBufferInPS(6, m_gfx);
 
 		//m_gfx->ClearDepthTargetView();
 

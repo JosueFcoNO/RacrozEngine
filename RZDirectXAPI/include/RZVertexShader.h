@@ -17,13 +17,13 @@ namespace rczEngine
 			///Releases data
 			void Destroy();
 			///Set This Vertex Shader In The Input Assembly
-			void SetThisVertexShader(GfxCore* gfx = NULL);
+			void SetThisVertexShader(GfxCore* gfx);
 			///Set this Vertex Shader's input layout in the input Assembly
-			void SetThisInputLayout(GfxCore* gfx = NULL);
+			void SetThisInputLayout(GfxCore* gfx);
 			///Set this Vertex Shader and its Input Layout in the pipeline
-			void SetThisVertexShaderAndInputLayout(GfxCore* gfx = NULL);
+			void SetThisVertexShaderAndInputLayout(GfxCore* gfx);
 			///Reflect this shader's layout.
-			void ReflectLayout(GfxCore* gfx = NULL);
+			void ReflectLayout(int layoutSlot, GfxCore* gfx);
 
 			///A pointer to a Vertex Shader
 			ID3D11VertexShader* m_VertexShader;

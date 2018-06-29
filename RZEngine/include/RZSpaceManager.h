@@ -19,6 +19,7 @@ namespace rczEngine
 		void InitSpaceManager();
 		void Update(float deltaTime);
 		void Render();
+		void RenderAtmos(float offset);
 
 		void CreatePlanet(int32 seed, float x, float y, float z);
 		void ChangeCurrentPlanet(Planet* planet);

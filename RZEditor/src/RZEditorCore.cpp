@@ -49,7 +49,7 @@ namespace rczEngine
 		ActorComponentFactory::Start();
 
 		SceneManager::Start();
-		SceneManager::Pointer()->CreateScene("Default");
+		SceneManager::Pointer()->CreateDefaultScene("Default");
 
 		RacrozRenderer::Start();
 		RacrozRenderer::Pointer()->InitRenderer();

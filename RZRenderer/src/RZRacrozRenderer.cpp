@@ -45,7 +45,7 @@ namespace rczEngine
 
 		///Compile, create and reflect the ScreenQuad Vertex Shader.
 		m_gfx->CompileAndCreateVertexShader(m_ScreenQuadVS, L"Shaders/PassVShader.hlsl");
-		m_ScreenQuadVS.ReflectLayout(m_gfx);
+		m_ScreenQuadVS.ReflectLayout(1, m_gfx);
 
 		m_ActiveSkyBox = std::make_shared<SkyBox>();
 
@@ -86,6 +86,8 @@ namespace rczEngine
 
 	void RacrozRenderer::Render(Scene * sceneGraph, GUIEditor * editor)
 	{
+		static bool StartingSpaceManager = false;
+
 		int32 i = 0;
 
 		for (i = 0; i < m_PassesOrder.size(); ++i)
@@ -103,49 +105,60 @@ namespace rczEngine
 			pass->PostRenderPass();
 		}
 
+		if (StartingSpaceManager)
+		{
+			StartingSpaceManager = false;
+			SpaceManager::Start();
+			SpaceManager::Pointer()->InitSpaceManager();
+		}
+
 		static StrPtr<PBR_Pass> pbr = std::dynamic_pointer_cast<PBR_Pass, Pass>(m_Passes["PBR"]);
 
 		//If there exists an editor, render it.
 		if (editor)
+		{
 			editor->RenderEditor(&pbr->config);
 
-		ImGui::Begin("Renderer");
-		{
-			if (ImGui::Button("SkyBox"))
+			ImGui::Begin("Renderer");
 			{
-				StrPtr<SkyBox> Sky = std::make_shared<SkyBox>();
-				Sky->InitSkyBox(LoadFile("SkyBox", "Sky", ResVault::Pointer()), Gfx::GfxCore::Pointer(), ResVault::Pointer());
-				ChangeSkyBox(Sky);
-			}
-		};
-
-		ImGui::Begin("Space");
-		{
-			if (SpaceManager::Pointer())
-			{
-				ImGui::Text("Space Manager Active");
-
-
-			}
-			else
-			{
-				if (ImGui::Button("Start Space"))
+				if (ImGui::Button("SkyBox"))
 				{
 					StrPtr<SkyBox> Sky = std::make_shared<SkyBox>();
-					Sky->InitSkyBox(ResVault::Pointer()->LoadResource("Cubemaps/OldSpace.dds"), Gfx::GfxCore::Pointer(), ResVault::Pointer());
+					Sky->InitSkyBox(LoadFile("SkyBox", "Sky", ResVault::Pointer()), Gfx::GfxCore::Pointer(), ResVault::Pointer());
 					ChangeSkyBox(Sky);
-
-					SpaceManager::Start();
-
-					SpaceManager::Pointer()->InitSpaceManager();
 				}
-			}
-		};
+			};
 
-		ImGui::Render();
-		GUIEditor::Pointer()->PreRender(ImGui::GetDrawData());
+			ImGui::Begin("Space");
+			{
+				if (SpaceManager::Pointer())
+				{
+					ImGui::Text("Space Manager Active");
+
+
+				}
+				else
+				{
+					if (ImGui::Button("Start Space"))
+					{
+						StrPtr<SkyBox> Sky = std::make_shared<SkyBox>();
+						Sky->InitSkyBox(ResVault::Pointer()->LoadResource("Cubemaps/OldSpace.dds"), Gfx::GfxCore::Pointer(), ResVault::Pointer());
+						ChangeSkyBox(Sky);
+
+						StartingSpaceManager = true;
+
+						auto Light = LightManager::Pointer()->AddLight();
+						Light->InitDirectionalLight(Vector3(1.0f, -1.0f, 0).GetNormalized(), Vector4(1, 1, 1, 1), false);
+					}
+				}
+			};
+
+			ImGui::Render();
+			GUIEditor::Pointer()->PreRender(ImGui::GetDrawData());
+		}
 
 		m_gfx->Present();
+
 	}
 
 	void RacrozRenderer::Destroy()
@@ -207,15 +220,15 @@ namespace rczEngine
 		///////////////////
 
 		///Create the geometry pass
-		//auto passTerrainGeometry = CreatePass("Planet", PASSES::PLANET_PASS, m_CurrentRenderingMode);
-		//
-		//passTerrainGeometry->AddRenderTarget(m_RTs["ColorAO"].get(), 0);
-		//passTerrainGeometry->AddRenderTarget(m_RTs["Position"].get(), 1);
-		//passTerrainGeometry->AddRenderTarget(m_RTs["NormalsMR"].get(), 2);
-		//passTerrainGeometry->AddRenderTarget(m_RTs["Emmisive"].get(), 3);
-		//passTerrainGeometry->AddRenderTarget(m_RTs["Velocity"].get(), 4);
-		//
-		//m_PassesOrder.push_back("Terrain");
+		auto passTerrainGeometry = CreatePass("Terrain", PASSES::TERRAIN_GEOMETRY_PASS, m_CurrentRenderingMode);
+		
+		passTerrainGeometry->AddRenderTarget(m_RTs["ColorAO"].get(), 0);
+		passTerrainGeometry->AddRenderTarget(m_RTs["Position"].get(), 1);
+		passTerrainGeometry->AddRenderTarget(m_RTs["NormalsMR"].get(), 2);
+		passTerrainGeometry->AddRenderTarget(m_RTs["Emmisive"].get(), 3);
+		passTerrainGeometry->AddRenderTarget(m_RTs["Velocity"].get(), 4);
+		
+		m_PassesOrder.push_back("Terrain");
 		//
 		//
 		/////Start the post processing.
@@ -249,7 +262,7 @@ namespace rczEngine
 
 		passTransparent->AddRenderTarget(m_RTs["PBR"].get(), 0);
 
-		//m_PassesOrder.push_back("Transparent");
+		m_PassesOrder.push_back("Transparent");
 
 		///////////////////
 		///PLANET PASS/////
@@ -262,7 +275,17 @@ namespace rczEngine
 		passPlanet->AddRenderTarget(m_RTs["NormalsMR"].get(), 2);
 
 		m_PassesOrder.push_back("Planet");
-		
+
+		///////////////////
+		///SCATTER PASS/////
+		///////////////////
+
+		auto passAtmos = CreatePass("Atmos", PASSES::ATMOS_SCATTER_PASS, m_CurrentRenderingMode);
+
+		passAtmos->AddRenderTarget(m_RTs["PBR"].get(), 0);
+
+		m_PassesOrder.push_back("Atmos");
+
 		m_PassesOrder.push_back("PostProcess");
 
 		/////////////////
@@ -371,6 +394,14 @@ namespace rczEngine
 		passColorCorrection->AddTexture2D(m_Textures["HDRBloom"].get(), 0);
 
 		m_PassesOrder.push_back("ColorCorrection");
+
+		//////////////////////
+		///PERLIN ////////////
+		//////////////////////
+
+		///Create the PBR pass
+		auto passPerlin = CreatePass("Perlin3D", PASSES::PERLIN3D, m_CurrentRenderingMode);
+
 	}
 
 	void RacrozRenderer::SetForward()
@@ -421,6 +452,104 @@ namespace rczEngine
 	void RacrozRenderer::SetForwardPlus()
 	{
 
+	}
+
+	ResourceHandle RacrozRenderer::CreateCubeMap(const char* name, Scene * sceneGraph, Vector<String>& RenderPasses, int width, int height)
+	{
+		m_gfx->SetViewPort(width, height);
+
+		Vector3 Targets[6];
+
+		Targets[2].Set(0, 0, -1);
+		Targets[3].Set(0, 0, 1);
+		Targets[0].Set(1, 0, 0);
+		Targets[1].Set(-1, 0, 0);
+		Targets[4].Set(0, 1, 0);
+		Targets[5].Set(0, -1, 0);
+
+		Vector3 Ups[6];
+
+		Ups[0].Set(0, 1, 0);
+		Ups[1].Set(0, 1, 0);
+		Ups[2].Set(0, 1, 0);
+		Ups[3].Set(0, 1, 0);
+		Ups[4].Set(0, 0, 1);
+		Ups[5].Set(0, 0, -1);
+
+		StrPtr<Gfx::RenderTarget> renderTargets[6];
+		StrPtr<Texture2D> Textures[6];
+
+		auto format = Gfx::FORMAT_R16G16B16A16_FLOAT;
+
+		renderTargets[0] = CreateRenderTargetAndTexture_WidthHeight("0", Textures[0], 1, width, height, format);
+		renderTargets[1] = CreateRenderTargetAndTexture_WidthHeight("1", Textures[1], 1, width, height, format);
+		renderTargets[2] = CreateRenderTargetAndTexture_WidthHeight("2", Textures[2], 1, width, height, format);
+		renderTargets[3] = CreateRenderTargetAndTexture_WidthHeight("3", Textures[3], 1, width, height, format);
+		renderTargets[4] = CreateRenderTargetAndTexture_WidthHeight("4", Textures[4], 1, width, height, format);
+		renderTargets[5] = CreateRenderTargetAndTexture_WidthHeight("5", Textures[5], 1, width, height, format);
+
+		auto scene = SceneManager::Pointer()->CreateEmptyScene("CubeMapRender");
+		auto ptr = CameraManager::Pointer();
+		auto cameraCmp = scene->FindActorsWithComponent(CMP_CAMERA_WALK)[0].lock()->GetComponent(CMP_CAMERA_WALK).lock();
+		ptr->SetActiveCamera(2, m_gfx);
+		auto camera = &CastStaticPtr<CameraCmp>(cameraCmp)->m_CameraCore;
+		camera->m_Fov = 90.0f;
+		camera->m_AspectRatio = 1.0f;
+		camera->m_Position.Set(0, 0, 0);
+		camera->m_FarClip = 100.0f;
+		camera->m_NearClip = 0.01f;
+
+		for (int k = 0; k < 6; ++k)
+		{
+			camera->m_Target = Targets[k];
+			camera->m_Up = Ups[k];
+
+			for (int32 i = 0; i < RenderPasses.size(); ++i)
+			{
+				if (RenderPasses[i] == "PostProcess")
+				{
+					StartPostProcessing();
+					continue;
+				}
+
+				auto pass = m_Passes[RenderPasses[i]];
+				pass->PreRenderPass();
+
+				m_gfx->AddRenderTarget(*renderTargets[k], 0);
+				m_gfx->SetNumberOfRenderTargets(1);
+				m_gfx->SetRenderTargets(false);
+
+				pass->RenderPass();
+				pass->PostRenderPass();
+			}
+		}
+
+		StrPtr<CubeMap> cubemap = std::make_shared<CubeMap>();
+		cubemap->SetFilePath(String("CubemapGenerated/") + name);
+		cubemap->SetName(name);
+
+		m_gfx->CreateCubeMapFrom6Tex2DCore(
+			Textures[0]->m_TextureCore,
+			Textures[1]->m_TextureCore,
+			Textures[2]->m_TextureCore,
+			Textures[3]->m_TextureCore,
+			Textures[4]->m_TextureCore,
+			Textures[5]->m_TextureCore,
+			cubemap->m_TextureCore,
+			format);
+
+		ResourceHandle handle = m_res->InsertResource(cubemap);
+
+		StrPtr<SkyBox> skyBox = std::make_shared<SkyBox>();
+		skyBox->InitSkyBox(handle, m_gfx, m_res);
+
+		CameraManager::Pointer()->SetActiveCamera(1, m_gfx);
+
+		ChangeSkyBox(skyBox);
+
+		m_gfx->SetViewPortDefault();
+
+		return handle;
 	}
 
 	void RacrozRenderer::RenderScene(Scene * sceneGraph, eCOMPONENT_ID componentID, MATERIAL_TYPE matType, bool Forward)
@@ -518,6 +647,8 @@ namespace rczEngine
 		out_Texture = std::make_shared<Texture2D>();
 		out_Texture->CreateFromRenderTarget(*renderTarget);
 
+		ResVault::Pointer()->InsertResource(out_Texture);
+
 		return renderTarget;
 	}
 
@@ -538,6 +669,9 @@ namespace rczEngine
 			break;
 		case PASSES::PLANET_PASS:
 			returnPass = m_Passes[name] = std::make_shared<PlanetPass>();
+			break;
+		case PASSES::ATMOS_SCATTER_PASS:
+			returnPass = m_Passes[name] = std::make_shared<AtmosScatterPass>();
 			break;
 		case PASSES::PBR:
 			returnPass = m_Passes[name] = std::make_shared<PBR_Pass>();
@@ -568,6 +702,9 @@ namespace rczEngine
 			break;
 		case PASSES::MOTION_BLUR:
 			returnPass = m_Passes[name] = std::make_shared<MotionBlurPass>();
+			break;
+		case PASSES::PERLIN3D:
+			returnPass = m_Passes[name] = std::make_shared<PerlinPlanetPass>();
 			break;
 		}
 

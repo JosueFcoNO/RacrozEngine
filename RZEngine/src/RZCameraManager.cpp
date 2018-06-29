@@ -35,24 +35,30 @@ namespace rczEngine
 		m_Cameras.clear();
 	}
 
-	void CameraManager::AddCamera(StrPtr<CameraCmp> cameraPtr)
+	ComponentId CameraManager::AddCamera(StrPtr<CameraCmp> cameraPtr)
 	{
 		Pair<ComponentId, StrPtr<CameraCmp>> value;
 		value.second = cameraPtr;
-		value.first = cameraPtr->m_ID;
+		value.first = cameraPtr->GetComponentID();;
 		m_Cameras.insert(value);
 
 		m_ActiveCamera = cameraPtr;
+
+		return cameraPtr->GetComponentID();
 	}
 
 	void CameraManager::RemoveCamera(ComponentId id)
 	{
+		if (m_ActiveCamera == m_Cameras[id])
+		{
+			if (m_Cameras.size() > 1)
+			{
+				m_ActiveCamera = (m_Cameras.begin()++)->second;
+			}
+		}
+
 		m_Cameras.erase(id);
 
-		if (m_ActiveCamera->m_ID == id)
-		{
-			m_ActiveCamera = m_Cameras.begin()->second;
-		}
 	}
 
 	WeakPtr<CameraCmp> CameraManager::GetActiveCamera()

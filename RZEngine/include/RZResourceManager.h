@@ -47,7 +47,7 @@ namespace rczEngine
 
 			for (auto i = m_ResourceMap.begin(); i != m_ResourceMap.end(); ++i)
 			{
-				if (i->second->m_Name == name)
+				if (i->second->GetName() == name)
 				{
 					res = std::static_pointer_cast<type, Resource>(i->second);
 					return res;

@@ -6,7 +6,7 @@ namespace rczEngine
 	{
 		///Geometry Vertex Shader
 		m_gfx->CompileAndCreateVertexShader(m_Vshader, L"Shaders/ProcGen/Terrain/TerrainGenVS.hlsl");
-		m_Vshader.ReflectLayout(m_gfx);
+		m_Vshader.ReflectLayout(0, m_gfx);
 
 		m_gfx->CompileAndCreateHullShader(m_Hshader, L"Shaders/Tess/TessHS.hlsl");
 

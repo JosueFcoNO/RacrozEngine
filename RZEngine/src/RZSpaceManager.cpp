@@ -34,7 +34,7 @@ namespace rczEngine
 
 		surfaceScale = 100.0f;
 
-		CreatePlanet(123123, 0, 0, 200.0f);
+		CreatePlanet(123123, 0, 0, 00.0f);
 		m_CurrentPlanet = m_Planets[0];
 
 		m_OnLand = false;
@@ -51,6 +51,14 @@ namespace rczEngine
 	void SpaceManager::Render()
 	{
 		m_OnLand ? RenderSurface() : RenderSpace();
+	}
+
+	void SpaceManager::RenderAtmos(float offset)
+	{
+		for (int32 i = 0; i < m_Planets.size(); ++i)
+		{
+			m_Planets[i]->RenderAtmosphere(surfaceScale + offset);
+		}
 	}
 
 	void SpaceManager::CreatePlanet(int32 seed, float x, float y, float z)

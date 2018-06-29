@@ -59,7 +59,7 @@ namespace rczEngine
 			m_res->GetResource<Texture2D>(HeightMap).lock()->SetThisTextureInPS(0, 1, m_gfx);
 		}
 
-		m_VertexBuffer.SetThisVertexBuffer(m_gfx);
+		m_VertexBuffer.SetThisVertexBuffer(m_gfx, 0);
 
 		int32 vertexSize;
 

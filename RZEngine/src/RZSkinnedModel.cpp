@@ -9,7 +9,7 @@ namespace rczEngine
 		ResVault* Res = (ResVault*)res;
 
 		///Sets his own buffers
-		m_VertexBuffer.SetThisVertexBuffer(gfx);
+		m_VertexBuffer.SetThisVertexBuffer(gfx, 0);
 		m_IndexBuffer.SetThisIndexBuffer(gfx);
 		m_MeshSkeleton.SetSkeletonBuffers(gfx);
 

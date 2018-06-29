@@ -8,18 +8,18 @@ namespace rczEngine
 
 		///Geometry Vertex Shader
 		m_gfx->CompileAndCreateVertexShader(m_Vshader, L"Shaders/GPassMetRough.hlsl");
-		m_Vshader.ReflectLayout(m_gfx);
+		m_Vshader.ReflectLayout(0, m_gfx);
 
 		///Geometry Skinned Vertex Shader
 		m_gfx->CompileAndCreateVertexShader(m_SkinnedVshader, L"Shaders/SkinnedVertexShader.hlsl");
-		m_SkinnedVshader.ReflectLayout(m_gfx);
+		m_SkinnedVshader.ReflectLayout(0, m_gfx);
 
 		///Geometry Pixel Shader
 		m_gfx->CompileAndCreatePixelShader(m_PixelMetRough, L"Shaders/GPassMetRough.hlsl");
 
 		m_gfx->CompileAndCreateHullShader(m_Hshader, L"Shaders/Tess/TessHS.hlsl");
 		m_gfx->CompileAndCreateVertexShader(m_VTessShader, L"Shaders/Tess/TessVS.hlsl");
-		m_VTessShader.ReflectLayout(m_gfx);
+		m_VTessShader.ReflectLayout(0, m_gfx);
 		m_gfx->CompileAndCreateDomainShader(m_Dshader, L"Shaders/Tess/TessDS.hlsl");
 
 	}
@@ -53,14 +53,17 @@ namespace rczEngine
 
 		///NORMAL MATERIALS
 
-		//m_VTessShader.SetThisVertexShaderAndInputLayout(m_gfx);
-		//m_Hshader.SetThisHullShader(m_gfx);
-		//m_Dshader.SetThisDomainShader(m_gfx);
-		//RacrozRenderer::RenderScene(activeScene, CMP_MODEL_RENDERER, MAT_PBR_TESS, true);
+		m_VTessShader.SetThisVertexShaderAndInputLayout(m_gfx);
+		m_Hshader.SetThisHullShader(m_gfx);
+		m_Dshader.SetThisDomainShader(m_gfx);
+		RacrozRenderer::RenderScene(activeScene, CMP_MODEL_RENDERER, MAT_PBR_TESS, true);
 
-		//m_PixelMetRough.SetThisPixelShader(m_gfx);
-		//m_SkinnedVshader.SetThisVertexShaderAndInputLayout(m_gfx);
-		//RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_SKINNED_MODEL_RENDERER, MAT_PBR_MetRough, true);
+		m_gfx->RemoveDomainShader();
+		m_gfx->RemoveHullShader();
+
+		m_PixelMetRough.SetThisPixelShader(m_gfx);
+		m_SkinnedVshader.SetThisVertexShaderAndInputLayout(m_gfx);
+		RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_SKINNED_MODEL_RENDERER, MAT_PBR_MetRough, true);
 
 
 	}

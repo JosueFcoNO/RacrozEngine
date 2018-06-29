@@ -12,7 +12,7 @@ namespace rczEngine
 		m_res = resMng;
 
 		m_gfx->CompileAndCreateVertexShader(m_VShader, L"Shaders/SkyBoxShader.hlsl");
-		m_VShader.ReflectLayout(m_gfx);
+		m_VShader.ReflectLayout(0, m_gfx);
 
 		m_gfx->CompileAndCreatePixelShader(m_PShader, L"Shaders/SkyBoxShader.hlsl");
 

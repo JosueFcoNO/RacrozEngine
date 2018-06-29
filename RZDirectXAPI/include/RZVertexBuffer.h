@@ -28,9 +28,9 @@ namespace rczEngine
 			};
 
 			///Set this vertex buffer on the pipeline.
-			void SetThisVertexBuffer(GfxCore* gfx)
+			void SetThisVertexBuffer(GfxCore* gfx, int slot)
 			{
-				gfx->SetVertexBuffer(*this, 1, 0, sizeof(t), 0);
+				gfx->SetVertexBuffer(*this, 1, slot, sizeof(t), 0);
 			};
 
 			///Add a vertex.

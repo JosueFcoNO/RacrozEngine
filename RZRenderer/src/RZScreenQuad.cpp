@@ -48,13 +48,13 @@ namespace rczEngine
 
 	void ScreenQuad::SetScreenQuadBuffers(Gfx::GfxCore * gfx)
 	{
-		m_vBuffer.SetThisVertexBuffer(gfx);
+		m_vBuffer.SetThisVertexBuffer(gfx, 1);
 		m_iBuffer.SetThisIndexBuffer(gfx);
 	}
 
 	void ScreenQuad::DrawScreenQuad(Gfx::GfxCore* gfx)
 	{
-		gfx->DrawIndexed(6,0,0);
+		gfx->DrawIndexed(6, 1, 0);
 	}
 
 }

@@ -49,7 +49,10 @@ namespace rczEngine
 			bool SetRenderTargetViewAndDepthStencil();
 
 			///Sets The Viewport using m_ScreenWidth and m_ScreenHeight
-			bool SetViewPort();
+			bool SetViewPortDefault();
+
+			///Sets The Viewport using m_ScreenWidth and m_ScreenHeight
+			bool SetViewPort(int32 width, int32 height);
 
 			///Resize the window
 			void Resize(uint32 Width, uint32 Height);
@@ -326,6 +329,9 @@ namespace rczEngine
 
 			///Create a Cubemap from 6 image paths.
 			bool CreateCubeMapFrom6Files(char * front, char * back, char * left, char * right, char * top, char * bottom, TextureCore2D & out_Cubemap, eFORMAT format, eBUFFER_USAGE usage = USAGE_DEFAULT, eBIND_FLAGS bind_flags = eBIND_FLAGS::BIND_SHADER_RESOURCE, eCPU_ACCESS_FLAGS cpu_access_flags = eCPU_ACCESS_FLAGS::CPU_DEFAULT);
+
+			///Create a Cubemap from 6 image paths.
+			bool CreateCubeMapFrom6Tex2DCore(TextureCore2D& front, TextureCore2D& back, TextureCore2D& left, TextureCore2D& right, TextureCore2D& top, TextureCore2D& bottom, TextureCore2D & out_Cubemap, eFORMAT format, eBUFFER_USAGE usage = USAGE_DEFAULT, eBIND_FLAGS bind_flags = eBIND_FLAGS::BIND_SHADER_RESOURCE, eCPU_ACCESS_FLAGS cpu_access_flags = eCPU_ACCESS_FLAGS::CPU_DEFAULT);
 
 			///Create a Cubemap from 6 memory pointers
 			bool CreateCubeMapFrom6MemoryPtr(void * front, void * back, void * left, void * right, void * top, void * bottom, TextureCore2D & out_Cubemap, eFORMAT format, eBUFFER_USAGE usage = USAGE_DEFAULT, eBIND_FLAGS bind_flags = eBIND_FLAGS::BIND_SHADER_RESOURCE, eCPU_ACCESS_FLAGS cpu_access_flags = eCPU_ACCESS_FLAGS::CPU_DEFAULT);

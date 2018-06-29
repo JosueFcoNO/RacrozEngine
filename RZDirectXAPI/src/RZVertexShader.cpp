@@ -48,7 +48,7 @@ namespace rczEngine
 			SetThisInputLayout(gfx);
 		}
 
-		void VertexShader::ReflectLayout(GfxCore* gfx)
+		void VertexShader::ReflectLayout(int layoutSlot, GfxCore* gfx)
 		{
 			HRESULT hr;
 
@@ -66,7 +66,6 @@ namespace rczEngine
 			int32 SemanticIndex;
 			int32 ByteWidth = 0;
 
-
 			for (int32 i = 0; i < nOfInputParameters; ++i)
 			{
 				hr = reflect->GetInputParameterDesc(i, &parameterDesc);
@@ -76,58 +75,50 @@ namespace rczEngine
 
 				if (SemanticName == "POSITION")
 				{
-					m_InputLayout.AddElement(SemanticName.c_str(), SemanticIndex, eFORMAT::FORMAT_R32G32B32_FLOAT, 0, ByteWidth, eINPUT_CLASSIFICATION::INPUT_PER_VERTEX, 0);
+					m_InputLayout.AddElement(SemanticName.c_str(), SemanticIndex, eFORMAT::FORMAT_R32G32B32_FLOAT, layoutSlot, ByteWidth, eINPUT_CLASSIFICATION::INPUT_PER_VERTEX, 0);
 					ByteWidth += 4 * 3;
 				}
 				else
 					if (SemanticName == "TEXCOORD")
 					{
-						m_InputLayout.AddElement(SemanticName.c_str(), SemanticIndex, eFORMAT::FORMAT_R32G32_FLOAT, 0, ByteWidth, eINPUT_CLASSIFICATION::INPUT_PER_VERTEX, 0);
+						m_InputLayout.AddElement(SemanticName.c_str(), SemanticIndex, eFORMAT::FORMAT_R32G32_FLOAT, layoutSlot, ByteWidth, eINPUT_CLASSIFICATION::INPUT_PER_VERTEX, 0);
 						ByteWidth += 4 * 2;
 					}
 					else
 						if (SemanticName == "NORMAL")
 						{
-							m_InputLayout.AddElement(SemanticName.c_str(), SemanticIndex, eFORMAT::FORMAT_R32G32B32_FLOAT, 0, ByteWidth, eINPUT_CLASSIFICATION::INPUT_PER_VERTEX, 0);
+							m_InputLayout.AddElement(SemanticName.c_str(), SemanticIndex, eFORMAT::FORMAT_R32G32B32_FLOAT, layoutSlot, ByteWidth, eINPUT_CLASSIFICATION::INPUT_PER_VERTEX, 0);
 							ByteWidth += 4 * 3;
 						}
 						else
 							if (SemanticName == "BINORMAL")
 							{
-								m_InputLayout.AddElement(SemanticName.c_str(), SemanticIndex, eFORMAT::FORMAT_R32G32B32_FLOAT, 0, ByteWidth, eINPUT_CLASSIFICATION::INPUT_PER_VERTEX, 0);
+								m_InputLayout.AddElement(SemanticName.c_str(), SemanticIndex, eFORMAT::FORMAT_R32G32B32_FLOAT, layoutSlot, ByteWidth, eINPUT_CLASSIFICATION::INPUT_PER_VERTEX, 0);
 								ByteWidth += 4 * 3;
 							}
 							else
 								if (SemanticName == "TANGENT")
 								{
-									m_InputLayout.AddElement(SemanticName.c_str(), SemanticIndex, eFORMAT::FORMAT_R32G32B32_FLOAT, 0, ByteWidth, eINPUT_CLASSIFICATION::INPUT_PER_VERTEX, 0);
+									m_InputLayout.AddElement(SemanticName.c_str(), SemanticIndex, eFORMAT::FORMAT_R32G32B32_FLOAT, layoutSlot, ByteWidth, eINPUT_CLASSIFICATION::INPUT_PER_VERTEX, 0);
 									ByteWidth += 4 * 3;
 								}
 								else
 									if (SemanticName == "BLENDINDICES")
 									{
-										m_InputLayout.AddElement(SemanticName.c_str(), SemanticIndex, eFORMAT::FORMAT_R32_SINT, 0, ByteWidth, eINPUT_CLASSIFICATION::INPUT_PER_VERTEX, 0);
+										m_InputLayout.AddElement(SemanticName.c_str(), SemanticIndex, eFORMAT::FORMAT_R32_SINT, layoutSlot, ByteWidth, eINPUT_CLASSIFICATION::INPUT_PER_VERTEX, 0);
 										ByteWidth += 4;
 									}
 									else
 										if (SemanticName == "BLENDWEIGHT")
 										{
-											m_InputLayout.AddElement(SemanticName.c_str(), SemanticIndex, eFORMAT::FORMAT_R32_FLOAT, 0, ByteWidth, eINPUT_CLASSIFICATION::INPUT_PER_VERTEX, 0);
+											m_InputLayout.AddElement(SemanticName.c_str(), SemanticIndex, eFORMAT::FORMAT_R32_FLOAT, layoutSlot, ByteWidth, eINPUT_CLASSIFICATION::INPUT_PER_VERTEX, 0);
 											ByteWidth += 4;
 										}
 			}
 
 			reflect->Release();
 
-			if (gfx == NULL)
-			{
-				m_InputLayout.CreateInputLayout(*this);
-			}
-			else
-			{
-				m_InputLayout.CreateInputLayout(*this, gfx);
-			}
-
+			m_InputLayout.CreateInputLayout(*this, gfx);
 		}
 	}
 }

@@ -13,7 +13,7 @@ namespace rczEngine
 	void TerrainPatch::Render(Gfx::GfxCore * gfx)
 	{
 		m_Index.SetThisIndexBuffer(gfx);
-		m_Mesh.SetThisVertexBuffer(gfx);
+		m_Mesh.SetThisVertexBuffer(gfx, 0);
 		gfx->DrawIndexed(m_Index.GetSize(), 0, 0);
 	}
 

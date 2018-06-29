@@ -75,7 +75,7 @@ namespace rczEngine
 		m_GreyTex = LoadResource("RacrozEngineAssets/GreyTex.tga", "GreyTex");
 		m_NormalTex = LoadResource("RacrozEngineAssets/NormalTex.png", "NormalTex");
 
-		m_ModelCube = LoadResource("RacrozEngineAssets/Cube.fbx", "assetCube");
+		m_ModelCube = LoadResource("RacrozEngineAssets/CubePerlin.dae", "assetCube");
 		m_ModelPlane = LoadResource("RacrozEngineAssets/Plane.fbx", "assetPlane");
 		m_ModelSphere = LoadResource("RacrozEngineAssets/Showcase.fbx", "assetSphere");
 

@@ -23,12 +23,13 @@ namespace rczEngine
 		delete _Instance();
 	}
 
-	StrPtr<Scene> SceneManager::CreateScene(const char * name)
+	StrPtr<Scene> SceneManager::CreateDefaultScene(const char * name)
 	{
 		StrPtr<Scene> DefaultScene = std::make_shared<Scene>();
 		DefaultScene->InitScene(name);
 
 		m_SavedScenes.push_back(DefaultScene);
+
 		m_ActiveScene = DefaultScene;
 
 		StrGameObjectPtr defaultCamera = DefaultScene->CreateActor("Camera", NULL).lock();
@@ -36,12 +37,30 @@ namespace rczEngine
 		m_ActiveScene->CreateComponent(CMP_CAMERA_WALK, defaultCamera->GetID());
 		auto camera = defaultCamera->GetComponent<CameraWalk>(CMP_CAMERA_WALK).lock();
 		
-		CameraManager::Pointer()->SetActiveCamera(camera->m_ID, Gfx::GfxCore::Pointer());
+		CameraManager::Pointer()->SetActiveCamera(camera->GetComponentID(), Gfx::GfxCore::Pointer());
 
 		DefaultScene->m_RootNode->SetScale(1.0f, 1.0f, 1.0f);
 		DefaultScene->m_RootNode->SetPosition(0, 0, 0);
 		DefaultScene->m_RootNode->SetOrientation(0, 0, 0);
 		
+		return DefaultScene;
+	}
+
+	StrPtr<Scene> SceneManager::CreateEmptyScene(const char * name)
+	{
+		StrPtr<Scene> DefaultScene = std::make_shared<Scene>();
+		DefaultScene->InitScene(name);
+
+		m_SavedScenes.push_back(DefaultScene);
+
+		StrGameObjectPtr defaultCamera = DefaultScene->CreateActor("DefaultCamera", NULL).lock();
+		m_ActiveScene->CreateComponent(CMP_CAMERA_WALK, defaultCamera);
+		auto camera = defaultCamera->GetComponent<CameraWalk>(CMP_CAMERA_WALK).lock();
+
+		DefaultScene->m_RootNode->SetScale(1.0f, 1.0f, 1.0f);
+		DefaultScene->m_RootNode->SetPosition(0, 0, 0);
+		DefaultScene->m_RootNode->SetOrientation(0, 0, 0);
+
 		return DefaultScene;
 	}
 

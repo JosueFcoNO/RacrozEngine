@@ -22,6 +22,7 @@ namespace rczEngine
 		void InitPlanet(int32 seed, float x, float y, float z, SpaceManager* spaceMng);
 		void RenderPlanet(float scale);
 		void RenderPlanetWater(float scale);
+		void RenderAtmosphere(float scale);
 
 		void CreateMaterial();
 
@@ -35,6 +36,7 @@ namespace rczEngine
 		float m_RealDist = 0.0f;
 
 		ResourceHandle m_Materials;
+		ResourceHandle m_HeightMap;
 		Vector4 m_HeightScale;
 
 	private:
@@ -51,10 +53,18 @@ namespace rczEngine
 		Gfx::ConstantBuffer m_GradientCB;
 		Gfx::ConstantBuffer m_GradientsReal;
 		Gfx::ConstantBuffer m_ScaleCB;
+
+		Gfx::ConstantBuffer m_PosView;
+		Vector4 PlanetPos;
+
+		Gfx::ConstantBuffer m_HeightCameracb;
+		Vector4 m_HeightCamera;
 		
 		Vector4 PermutationTable[PERMUTATION_TABLE_SIZE];
 
 		Vector3 m_SpacePosition;
+
+		Matrix4 m_PlanetMatrix;
 
 		ResourceHandle Water;
 	};

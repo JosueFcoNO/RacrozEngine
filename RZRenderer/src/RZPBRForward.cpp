@@ -11,10 +11,10 @@ namespace rczEngine
 		m_gfx->CompileAndCreatePixelShader(m_PBRShader, L"Shaders/PBR_Forward.hlsl");
 
 		m_gfx->CompileAndCreateVertexShader(m_GeometryPBRShader, L"Shaders/GeometryPass.hlsl");
-		m_GeometryPBRShader.ReflectLayout(m_gfx);
+		m_GeometryPBRShader.ReflectLayout(0, m_gfx);
 
 		m_gfx->CompileAndCreateVertexShader(m_SkinnedGeometryPBRShader, L"Shaders/SkinnedVertexShader.hlsl");
-		m_SkinnedGeometryPBRShader.ReflectLayout(m_gfx);
+		m_SkinnedGeometryPBRShader.ReflectLayout(0, m_gfx);
 
 		AddTexture2D(m_LUT.get(), 7);
 

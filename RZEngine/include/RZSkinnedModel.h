@@ -3,7 +3,7 @@
 namespace rczEngine
 {
 	///Contains an animation, a skeleton and a vector of SkinnedMeshes.
-	class RZ_UTILITY_EXPORT SkinnedModel : public Resource
+	class RZ_EXP SkinnedModel : public Resource
 	{
 	public:
 		SkinnedModel() { m_Type = ResourceType::RES_SKINNEDMODEL; };

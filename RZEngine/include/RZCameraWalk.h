@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT CameraWalk : 
+	class RZ_EXP CameraWalk : 
 		public CameraCmp, 
 		public IKeyHandler, 
 		public IMouseHandler
@@ -46,6 +46,8 @@ namespace rczEngine
 
 		virtual void Update(float deltaTime)
 		{
+			if (!m_Active) return;
+
 			m_CameraCore.MoveRight(-deltaTime*m_xAxis*Speed);
 
 			auto VectorDir = m_CameraCore.GetTarget() - m_CameraCore.GetPosition();
@@ -56,7 +58,7 @@ namespace rczEngine
 
 			if (m_Jumping)
 			{
-				m_ySpeed -= 9.81*deltaTime;
+				m_ySpeed -= 9.81f*deltaTime;
 				if (m_CameraCore.GetPosition().m_y <= 2.0f)
 				{
 					m_Jumping = false;
@@ -158,6 +160,11 @@ namespace rczEngine
 			}
 		};
 
+		virtual void OnClick(int32 mb = 0, int32 mx = 0, int32 my = 0) {};
+		virtual void OnHold(int32 mb = 0, int32 mx = 0, int32 my = 0) {};
+		virtual void OnReleased(int32 mb = 0, int32 mx = 0, int32 my = 0) {};
+		virtual void OnMoved(int32 mb = 0, int32 mx = 0, int32 my = 0) {};
+
 #ifndef RZ_EDITOR
 		virtual void RenderComponent()
 		{
@@ -167,10 +174,18 @@ namespace rczEngine
 			ImGui::DragFloat("FOV", &m_CameraCore.m_Fov, 1.0f, 10.0f, 180.0f);
 			ImGui::DragFloat("Aspect Ratio", &m_CameraCore.m_AspectRatio, 0.05f);
 			ImGui::DragFloat("Far Clip", &m_CameraCore.m_FarClip, 10.0f, 1.0f, 1000.0f);
-			ImGui::DragFloat("Near Clip", &m_CameraCore.m_NearClip, 10.0f, 1.0f, 1000.0f);
+			ImGui::DragFloat("Near Clip", &m_CameraCore.m_NearClip, 0.01f, 0.001f, 1000.0f);
 
 			ImGui::DragFloat("Speed", &Speed, 0.1f, 0.01f, 100.0f);
 
+			if (ImGui::Button("Set Active"))
+			{
+				CameraManager::Pointer()->SetActiveCamera(m_ID, Gfx::GfxCore::Pointer());
+
+				m_Active = true;
+			}
+
+			if (ImGui::Button("Deactivate")) m_Active = false;
 		}
 #endif
 
@@ -183,11 +198,11 @@ namespace rczEngine
 		float m_SpinY = 0.0f;
 		float m_SpinX = 0.0f;
 
-		float Speed = 30.0f;
+		float Speed = 1.0f;
 
 		bool m_Jumping = false;
 		bool m_Mouse = false;
-
+		bool m_Active = false;
 
 	};
 }

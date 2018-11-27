@@ -5,11 +5,11 @@ namespace rczEngine
 	enum { INVALID_ID = -1 };
 
 	///The class GameObject from the Scene Graph, it's also the actor, has a transform and components.
-	class RZ_UTILITY_EXPORT GameObject : public std::enable_shared_from_this<GameObject>, public Serializable
+	class RZ_EXP GameObject : public std::enable_shared_from_this<GameObject>, public Serializable
 	{
 	public:
 		///Calls Destroy()
-		~GameObject() { Destroy(); };
+		~GameObject() {  };
 
 		///The Node constructor takes an id and a name. There can't be a game object without a name.
 		GameObject(GameObjectID actorID = INVALID_ID, String actorName = "GameObj") : m_Position(INIT_NONE), m_Orientation(INIT_NONE), m_Scale(INIT_NONE), m_ToLocal(INIT_NONE)
@@ -22,14 +22,15 @@ namespace rczEngine
 		void Init();
 		///Updates the node
 		void Update(Scene* scene, float deltaTime);
+
 		///Destroys the GameObject's data
-		void Destroy();
+		void Destroy(bool DestroyParentRef = false);
 
 		///Sets the pipeline before rendering
 		void PreRender(Scene* scene);
 		///Renders the gameobject
 		void Render(Scene* scene, ComponentType cmpType, MATERIAL_TYPE mat = MAT_ANY);
-		
+
 		FORCEINLINE void SetParent(StrGameObjectPtr parent) { m_ParentNode = parent; m_ParentID = m_ParentNode.lock()->GetID(); };
 		///Returns the parent of the node
 		FORCEINLINE WeakGameObjectPtr GetParent() { return m_ParentNode; };
@@ -37,23 +38,35 @@ namespace rczEngine
 		FORCEINLINE GameObjectVector GetChildren() { return m_ChildrenVector; };
 
 		///Adds a new node child
-		void AddChild(WeakGameObjectPtr babyNode) 
-		{ 
-			m_ChildrenVector.push_back(babyNode); 
-			m_ChildrenIDs.push_back(babyNode.lock()->GetID()); 
-			babyNode.lock()->SetParent(shared_from_this()); 
+		void AddChild(WeakGameObjectPtr babyNode)
+		{
+			m_ChildrenVector.push_back(babyNode);
+			m_ChildrenIDs.push_back(babyNode.lock()->GetID());
+			babyNode.lock()->SetParent(shared_from_this());
 		};
 		///Removes a child node
-		void RemoveChild(GameObjectID orphanActorId) 
-		{ 
-			for (int32 i = 0; i < m_ChildrenVector.size(); ++i) 
-			{ 
+		void RemoveChild(GameObjectID orphanActorId)
+		{
+			for (int32 i = 0; i < m_ChildrenVector.size(); ++i)
+			{
 				if (m_ChildrenVector[i].lock()->GetID() == orphanActorId)
 				{
 					m_ChildrenVector.erase(m_ChildrenVector.begin() + i);
 					m_ChildrenIDs.erase(m_ChildrenIDs.begin() + i);
 				}
-			} 
+			}
+		};
+
+		///Removes a child node
+		void RemoveChildren()
+		{
+			for (int32 i = 0; i < m_ChildrenVector.size(); ++i)
+			{
+				m_ChildrenVector[i].lock()->RemoveChildren();
+
+				m_ChildrenVector.erase(m_ChildrenVector.begin() + i);
+				m_ChildrenIDs.erase(m_ChildrenIDs.begin() + i);
+			}
 		};
 
 		///Returns the node's id
@@ -88,13 +101,14 @@ namespace rczEngine
 		///Returns the position of the Node.
 		FORCEINLINE Vector3 GetPosition() { return m_Position; };
 		///Returns the world position.
-		FORCEINLINE Vector3 GetAccumulatedPosition() { return m_ToWorld[0]*m_Position; };
+		FORCEINLINE Vector3 GetAccumulatedPosition() { return m_ToWorld[0] * m_Position; };
 		///Returns the orientation of the node.
 		FORCEINLINE Vector3 GetOrientation() { return m_Orientation; };
 		///Returns the node's scale.
 		FORCEINLINE Vector3 GetScale() { return m_Scale; };
 		///Returns the WorldMatrix for this node.
 		FORCEINLINE Matrix4 GetToWorldMatrix() { return m_ToWorld[0]; };
+		FORCEINLINE Matrix4 GetLocalMatrix();
 
 		void UpdateWorldMatrix();
 
@@ -104,7 +118,7 @@ namespace rczEngine
 		///Returns a strPtr to a component given its id.
 		template <class CType>
 		WeakPtr<CType> GetComponent(eCOMPONENT_ID cmp)
-		{ 
+		{
 			StrPtr<CType> ret;
 
 			auto It = m_Components.find(short(cmp));
@@ -147,7 +161,7 @@ namespace rczEngine
 
 		///The GameObject's id
 		GameObjectID m_GameObjectID;
-		
+
 		///A pointer to the parent
 		WeakGameObjectPtr m_ParentNode;
 
@@ -180,7 +194,5 @@ namespace rczEngine
 
 		///If the gameobject is to be destroyed.
 		bool m_ToDestroy = false;
-
-		FORCEINLINE Matrix4 GetLocalMatrix(bool HasParent = true);
 	};
-}; 
+};

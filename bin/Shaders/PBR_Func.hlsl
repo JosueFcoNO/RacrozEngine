@@ -458,14 +458,14 @@ float3 PBR_rm(float3 _position, float3 _albedoColor, float3 _normal, float _roug
 	float3 Enviroment = EnviromentCube.SampleLevel(LinearWrapSampler, envVector.xyz, mipIndex).xyz;
 	Enviroment = pow(Enviroment, 2.2f);
 
-	float3 Irradiance = saturate(EnviromentCube.SampleLevel(LinearWrapSampler, _normal.xyz, 8.0f).xyz);
+	float3 Irradiance = saturate(EnviromentCube.SampleLevel(LinearWrapSampler, _normal.xyz, 7.0f).xyz);
 	Irradiance = pow(Irradiance, 2.2f);
 
 	float2 envBRDF = BRDFLUT.SampleLevel(LinearClampSampler, float2(saturate(dot(_normal, viewDir)), clamp(_roughness, 0.05f, 0.95f)), 0.0f).xy;
 
 	float3 FinalColor =
 		(_albedoColor.xyz * Irradiance * Kd * g_AmbientLightIntensity) +
-		(Enviroment * (envFresnel * envBRDF.x + envBRDF.y) * g_ReflectionIntensity) +
+		(Enviroment * (envFresnel * envBRDF.xxx + envBRDF.yyy) * g_ReflectionIntensity) +
 		(Light1 * (1.0f - _metallic) * g_LightIntensity);
 
 	return FinalColor.xyz;

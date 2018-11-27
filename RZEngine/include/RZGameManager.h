@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT GameManager
+	class RZ_EXP GameManager
 	{
 	public:
 		void UpdateActor(float deltaTime);

@@ -16,36 +16,36 @@ namespace rczEngine
 	};
 
 	///A Camera Manager Class that holds pointers to all cameras in the Scene and can change between them.
-	class RZ_UTILITY_EXPORT CameraManager
+	class CameraManager
 	{
 	private:
 		static CameraManager*& _Instance();
 
 	public:
-		static void Start();
-		static CameraManager* Pointer();
-		static void ShutDown();
+		RZ_EXP static void Start();
+		RZ_EXP static CameraManager* Pointer();
+		RZ_EXP static void ShutDown();
 
 		///Calls Destroy();
-		~CameraManager() { Destroy(); };
+		RZ_EXP ~CameraManager() { Destroy(); };
 		///Inits the Camera Manager and buffers
-		void Init(Gfx::GfxCore* gfx);
+		RZ_EXP void Init(Gfx::GfxCore* gfx);
 		///Destroys the Camera Manager and all buffers.
-		void Destroy();
+		RZ_EXP void Destroy();
 
 
 		///Adds a Camera Cmp to the Manager
-		ComponentId AddCamera(StrPtr<CameraCmp> cameraPtr);
+		RZ_EXP ComponentId AddCamera(StrPtr<CameraCmp> cameraPtr);
 		///Removes a Camera By Name
-		void RemoveCamera(ComponentId id);
+		RZ_EXP void RemoveCamera(ComponentId id);
 		///Returns a weak pointer to the active camera's component
-		WeakPtr<CameraCmp> GetActiveCamera();
+		RZ_EXP WeakPtr<CameraCmp> GetActiveCamera();
 
 
 		///Sets the Active Camera By idd
-		void SetActiveCamera(ComponentId id, Gfx::GfxCore* gfx);
+		RZ_EXP void SetActiveCamera(ComponentId id, Gfx::GfxCore* gfx);
 		///Updates the Camera Buffer With the Active Camera's data and sets it on the VS and PS specified slots.
-		void UpdateAndSetCameraBuffer(Gfx::GfxCore* gfx, int32 vertexShaderSlot, int32 PixelShaderSlot);
+		RZ_EXP void UpdateAndSetCameraBuffer(Gfx::GfxCore* gfx, int32 vertexShaderSlot, int32 PixelShaderSlot);
 
 	private:
 		///A Map of Camera Component Ptrs with String as key values

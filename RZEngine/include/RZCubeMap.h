@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT CubeMap : public Texture2D
+	class RZ_EXP CubeMap : public Texture2D
 	{
 	public:
 		CubeMap() { m_Type = ResourceType::RES_CUBEMAP; };

@@ -86,7 +86,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	API->SetViewPort();
 
 	ComputeAPI CAPI;
-	CAPI.InitComputeAPI(API);
+	//CAPI.InitComputeAPI(API);
 
 	SoundAPI::StartUp();
 	SoundAPI* SoundAPI = SoundAPI::InstancePtr();

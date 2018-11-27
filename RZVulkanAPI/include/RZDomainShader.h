@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT DomainShader : public Shader
+	class RZ_EXP DomainShader : public Shader
 	{
 	public:
 		///Inits everything to NULL

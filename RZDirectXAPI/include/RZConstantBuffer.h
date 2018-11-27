@@ -8,7 +8,7 @@ namespace rczEngine
 {
 	namespace Gfx
 	{
-		class RZ_UTILITY_EXPORT ConstantBuffer : public BasicBuffer
+		class RZ_EXP ConstantBuffer : public BasicBuffer
 		{
 		public:
 			virtual ~ConstantBuffer() { };

@@ -55,7 +55,7 @@ namespace rczEngine
 	};
 
 	///The Renderer class, handles the render passes.
-	class RZ_UTILITY_EXPORT RacrozRenderer
+	class RZ_EXP RacrozRenderer : GUIBaseWindow
 	{
 	private:
 		static RacrozRenderer*& _Instance();
@@ -64,6 +64,32 @@ namespace rczEngine
 		static void Start();
 		static RacrozRenderer* Pointer();
 		static void ShutDown();
+
+		int CurrentPass = 0;
+
+		void InitWindow()
+		{
+			GUIEditor::Pointer()->AddWindow("Renderer", this);
+		};
+
+		void RenderWindow()
+		{
+			ImGui::Begin("Renderer");
+			{
+
+				if (ImGui::Button("Previous Pass"))
+				{
+					CurrentPass = Math::Max(CurrentPass - 1, 0);
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Next Pass"))
+				{
+					CurrentPass = Math::Min(CurrentPass + 1, (int)m_PassesOrder.size() - 1);
+				}
+
+				if (m_Passes[m_PassesOrder[CurrentPass]]) m_Passes[m_PassesOrder[CurrentPass]]->RenderPassGUI();
+			}
+		};
 
 	public:
 		RacrozRenderer() {};
@@ -87,7 +113,7 @@ namespace rczEngine
 			m_Passes["SkyBox"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 5);
 			m_Passes["PBR"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 3);
 			m_Passes["Transparent"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 5);
-			m_Passes["Planet"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 5);
+			//m_Passes["Planet"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 5);
 
 		}
 
@@ -161,11 +187,11 @@ namespace rczEngine
 		Gfx::SamplerState m_AnisotropicWrapSampler;
 		Gfx::SamplerState m_LinealClampSampler;
 		Gfx::SamplerState m_AnisotropicClampSampler;
+		Gfx::SamplerState m_PointWrapSampler;
 
 		///Rasterizers
 		Gfx::RasterizerState m_RSWireframe;
 		Gfx::RasterizerState m_RSSolid;
 		Gfx::RasterizerState m_RSSolidCullNone;
-
 	};
 }

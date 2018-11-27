@@ -11,7 +11,7 @@ namespace rczEngine
 		byte buttons[4];
 	};
 
-	class RZ_UTILITY_EXPORT Input
+	class RZ_EXP Input
 	{
 	private:
 		static Input*& _Instance();

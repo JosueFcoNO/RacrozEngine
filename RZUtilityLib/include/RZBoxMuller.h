@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT RandomBoxMuller : public RandomNumberGen
+	class RZ_EXP RandomBoxMuller : public RandomNumberGen
 	{
 	public:
 		virtual ~RandomBoxMuller() {};

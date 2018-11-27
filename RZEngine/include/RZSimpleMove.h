@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT SimpleMove : public Component
+	class RZ_EXP SimpleMove : public Component
 	{
 	public:
 		SimpleMove() {};

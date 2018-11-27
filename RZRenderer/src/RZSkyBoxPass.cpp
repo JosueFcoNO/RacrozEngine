@@ -14,7 +14,8 @@ namespace rczEngine
 		m_gfx->CompileAndCreateVertexShader(m_VShader, L"Shaders/SkyBoxShader.hlsl");
 		m_VShader.ReflectLayout(0, m_gfx);
 
-		m_gfx->CompileAndCreatePixelShader(m_PShader, L"Shaders/SkyBoxShader.hlsl");
+		m_PShaderPath = L"Shaders/SkyBoxShader.hlsl";
+		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
 
 		m_SkyBoxBuffer.CreateConstantBuffer(sizeof(Matrix4::m_elements), Gfx::USAGE_DEFAULT, m_gfx);
 

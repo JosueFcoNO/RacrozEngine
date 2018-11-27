@@ -3,7 +3,7 @@
 namespace rczEngine
 {
 	///A class to wrap shaders, is a friend to GfxCore.
-	class RZ_UTILITY_EXPORT HullShader : public Shader
+	class RZ_EXP HullShader : public Shader
 	{
 	public:
 		///Inits everything to NULL

@@ -29,7 +29,7 @@ namespace rczEngine
 		float GSquared = .9025;
 	};
 
-	class RZ_UTILITY_EXPORT AtmosScatterPass : public Pass
+	class RZ_EXP AtmosScatterPass : public Pass
 	{
 	public:
 		///Inits the pass with a name and a rendering mode.

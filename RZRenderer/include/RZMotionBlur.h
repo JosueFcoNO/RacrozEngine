@@ -3,7 +3,7 @@
 namespace rczEngine
 {
 	///A Base Class to derive into concrete Passes.
-	class RZ_UTILITY_EXPORT MotionBlurPass : public Pass
+	class RZ_EXP MotionBlurPass : public Pass
 	{
 	public:
 		virtual void SetRenderingMode(RENDERING_MODE mode);
@@ -12,8 +12,9 @@ namespace rczEngine
 		virtual void PreRenderPass();
 		virtual void RenderPass();
 		virtual void PostRenderPass();
+		Vector4 FPS;
 
 	private:
-		Gfx::PixelShader m_BlurShader;
+		Gfx::ConstantBuffer m_FPSBuffer;
 	};
 }

@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT InputLayoutManager
+	class RZ_EXP InputLayoutManager
 	{
 	public:
 

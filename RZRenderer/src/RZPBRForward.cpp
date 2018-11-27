@@ -8,7 +8,8 @@ namespace rczEngine
 		m_LUT = std::make_shared<Texture2D>();
 		m_LUT->Load("RacrozEngineAssets/BRDF LUT.png", "LUT");
 
-		m_gfx->CompileAndCreatePixelShader(m_PBRShader, L"Shaders/PBR_Forward.hlsl");
+		m_PShaderPath = L"Shaders/PBR_Forward.hlsl";
+		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
 
 		m_gfx->CompileAndCreateVertexShader(m_GeometryPBRShader, L"Shaders/GeometryPass.hlsl");
 		m_GeometryPBRShader.ReflectLayout(0, m_gfx);
@@ -33,7 +34,7 @@ namespace rczEngine
 	{
 		LightManager::Pointer()->SetLightsBuffers();
 
-		m_PBRShader.SetThisPixelShader(m_gfx);
+		m_PShader.SetThisPixelShader(m_gfx);
 
 		UserDisney.UpdateConstantBuffer(&config, m_gfx);
 		UserDisney.SetBufferInPS(6, m_gfx);

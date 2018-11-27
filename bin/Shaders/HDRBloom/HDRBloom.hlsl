@@ -66,12 +66,12 @@ PS_Output PS_Main(PS_Input Input)
     float3 Lw = PBRTexture.Load(int3(Input.pos.xy, 0), 0).xyz;
 
     float3 bloom = float3(0,0,0);
-    bloom += 0.5f * BloomTexture.SampleLevel(Sampler_, Input.Texcoord, 0).xyz;
+    bloom += 1.0f * BloomTexture.SampleLevel(Sampler_, Input.Texcoord, 0).xyz;
 
-	float scale = 1.0f;// saturate(AvgLuminanceTex.SampleLevel(Sampler_, Input.Texcoord, 0.0f).r);
-    float3 L = scale * Lw + bloom;
+	float scale = saturate(AvgLuminanceTex.SampleLevel(Sampler_, float2(0,0), 0.0f).r);
+	float3 L = scale.xxx * pow(Lw, 1.0f / 2.2f) + bloom;
 
-    psout.FinalColor = float4(L.xyz, 1.0f);
+    psout.FinalColor = float4(pow(L.xyz, 2.2f), 1.0f);
     return psout;
 };
 

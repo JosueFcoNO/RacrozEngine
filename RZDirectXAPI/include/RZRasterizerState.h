@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	namespace Gfx
 	{
-		class RZ_UTILITY_EXPORT RasterizerState
+		class RZ_EXP RasterizerState
 		{
 		public:
 			RasterizerState() { m_RasterizerState = NULL; };

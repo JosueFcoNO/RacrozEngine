@@ -26,34 +26,34 @@ namespace rczEngine
 	};
 
 	//A class to serialize and deserialize objects. It internally manages the file manager.
-	class RZ_UTILITY_EXPORT Serializer
+	class Serializer
 	{
 	public:
-		static void Start();
-		static Serializer* Pointer();
-		static void ShutDown();
+		RZ_EXP static void Start();
+		RZ_EXP static Serializer* Pointer();
+		RZ_EXP static void ShutDown();
 
 		//Open and truncate the new file.
-		void StartFile(const char* pszFilePath);
+		RZ_EXP void StartFile(const char* pszFilePath);
 		//Load the file.
-		void LoadFile(const char* pszFilePath);
+		RZ_EXP void LoadFile(const char* pszFilePath);
 		//Close the file. It is not automatic.
-		void CloseFile();
+		RZ_EXP void CloseFile();
 
 		//Set and write the serial for the next serialized object
-		void SetNextObjectSerial(int serial);
+		RZ_EXP void SetNextObjectSerial(int serial);
 		//Read and get the serial for the next deserialized object.
-		int GetNextObjectSerial();
+		RZ_EXP int GetNextObjectSerial();
 
 		//Serialize a String.
-		void SerializeString(const String& str);
+		RZ_EXP void SerializeString(const String& str);
 		//DeSerialize a String.
-		void DeSerializeString(String& str);
+		RZ_EXP void DeSerializeString(String& str);
 
 		//Write data.
-		void WriteData(void* pointer, size_t size);
+		RZ_EXP void WriteData(void* pointer, size_t size);
 		//Read Data.
-		void ReadData(void* pointer, size_t size);
+		RZ_EXP void ReadData(void* pointer, size_t size);
 
 	private:
 		static Serializer*& _Instance();

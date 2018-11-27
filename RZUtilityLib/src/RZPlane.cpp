@@ -8,27 +8,48 @@ namespace rczEngine
 	////////Plane
 	///////////////////////////////////////////////
 
-	Plane::Plane() : Vector3(INIT_NONE)
+	Plane::Plane()
 	{
-		m_x = 0;
-		m_y = 1;
-		m_z = 0;
-		m_w = 0;
+		Normal.Set(0, 1, 0);
+		D = 0;
 	}
 
-	Plane::Plane(float x, float y, float z, float w) : Vector3(INIT_NONE)
+	Plane::Plane(float x, float y, float z, float w)
 	{
-		m_x = x;
-		m_y = y;
-		m_z = z;
-		m_w = w;
+		Normal.Set(x, y, z);
+		D = w;
 	}
 
-	Plane::Plane(Vector3 Normal, float w) : Vector3(INIT_NONE)
+	Plane::Plane(const Vector3& normal, float d)
 	{ 
-		m_x = Normal.m_x;
-		m_y = Normal.m_y;
-		m_z = Normal.m_z;
-		m_w = w;
+		Normal = normal;
+		D = d;
+	}
+
+	Plane::Plane(const Vector3& p1, const Vector3& p2, const Vector3& p3)
+	{
+		ConstructFromPoints(p1, p2, p3);
+	}
+
+
+	void Plane::ConstructFromPointNormal(const Vector3 &Pt, const Vector3 &normal)
+	{
+		Vector3 NormalizedNormal = normal;
+		NormalizedNormal.Normalize();
+
+		Normal = NormalizedNormal;
+		D = -(Pt | NormalizedNormal);
+	}
+
+	void Plane::ConstructFromPointVectors(const Vector3 &Pt, const Vector3 &V1, const Vector3 &V2)
+	{
+		Vector3 normal = V1^V2;
+		ConstructFromPointNormal(Pt, normal);
+	}
+
+	void Plane::ConstructFromPoints(const Vector3 &V0, const Vector3 &V1, const Vector3 &V2)
+	{
+		Vector3 normal = ((V1 - V0) ^ (V2 - V0)).GetNormalized();
+		return ConstructFromPointNormal(V0, normal);
 	}
 }

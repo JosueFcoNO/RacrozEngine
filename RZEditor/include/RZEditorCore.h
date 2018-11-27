@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT EditorCore
+	class RZ_EXP EditorCore
 	{
 	public:
 		~EditorCore() { DestroyEditor(); };

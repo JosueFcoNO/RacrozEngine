@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT Color
+	class RZ_EXP Color
 	{
 	public:
 		Color(uint8 r, uint8 g, uint8 b, uint8 a);

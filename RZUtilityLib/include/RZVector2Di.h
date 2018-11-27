@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT Vector2I
+	class RZ_EXP Vector2I
 	{
 	public:
 		///////////////////////

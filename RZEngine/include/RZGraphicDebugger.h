@@ -1,7 +1,7 @@
 #pragma once
 
 namespace rczEngine {
-	class RZ_UTILITY_EXPORT GraphicDebugger
+	class RZ_EXP GraphicDebugger
 	{
 	private:
 		static GraphicDebugger*& _Instance();
@@ -66,12 +66,11 @@ namespace rczEngine {
 		uint32 m_StaticIndicesNum = 0;
 		uint32 m_StaticVerticesNum = 0;
 
-		Model m_SphereModel;
+		ResourceHandle m_SphereModel;
 
 		Gfx::PixelShader m_Shader;
 		Gfx::ConstantBuffer m_ColorCB;
 		Gfx::ConstantBuffer m_WorldMatrixCB;
-
 
 		Gfx::RasterizerState m_LinesRS;
 		Gfx::RasterizerState m_SolidRS;

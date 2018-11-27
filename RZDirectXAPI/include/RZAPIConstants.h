@@ -5,13 +5,9 @@ namespace rczEngine
 	namespace Gfx
 	{
 		///The Vertex structure
-		class RZ_UTILITY_EXPORT Vertex
+		class RZ_EXP Vertex
 		{
 		public:
-			Vertex() : VertexPosition(INIT_ZERO), TextureCoordinates(INIT_ZERO), VertexNormals(INIT_ZERO)
-			{
-			};
-
 			Vector3 VertexPosition;
 			Vector2 TextureCoordinates;
 			Vector3 VertexNormals;
@@ -19,24 +15,9 @@ namespace rczEngine
 			Vector3 BiNormals;
 		};
 
-		///The Vertex structure
-		class RZ_UTILITY_EXPORT PlanetVertex
+		class RZ_EXP SkinnedVertex
 		{
 		public:
-			PlanetVertex() : VertexPosition(INIT_ZERO)
-			{
-			};
-
-			Vector3 VertexPosition;
-		};
-
-		class RZ_UTILITY_EXPORT SkinnedVertex
-		{
-		public:
-			SkinnedVertex() : VertexPosition(INIT_ZERO), TextureCoordinates(INIT_ZERO), VertexNormals(INIT_ZERO)
-			{
-			};
-
 			Vector3 VertexPosition;
 			Vector2 TextureCoordinates;
 			Vector3 VertexNormals;

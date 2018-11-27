@@ -20,7 +20,8 @@ namespace rczEngine
 			if (mat->m_MatType == matType || matType == MAT_ANY)
 			{
 				if (mat->m_MatType != MAT_PLANET)
-				mat->SetThisMaterial(gfx, Res);
+					mat->SetThisMaterial(gfx, Res);
+
 				m_VectorMeshes[i].Draw(gfx);
 			}
 		}
@@ -55,7 +56,7 @@ namespace rczEngine
 		free(ptr);
 
 		//Write the number of meshes
-		tempInt = m_VectorMeshes.size();
+		tempInt = (int32)m_VectorMeshes.size();
 		ser->WriteData(&tempInt, sizeof(int32));
 
 		//Write the meshes.
@@ -65,7 +66,7 @@ namespace rczEngine
 		}
 
 		//Write the number of materials in the map
-		tempInt = m_MaterialMap.size();
+		tempInt = (int32)m_MaterialMap.size();
 		ser->WriteData(&tempInt, sizeof(int32));
 
 		//Write the materials name and the handle.

@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT TextureCore3D
+	class RZ_EXP TextureCore3D
 	{
 	public:
 		ID3D11Texture3D** GetTexture();

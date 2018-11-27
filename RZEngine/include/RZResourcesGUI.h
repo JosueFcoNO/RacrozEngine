@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT GUIResources
+	class RZ_EXP GUIResources
 	{
 	public:
 		void RenderResources()

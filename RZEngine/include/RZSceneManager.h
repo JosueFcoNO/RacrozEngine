@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT SceneManager
+	class RZ_EXP SceneManager
 	{
 	private:
 		static SceneManager*& _Instance();

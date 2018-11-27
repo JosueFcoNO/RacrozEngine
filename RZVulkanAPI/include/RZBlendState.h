@@ -3,7 +3,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT BlendState
+	class RZ_EXP BlendState
 	{
 	public:
 		BlendState() { m_BlendState = NULL; };

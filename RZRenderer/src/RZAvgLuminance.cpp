@@ -4,12 +4,13 @@ namespace rczEngine
 {
 	void AverageLuminancePass::SetRenderingMode(RENDERING_MODE mode)
 	{
-		m_gfx->CompileAndCreatePixelShader(m_AvgLuminanceShader, L"Shaders/HDRBloom/AvgLuminance.hlsl");
+		m_PShaderPath = L"Shaders/HDRBloom/AvgLuminance.hlsl";
+		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
 	}
 
 	void AverageLuminancePass::PreRenderPass()
 	{
-		m_AvgLuminanceShader.SetThisPixelShader(m_gfx);
+		m_PShader.SetThisPixelShader(m_gfx);
 
 		SetRenderTargetsInPipeline();
 		SetTexturesInPipeline();

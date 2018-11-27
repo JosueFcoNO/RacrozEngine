@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT Quaternion
+	class RZ_EXP Quaternion
 	{
 	public:
 		Quaternion(eINIT init);
@@ -48,10 +48,7 @@ namespace rczEngine
 		static Quaternion GetDifference(Quaternion lh, Quaternion rh);
 		static Quaternion Slerp(Quaternion q1, Quaternion q2, float t);
 
-		union {
-			Vector3 m_v;
-			struct { float m_x, m_y, m_z; };
-		};
+		Vector3 m_v;
 		float m_w;
 	};
 }

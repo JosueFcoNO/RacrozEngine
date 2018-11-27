@@ -31,7 +31,13 @@ namespace rczEngine
 		m_LinesRS.Init(Gfx::eFILL_MODE::FILL_WIREFRAME);
 		m_SolidRS.Init(Gfx::eFILL_MODE::FILL_SOLID);
 		m_WorldMatrixCB.CreateConstantBuffer(sizeof(Matrix4::m_elements), Gfx::USAGE_DEFAULT, gfx);
-		ResVault::Pointer()->LoadResource("EsferaLowPoly.fbx", "DebuggerSphere");
+		m_SolidRS.CreateRasterizerState(gfx);
+		m_LinesRS.CreateRasterizerState(gfx);
+
+		StrPtr<Model> Sphere = std::make_shared<Model>();
+		Sphere->Load("RacrozEngineAssets/EsferaLowPoly.fbx", "DebuggerSphere");
+
+		m_SphereModel = ResVault::Pointer()->InsertResource(Sphere);
 	}
 
 	void GraphicDebugger::Destroy()
@@ -46,7 +52,6 @@ namespace rczEngine
 	void GraphicDebugger::Render(Gfx::GfxCore * graphicsapi_instance)
 	{
 		Vector<DebuggerPoint*> staticpoints;
-		Vector<DebuggerPoint*> framepoints;
 
 		///Set the Graphic debugger's  pixel shader
 		m_Shader.SetThisPixelShader(graphicsapi_instance);
@@ -55,7 +60,6 @@ namespace rczEngine
 		m_ColorCB.SetBufferInPS(0, graphicsapi_instance);
 
 		///Set the Rasterizer State
-		m_LinesRS.CreateRasterizerState(graphicsapi_instance);
 		m_LinesRS.SetThisRasterizerState(graphicsapi_instance);
 
 		///Change the Topology to linelist
@@ -67,13 +71,17 @@ namespace rczEngine
 	
 		if (m_FrameObjs.size())
 		{
+			///Destroy the Static Index And Gfx::Vertex Buffers
+			//m_FrameIndexBuffer.Destroy();
+			//m_FrameVertexBuffer.Destroy();
+
 			///Create the Frame Index Buffer and the Gfx::Vertex Buffer
-			m_FrameIndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, graphicsapi_instance);
-			m_FrameVertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, false, graphicsapi_instance);
+			//m_FrameIndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, graphicsapi_instance);
+			//m_FrameVertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, false, graphicsapi_instance);
 
 			///Set the Framem Index and Gfx::Vertex Buffer ont the pipeline
-			m_FrameIndexBuffer.SetThisIndexBuffer(graphicsapi_instance);
-			m_FrameVertexBuffer.SetThisVertexBuffer(graphicsapi_instance, 0);
+			//m_FrameIndexBuffer.SetThisIndexBuffer(graphicsapi_instance);
+			//m_FrameVertexBuffer.SetThisVertexBuffer(graphicsapi_instance, 0);
 
 			///Iterate through the frame objects, render and delete them
 			for (int i = 0; i < m_FrameObjs.size(); i++)
@@ -81,8 +89,6 @@ namespace rczEngine
 				if (m_FrameObjs[i]->GetElementType() == DEBUG_POINT)
 				{
 					m_ColorCB.UpdateConstantBuffer(&m_FrameObjs[i]->m_Color, graphicsapi_instance);
-
-					framepoints.push_back((DebuggerPoint*)m_FrameObjs[i]);
 				}
 				else
 				{
@@ -95,8 +101,6 @@ namespace rczEngine
 				}
 			}
 
-			///Clear the Frame Object Vector
-			m_FrameObjs.clear();
 		}
 
 		if (m_StaticObjs.size())
@@ -132,7 +136,6 @@ namespace rczEngine
 			}
 		}
 
-		m_SolidRS.CreateRasterizerState(graphicsapi_instance);
 		m_SolidRS.SetThisRasterizerState(graphicsapi_instance);
 		graphicsapi_instance->SetPrimitiveTopology(Gfx::eTOPOLOGY::TOPO_TRIANGLELIST);
 
@@ -148,22 +151,25 @@ namespace rczEngine
 			staticpoints[i]->Render(graphicsapi_instance);
 		}
 
-		for (int i = 0; i < framepoints.size(); ++i)
+		for (int i = 0; i < m_FrameObjs.size(); ++i)
 		{
-			M = Matrix4::Scale3D(staticpoints[i]->m_Radius, staticpoints[i]->m_Radius, staticpoints[i]->m_Radius)*Matrix4::Translate3D(framepoints[i]->m_Position.m_x, framepoints[i]->m_Position.m_y, framepoints[i]->m_Position.m_z);
+			auto ptr = (DebuggerPoint*)m_FrameObjs[i];
+			M = Matrix4::Scale3D(ptr->m_Radius, ptr->m_Radius, ptr->m_Radius)*Matrix4::Translate3D(ptr->m_Position.m_x, ptr->m_Position.m_y, ptr->m_Position.m_z);
 			M.Transpose();
 			m_WorldMatrixCB.UpdateConstantBuffer(&M, graphicsapi_instance);
 			m_WorldMatrixCB.SetBufferInVS(2, graphicsapi_instance);
 
-			m_ColorCB.UpdateConstantBuffer(&framepoints[i]->m_Color, graphicsapi_instance);
+			m_ColorCB.UpdateConstantBuffer(&ptr->m_Color, graphicsapi_instance);
 
-			framepoints[i]->Render(graphicsapi_instance);
+			ptr->Render(graphicsapi_instance);
 
-			delete framepoints[i];
+			delete m_FrameObjs[i];
 		}
 
 		staticpoints.clear();
-		framepoints.clear();
+
+		///Clear the Frame Object Vector
+		m_FrameObjs.clear();
 	}
 
 	void GraphicDebugger::AddStaticDebuggerLine(float x1, float y1, float z1, float x2, float y2, float z2, float r, float g, float b)
@@ -203,7 +209,7 @@ namespace rczEngine
 		Temp->m_Position.m_y = y;
 		Temp->m_Position.m_z = z;
 		Temp->m_Radius = radius;
-		Temp->m_PointModel = &m_SphereModel;
+		Temp->handle = m_SphereModel;
 		Temp->m_Color.m_x = r;
 		Temp->m_Color.m_z = b;
 		Temp->m_Color.m_y = g;
@@ -328,8 +334,8 @@ namespace rczEngine
 		Temp->m_Position.m_x = x;
 		Temp->m_Position.m_y = y;
 		Temp->m_Position.m_z = z;
-		Temp->m_Radius = radius;
-		Temp->m_PointModel = &m_SphereModel;
+		Temp->m_Radius = radius*10;
+
 		Temp->m_Color.m_x = r;
 		Temp->m_Color.m_z = b;
 		Temp->m_Color.m_y = g;

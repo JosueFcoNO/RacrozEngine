@@ -17,7 +17,7 @@ namespace rczEngine
 		PROP_SPOT_RANGE
 	};
 
-	class RZ_UTILITY_EXPORT Light
+	class RZ_EXP Light
 	{
 	public:
 		Light()

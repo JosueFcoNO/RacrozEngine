@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT TerrainRenderer : public Component
+	class RZ_EXP TerrainRenderer : public Component
 	{
 	public:
 		TerrainRenderer() {};

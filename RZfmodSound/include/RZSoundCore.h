@@ -3,7 +3,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT SoundCore
+	class RZ_EXP SoundCore
 	{
 	public:
 		FMOD::Sound* m_Sound;

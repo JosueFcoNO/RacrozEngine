@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT HDRBloomPass : public Pass
+	class RZ_EXP HDRBloomPass : public Pass
 	{
 	public:
 		virtual void SetRenderingMode(RENDERING_MODE mode);
@@ -17,6 +17,5 @@ namespace rczEngine
 		virtual void PostRenderPass();
 
 	private:
-		Gfx::PixelShader m_HDRBloomShader;
 	};
 }

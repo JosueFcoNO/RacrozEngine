@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT Scene
+	class RZ_EXP Scene
 	{
 	public:
 		///Calls Destroy.
@@ -24,7 +24,7 @@ namespace rczEngine
 		WeakGameObjectPtr FindActor(const char* name);
 
 		void AddRootNodeChild(StrGameObjectPtr node);
-		void RemoveChild(GameObjectID actorId);
+		void RemoveGameObject(GameObjectID actorId);
 
 		void AddActor(StrGameObjectPtr node);
 		Vector<WeakPtr<GameObject>> FindActorsWithComponent(eCOMPONENT_ID cmp);
@@ -40,6 +40,8 @@ namespace rczEngine
 
 	private:
 		String m_Name;
+		
+		Vector<StrPtr<GameObject>> m_GameObjectsToDelete;
 	};
 
 }

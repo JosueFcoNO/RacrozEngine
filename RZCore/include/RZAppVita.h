@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	namespace Core
 	{
-		class RZ_UTILITY_EXPORT AppVita : App
+		class RZ_EXP AppVita : App
 		{
 		public:
 			void StartApp() {};

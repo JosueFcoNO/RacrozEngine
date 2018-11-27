@@ -36,7 +36,7 @@ namespace rczEngine
 
 				static int comboint = 0;
 				static bool AddComponentMenu = false;
-				static int componentIds[5] = { 3, 4, 5, 6, 10 };
+				static int componentIds[5] = { 3, 4, 5, 6, 9 };
 
 				if (ImGui::Button("AddComponent"))
 				{
@@ -47,7 +47,7 @@ namespace rczEngine
 				{
 					ImGui::Begin("PopUp");
 					{
-						ImGui::Combo("Components", &comboint, "Model Renderer \0Skinned Model Renderer\0Light \0Move \0Space Manager");
+						ImGui::Combo("Components", &comboint, "Model Renderer \0Skinned Model Renderer\0Light \0Move \0CameraWalk");
 						if (ImGui::Button("Add"))
 						{
 							SceneManager::Pointer()->GetActiveScene()->CreateComponent((eCOMPONENT_ID)componentIds[comboint], m_ActiveObject->GetID());

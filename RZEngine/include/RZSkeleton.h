@@ -3,7 +3,7 @@
 namespace rczEngine
 {
 	///Contains all the bones and the skeleton hierarchy.
-	class RZ_UTILITY_EXPORT Skeleton
+	class RZ_EXP Skeleton
 	{
 	public:
 		///Updates the skeleton transform if given an animation, if not, just updates the bone transforms.

@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT Rect3D
+	class RZ_EXP Rect3D
 	{
 	public:
 		Rect3D();

@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT Sound : public Resource
+	class RZ_EXP Sound : public Resource
 	{
 	public:
 		Sound() {};

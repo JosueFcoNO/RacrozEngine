@@ -11,7 +11,7 @@ namespace rczEngine
 		Vector2 m_Uvs;
 	};
 
-	class RZ_UTILITY_EXPORT ScreenQuad
+	class RZ_EXP ScreenQuad
 	{
 	public:
 		void InitScreenQuad(Gfx::GfxCore * gfx);

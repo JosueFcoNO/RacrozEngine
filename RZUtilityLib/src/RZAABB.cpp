@@ -4,10 +4,10 @@
 
 namespace rczEngine
 {
-	void AABB::SetAABB(Vector3 min, Vector3 max)
+	void AABB::SetAABB(Vector3 minV, Vector3 maxV)
 	{
-		m_PointMax = max;
-		m_PointMin = min;
+		m_PointMax = maxV;
+		m_PointMin = minV;
 	}
 
 	void AABB::SetAABB(float xMin, float yMin, float zMin, float xMax, float yMax, float zMax)
@@ -72,6 +72,11 @@ namespace rczEngine
 		{
 			AddPoint(points[i]);
 		}
+	}
+
+	bool AABB::CheckPointCollision(const Vector3 & point)
+	{
+		return (point >= m_PointMin && point <= m_PointMax);
 	}
 
 	Vector3 AABB::GetCenter()

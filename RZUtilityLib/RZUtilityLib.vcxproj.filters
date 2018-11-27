@@ -66,6 +66,9 @@
     <Filter Include="Archivos de código fuente\Serializable">
       <UniqueIdentifier>{db0bdd0e-04ed-4006-9876-45fbd2b43219}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\Collision Math">
+      <UniqueIdentifier>{82677cea-63fb-43b5-9d01-1d36d1f73d9a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZUtilityPCH.h">
@@ -96,9 +99,6 @@
       <Filter>Archivos de encabezado\Math</Filter>
     </ClInclude>
     <ClInclude Include="include\RZColor.h">
-      <Filter>Archivos de encabezado\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RZRay.h">
       <Filter>Archivos de encabezado\Math</Filter>
     </ClInclude>
     <ClInclude Include="include\RZQuaternion.h">
@@ -137,12 +137,6 @@
     <ClInclude Include="include\RZRandomZiggurat.h">
       <Filter>Archivos de encabezado\Random Generators</Filter>
     </ClInclude>
-    <ClInclude Include="include\RZSphere.h">
-      <Filter>Archivos de encabezado\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RZPlane.h">
-      <Filter>Archivos de encabezado\Math</Filter>
-    </ClInclude>
     <ClInclude Include="include\RZVector4D.h">
       <Filter>Archivos de encabezado\Math</Filter>
     </ClInclude>
@@ -159,12 +153,6 @@
       <Filter>Archivos de encabezado\Math</Filter>
     </ClInclude>
     <ClInclude Include="include\RZVector2Di.h">
-      <Filter>Archivos de encabezado\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RZAABB.h">
-      <Filter>Archivos de encabezado\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RZTriangle.h">
       <Filter>Archivos de encabezado\Math</Filter>
     </ClInclude>
     <ClInclude Include="include\RZTextTool.h">
@@ -190,6 +178,21 @@
     </ClInclude>
     <ClInclude Include="include\RZParser.h">
       <Filter>Archivos de encabezado\File Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSphere.h">
+      <Filter>Archivos de encabezado\Collision Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZTriangle.h">
+      <Filter>Archivos de encabezado\Collision Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZRay.h">
+      <Filter>Archivos de encabezado\Collision Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZPlane.h">
+      <Filter>Archivos de encabezado\Collision Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZAABB.h">
+      <Filter>Archivos de encabezado\Collision Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

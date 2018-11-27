@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT PlanetPass : public Pass
+	class RZ_EXP PlanetPass : public Pass
 	{
 	public:
 		///Inits the pass with a name and a rendering mode.
@@ -21,7 +21,6 @@ namespace rczEngine
 		Gfx::VertexShader m_PlanetVshader;
 		Gfx::DomainShader m_PlanetDshader;
 		Gfx::HullShader   m_PlanetHshader;
-		Gfx::PixelShader  m_PlanetPshader;
 
 		StrPtr<Scene> m_ActiveScene;
 

@@ -8,21 +8,20 @@ namespace rczEngine
 		{
 			if (m_Parent)
 			{
-				m_AccumulatedTransform = m_Parent->m_AccumulatedTransform*m_TransformMatrix;
+				m_AccumulatedTransform = m_Parent->m_AccumulatedTransform*m_JointMatrix;
 				m_AccumulatedMatrix = (m_Parent->m_AccumulatedMatrix*m_JointMatrix);
-
-				//m_AccumulatedMatrix = (m_Parent->m_AccumulatedTransform*m_JointMatrix);
 			}
 			else
 			{
-				m_AccumulatedMatrix = m_JointMatrix;
+				m_AccumulatedTransform = m_TransformMatrix;
+				m_AccumulatedMatrix = m_TransformMatrix;
 			}
 
-			if (!m_JointIsTransform)
-				matrixPalette[m_BoneIndex] = (m_AccumulatedMatrix)*m_OffsetMatrix;
-			else
-				matrixPalette[m_BoneIndex] = m_AccumulatedMatrix*m_OffsetMatrix;
-
+			matrixPalette[m_BoneIndex] = (m_AccumulatedTransform)*m_OffsetMatrix;
+		}
+		else
+		{
+			assert(false);
 		}
 
 		UpdateChildren(matrixPalette);
@@ -51,24 +50,23 @@ namespace rczEngine
 			currentTime = 0.0f;
 		}
 
-		if (currentTime > 1.0f)
-		{
-			currentTime *= -1;
-		}
-
 		/// Lerp the position, scale and slerp rotation
 		Vector3 newPos = Math::Lerp(k0.m_Position, k1.m_Position, currentTime);
 		Vector3 newScale = Math::Lerp(k0.m_Scale, k1.m_Scale, currentTime);
 		Quaternion newRot = Quaternion::Slerp(k0.m_Rotation, k1.m_Rotation, currentTime);
 
-		if (m_JointIsTransform);
-			newPos.Set(0, 0, 0);
+		GraphicDebugger::Pointer()->AddFrameDebuggerPoint(m_OffsetInverse*newPos, 0.1f, 1, 0, 0);
 
 		///Create the new local joint matrix for the bone.
 		m_JointMatrix = newRot.GetAsMatrix4()*Matrix4::Scale3D(newScale.m_x, newScale.m_y, newScale.m_z)*Matrix4::Translate3D(newPos.m_x, newPos.m_y, newPos.m_z);
 		m_JointMatrix.Transpose();
 
-		m_JointMatrix = m_TransformMatrix*m_JointMatrix;
+		if (m_BoneComponent)
+		{
+			m_TransformMatrix = m_BoneComponent->GetOwner().lock()->GetLocalMatrix().GetTransposed();
+			//m_JointMatrix *= m_TransformMatrix;
+		}
+
 	}
 
 	void Bone::InterpolateBoneWithAnim(float time, WeakPtr<Animation> anim)
@@ -82,9 +80,15 @@ namespace rczEngine
 		k1 = animPtr->GetNextKeyFrame(m_Name, time);
 
 		if (k0.m_Time >= 0)
-			{
-				InterpolateBone(k0, k1, time);
-			}
+		{
+			InterpolateBone(k0, k1, time);
+		}
+		else
+		{
+			m_TransformMatrix = m_BoneComponent->GetOwner().lock()->GetLocalMatrix().GetTransposed();
+			m_JointMatrix = m_TransformMatrix;
+		}
+
 
 		for (int32 i = 0; i < m_ChildrenBones.size(); ++i)
 		{

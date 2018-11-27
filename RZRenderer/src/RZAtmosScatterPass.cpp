@@ -65,30 +65,30 @@ namespace rczEngine
 		//}
 		//
 		//
-		auto space = SpaceManager::Pointer();
-		
-		if (space)
-		{
-			m_AtmosValues.SetBufferInVS(10, m_gfx);
-			m_AtmosValues.SetBufferInPS(10, m_gfx);
-			
-			UseDepth = true;
-			SetRenderTargetsInPipeline();
-		
-			//m_GroundFromSpaceVS.SetThisVertexShaderAndInputLayout(m_gfx);
-			//m_GroundFromSpacePS.SetThisPixelShader(m_gfx);
-			//
-			//space->RenderAtmos(0);
-		
-			m_SkyFromSpaceVS.SetThisVertexShaderAndInputLayout(m_gfx);
-			m_SkyFromSpacePS.SetThisPixelShader(m_gfx);
-			m_CullBack.SetThisRasterizerState(m_gfx);
-		
-			space->RenderAtmos(105.0f);
-		
-			m_gfx->UnbindRenderTargets();
-		
-		}
+		//auto space = SpaceManager::Pointer();
+		//
+		//if (space)
+		//{
+		//	m_AtmosValues.SetBufferInVS(10, m_gfx);
+		//	m_AtmosValues.SetBufferInPS(10, m_gfx);
+		//	
+		//	UseDepth = true;
+		//	SetRenderTargetsInPipeline();
+		//
+		//	//m_GroundFromSpaceVS.SetThisVertexShaderAndInputLayout(m_gfx);
+		//	//m_GroundFromSpacePS.SetThisPixelShader(m_gfx);
+		//	//
+		//	//space->RenderAtmos(0);
+		//
+		//	m_SkyFromSpaceVS.SetThisVertexShaderAndInputLayout(m_gfx);
+		//	m_SkyFromSpacePS.SetThisPixelShader(m_gfx);
+		//	m_CullBack.SetThisRasterizerState(m_gfx);
+		//
+		//	space->RenderAtmos(105.0f);
+		//
+		//	m_gfx->UnbindRenderTargets();
+		//
+		//}
 
 	}
 

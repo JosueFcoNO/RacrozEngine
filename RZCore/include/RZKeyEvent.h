@@ -5,7 +5,7 @@ namespace rczEngine
 {
 	typedef std::function<void(int32)> KeyCallback;
 
-	class RZ_UTILITY_EXPORT IKeyHandler : public IEventHandler
+	class RZ_EXP IKeyHandler : public IEventHandler
 	{
 	public:
 		virtual void OnKeyDown(int32 k) = 0;

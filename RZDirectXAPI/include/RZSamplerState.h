@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	namespace Gfx
 	{
-		class RZ_UTILITY_EXPORT SamplerState
+		class RZ_EXP SamplerState
 		{
 		public:
 			SamplerState() : m_BorderColor(INIT_ZERO)
@@ -18,7 +18,7 @@ namespace rczEngine
 				{
 					if (m_SamplerState->Release())
 					{
-						Logger::Pointer()->LogMessage("Gfx","Sampler State no se libero bien");
+						Logger::Pointer()->LogMessageToFileLog("Gfx","Sampler State no se libero bien");
 					};
 				}
 			};

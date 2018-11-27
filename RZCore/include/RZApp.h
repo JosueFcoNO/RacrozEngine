@@ -2,11 +2,11 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT GUIEditor;
+	class RZ_EXP GUIEditor;
 
 	namespace Core
 	{
-		class RZ_UTILITY_EXPORT App
+		class RZ_EXP App
 		{
 		public:
 			virtual void StartApp() = 0;

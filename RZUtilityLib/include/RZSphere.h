@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT Sphere
+	class RZ_EXP Sphere
 	{
 	public:
 		Sphere();

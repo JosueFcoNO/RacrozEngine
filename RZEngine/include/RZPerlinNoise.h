@@ -11,7 +11,7 @@ namespace rczEngine
 		char GradientGrid[MAX_GRAD_Y][MAX_GRAD_X];
 	};
 
-	class RZ_UTILITY_EXPORT PerlinNoise : public HeightMap
+	class RZ_EXP PerlinNoise2D : public HeightMap
 	{
 	public:
 		void InitPerlinNoise(int32 seed);

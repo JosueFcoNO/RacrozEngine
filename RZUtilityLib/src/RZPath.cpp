@@ -15,6 +15,14 @@ namespace rczEngine
 	void Path::ResetPath(const char * filePath)
 	{
 		m_FilePath = filePath;
+
+		auto pos = m_FilePath.find("\\");
+		while (pos != std::string::npos)
+		{
+			m_FilePath[pos] = '/';
+			pos = m_FilePath.find("\\");
+		}
+
 		std::hash<String> hash;
 		m_Hash = hash(m_FilePath);
 	}
@@ -29,8 +37,6 @@ namespace rczEngine
 		ResetPath(m_FilePath);
 	}
 
-	String Path::GetFilePath() const { return m_FilePath; }
-
 	String Path::GetFileName() const
 	{
 		///Parse the filepath to find the extension
@@ -40,9 +46,28 @@ namespace rczEngine
 
 		///Parse the filepath withouth the extension to find the name
 		parsedFilePath = Parser::ParseToStrings<ANSICHAR>(m_FilePath, "/", 0);
-		
+
 		//Get the extension name into fileName
 		return parsedFilePath[parsedFilePath.size() - 1];
+	}
+
+	String Path::GetFileDir() const
+	{
+		///Parse the filepath to find the extension
+		Vector<String> parsedFilePath = Parser::ParseToStrings<ANSICHAR>(m_FilePath, ".", 0);
+		//Get the extension substring into fileExtension
+		String fileExtension = parsedFilePath[parsedFilePath.size() - 1];
+
+		///Parse the filepath withouth the extension to find the name
+		parsedFilePath = Parser::ParseToStrings<ANSICHAR>(m_FilePath, "/", 0);
+
+		String pathDir = m_FilePath;
+
+		for (int i = 0; i < parsedFilePath[parsedFilePath.size() - 1].length(); ++i)
+			pathDir.pop_back();
+
+		//Get the extension name into fileName
+		return pathDir;
 	}
 
 	String Path::GetFileExtension() const

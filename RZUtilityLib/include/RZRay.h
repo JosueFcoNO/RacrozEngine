@@ -3,7 +3,7 @@
 namespace rczEngine
 {
 	///Ray class
-	class RZ_UTILITY_EXPORT Ray
+	class RZ_EXP Ray
 	{
 	public:
 		Ray();

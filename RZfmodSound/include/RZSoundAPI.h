@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT SoundAPI : public Module<SoundAPI>
+	class RZ_EXP SoundAPI : public Module<SoundAPI>
 	{
 	public:
 		~SoundAPI();

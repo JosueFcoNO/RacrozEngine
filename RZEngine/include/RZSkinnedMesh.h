@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	////////////////MESH
 	///A class Mesh that contains Gfx::Vertex and Index buffers.
-	class RZ_UTILITY_EXPORT SkinnedMesh
+	class RZ_EXP SkinnedMesh
 	{
 	public:
 		SkinnedMesh() {};

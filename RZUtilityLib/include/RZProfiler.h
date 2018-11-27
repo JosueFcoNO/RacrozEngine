@@ -9,27 +9,27 @@ namespace rczEngine
 		PROF_MAX
 	};
 
-	class RZ_UTILITY_EXPORT Profiler
+	class Profiler
 	{
 	public:
-		~Profiler() {
+		RZ_EXP ~Profiler() {
 			Destroy();
 		};
 
-		static void Start();
-		static Profiler* Pointer();
-		static void ShutDown();
+		RZ_EXP static void Start();
+		RZ_EXP static Profiler* Pointer();
+		RZ_EXP static void ShutDown();
 
-		void Destroy();
+		RZ_EXP void Destroy();
 
-		void StartProfiler();
-		void Reset();
-		void SaveResults();
+		RZ_EXP void StartProfiler();
+		RZ_EXP void Reset();
+		RZ_EXP void SaveResults();
 
-		void NewFrameStart();
+		RZ_EXP void NewFrameStart();
 
-		void AddTime(String event, PROFILE_EVENTS eventType);
-		void AddTime(String event, double time, PROFILE_EVENTS eventType);
+		RZ_EXP void AddTime(String event, PROFILE_EVENTS eventType);
+		RZ_EXP void AddTime(String event, double time, PROFILE_EVENTS eventType);
 
 	private:
 		static Profiler*& _Instance();

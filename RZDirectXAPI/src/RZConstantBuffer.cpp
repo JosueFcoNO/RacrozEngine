@@ -14,7 +14,7 @@ namespace rczEngine
 		void ConstantBuffer::UpdateConstantBuffer(void* srcData, GfxCore* gfx)
 		{
 			gfx->UpdateConstantBuffer(*this, srcData);
-		}
+	}
 
 		void ConstantBuffer::SetBufferInPS(uint32 startSlot, GfxCore* gfx)
 		{

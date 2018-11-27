@@ -5,7 +5,7 @@ namespace rczEngine
 	class TextTool
 	{
 	public:
-		static ANSICHAR* FloatTo(float var)
+		static String FloatTo(float var)
 		{
 			ANSICHAR text[30];
 
@@ -13,28 +13,28 @@ namespace rczEngine
 			return text;
 		};
 
-		static ANSICHAR* IntTo(int32 var)
+		static String IntTo(int32 var)
 		{
 			ANSICHAR text[30];
 			sprintf_s(text, sizeof(ANSICHAR)*30, "%d\n", var);
 			return text;
 		};
 
-		static ANSICHAR* TextFloatTo(char* text, float var)
+		static String TextFloatTo(char* text, float var)
 		{
 			ANSICHAR textf[30];
 			sprintf_s(textf, sizeof(ANSICHAR)*30, "%s%f\n",text, var);
 			return textf;
 		};
 
-		static ANSICHAR* TextIntTo(char* text, int32 var)
+		static String TextIntTo(char* text, int32 var)
 		{
 			ANSICHAR textf[30];
 			sprintf_s(textf, sizeof(ANSICHAR)*30, "%s%d\n",text, var);
 			return textf;
 		};
 
-		static ANSICHAR* UniToAnsi(UNICHAR* text)
+		static String UniToAnsi(UNICHAR* text)
 		{
 			size_t origsize = wcslen(text) + 1;
 			size_t convertedChars = 0;
@@ -48,7 +48,7 @@ namespace rczEngine
 			return nstring;
 		};
 
-		static ANSICHAR* UniToAnsi(const UNICHAR* text)
+		static String UniToAnsi(const UNICHAR* text)
 		{
 			size_t origsize = wcslen(text) + 1;
 			size_t convertedChars = 0;
@@ -64,35 +64,35 @@ namespace rczEngine
 
 		////UNICHAR////
 
-		static UNICHAR* WFloatTo(float var)
+		static StringW WFloatTo(float var)
 		{
 			UNICHAR text[70];
 			swprintf_s(text, (30 * sizeof(UNICHAR)), L"%f\n", var);
 			return text;
 		};
 
-		static UNICHAR* WIntTo(int32 var)
+		static StringW WIntTo(int32 var)
 		{
 			UNICHAR text[70];
 			swprintf_s(text, (30 * sizeof(UNICHAR)), L"%d\n", var);
 			return text;
 		};
 
-		static UNICHAR* WTextFloatTo(UNICHAR* text, float var)
+		static StringW WTextFloatTo(UNICHAR* text, float var)
 		{
 			UNICHAR textf[70];
 			swprintf_s(textf, (30 * sizeof(UNICHAR)), L"%s%f\n", text, var);
 			return textf;
 		};
 
-		static UNICHAR* WTextIntTo(UNICHAR* text, int32 var)
+		static StringW WTextIntTo(UNICHAR* text, int32 var)
 		{
 			UNICHAR textf[70];
 			swprintf_s(textf, (30 * sizeof(UNICHAR)), L"%s%d\n", text, var);
 			return textf;
 		};
 
-		static UNICHAR* AnsiToUni(ANSICHAR* text)
+		static StringW AnsiToUni(ANSICHAR* text)
 		{
 			size_t newsize = strlen(text) + 1;
 
@@ -104,7 +104,7 @@ namespace rczEngine
 			return wcstring;
 		};
 
-		static UNICHAR* AnsiToUni(const ANSICHAR* text)
+		static StringW AnsiToUni(const ANSICHAR* text)
 		{
 			size_t newsize = strlen(text) + 1;
 

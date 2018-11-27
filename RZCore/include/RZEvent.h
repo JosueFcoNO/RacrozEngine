@@ -175,7 +175,7 @@ namespace rczEngine
 		KEY_MAX
 	};
 
-	class RZ_UTILITY_EXPORT IEventHandler
+	class RZ_EXP IEventHandler
 	{
 	public:
 		virtual EVENT_HANDLER GetEventHandlerType() = 0;

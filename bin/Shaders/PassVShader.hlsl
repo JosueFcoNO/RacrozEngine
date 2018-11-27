@@ -40,14 +40,7 @@ float4 PS_Main(PS_Input frag) : SV_TARGET
 {
     float2 UV = frag.tex0;
     //UV.y *= -1;
-    UV.x = 1.0f-UV.x;
+    UV.x = UV.x;
 
-    if (R + G + B == 0 && A == 1)
-    {
-        return DiffuseTexture.Sample(colorSampler_, UV).aaaa;
-    }
-
-    float4 color = DiffuseTexture.Sample(colorSampler_, UV);
-
-    return float4(color.r * R, color.g * G, color.b * B, color.a);
+	return DiffuseTexture.Sample(colorSampler_, UV).aaaa;
 }

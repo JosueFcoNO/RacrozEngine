@@ -52,7 +52,9 @@ namespace rczEngine
 		case CMP_SKINNED_MODEL_RENDERER:
 			P = std::make_shared<SkinnedModelRenderer>();
 			break;
-
+		case CMP_BONE:
+			P = std::make_shared<BoneComponent>();
+			break;
 		case CMP_LIGHT:
 			P = std::make_shared<LightComponent>();
 			break;

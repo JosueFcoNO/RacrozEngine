@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT Terrain
+	class RZ_EXP Terrain
 	{
 	public:
 		void InitTerrain(Gfx::GfxCore* gfx, ResVault* res, ComputeAPI* Capi);
@@ -12,7 +12,7 @@ namespace rczEngine
 		MeshPlane m_Mesh;
 
 	private:
-		PerlinNoise m_Perlin;
+		PerlinNoise2D m_Perlin;
 
 		Gfx::GfxCore* m_gfx;
 		ResVault* m_res;

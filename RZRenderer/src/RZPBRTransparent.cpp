@@ -7,7 +7,8 @@ namespace rczEngine
 		///Load the LUT.
 		m_LUT = m_res->GetResource<Texture2D>(m_res->LoadResource("RacrozEngineAssets/BRDF LUT.png", "LUT")).lock();
 		
-		m_gfx->CompileAndCreatePixelShader(m_PBRShader, L"Shaders/PBR_Forward.hlsl");
+		m_PShaderPath = L"Shaders/PBR_Forward.hlsl";
+		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
 
 		m_gfx->CompileAndCreateVertexShader(m_GeometryPBRShader, L"Shaders/GeometryPass.hlsl");
 		m_GeometryPBRShader.ReflectLayout(0, m_gfx);
@@ -43,7 +44,7 @@ namespace rczEngine
 	{
 		LightManager::Pointer()->SetLightsBuffers();
 
-		m_PBRShader.SetThisPixelShader(m_gfx);
+		m_PShader.SetThisPixelShader(m_gfx);
 
 		//UserDisney.UpdateConstantBuffer(&config, m_gfx);
 		//UserDisney.SetBufferInPS(6, m_gfx);
@@ -70,18 +71,19 @@ namespace rczEngine
 		//SetRenderTargetsInPipeline();
 		CullBack.SetThisRasterizerState(m_gfx);
 		RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_TRANSPARENT, false);
-		m_gfx->UnbindRenderTargets();
+
+		m_gfx->SetRSStateDefault();
+
+		GraphicDebugger::Pointer()->Render(m_gfx);
+		m_gfx->SetBlendStateDefault();
 
 	}
 
 	void PBR_Transparent_Pass::PostRenderPass()
 	{
-		//m_gfx->UnbindRenderTargets();
+		m_gfx->UnbindRenderTargets();
 		for (int32 i = 0; i < 10; ++i)
 			m_gfx->UnbindPSShaderResource(i);
 
-		m_gfx->SetRSStateDefault();
-
-		m_gfx->SetBlendStateDefault();
 	}
 };

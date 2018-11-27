@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT MemBuffer
+	class RZ_EXP MemBuffer
 	{
 	public:
 		~MemBuffer() { Destroy(); };

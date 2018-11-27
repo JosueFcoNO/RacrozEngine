@@ -8,7 +8,7 @@ namespace rczEngine
 		Light m_Lights[8];
 	};
 
-	class RZ_UTILITY_EXPORT LightManager
+	class RZ_EXP LightManager
 	{
 	private:
 		static LightManager*& _Instance();

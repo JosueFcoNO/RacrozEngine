@@ -172,15 +172,15 @@
 
 #if RZ_PLATFORM == RZ_PLATFORM_WINDOWS
 	#if defined(RZ_STATIC_LIB)
-		#define RZ_UTILITY_EXPORT
+		#define RZ_EXP
 	#else
 	#if defined(RZ_UTILITY_EXPORTS)
-		#define RZ_UTILITY_EXPORT __declspec(dllexport)
+		#define RZ_EXP __declspec(dllexport)
 	#else
 	#if defined(__MINGW32)
-		#define RZ_UTILITY_EXPORT
+		#define RZ_EXP
 	#else
-		#define RZ_UTILITY_EXPORT __declspec(dllimport)
+		#define RZ_EXP __declspec(dllimport)
 		#endif
 	#endif
 #endif
@@ -198,9 +198,9 @@
 
 #if RZ_PLATFORM == RZ_PLATFORM_LINUX || RZ_PLATFORM == RZ_PLATFORM_OSX
 #if defined(RZ_GCC_VISIBILITY)
-#define RZ_UTILITY_EXPORT __attribute__ ((visibility("default")))
+#define RZ_EXP __attribute__ ((visibility("default")))
 #else
-#define RZ_UTILITY_EXPORT
+#define RZ_EXP
 #endif
 
 #define stricmp strcasecmp
@@ -218,9 +218,9 @@
 
 #if RZ_PLATFORM == RZ_PLATFORM_PSVITA
 #if defined(RZ_GCC_VISIBILITY)
-#define RZ_UTILITY_EXPORT __attribute__ ((visibility("default")))
+#define RZ_EXP __attribute__ ((visibility("default")))
 #else
-#define RZ_UTILITY_EXPORT
+#define RZ_EXP
 #endif
 
 #if defined(_DEBUG) || defined(DEBUG)

@@ -4,7 +4,7 @@
 namespace rczEngine
 {
 	template <class T>
-	class RZ_UTILITY_EXPORT Module
+	class RZ_EXP Module
 	{
 	public:
 		static T& Instance()

@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	namespace Gfx
 	{
-		struct RZ_UTILITY_EXPORT InputLayoutElement
+		struct RZ_EXP InputLayoutElement
 		{
 			String SemanticName;
 			uint32 SemanticIndex;
@@ -17,7 +17,7 @@ namespace rczEngine
 
 		class VertexShader;
 
-		class RZ_UTILITY_EXPORT InputLayout
+		class RZ_EXP InputLayout
 		{
 		public:
 			~InputLayout() { Destroy(); };

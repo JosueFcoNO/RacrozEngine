@@ -3,7 +3,7 @@
 namespace rczEngine
 {
 	///3x3 Matrix that can be accesed as 3 row Vector3s, a linear 9 float array and a 3x3 float nested array.
-	class RZ_UTILITY_EXPORT Matrix3
+	class RZ_EXP Matrix3
 	{
 	public:
 		///////////////////////

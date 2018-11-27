@@ -3,7 +3,7 @@
 namespace rczEngine
 {
 	///A Base Class to derive into concrete Passes.
-	class RZ_UTILITY_EXPORT GaussPass : public Pass
+	class RZ_EXP GaussPass : public Pass
 	{
 	public:
 		struct BlurData

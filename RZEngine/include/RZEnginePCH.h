@@ -1,7 +1,11 @@
+#pragma warning(disable: 4100)
+
 #pragma once
 #include <RZDirectXPCH.h>
 #include <RZSoundPCH.h>
 #include <RZComputePCH.h>
+
+#include "RZEngineFwdDcl.h"
 
 #include "RZResource.h"
 #include "RZResourceManager.h"
@@ -13,7 +17,6 @@
 #include "../../Plug-Ins/stb-master/stb_image.h"
 #include "RZTextureLoader.h"
 
-
 #include "RZTexture2D.h"
 #include "RZTexture3D.h"
 #include "RZCubeMap.h"
@@ -23,14 +26,25 @@
 
 #include "RZMaterial.h"
 
+#include "RZLight.h"
+#include "RZLightManager.h"
+
+#include "RZActorComponentFactory.h"
+#include "RZScene.h"
+#include "RZSceneManager.h"
+#include "RZGameObject.h"
+#include "RZComponent.h"
+
+#include "RZGraphicDebuggerElement.h"
+#include "RZGraphicDebuggerLine.h"
+#include "RZGraphicDebuggerCube.h"
+
 #include "RZKeyFrame.h"
+#include "RZSkinnedBoneComponent.h"
 #include "RZBone.h"
 
 #include "RZAnimation.h"
 #include "RZSkeleton.h"
-
-#include "RZLight.h"
-#include "RZLightManager.h"
 
 #include "RZMesh.h"
 #include "RZSkinnedMesh.h"
@@ -38,11 +52,8 @@
 #include "RZModel.h"
 #include "RZSkinnedModel.h"
 
-#include "RZActorComponentFactory.h"
-#include "RZScene.h"
-#include "RZSceneManager.h"
-#include "RZGameObject.h"
-#include "RZComponent.h"
+#include "RZGraphicDebuggerPoint.h"
+#include "RZGraphicDebugger.h"
 
 #include "RZModelLoader.h"
 #include "RZFbxLoader.h"
@@ -52,6 +63,7 @@
 #include "RZSceneGraphGUI.h"
 #include "RZGameObjectGUI.h"
 #include "RZResourcesGUI.h"
+#include "RZConsoleGUI.h"
 #include "RZEditorGUI.h"
 
 #include "RZLightComponent.h"
@@ -62,12 +74,6 @@
 #include "RZCameraManager.h"
 #include "RZSkyBox.h"
 
-#include "RZGraphicDebuggerElement.h"
-#include "RZGraphicDebuggerLine.h"
-#include "RZGraphicDebuggerPoint.h"
-#include "RZGraphicDebuggerCube.h"
-#include "RZGraphicDebugger.h"
-
 #include "RZGameManager.h"
 
 #include "RZCameraGhost.h"
@@ -76,10 +82,12 @@
 
 #include "RZHeightMap.h"
 #include "RZPerlinNoise.h"
+#include "RZPerlinNoise3D.h"
 #include "RZMeshPlane.h"
 #include "RZTerrain.h"
 #include "RZTerrainComponent.h"
 #include "RZSpaceTravel.h"
+#include "RZPlanetQuadTreeNode.h"
 #include "RZPlanet.h"
 #include "RZTerrainPatch.h"
 #include "RZSpaceManager.h"

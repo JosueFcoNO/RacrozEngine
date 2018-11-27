@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	namespace Gfx
 	{
-		class RZ_UTILITY_EXPORT DepthStencylView
+		class RZ_EXP DepthStencylView
 		{
 		public:
 			ID3D11DepthStencilView* m_DepthStencylView;

@@ -4,12 +4,15 @@ namespace rczEngine
 {
 	void BrightPass::SetRenderingMode(RENDERING_MODE mode)
 	{
-		m_gfx->CompileAndCreatePixelShader(m_BrightShader, L"Shaders/HDRBloom/Bright.hlsl");
+		m_PShaderPath = L"Shaders/HDRBloom/Bright.hlsl";
+		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
+
+		
 	}
 
 	void BrightPass::PreRenderPass()
 	{
-		m_BrightShader.SetThisPixelShader(m_gfx);
+		m_PShader.SetThisPixelShader(m_gfx);
 
 		SetRenderTargetsInPipeline();
 		SetTexturesInPipeline();

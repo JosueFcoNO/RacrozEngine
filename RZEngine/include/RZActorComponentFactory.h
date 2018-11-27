@@ -2,8 +2,8 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT GameObject;
-	class RZ_UTILITY_EXPORT Component;
+	class RZ_EXP GameObject;
+	class RZ_EXP Component;
 
 	typedef StrPtr<GameObject> StrGameObjectPtr;
 	typedef StrPtr<Component> StrCmpPtr;
@@ -11,6 +11,7 @@ namespace rczEngine
 	typedef WeakPtr<Component> WeakCmpPtr;
 	typedef uint16 ComponentType;
 	typedef int32 GameObjectID;
+	typedef uint16 ComponentId;
 
 	typedef Map<ComponentType, StrCmpPtr> ComponentMap;
 	typedef Map<GameObjectID, StrGameObjectPtr> StrGameObjectMap;
@@ -20,7 +21,7 @@ namespace rczEngine
 	enum { SERIAL_COMPONENT_OFFSET = 1000, SERIAL_RESOURCE_OFFSET = 2000};
 
 
-	class RZ_UTILITY_EXPORT ActorComponentFactory
+	class RZ_EXP ActorComponentFactory
 	{
 	private:
 		static ActorComponentFactory*& _Instance();
@@ -34,13 +35,13 @@ namespace rczEngine
 		StrCmpPtr CreateComponent(eCOMPONENT_ID component, WeakGameObjectPtr owner);
 
 		FORCEINLINE void Reset() { m_LastId = 0; m_LastCmpID = 0; };
-		void SetLastID(uint32 id) { m_LastId = id; };
+		void SetLastID(ComponentId id) { m_LastId = id; };
 
 	private:
-		uint32 m_LastId = 0;
-		uint32 m_LastCmpID = 0;
+		ComponentId m_LastId = 0;
+		ComponentId m_LastCmpID = 0;
 
-		uint32 GetNewActorId() { return ++m_LastId; };
+		ComponentId GetNewActorId() { return ++m_LastId; };
 
 	};
 }

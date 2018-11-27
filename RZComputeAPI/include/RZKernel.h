@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT Kernel
+	class RZ_EXP Kernel
 	{
 	public:
 		~Kernel() { Destroy(); };

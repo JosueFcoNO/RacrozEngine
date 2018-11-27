@@ -16,6 +16,7 @@ namespace rczEngine
 		CMP_CAMERA_WALK,
 		CMP_SPACE_MANAGER,
 		CMP_SPACE_TRAVEL,
+		CMP_BONE,
 		CMP_MAX
 	};
 };

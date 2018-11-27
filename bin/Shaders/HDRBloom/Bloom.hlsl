@@ -65,7 +65,7 @@ PS_Output PS_Main(PS_Input Input)
     float4 fBrightAdd = AddBright.SampleLevel(Sampler_, Input.Texcoord, 0);
     float4 fBrightOriginal = BrightOriginal.Sample(Sampler_, Input.Texcoord);
 
-    psout.BrightAdd = 0.5f * (fBrightAdd + fBrightOriginal);
+    psout.BrightAdd = (fBrightAdd + fBrightOriginal);
 
     return psout;
 };

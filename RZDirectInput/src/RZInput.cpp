@@ -139,8 +139,8 @@ namespace rczEngine
 		GetCursorPos(&m_point);
 		ScreenToClient(hwnd, &m_point);
 
-		m_MousePos.m_x = m_point.x;
-		m_MousePos.m_y = m_point.y;
+		m_MousePos.m_x = CastStatic<float>(m_point.x);
+		m_MousePos.m_y = CastStatic<float>(m_point.y);
 
 		m_MouseData.x = m_MousePos.m_x;
 		m_MouseData.y = m_MousePos.m_y;

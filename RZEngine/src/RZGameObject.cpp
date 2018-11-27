@@ -12,23 +12,49 @@ namespace rczEngine
 
 	void GameObject::Update(Scene* scene, float deltaTime)
 	{
+		if (m_ToDestroy) return;
+
 		UpdateWorldMatrix();
 
 		///Go through all the actor's components and update them
+#pragma omp parallel for
 		for (auto It = m_Components.begin(); It != m_Components.end(); It++)
 		{
 			(*It).second->Update(deltaTime);
 		}
 
+#pragma omp parallel for
 		for (int i = 0; i < m_ChildrenVector.size(); ++i)
 		{
 			m_ChildrenVector[i].lock()->Update(scene, deltaTime);
 		}
 	}
 
-	void GameObject::Destroy()
+	void GameObject::Destroy(bool DestroyParentRef)
 	{
+		//Set myself to be destroyed
 		m_ToDestroy = true;
+
+		//Clear my components
+		m_Components.clear();
+
+		//Destroy reference in parent
+		//if (DestroyParentRef)
+		//	m_ParentNode.lock()->RemoveChild(m_GameObjectID);
+
+		//Remove myself from the scene
+		if (m_GameObjectID != 0)
+			SceneManager::Pointer()->GetActiveScene()->RemoveGameObject(m_GameObjectID);
+
+		//Destroy all my children
+		for (int i = 0; i < m_ChildrenVector.size(); ++i)
+		{
+			if (!m_ChildrenVector[i].expired())
+				m_ChildrenVector[i].lock()->Destroy();
+		}
+
+		m_ChildrenIDs.clear();
+		m_ChildrenVector.clear();
 	}
 
 	void GameObject::PreRender(Scene * scene)
@@ -93,7 +119,7 @@ namespace rczEngine
 		}
 		else
 		{
-			m_ToWorld[0] = GetLocalMatrix(false);
+			m_ToWorld[0] = GetLocalMatrix();
 		}
 	}
 
@@ -154,7 +180,7 @@ namespace rczEngine
 		ser->WriteData(&id, sizeof(id));
 
 		//Child number
-		id = m_ChildrenIDs.size();
+		id = (int)m_ChildrenIDs.size();
 		ser->WriteData(&id, sizeof(id));
 
 		//Child Ids
@@ -168,7 +194,7 @@ namespace rczEngine
 		ser->SetNextObjectSerial(SERIAL_COMPONENT);
 
 		//Number Of Components
-		id = m_Components.size();
+		id = (int)m_Components.size();
 		ser->WriteData(&id, sizeof(id));
 
 		if (id)
@@ -262,17 +288,13 @@ namespace rczEngine
 		}
 	}
 
-	Matrix4 GameObject::GetLocalMatrix(bool HasParent)
+	Matrix4 GameObject::GetLocalMatrix()
 	{
 		if (m_DirtyLocalMatrix)
-			m_ToLocal = HasParent ?
+			m_ToLocal =
 			Matrix4::Scale3D(m_Scale.m_x, m_Scale.m_y, m_Scale.m_z)*
 			Matrix4::Rotate3D(m_Orientation.m_x, m_Orientation.m_y, m_Orientation.m_z)*
-			Matrix4::Translate3D(m_Position.m_x, m_Position.m_y, m_Position.m_z)
-			:
-			Matrix4::Scale3D(m_Scale.m_x, m_Scale.m_y, m_Scale.m_z)*
-			Matrix4::Translate3D(m_Position.m_x, m_Position.m_y, m_Position.m_z)*
-			Matrix4::Rotate3D(m_Orientation.m_x, m_Orientation.m_y, m_Orientation.m_z);
+			Matrix4::Translate3D(m_Position.m_x, m_Position.m_y, m_Position.m_z);
 
 		m_DirtyLocalMatrix = false;
 		return m_ToLocal;

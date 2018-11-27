@@ -2,8 +2,6 @@
 
 namespace rczEngine
 {
-	class ResVault;
-
 	enum ResourceType
 	{
 		RES_UNKNOWN,
@@ -18,7 +16,7 @@ namespace rczEngine
 	};
 
 	///The resource base class. 
-	class RZ_UTILITY_EXPORT Resource : public std::enable_shared_from_this<Resource>, public Serializable
+	class RZ_EXP Resource : public std::enable_shared_from_this<Resource>, public Serializable
 	{
 	public:
 		Resource() {};
@@ -33,7 +31,7 @@ namespace rczEngine
 		void SetName(const char* name) { m_Name = name; };
 
 		//Returns the FilePath const char
-		const char* GetFilePath() const { return m_FilePath.GetFilePath().c_str(); };
+		String GetFilePath() const { return m_FilePath.GetFilePath(); };
 		//Returns the FilePath Object
 		const Path& GetPath() { return m_FilePath; };
 

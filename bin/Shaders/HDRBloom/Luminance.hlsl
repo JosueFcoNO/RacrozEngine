@@ -64,7 +64,7 @@ PS_Output PS_Main(PS_Input Input)
     float4 LuminanceFactor = float4(0.3f, 0.6f, 0.06f, 1.0f);
     float4 Color = PBRTexture.Sample(Sampler_, Input.Texcoord);
 
-    psout.Luminance = log(dot(Color, LuminanceFactor) + 0.00001f);
+    psout.Luminance = float4(log(dot(Color, LuminanceFactor) + 0.00001f).xxx, 1.0f);
 
     return psout;
 };

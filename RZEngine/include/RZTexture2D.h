@@ -2,13 +2,21 @@
 
 namespace rczEngine
 {
-	class ResVault;
-
-	class RZ_UTILITY_EXPORT Texture2D : public Resource, public Serializable
+	class RZ_EXP Texture2D : public Resource
 	{
 	public:
 		Texture2D() { m_Type = ResourceType::RES_TEXTURE; };
-		virtual ~Texture2D() { Release(); };
+		virtual ~Texture2D()
+		{
+			try
+			{
+				Release();
+			}
+			catch (...)
+			{
+				
+			}
+		};
 
 		uint32 Width();
 		uint32 Height();

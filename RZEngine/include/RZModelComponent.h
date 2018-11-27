@@ -2,49 +2,20 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT ModelRenderer : public Component 
+	class RZ_EXP ModelRenderer : public Component 
 	{
 	public:
-		ModelRenderer() 
-		{
-		};
+		ModelRenderer() {};
 
-		virtual void Init() 
-		{
-			m_Model = INVALID_RESOURCE;
-			m_Materials.clear();
+		virtual void Init();
 
-			auto resVault = ResVault::Pointer();
+		virtual void Update(float deltaTime) {};
 
-			SetModel(resVault->m_ModelCube, resVault);
-		};
+		virtual void Render(Gfx::GfxCore* gfx, ResVault* res, Scene* scene, MATERIAL_TYPE matType = MAT_ANY);
 
-		void Update(float deltaTime) {};
+		void SetModel(ResourceHandle model, ResVault* resManager);
 
-		void Render(Gfx::GfxCore* gfx, ResVault* res, Scene* scene, MATERIAL_TYPE matType = MAT_ANY) 
-		{ 
-			if (m_Materials.size())
-			{
-				res->GetResource<Model>(m_Model).lock()->DrawModel(gfx, res, &m_Materials, matType);
-			}
-		};
-
-		void SetModel(ResourceHandle model, ResVault* resManager)
-		{
-			m_Model = model;
-
-			auto ModelObj = resManager->GetResource<Model>(model).lock();
-			
-			for (auto it = ModelObj->m_MaterialMap.begin(); it != ModelObj->m_MaterialMap.end(); ++it)
-			{
-				m_Materials[it->first] = it->second;
-			}
-		}
-
-		void OverrideMaterial(ResourceHandle material, char* materialName)
-		{
-			m_Materials[materialName] = material;
-		}
+		void OverrideMaterial(ResourceHandle material, char* materialName);
 
 		virtual void Serialize();
 		virtual void DeSerialize();
@@ -60,7 +31,14 @@ namespace rczEngine
 
 			if (ImGui::Button("Change Model"))
 			{
-				SetModel(LoadFile("New Model", "Modelo", ResVault::Pointer()), ResVault::Pointer());
+				ResVault::Pointer()->LoadModel(m_Owner.lock(), GetFilePath("Choose Model").c_str(), false);
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Change Model To Hierarchy"))
+			{
+				ResVault::Pointer()->LoadModel(m_Owner.lock(), GetFilePath("Choose Model").c_str(), true);
 			}
 		}
 #endif

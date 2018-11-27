@@ -4,7 +4,7 @@
 namespace rczEngine
 {
 	///A class to wrap shaders, is a friend to GfxCore. Can hold Vertex and Pixel shaders.
-	class RZ_UTILITY_EXPORT PixelShader : public Shader
+	class RZ_EXP PixelShader : public Shader
 	{
 	public:
 		///Inits everything to NULL

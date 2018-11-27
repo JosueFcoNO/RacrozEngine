@@ -133,7 +133,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProfileGuidedDatabase>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>RZRenderer.lib;libfbxsdk.lib;assimp-vc140-mt.lib;RZDirectInput.lib;RZUtilityLib.lib;RZCore.lib;RZDirectXAPI.lib;RZComputeAPI.lib;RZfmodSound.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk.lib;assimp-vc140-mt.lib;RZDirectInput.lib;RZUtilityLib.lib;RZCore.lib;RZDirectXAPI.lib;RZComputeAPI.lib;RZfmodSound.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -179,7 +179,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProfileGuidedDatabase>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>RZRenderer.lib;libfbxsdk.lib;assimp-vc140-mt.lib;RZDirectInput.lib;RZUtilityLib.lib;RZCore.lib;RZDirectXAPI.lib;RZComputeAPI.lib;RZfmodSound.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk.lib;assimp-vc140-mt.lib;RZDirectInput.lib;RZUtilityLib.lib;RZCore.lib;RZDirectXAPI.lib;RZComputeAPI.lib;RZfmodSound.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -197,8 +197,10 @@
     <ClInclude Include="include\RZComponentIDs.h" />
     <ClInclude Include="include\RZCameraComponent.h" />
     <ClInclude Include="include\RZComponent.h" />
+    <ClInclude Include="include\RZConsoleGUI.h" />
     <ClInclude Include="include\RZCubeMap.h" />
     <ClInclude Include="include\RZEditorGUI.h" />
+    <ClInclude Include="include\RZEngineFwdDcl.h" />
     <ClInclude Include="include\RZEnginePCH.h" />
     <ClInclude Include="include\RZFbxLoader.h" />
     <ClInclude Include="include\RZGameManager.h" />
@@ -223,11 +225,14 @@
     <ClInclude Include="include\RZMusic.h" />
     <ClInclude Include="include\RZOctree.h" />
     <ClInclude Include="include\RZPerlinNoise.h" />
+    <ClInclude Include="include\RZPerlinNoise3D.h" />
     <ClInclude Include="include\RZPlanet.h" />
+    <ClInclude Include="include\RZPlanetQuadTreeNode.h" />
     <ClInclude Include="include\RZResource.h" />
     <ClInclude Include="include\RZResourcesGUI.h" />
     <ClInclude Include="include\RZSceneGraphGUI.h" />
     <ClInclude Include="include\RZSceneManager.h" />
+    <ClInclude Include="include\RZSkinnedBoneComponent.h" />
     <ClInclude Include="include\RZSpaceComponent.h" />
     <ClInclude Include="include\RZResourceManager.h" />
     <ClInclude Include="include\RZScene.h" />
@@ -255,6 +260,8 @@
     <ClCompile Include="src\RZAnimation.cpp" />
     <ClCompile Include="src\RZAssimpLoader.cpp" />
     <ClCompile Include="src\RZBone.cpp" />
+    <ClCompile Include="src\RZConsoleGUI.cpp" />
+    <ClCompile Include="src\RZSkinnedBoneComponent.cpp" />
     <ClCompile Include="src\RZCameraComponent.cpp" />
     <ClCompile Include="src\RZCameraManager.cpp" />
     <ClCompile Include="src\RZComponent.cpp" />
@@ -286,7 +293,9 @@
     <ClCompile Include="src\RZModel.cpp" />
     <ClCompile Include="src\RZMusic.cpp" />
     <ClCompile Include="src\RZPerlinNoise.cpp" />
+    <ClCompile Include="src\RZPerlinNoise3D.cpp" />
     <ClCompile Include="src\RZPlanet.cpp" />
+    <ClCompile Include="src\RZPlanetQuadTreeNode.cpp" />
     <ClCompile Include="src\RZResourceManager.cpp" />
     <ClCompile Include="src\RZScene.cpp" />
     <ClCompile Include="src\RZSceneGraphGUI.cpp" />

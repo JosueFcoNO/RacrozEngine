@@ -33,19 +33,19 @@ PS_OUTPUT PS_Main(PS_INPUT input)
         { 3, 0, 0, 1.0f / 64.0f }
     };
 
-    float TextureOffset = 1.0f / TextureSizeX;
+    float TextureOffset = 1.0f / TextureSizeX * 4.0f;
    
     float2 UV = input.TexCoord;
 
-    float4 c = InTexture.SampleLevel(Sampler_, UV, 0);
+    float4 c = InTexture.SampleLevel(Sampler_, UV, 1);
     float4 Color = float4(0, 0, 0, 0);
    
-    float4 m3 = InTexture.SampleLevel(Sampler_, UV + float2(-3 * TextureOffset, 0), 0);
-    float4 m2 = InTexture.SampleLevel(Sampler_, UV + float2(-2 * TextureOffset, 0), 0);
-    float4 m1 = InTexture.SampleLevel(Sampler_, UV + float2(-1 * TextureOffset, 0), 0);
-    float4 p1 = InTexture.SampleLevel(Sampler_, UV + float2(1 * TextureOffset , 0), 0);
-    float4 p2 = InTexture.SampleLevel(Sampler_, UV + float2(2 * TextureOffset , 0), 0);
-    float4 p3 = InTexture.SampleLevel(Sampler_, UV + float2(3 * TextureOffset , 0), 0);
+    float4 m3 = InTexture.SampleLevel(Sampler_, UV + float2(-3 * TextureOffset, 0), 1);
+    float4 m2 = InTexture.SampleLevel(Sampler_, UV + float2(-2 * TextureOffset, 0), 1);
+    float4 m1 = InTexture.SampleLevel(Sampler_, UV + float2(-1 * TextureOffset, 0), 1);
+    float4 p1 = InTexture.SampleLevel(Sampler_, UV + float2(1 * TextureOffset , 0), 1);
+    float4 p2 = InTexture.SampleLevel(Sampler_, UV + float2(2 * TextureOffset , 0), 1);
+    float4 p3 = InTexture.SampleLevel(Sampler_, UV + float2(3 * TextureOffset , 0), 1);
   
     Color +=
     m3 * Gauss[0].w +

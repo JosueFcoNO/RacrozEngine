@@ -4,7 +4,8 @@ namespace rczEngine
 {
 	void ColorCorrectionPass::SetRenderingMode(RENDERING_MODE mode)
 	{
-		m_gfx->CompileAndCreatePixelShader(m_Pshader, L"Shaders/ColorCorrection.hlsl");
+		m_PShaderPath = L"Shaders/ColorCorrection.hlsl";
+		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
 
 		GammaBuffer.Destroy();
 		GammaBuffer.CreateConstantBuffer(sizeof(GammaSetting), Gfx::USAGE_DEFAULT, m_gfx);
@@ -15,7 +16,7 @@ namespace rczEngine
 
 	void ColorCorrectionPass::PreRenderPass()
 	{
-		m_Pshader.SetThisPixelShader(m_gfx);
+		m_PShader.SetThisPixelShader(m_gfx);
 
 		GammaData.Exposure = GUIEditor::Pointer()->Exposure;
 		GammaData.Correction = GUIEditor::Pointer()->ColorMode;

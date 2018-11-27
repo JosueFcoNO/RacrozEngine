@@ -3,7 +3,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT Vector4
+	class RZ_EXP Vector4
 	{
 	public:
 		///////////////////////

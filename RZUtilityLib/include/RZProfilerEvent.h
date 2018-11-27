@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	enum { PROFILER_CAPTURED_FRAMES = 1200 };
 
-	class RZ_UTILITY_EXPORT ProfilerEvent
+	class RZ_EXP ProfilerEvent
 	{
 	public:
 		void AddTimeEntry(double time);

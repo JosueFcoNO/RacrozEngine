@@ -6,7 +6,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT SpaceManager
+	class RZ_EXP SpaceManager
 	{
 	private:
 		static SpaceManager*& _Instance();

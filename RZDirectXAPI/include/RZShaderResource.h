@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	namespace Gfx
 	{
-		class RZ_UTILITY_EXPORT ShaderResource
+		class RZ_EXP ShaderResource
 		{
 		public:
 			ID3D11ShaderResourceView* m_ShaderResource;

@@ -5,13 +5,13 @@ namespace rczEngine
 {
 	typedef std::function<void (int32, int32, int32)> MouseCallback;
 
-	class RZ_UTILITY_EXPORT IMouseHandler : public IEventHandler
+	class RZ_EXP IMouseHandler : public IEventHandler
 	{
 	public:
-		virtual void OnClick(int32 mb, int32 mx, int32 my) {};
-		virtual void OnHold(int32 mb, int32 mx, int32 my) {};
-		virtual void OnReleased(int32 mb, int32 mx, int32 my) {};
-		virtual void OnMoved(int32 mb, int32 mx, int32 my) {};
+		virtual void OnClick(int32 mb = 0, int32 mx = 0, int32 my = 0) = 0;
+		virtual void OnHold(int32 mb = 0, int32 mx = 0, int32 my = 0) = 0;
+		virtual void OnReleased(int32 mb = 0, int32 mx = 0, int32 my = 0) = 0;
+		virtual void OnMoved(int32 mb = 0, int32 mx = 0, int32 my = 0) = 0;
 		EVENT_HANDLER GetEventHandlerType() { return EVENT_HANDLER::HANDLER_MOUSE; };
 
 	};

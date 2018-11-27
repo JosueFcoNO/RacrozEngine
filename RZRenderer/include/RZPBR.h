@@ -3,7 +3,7 @@
 namespace rczEngine
 {
 	///A Base Class to derive into concrete Passes.
-	class RZ_UTILITY_EXPORT PBR_Pass : public Pass
+	class RZ_EXP PBR_Pass : public Pass
 	{
 	public:
 		virtual void SetRenderingMode(RENDERING_MODE mode);
@@ -21,7 +21,6 @@ namespace rczEngine
 	private:
 		StrPtr<Texture2D> m_LUT;
 
-		Gfx::PixelShader m_PBRShader;
 		Gfx::ConstantBuffer UserDisney;
 	};
 }

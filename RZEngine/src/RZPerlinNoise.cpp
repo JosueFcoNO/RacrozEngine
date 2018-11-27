@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void PerlinNoise::InitPerlinNoise(int32 seed)
+	void PerlinNoise2D::InitPerlinNoise(int32 seed)
 	{
 		m_Core.GradientVectors[0] = Vector2(-1, 1);
 		m_Core.GradientVectors[1] = Vector2(-1, -1);
@@ -17,7 +17,7 @@ namespace rczEngine
 		m_PerlinCBuffer.UpdateConstantBuffer(&m_Core, gfx);
 	}
 
-	void PerlinNoise::ResetSeedAndGrads(int32 seed)
+	void PerlinNoise2D::ResetSeedAndGrads(int32 seed)
 	{
 		m_rnd.SetRandomSeed(seed);
 
@@ -31,22 +31,22 @@ namespace rczEngine
 			}
 	}
 
-	void PerlinNoise::SetNoiseCoreInPS(int32 slot)
+	void PerlinNoise2D::SetNoiseCoreInPS(int32 slot)
 	{
 		m_PerlinCBuffer.SetBufferInPS(slot, Gfx::GfxCore::Pointer());
 	}
 
-	void PerlinNoise::SetNoiseCoreInVS(int32 slot)
+	void PerlinNoise2D::SetNoiseCoreInVS(int32 slot)
 	{
 		m_PerlinCBuffer.SetBufferInVS(slot, Gfx::GfxCore::Pointer());
 	}
 
-	void PerlinNoise::SetNoiseCoreInDS(int32 slot)
+	void PerlinNoise2D::SetNoiseCoreInDS(int32 slot)
 	{
 		m_PerlinCBuffer.SetBufferInDS(slot, Gfx::GfxCore::Pointer());
 	}
 
-	ResourceHandle PerlinNoise::GetPerlinNoiseAsTextureRGBA32FLOAT(int32 w, int32 h, int32 octaves, Gfx::GfxCore* gfx, ResVault* res)
+	ResourceHandle PerlinNoise2D::GetPerlinNoiseAsTextureRGBA32FLOAT(int32 w, int32 h, int32 octaves, Gfx::GfxCore* gfx, ResVault* res)
 	{
 		Vector4 planetColor1(m_rnd.GetRandomNumberN(), m_rnd.GetRandomNumberN(), m_rnd.GetRandomNumberN(), m_rnd.GetRandomNumberN());
 		planetColor1.Normalize();
@@ -76,7 +76,7 @@ namespace rczEngine
 		return m_HeightMapTexture;
 	}
 
-	ResourceHandle PerlinNoise::GetPerlinNoiseAsTextureR8UNORM(int32 w, int32 h, int32 octaves, Gfx::GfxCore * gfx, ResVault * res)
+	ResourceHandle PerlinNoise2D::GetPerlinNoiseAsTextureR8UNORM(int32 w, int32 h, int32 octaves, Gfx::GfxCore * gfx, ResVault * res)
 	{
 		Vector4 planetColor1(m_rnd.GetRandomNumberN(), m_rnd.GetRandomNumberN(), m_rnd.GetRandomNumberN(), m_rnd.GetRandomNumberN());
 		planetColor1.Normalize();
@@ -107,7 +107,7 @@ namespace rczEngine
 		return m_HeightMapTexture;
 	}
 
-	float PerlinNoise::Noise(float x, float y)
+	float PerlinNoise2D::Noise(float x, float y)
 	{
 		int xi = ((int)x) % MAX_GRAD_X;
 		int yi = ((int)y) % MAX_GRAD_Y;
@@ -152,7 +152,7 @@ namespace rczEngine
 		return Math::Lerp(x1, x2, v);
 	}
 
-	float PerlinNoise::OctaveNoise(float x, float y, int octaves, double persistence)
+	float PerlinNoise2D::OctaveNoise(float x, float y, int octaves, double persistence)
 	{
 		float total = 0;
 		float frequency = 1;
@@ -164,7 +164,7 @@ namespace rczEngine
 
 			maxValue += amplitude;
 
-			amplitude *= persistence;
+			amplitude *= CastStatic<float>(persistence);
 			frequency *= 2;
 		}
 

@@ -4,12 +4,13 @@ namespace rczEngine
 {
 	void HDRBloomPass::SetRenderingMode(RENDERING_MODE mode)
 	{
-		m_gfx->CompileAndCreatePixelShader(m_HDRBloomShader, L"Shaders/HDRBloom/HDRBloom.hlsl");
+		m_PShaderPath = L"Shaders/HDRBloom/HDRBloom.hlsl";
+		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
 	}
 
 	void HDRBloomPass::PreRenderPass()
 	{
-		m_HDRBloomShader.SetThisPixelShader(m_gfx);
+		m_PShader.SetThisPixelShader(m_gfx);
 
 		SetRenderTargetsInPipeline();
 		SetTexturesInPipeline();

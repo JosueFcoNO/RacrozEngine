@@ -68,6 +68,7 @@ PS_Output PS_Main(PS_Input Input)
     float4 Emmisive = EmmisiveTexture.Sample(Sampler_ , Input.Texcoord);
 
     psout.Bright = max(Luminance - BloomThreshold, float4(0, 0, 0, 0)) + Emmisive;
+	psout.Bright.a = 1.0f;
 
     return psout;
 };

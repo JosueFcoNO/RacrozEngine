@@ -34,15 +34,27 @@ namespace rczEngine
 
 	void Scene::Update(float deltaTime)
 	{
+		for (int32 i = 0; i < m_GameObjectsToDelete.size(); ++i)
+		{
+			if (m_GameObjectsToDelete[i])
+			{
+				m_SceneActorMap.erase(m_GameObjectsToDelete[i]->GetID());
+
+				if (i == (m_GameObjectsToDelete.size() - 1)) m_GameObjectsToDelete.clear();
+			}
+		}
+
 		m_RootNode->Update(this, deltaTime);
 	}
 
 	void Scene::Destroy()
 	{
-		m_SceneActorMap.clear();
 		m_WorldMatrix.Destroy();
 
-		m_RootNode->Destroy();
+		//m_RootNode->Destroy();
+
+		m_SceneActorMap.clear();
+
 	}
 
 	
@@ -107,7 +119,7 @@ namespace rczEngine
 		m_RootNode->AddChild(node);
 	}
 
-	void Scene::RemoveChild(GameObjectID actorId)
+	void Scene::RemoveGameObject(GameObjectID actorId)
 	{
 		if (actorId == INVALID_ID)
 		{
@@ -115,8 +127,7 @@ namespace rczEngine
 		}
 
 		auto DeadMan = FindActor(actorId);
-		m_SceneActorMap.erase(actorId);
-		m_RootNode->RemoveChild(actorId);
+		m_GameObjectsToDelete.push_back(DeadMan.lock());
 	}
 
 	void Scene::AddActor(StrGameObjectPtr node)

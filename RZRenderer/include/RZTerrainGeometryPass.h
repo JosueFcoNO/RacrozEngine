@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT TerrainGeometryPass : public Pass
+	class RZ_EXP TerrainGeometryPass : public Pass
 	{
 	public:
 		///Inits the pass with a name and a rendering mode.
@@ -19,7 +19,6 @@ namespace rczEngine
 
 	private:
 		Gfx::VertexShader m_Vshader;
-		Gfx::PixelShader  m_Pshader;
 		Gfx::DomainShader m_Dshader;
 		Gfx::HullShader   m_Hshader;
 

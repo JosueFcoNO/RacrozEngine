@@ -2,9 +2,7 @@
 
 namespace rczEngine
 {
-	typedef uint16 ComponentId;
-
-	class RZ_UTILITY_EXPORT Component : public Object, public Serializable
+	class RZ_EXP Component : public Object, public Serializable
 	{
 	public:
 		virtual ~Component() {};

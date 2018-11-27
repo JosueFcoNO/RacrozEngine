@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT Triangle 
+	class RZ_EXP Triangle 
 	{
 	public:
 		Triangle();

@@ -162,6 +162,9 @@
     <ClInclude Include="include\RZPerlinPlanetPass.h">
       <Filter>Archivos de encabezado\Passes\Perlin</Filter>
     </ClInclude>
+    <ClInclude Include="include\RZRendererWindow.h">
+      <Filter>Archivos de encabezado\EditorWindows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZRendererPCH.cpp">

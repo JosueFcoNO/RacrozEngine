@@ -3,7 +3,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT MeshAPI
+	class RZ_EXP MeshAPI
 	{
 	public:
 		MeshAPI() {};

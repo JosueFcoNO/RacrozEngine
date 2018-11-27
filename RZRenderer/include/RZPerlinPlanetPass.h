@@ -3,7 +3,7 @@
 namespace rczEngine
 {
 	///A concrete SkyBox Pass implementation, using a normal CubeMap.
-	class RZ_UTILITY_EXPORT PerlinPlanetPass : public Pass
+	class RZ_EXP PerlinPlanetPass : public Pass
 	{
 	public:
 		///Sets the rendering mode for this Pass. Changes the shaders and buffers as needed.
@@ -17,7 +17,6 @@ namespace rczEngine
 		WeakPtr<Model> m_Cube;
 
 		Gfx::VertexShader m_VShader;
-		Gfx::PixelShader  m_PShader;
 
 		Gfx::RasterizerState rzState;
 		ResourceHandle m_Planet;

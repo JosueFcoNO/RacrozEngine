@@ -56,7 +56,7 @@ namespace rczEngine
 
 #pragma endregion
 
-	class RZ_UTILITY_EXPORT GUIEditor
+	class RZ_EXP GUIEditor
 	{
 	private:
 		static GUIEditor*& _Instance();
@@ -70,9 +70,15 @@ namespace rczEngine
 		void PreRender(ImDrawData* draw_data);
 		void DestroyEditor();
 		void RenderEditor(RendererConfig* user);
+		
+		void AddWindow(const String& name, GUIBaseWindow* window)
+		{
+			m_Windows[name] = window;
+		}
 
 		int ColorMode = 0;
 		float Exposure = 1.0f;
+		float FPS = 0.0f;
 
 	private:
 		void CreateFontsTexture();
@@ -87,11 +93,13 @@ namespace rczEngine
 
 		Gfx::GfxCore* m_gfx;
 		Gfx::ConstantBuffer m_ConstantBuffer;
-		Gfx::BlendState m_BlendState;
+		Gfx::BlendState m_NormalBlendState;
+		Gfx::BlendState m_TextBlendState;
 
 		GUISceneGraph m_SceneGraphGUI;
 		GUIGameObject m_GameObjectGUI;
 		GUIResources m_ResourcesGUI;
+		GUIConsole m_ConsoleGUI;
 
 		Map<String, GUIBaseWindow*> m_Windows;
 

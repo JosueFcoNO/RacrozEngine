@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT SamplerState
+	class RZ_EXP SamplerState
 	{
 	public:
 		SamplerState() : m_BorderColor(INIT_ZERO)

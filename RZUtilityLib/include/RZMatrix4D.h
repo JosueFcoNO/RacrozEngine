@@ -3,7 +3,7 @@
 namespace rczEngine
 {
 	///4x4 Matrix that can be accesed as 4 row Vector4s, a linear 16 float array and a 4x4 float nested array.
-	class RZ_UTILITY_EXPORT Matrix4
+	class RZ_EXP Matrix4
 	{
 	public:
 		///////////////////////

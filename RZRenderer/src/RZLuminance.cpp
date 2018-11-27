@@ -4,12 +4,13 @@ namespace rczEngine
 {
 	void LuminancePass::SetRenderingMode(RENDERING_MODE mode)
 	{
-		m_gfx->CompileAndCreatePixelShader(m_LuminanceShader, L"Shaders/HDRBloom/Luminance.hlsl");
+		m_PShaderPath = L"Shaders/HDRBloom/Luminance.hlsl";
+		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
 	}
 
 	void LuminancePass::PreRenderPass()
 	{
-		m_LuminanceShader.SetThisPixelShader(m_gfx);
+		m_PShader.SetThisPixelShader(m_gfx);
 
 		SetRenderTargetsInPipeline();
 		SetTexturesInPipeline();

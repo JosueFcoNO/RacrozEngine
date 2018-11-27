@@ -2,7 +2,7 @@
 namespace rczEngine
 {
 	///A class Mesh that contains Gfx::Vertex and Index buffers.
-	class RZ_UTILITY_EXPORT Model : public Resource
+	class RZ_EXP Model : public Resource
 	{
 	public:
 		Model() { m_Type = ResourceType::RES_3DMODEL; };

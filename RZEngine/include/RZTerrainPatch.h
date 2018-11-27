@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT TerrainPatch
+	class RZ_EXP TerrainPatch
 	{
 	public:
 		void GeneratePatch(MeshPlane* left, MeshPlane* right, MeshPlane* down, MeshPlane* rightDown, Gfx::GfxCore* gfx);

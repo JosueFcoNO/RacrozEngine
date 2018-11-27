@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT HeightMap
+	class RZ_EXP HeightMap
 	{
 	public:
 		void LoadHeightMap(ResVault * res);

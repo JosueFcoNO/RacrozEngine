@@ -3,7 +3,7 @@
 namespace rczEngine
 {
 	///Class to use Radians, implements some functionality and avoids confusion
-	class RZ_UTILITY_EXPORT Radian
+	class RZ_EXP Radian
 	{
 	public:
 		Radian() { m_Value = 0.0f; };

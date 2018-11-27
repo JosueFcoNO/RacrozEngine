@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT GeometryShader : public Shader
+	class RZ_EXP GeometryShader : public Shader
 	{
 	public:
 		///Inits everything to NULL

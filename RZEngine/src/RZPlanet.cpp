@@ -1,5 +1,4 @@
 #include <RZEnginePCH.h>
-#include "../../RZRenderer/include/RZRendererPCH.h"
 
 namespace rczEngine
 {
@@ -11,28 +10,37 @@ namespace rczEngine
 		m_CurrentScene = SceneManager::Pointer()->GetActiveScene();
 		m_GfxCore = Gfx::GfxCore::Pointer();
 
+		PlayerCamera = CameraManager::Pointer()->GetActiveCamera().lock();
+
+		noise.InitPerlinNoise(seed);
+
+		for (int i = 0; i < 6; ++i)
+		{
+			Quadtree[i].InitQuadTree(&noise, Vector3(0,0,0), 0, 0, (eMeshPlaneOrientation)i);
+		}
+
+		Quadtree[(int)Xpos].SetAdyacents(&Quadtree[(int)Zneg], &Quadtree[(int)Zpos], &Quadtree[(int)Ypos], &Quadtree[(int)Yneg]);
+		Quadtree[(int)Xneg].SetAdyacents(&Quadtree[(int)Zpos], &Quadtree[(int)Zneg], &Quadtree[(int)Ypos], &Quadtree[(int)Yneg]);
+		Quadtree[(int)Ypos].SetAdyacents(&Quadtree[(int)Zneg], &Quadtree[(int)Zpos], &Quadtree[(int)Xpos], &Quadtree[(int)Xneg]);
+		Quadtree[(int)Yneg].SetAdyacents(&Quadtree[(int)Zpos], &Quadtree[(int)Zneg], &Quadtree[(int)Xneg], &Quadtree[(int)Xpos]);
+		Quadtree[(int)Zpos].SetAdyacents(&Quadtree[(int)Xneg], &Quadtree[(int)Xpos], &Quadtree[(int)Ypos], &Quadtree[(int)Yneg]);
+		Quadtree[(int)Zneg].SetAdyacents(&Quadtree[(int)Xpos], &Quadtree[(int)Xneg], &Quadtree[(int)Ypos], &Quadtree[(int)Yneg]);
+
 		m_HeightCameracb.CreateConstantBuffer(sizeof(Vector4), Gfx::USAGE_DEFAULT, m_GfxCore);
 
-		LoadAndProcessModel();
+		//LoadAndProcessModel();
+		//CreateMaterial();
 
 		m_SpacePosition.Set(x, y, z);
-
-		CreateMaterial();
 
 		Vector3	gradients[12] = {
 			Vector3(1,1,0),Vector3(-1,1,0),Vector3(1,-1,0),Vector3(-1,-1,0),
 			Vector3(1,0,1),Vector3(-1,0,1),Vector3(1,0,-1),Vector3(-1,0,-1),
 			Vector3(0,1,1),Vector3(0,-1,1),Vector3(0,1,-1),Vector3(0,-1,-1)
 		};
-		RandomBoxMuller rnd;
-
-		for (int i = 0; i < PERMUTATION_TABLE_SIZE; ++i)
-		{
-			PermutationTable[i].m_x = (int)floor(rnd.GetRandomNumberN() * 255);
-		}
 
 		///Render the planet sphere.
-		m_PlanetMatrix = Matrix4::Scale3D(200.0f, 200.0f, 200.0f)*Matrix4::Translate3D(m_SpacePosition.m_x, m_SpacePosition.m_y, m_SpacePosition.m_z);
+		m_PlanetMatrix = Matrix4::Scale3D(1.0f, 1.0f, 1.0f)*Matrix4::Translate3D(m_SpacePosition.m_x, m_SpacePosition.m_y, m_SpacePosition.m_z);
 		m_PlanetMatrix.Transpose();
 
 		m_PosView.CreateConstantBuffer(sizeof(Vector4), Gfx::USAGE_DEFAULT, m_GfxCore);
@@ -55,46 +63,38 @@ namespace rczEngine
 
 		m_ScaleCB.UpdateConstantBuffer(&m_HeightScale, m_GfxCore);
 		m_ScaleCB.SetBufferInPS(12, m_GfxCore);
-
-		Vector<String> Passes;
-		Passes.push_back("Perlin3D");
-
-		m_HeightMap = RacrozRenderer::Pointer()->CreateCubeMap("CubeMapo", nullptr, Passes, 2048, 2048);
 	}
 
 	void Planet::RenderPlanet(float scale)
 	{
+
 		m_CurrentScene->m_WorldMatrix.UpdateConstantBuffer(&m_PlanetMatrix, m_GfxCore);
 		m_CurrentScene->m_WorldMatrix.SetBufferInVS(2, m_GfxCore);
 		m_CurrentScene->m_WorldMatrix.SetBufferInHS(1, m_GfxCore);
 		m_CurrentScene->m_WorldMatrix.SetBufferInDS(2, m_GfxCore);
 
-		m_GradientCB.SetBufferInDS(10, m_GfxCore);
-		m_GradientsReal.SetBufferInDS(11, m_GfxCore);
-
-		m_ScaleCB.UpdateConstantBuffer(&m_HeightScale, m_GfxCore);
-		m_ScaleCB.SetBufferInDS(12, m_GfxCore);
-
-		PlanetPos = m_PlanetMatrix.GetInverse()*CameraManager::Pointer()->GetActiveCamera().lock()->GetPosition();
-		m_PosView.UpdateConstantBuffer(&PlanetPos, m_GfxCore);
-		m_PosView.SetBufferInVS(6, m_GfxCore);
-
-		ResVault::Pointer()->GetResource<Material>(m_Materials).lock()->SetPlanetMaterial();
-		ResVault::Pointer()->GetResource<CubeMap>(m_HeightMap).lock()->SetThisTextureInDS(0, 1, m_GfxCore);
-		ResVault::Pointer()->GetResource<CubeMap>(m_HeightMap).lock()->SetThisTextureInPS(6, 1, m_GfxCore);
+		//ResVault::Pointer()->GetResource<Material>(m_Materials).lock()->SetThisMaterial(Gfx::GfxCore::Pointer(), ResVault::Pointer());
 
 		static Gfx::RasterizerState wireframe;
 		static bool Done = false;
-
+		
 		if (!Done)
 		{
 			Done = true;
 			wireframe.Init(Gfx::FILL_WIREFRAME, Gfx::CULL_BACK);
 			wireframe.CreateRasterizerState(m_GfxCore);
 		}
+		
+		wireframe.SetThisRasterizerState(m_GfxCore);
 
-		//wireframe.SetThisRasterizerState(m_GfxCore);
-		m_Planet->DrawModel(m_GfxCore, ResVault::Pointer(), NULL);
+		Vector3 PlayerPos = PlayerCamera->GetPosition();
+
+		for (int i = 0; i < 6; ++i)
+		{
+			Quadtree[i].Update(PlayerPos);
+			Quadtree[i].Render();
+		}
+
 		m_GfxCore->SetRSStateDefault();
 	}
 
@@ -166,29 +166,6 @@ namespace rczEngine
 		//mat->InitMaterial(MAT_PBR_MetRough, Gfx::GfxCore::Pointer());
 		//mat->SetFilePath("PlanetMaterialWater");
 		//Water = res->InsertResource(mat);
-	}
-
-	Vector3 CubeToSphere(const Vector3 cubepoint)
-	{
-		float x2 = pow(cubepoint.m_x, 2);
-		float y2 = pow(cubepoint.m_y, 2);
-		float z2 = pow(cubepoint.m_z, 2);
-
-		Vector3 posFinal;
-
-		posFinal.m_x = cubepoint.m_x * sqrt(1.0f - y2 / 2.0f -
-			z2 / 2.0f +
-			y2 * z2 / 3.0f);
-
-		posFinal.m_y = cubepoint.m_y * sqrt(1.0f - z2 / 2.0f -
-			x2 / 2.0f +
-			x2 * z2 / 3.0f);
-
-		posFinal.m_z = cubepoint.m_z * sqrt(1.0f - x2 / 2.0f -
-			y2 / 2.0f +
-			y2 * x2 / 3.0f);
-
-		return posFinal;
 	}
 
 	void Planet::LoadAndProcessModel()

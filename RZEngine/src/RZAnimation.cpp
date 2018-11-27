@@ -139,14 +139,14 @@ namespace rczEngine
 						TempFrame.m_Scale.Set(1, 1, 1);
 						auto TempChannel = CurrentChannel;
 
-						TempFrame.m_Time = TempChannel->mPositionKeys[LastPosKey].mTime;
+						TempFrame.m_Time = CastStatic<float>(TempChannel->mPositionKeys[LastPosKey].mTime);
 						if (CurrentChannel->mRotationKeys[LastRotKey].mTime > TempFrame.m_Time)
 						{
-							TempFrame.m_Time = CurrentChannel->mRotationKeys[LastRotKey].mTime;
+							TempFrame.m_Time = CastStatic<float>(CurrentChannel->mRotationKeys[LastRotKey].mTime);
 						}
 						else if (CurrentChannel->mScalingKeys[LastScaleKey].mTime > TempFrame.m_Time)
 						{
-							TempFrame.m_Time = CurrentChannel->mScalingKeys[LastScaleKey].mTime;
+							TempFrame.m_Time = CastStatic<float>(CurrentChannel->mScalingKeys[LastScaleKey].mTime);
 						}
 
 						if (k < CurrentChannel->mNumPositionKeys)
@@ -181,18 +181,18 @@ namespace rczEngine
 
 						if (k < CurrentChannel->mNumRotationKeys)
 						{
-							TempFrame.m_Rotation.m_x = TempChannel->mRotationKeys[k].mValue.x;
-							TempFrame.m_Rotation.m_y = TempChannel->mRotationKeys[k].mValue.y;
-							TempFrame.m_Rotation.m_z = TempChannel->mRotationKeys[k].mValue.z;
+							TempFrame.m_Rotation.m_v.m_x = TempChannel->mRotationKeys[k].mValue.x;
+							TempFrame.m_Rotation.m_v.m_y = TempChannel->mRotationKeys[k].mValue.y;
+							TempFrame.m_Rotation.m_v.m_z = TempChannel->mRotationKeys[k].mValue.z;
 							TempFrame.m_Rotation.m_w = TempChannel->mRotationKeys[k].mValue.w;
 
 							LastRotKey = k;
 						}
 						else
 						{
-							TempFrame.m_Rotation.m_x = TempChannel->mRotationKeys[LastRotKey].mValue.x;
-							TempFrame.m_Rotation.m_y = TempChannel->mRotationKeys[LastRotKey].mValue.y;
-							TempFrame.m_Rotation.m_z = TempChannel->mRotationKeys[LastRotKey].mValue.z;
+							TempFrame.m_Rotation.m_v.m_x = TempChannel->mRotationKeys[LastRotKey].mValue.x;
+							TempFrame.m_Rotation.m_v.m_y = TempChannel->mRotationKeys[LastRotKey].mValue.y;
+							TempFrame.m_Rotation.m_v.m_z = TempChannel->mRotationKeys[LastRotKey].mValue.z;
 							TempFrame.m_Rotation.m_w = TempChannel->mRotationKeys[LastRotKey].mValue.w;
 						}
 
@@ -228,7 +228,7 @@ namespace rczEngine
 			ser->SerializeString(it->first);
 
 			//Write the size of the vector of keyframes
-			size = it->second.size();
+			size = (int32)it->second.size();
 			ser->WriteData(&size, sizeof(size));
 
 			//Write the vector of keyframes

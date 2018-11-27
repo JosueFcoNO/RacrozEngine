@@ -7,7 +7,7 @@
 namespace rczEngine
 {
 	template <class t>
-	class RZ_UTILITY_EXPORT VertexBuffer : public BasicBuffer ///A Vertex Buffer that hold a Vertex List and a Buffer.
+	class RZ_EXP VertexBuffer : public BasicBuffer ///A Vertex Buffer that hold a Vertex List and a Buffer.
 	{
 	public:
 		virtual ~VertexBuffer() { ClearVertexList(); };

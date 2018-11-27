@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT GUISceneGraph
+	class RZ_EXP GUISceneGraph
 	{
 	public:
 		void InitSceneGraphGUI();

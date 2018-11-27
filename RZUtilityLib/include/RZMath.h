@@ -9,7 +9,7 @@
 namespace rczEngine
 {
 	///General Math Functions Class
-	class RZ_UTILITY_EXPORT Math
+	class RZ_EXP Math
 	{
 	public:
 		///Multiplication by 2 using bit shifts
@@ -138,6 +138,29 @@ namespace rczEngine
 			}
 
 			return f;
+		}
+
+		static Vector3 CubeToSphere(const Vector3 &cubepoint)
+		{
+			float x2 = pow(cubepoint.m_x, 2);
+			float y2 = pow(cubepoint.m_y, 2);
+			float z2 = pow(cubepoint.m_z, 2);
+
+			Vector3 posFinal;
+
+			posFinal.m_x = cubepoint.m_x * sqrt(1.0f - y2 / 2.0f -
+				z2 / 2.0f +
+				y2 * z2 / 3.0f);
+
+			posFinal.m_y = cubepoint.m_y * sqrt(1.0f - z2 / 2.0f -
+				x2 / 2.0f +
+				x2 * z2 / 3.0f);
+
+			posFinal.m_z = cubepoint.m_z * sqrt(1.0f - x2 / 2.0f -
+				y2 / 2.0f +
+				y2 * x2 / 3.0f);
+
+			return posFinal;
 		}
 
 		///Elevate a float to ipow

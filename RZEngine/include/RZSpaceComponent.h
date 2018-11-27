@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT SpaceComponent : public Component
+	class RZ_EXP SpaceComponent : public Component
 	{
 	public:
 		SpaceComponent() {};

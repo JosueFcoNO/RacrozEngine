@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT RenderTargetView
+	class RZ_EXP RenderTargetView
 	{
 	public:
 		ID3D11RenderTargetView* m_RenderTargetView;

@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT ComputeAPI
+	class RZ_EXP ComputeAPI
 	{
 	private:
 		static ComputeAPI*& _Instance();

@@ -2,9 +2,9 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT Planet;
-	class RZ_UTILITY_EXPORT SpaceManager;
-	class RZ_UTILITY_EXPORT TerrainPatch;
+	class RZ_EXP Planet;
+	class RZ_EXP SpaceManager;
+	class RZ_EXP TerrainPatch;
 
 #define HEIGHTMAP_RES 1024
 
@@ -12,6 +12,7 @@ namespace rczEngine
 	{
 		int32 Size;
 		double distVertex;
+		double HalfSize;
 		float xCell;
 		float yCell;
 
@@ -23,17 +24,30 @@ namespace rczEngine
 		float padding[3];
 	};
 
-	class RZ_UTILITY_EXPORT MeshPlane
+	enum eMeshPlaneOrientation
+	{
+		Ypos,
+		Yneg,
+		Xpos,
+		Xneg,
+		Zpos,
+		Zneg,
+		Sides_Max
+	};
+
+	class RZ_EXP MeshPlane
 	{
 	public:
-		void InitMeshPlane(int32 vertices, float size, ComputeAPI* compute, bool CreateIndexBuffer = true);
-		void RenderMeshPlane(uint32 size = 0);
+		virtual ~MeshPlane() { DestroyMeshPlane(); };
+
+		void InitMeshPlane(int32 vertices, double size, double HalfSize, Vector3 startPos, eMeshPlaneOrientation orientation, bool CreateIndexBuffer = true);
+		void DestroyMeshPlane() noexcept;
+
+		virtual void Render();
+		virtual Vector3 CalculateVertexPos(Vector3 pos);
 
 		FORCEINLINE void SetMaterial(ResourceHandle mat) { m_Material = mat; };
 		FORCEINLINE WeakPtr<Material> GetMaterial() { return m_res->GetResource<Material>(m_Material); };
-
-		float m_NoisePatch[HEIGHTMAP_RES][HEIGHTMAP_RES];
-		float m_NormalTex[HEIGHTMAP_RES][HEIGHTMAP_RES];
 
 		MeshPlaneBuffer m_MeshBuffer;
 
@@ -41,13 +55,11 @@ namespace rczEngine
 
 		Gfx::VertexBuffer<Gfx::Vertex> m_VertexBuffer;
 
-		ResourceHandle HeightMap = 0;
-		ResourceHandle NormalMap = 0;
-
 		bool m_Dirty = false;
-		void GenerateMesh();
 
-	private:
+		void GenerateMesh(Vector3 startPos, eMeshPlaneOrientation orientation);
+
+	protected:
 		void GenerateNormals();
 		void GenerateSmoothNormals();
 
@@ -55,9 +67,13 @@ namespace rczEngine
 
 		ResourceHandle m_Material;
 
+		AABB m_MeshAABB;
+
 		Gfx::GfxCore* m_gfx = NULL;
 		ResVault* m_res = NULL;
 		ComputeAPI* m_capi = NULL;
+
+		Vector3 m_StartPos;
 
 		friend TerrainPatch;
 	};

@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT GUIBaseWindow
+	class RZ_EXP GUIBaseWindow
 	{
 	public:
 		virtual void InitWindow() = 0;

@@ -3,7 +3,7 @@
 namespace rczEngine
 {
 	///A Random Number Generator Interface.
-	class RZ_UTILITY_EXPORT RandomNumberGen
+	class RZ_EXP RandomNumberGen
 	{
 	public:
 		virtual ~RandomNumberGen() {};

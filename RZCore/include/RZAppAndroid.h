@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	namespace Core
 	{
-		class RZ_UTILITY_EXPORT AppAndroid : App
+		class RZ_EXP AppAndroid : App
 		{
 		public:
 			void StartApp() {};

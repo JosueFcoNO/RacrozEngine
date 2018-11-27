@@ -8,7 +8,6 @@ namespace rczEngine
 		Gfx::GfxCore* gfx = Gfx::GfxCore::Pointer();
 
 		StrPtr<Model> model = std::make_shared<Model>();
-
 		model->SetFilePath(filePath);
 		model->GetPath().GetFileName();
 
@@ -22,9 +21,317 @@ namespace rczEngine
 		///Create an Importer and Read the file in fileName
 		Assimp::Importer B;
 		m_Scene = B.ReadFile(filePath, 
+			aiProcess_Triangulate | 
+			aiProcess_GenSmoothNormals | 
+			aiProcess_JoinIdenticalVertices | 
+			aiProcess_CalcTangentSpace | 
+			aiProcess_FlipUVs);
+
+		LoadMaterials();
+		model->m_MaterialMap = materialMap;
+
+		///Set the VertexOffset, IndexOffset and IndexCount local variables to 0. 
+		///These help creating the meshes and managing a single index and a single vertex buffer.
+		uint32 VertexOffset = 0;
+		uint32 IndexOffset = 0;
+		uint32 IndexCount = 0;
+
+		Mesh TempMesh;
+
+		///Iterate the scene's meshes.
+		for (uint32 n = 0; n < m_Scene->mNumMeshes; ++n)
+		{
+			///CurrentMesh = the mesh i'm currently iterating over.
+			aiMesh* CurrentMesh = m_Scene->mMeshes[n];
+
+			///Set the IndexCount to the CurrentMesh number of faces multiplied by 3. Each Triangle has 3 vertices and 3 indices
+			IndexCount = CurrentMesh->mNumFaces * 3;
+
+			///Create an object of my own Mesh
+			TempMesh.m_MeshCore.m_IndexOffset = IndexOffset;
+			TempMesh.m_MeshCore.m_IndexCount = IndexCount;
+			TempMesh.m_MeshCore.m_VertexOffset = VertexOffset;
+			TempMesh.m_Name = CurrentMesh->mName.C_Str();
+
+			///Add the Current Mesh IndexCount to the Index Offset of this Mesh.
+			IndexOffset += IndexCount;
+			///Add the Current Mesh Number of vertices to the Number of vertices in the buffer
+			VertexOffset += CurrentMesh->mNumVertices;
+
+			///Get the material name and save it.
+			aiString matName;
+			m_Scene->mMaterials[CurrentMesh->mMaterialIndex]->Get(AI_MATKEY_NAME, matName);
+			TempMesh.m_Material = matName.C_Str();
+
+			///Insert the meshes in the this model's meshes vector
+			model->m_VectorMeshes.push_back(TempMesh);
+
+			AddVertices(model->m_VertexBuffer, CurrentMesh);
+			AddIndices(model->m_IndexBuffer, CurrentMesh);
+		}
+
+		model->m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, gfx);
+		model->m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, true, gfx);
+		return model;
+	}
+
+	bool AssimpLoader::LoadModelWithHierarchy(StrGameObjectPtr gameObject, const char * filePath)
+	{
+		m_Res = ResVault::Pointer();
+
+		m_FilePath = filePath;
+
+		///Create an Importer and Read the file in fileName
+		Assimp::Importer B;
+		m_Scene = B.ReadFile(filePath,
 			aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices | aiProcess_CalcTangentSpace | aiProcess_FlipUVs);
 
-		LoadMaterials(model->m_MaterialMap);
+		LoadMaterials();
+
+		aiNode* lRootNode = m_Scene->mRootNode;
+
+		auto node = SceneManager::Pointer()->GetActiveScene()->
+			CreateActor(m_FilePath.GetFileName().c_str(), gameObject.get());
+
+		if (lRootNode) {
+			for (uint32 i = 0; i < lRootNode->mNumChildren; i++)
+				AddNodeMesh(lRootNode->mChildren[i], m_FilePath.GetFileName().c_str(), true);
+		}
+
+		return true;
+	}
+
+	bool AssimpLoader::LoadSkinnedModel(StrGameObjectPtr gameObject, const char * filePath)
+	{
+		m_Res = ResVault::Pointer();
+		m_Gfx = Gfx::GfxCore::Pointer();
+
+		Logger::Pointer()->StartLog("ModelSkinned");
+
+		StrPtr<SkinnedModel> model = std::make_shared<SkinnedModel>();
+		model->SetFilePath(filePath);
+		model->SetName(model->GetPath().GetFileName().c_str());
+		ResourceHandle handle = m_Res->InsertResource(model);
+
+		///Create an Importer and Read the file in fileName
+		Assimp::Importer B;
+		m_Scene = B.ReadFile(filePath, 
+			aiProcess_Triangulate | 
+			aiProcess_GenSmoothNormals | 
+			aiProcess_FlipUVs | 
+			aiProcess_CalcTangentSpace | 
+			aiProcess_LimitBoneWeights | 
+			 
+			aiProcess_OptimizeMeshes
+			);
+
+		LoadMaterials();
+
+		///Set the VertexOffset, IndexOffset and IndexCount local variables to 0. These help creating the meshes and managing a single index and a single vertex buffer.
+		uint32 VertexOffset = 0;
+		uint32 IndexOffset = 0;
+		uint32 IndexCount = 0;
+
+		for (uint32 n = 0; n < m_Scene->mNumMeshes; ++n)
+		{
+			///CurrentMesh = the mesh i'm currently iterating over.
+			aiMesh* CurrentMesh = m_Scene->mMeshes[n];
+
+			///Set the IndexCount to the CurrentMesh number of faces multiplied by 3. Each Triangle has 3 vertices and 3 indices
+			IndexCount = CurrentMesh->mNumFaces * 3;
+
+			///Create an object of my own Mesh
+			SkinnedMesh TempMesh;
+			TempMesh.m_MeshCore.m_IndexOffset = IndexOffset;
+			TempMesh.m_MeshCore.m_IndexCount = IndexCount;
+			TempMesh.m_MeshCore.m_VertexOffset = VertexOffset;
+			TempMesh.m_Name = CurrentMesh->mName.C_Str();
+
+			///Add the Current Mesh IndexCount to the Index Offset of this Mesh.
+			IndexOffset += IndexCount;
+
+			///Add the Current Mesh Number of vertices to the Number of vertices in the buffer
+			VertexOffset += CurrentMesh->mNumVertices;
+
+			///Get the material name and save it.
+			aiString matName;
+			m_Scene->mMaterials[CurrentMesh->mMaterialIndex]->Get(AI_MATKEY_NAME, matName);
+			TempMesh.m_Material = matName.C_Str();
+
+			model->m_MaterialMap[matName.C_Str()] = materialMap[matName.C_Str()];
+
+			AddVertices(model->m_VertexBuffer, CurrentMesh);
+			AddBones(model, CurrentMesh, TempMesh.m_MeshCore.m_VertexOffset);
+			AddIndices(model->m_IndexBuffer, CurrentMesh);
+
+			///Insert the meshes in the this model's meshes vector
+			model->m_VectorMeshes.push_back(TempMesh);
+		}
+
+		BuildSkeleton(model);
+
+		///Create a tempAnim pointer
+		StrPtr<Animation> TempAnim = std::make_shared<Animation>();
+        TempAnim->Load(filePath, "Anim");
+		model->m_SetAnimation = m_Res->InsertResource(TempAnim);
+
+		///Create the vertex and index buffers
+		model->m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, m_Gfx);
+		model->m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, true, m_Gfx);
+
+		///Create the Skeleton's buffers
+		model->m_MeshSkeleton.InitSkeletonBuffer(m_Gfx);
+
+		gameObject->GetComponent<SkinnedModelRenderer>(CMP_SKINNED_MODEL_RENDERER).lock()->SetModel(model->GetHandle(), m_Res);
+
+		aiNode* lRootNode = m_Scene->mRootNode;
+
+		if (lRootNode)
+		{
+			for (uint32 i = 0; i < lRootNode->mNumChildren; i++)
+				AddNodeMesh(lRootNode->mChildren[i], gameObject->GetName().c_str(), false, true);
+		}
+
+		for (auto it = BoneComponents.begin(); it != BoneComponents.end(); ++it)
+		{
+			Bone* boneToSet = model->m_MeshSkeleton.GetBone(it->first);
+			if (boneToSet)
+				boneToSet->InitBone(it->second);
+		}
+
+		return true;
+	}
+
+	bool AssimpLoader::AddNodeMesh(aiNode * pNode, const char * parent, bool addMeshes, bool addBones)
+	{
+		const char* nodeName = pNode->mName.C_Str();
+
+		aiVector3D translation;
+		aiVector3D rotation;
+		aiVector3D scaling;
+
+		pNode->mTransformation.Decompose(scaling, rotation, translation);
+
+		Vector3 trans(translation.x, translation.y, translation.z);
+		Vector3 rot(
+			Math::RadiansToDegrees(-rotation.x),
+			Math::RadiansToDegrees(-rotation.y),
+			Math::RadiansToDegrees(-rotation.z));
+		Vector3 scale(scaling.x, scaling.y, scaling.z);
+
+		WeakGameObjectPtr node;
+
+		auto scene = SceneManager::Pointer()->GetActiveScene();
+
+		if (!parent)
+		{
+			node = SceneManager::Pointer()->GetActiveScene()->
+				CreateActor(nodeName, NULL, trans, rot, scale);
+		}
+		else
+		{
+			auto ptrParent = scene->FindActor(parent);
+
+			node = scene->
+				CreateActor(nodeName, ptrParent.lock().get(), trans, rot, scale);
+		}
+
+		if (pNode->mNumMeshes && addMeshes)
+		{
+			ResourceHandle handle = LoadMesh(pNode, false);
+			scene->CreateComponent(CMP_MODEL_RENDERER, node.lock());
+			node.lock()->GetComponent<ModelRenderer>(CMP_MODEL_RENDERER).lock()->SetModel(handle, m_Res);
+		}
+
+		if (addBones)
+		{
+			BoneComponents[pNode->mName.C_Str()] = rczEngine::CastStaticPtr<BoneComponent>(scene->CreateComponent(CMP_BONE, node.lock()));
+		}
+
+		for (uint32 i = 0; i < pNode->mNumChildren; ++i)
+		{
+			AddNodeMesh(pNode->mChildren[i], node.lock()->GetName().c_str(), addMeshes, addBones);
+		}
+
+		return true;
+	}
+
+	void AssimpLoader::LoadMaterials()
+	{
+		for (uint32 i = 0; i < m_Scene->mNumTextures; ++i)
+		{
+			m_Scene->mTextures[i]->pcData;
+		}
+
+		///Adds the materials
+		for (uint32 k = 0; k < m_Scene->mNumMaterials; ++k)
+		{
+			aiMaterial* aimatTemp = m_Scene->mMaterials[k];
+
+			///Get the material's name
+			aiString name;
+			aimatTemp->Get(AI_MATKEY_NAME, name);
+
+			StrPtr<Material> Temp = std::make_shared<Material>();
+			Temp->SetName(name.C_Str());
+			Temp->SetFilePath(String(m_Scene->mRootNode->mName.C_Str()) + "/" + name.C_Str());
+
+			ResourceHandle tempHandle = m_Res->InsertResource(Temp);
+			materialMap.insert(Pair<String, ResourceHandle>(Temp->GetName(), tempHandle));
+			Temp->InitMaterial(MAT_PBR_MetRough, Gfx::GfxCore::Pointer());
+
+			aiString Path;
+			aimatTemp->GetTexture(aiTextureType_DIFFUSE, 0, &Path);
+			String path = Path.C_Str();
+			String Dir = m_FilePath.GetFileDir();
+			String RealPath;
+
+			if (path != "")
+			{
+				RealPath = Dir + path.c_str();
+				if (Path::FileExists(RealPath.c_str()))
+					Temp->m_TextureAlbedo = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
+			}
+
+			aimatTemp->GetTexture(aiTextureType_NORMALS, 0, &Path);
+			path = Path.C_Str();
+
+			if (path != "")
+			{
+				RealPath = Dir + path.c_str();
+				if (Path::FileExists(RealPath.c_str()))
+					Temp->m_TextureNormal = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
+			}
+
+			aimatTemp->GetTexture(aiTextureType_SPECULAR, 0, &Path);
+			path = Path.C_Str();
+
+			if (path != "")
+			{
+				RealPath = Dir + path.c_str();
+				if (Path::FileExists(RealPath.c_str()))
+					Temp->m_TextureMetSpec = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
+			}
+		}
+
+		Logger::Pointer()->CloseLog("Material");
+	}
+
+	ResourceHandle AssimpLoader::LoadMesh(aiNode * pNode, bool bones)
+	{
+		m_Res = ResVault::Pointer();
+		Gfx::GfxCore* gfx = Gfx::GfxCore::Pointer();
+
+		StrPtr<Model> model = std::make_shared<Model>();
+
+		model->SetFilePath(pNode->mName.C_Str());
+
+		ResourceHandle handle = m_Res->InsertResource(model);
+
+		///Clear the index and vertex buffer's lists
+		model->m_IndexBuffer.ClearIndexList();
+		model->m_VertexBuffer.ClearVertexList();
+		model->m_VectorMeshes.clear();
 
 		///Set the VertexOffset, IndexOffset and IndexCount local variables to 0. These help creating the meshes and managing a single index and a single vertex buffer.
 		uint32 VertexOffset = 0;
@@ -32,10 +339,10 @@ namespace rczEngine
 		uint32 IndexCount = 0;
 
 		///Iterate the scene's meshes.
-		for (uint32 n = 0; n < m_Scene->mNumMeshes; ++n)
+		for (uint32 n = 0; n < pNode->mNumMeshes; ++n)
 		{
 			///CurrentMesh = the mesh i'm currently iterating over.
-			aiMesh* CurrentMesh = m_Scene->mMeshes[n];
+			aiMesh* CurrentMesh = m_Scene->mMeshes[pNode->mMeshes[n]];
 
 			///Set the IndexCount to the CurrentMesh number of faces multiplied by 3. Each Triangle has 3 vertices and 3 indices
 			IndexCount = CurrentMesh->mNumFaces * 3;
@@ -56,6 +363,8 @@ namespace rczEngine
 			aiString matName;
 			m_Scene->mMaterials[CurrentMesh->mMaterialIndex]->Get(AI_MATKEY_NAME, matName);
 			TempMesh.m_Material = matName.C_Str();
+
+			model->m_MaterialMap[matName.C_Str()] = materialMap[matName.C_Str()];
 
 			///Insert the meshes in the this model's meshes vector
 			model->m_VectorMeshes.push_back(TempMesh);
@@ -117,222 +426,12 @@ namespace rczEngine
 
 		model->m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, gfx);
 		model->m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, true, gfx);
-		return model;
+
+		return model->GetHandle();
 	}
 
-	bool AssimpLoader::LoadModelWithHierarchy(StrGameObjectPtr gameObject, const char * filePath)
+	void AssimpLoader::BuildSkeleton(StrPtr<SkinnedModel> skin)
 	{
-		m_Res = ResVault::Pointer();
-		Gfx::GfxCore* gfx = Gfx::GfxCore::Pointer();
-
-		StrPtr<Model> model = std::make_shared<Model>();
-
-		model->SetFilePath(filePath);
-
-		ResourceHandle handle = m_Res->InsertResource(model);
-
-		///Clear the index and vertex buffer's lists
-		model->m_IndexBuffer.ClearIndexList();
-		model->m_VertexBuffer.ClearVertexList();
-		model->m_VectorMeshes.clear();
-
-		///Create an Importer and Read the file in fileName
-		Assimp::Importer B;
-		m_Scene = B.ReadFile(filePath,
-			aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices | aiProcess_CalcTangentSpace | aiProcess_FlipUVs);
-
-		aiNode* lRootNode = m_Scene->mRootNode;
-
-		auto node = SceneManager::Pointer()->GetActiveScene()->
-			CreateActor(model->GetPath().GetFileName().c_str(), NULL);
-
-		if (lRootNode) {
-			for (int i = 0; i < lRootNode->mNumChildren; i++)
-				AddNodeMesh(lRootNode->mChildren[i], lRootNode->mName.C_Str());
-		}
-
-		return true;
-	}
-
-	StrPtr<SkinnedModel> AssimpLoader::LoadSkinnedModel(const char * filePath)
-	{
-		ResVault* rsc = ResVault::Pointer();
-		Gfx::GfxCore* gfx = Gfx::GfxCore::Pointer();
-
-		Vector<String> BoneNames;
-
-		StrPtr<SkinnedModel> model = std::make_shared<SkinnedModel>();
-
-		model->SetFilePath(filePath);
-		model->SetName(model->GetPath().GetFileName().c_str());
-
-		ResourceHandle handle = m_Res->InsertResource(model);
-
-		///Clear the index and vertex buffer's lists
-		model->m_IndexBuffer.ClearIndexList();
-		model->m_VertexBuffer.ClearVertexList();
-		model->m_VectorMeshes.clear();
-
-		///Create an Importer and Read the file in fileName
-		Assimp::Importer B;
-		const aiScene* Scene = B.ReadFile(filePath, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_LimitBoneWeights);
-
-		LoadMaterials(model->m_MaterialMap);
-
-		///Set the VertexOffset, IndexOffset and IndexCount local variables to 0. These help creating the meshes and managing a single index and a single vertex buffer.
-		uint32 VertexOffset = 0;
-		uint32 IndexOffset = 0;
-		uint32 IndexCount = 0;
-
-		Vector<aiBone*> BoneList;
-
-		for (uint32 n = 0; n < Scene->mNumMeshes; ++n)
-		{
-
-			///CurrentMesh = the mesh i'm currently iterating over.
-			aiMesh* CurrentMesh = Scene->mMeshes[n];
-
-			///Set the IndexCount to the CurrentMesh number of faces multiplied by 3. Each Triangle has 3 vertices and 3 indices
-			IndexCount = CurrentMesh->mNumFaces * 3;
-
-			///Create an object of my own Mesh
-			SkinnedMesh TempMesh;
-			TempMesh.m_MeshCore.m_IndexOffset = IndexOffset;
-			TempMesh.m_MeshCore.m_IndexCount = IndexCount;
-			TempMesh.m_MeshCore.m_VertexOffset = VertexOffset;
-			TempMesh.m_Name = CurrentMesh->mName.C_Str();
-
-			///Add the Current Mesh IndexCount to the Index Offset of this Mesh.
-			IndexOffset += IndexCount;
-
-			///Add the Current Mesh Number of vertices to the Number of vertices in the buffer
-			VertexOffset += CurrentMesh->mNumVertices;
-
-			///Get the material name and save it.
-			aiString matName;
-			Scene->mMaterials[CurrentMesh->mMaterialIndex]->Get(AI_MATKEY_NAME, matName);
-			TempMesh.m_Material = matName.C_Str();
-
-			///Insert the meshes in the this model's meshes vector
-			//m_VectorMeshes.push_back(TempMesh);
-
-			///Iterate through the vertices
-			for (uint32 i = 0; i < CurrentMesh->mNumVertices; ++i)
-			{
-				///Create a temp Gfx::Vertex and assign it the CurrentMesh Gfx::Vertex[i] position, texcoords and normals
-				Gfx::SkinnedVertex Temp;
-				Temp.VertexPosition.m_x = CurrentMesh->mVertices[i].x;
-				Temp.VertexPosition.m_y = CurrentMesh->mVertices[i].y;
-				Temp.VertexPosition.m_z = CurrentMesh->mVertices[i].z;
-
-				if (CurrentMesh->HasTextureCoords(0))
-				{
-					Temp.TextureCoordinates.m_x = CurrentMesh->mTextureCoords[0][i].x;
-					Temp.TextureCoordinates.m_y = CurrentMesh->mTextureCoords[0][i].y;
-				}
-
-				Temp.VertexNormals.m_x = CurrentMesh->mNormals[i].x;
-				Temp.VertexNormals.m_y = CurrentMesh->mNormals[i].y;
-				Temp.VertexNormals.m_z = CurrentMesh->mNormals[i].z;
-
-				if (CurrentMesh->HasTangentsAndBitangents())
-				{
-					Temp.Tangents.m_x = CurrentMesh->mTangents[i].x;
-					Temp.Tangents.m_y = CurrentMesh->mTangents[i].y;
-					Temp.Tangents.m_z = CurrentMesh->mTangents[i].z;
-
-					Temp.BiNormals.m_x = CurrentMesh->mBitangents[i].x;
-					Temp.BiNormals.m_y = CurrentMesh->mBitangents[i].y;
-					Temp.BiNormals.m_z = CurrentMesh->mBitangents[i].z;
-				}
-				else
-				{
-					Temp.Tangents.m_x = 0;
-					Temp.Tangents.m_y = 0;
-					Temp.Tangents.m_z = 1;
-
-					Temp.BiNormals.m_x = 0;
-					Temp.BiNormals.m_y = 1;
-					Temp.BiNormals.m_z = 0;
-				}
-
-				model->m_VertexBuffer.AddVertex(Temp);
-			}
-
-			///Check to see if it has bones
-			if (CurrentMesh->HasBones())
-			{
-				///Iterate through the bones
-				for (uint32 i = 0; i < CurrentMesh->mNumBones; ++i)
-				{
-					///Create pointer CurrentBone to mBones[i]
-					aiBone* CurrentBone = CurrentMesh->mBones[i];
-					bool boneAlreadyInVector = false;
-
-					for (int o = 0; o < BoneList.size(); ++o)
-					{
-						if (BoneList[o] == CurrentBone)
-						{
-							boneAlreadyInVector = true;
-							break;
-						}
-					}
-
-					if (boneAlreadyInVector == false)
-					{
-						///Save all the bones in a bone list
-						BoneList.push_back(CurrentBone);
-						BoneNames.push_back(CurrentBone->mName.C_Str());
-					}
-					else
-					{
-						continue;
-					}
-
-					///Create a temp Gfx::SkinnedVertex pointer
-					Gfx::SkinnedVertex* SkndVertex;
-					///Iterate through the weights in my bone
-					for (uint32 o = 0; o < CurrentBone->mNumWeights; ++o)
-					{
-						///Get the vertex in this aiWeight.VertexId
-						SkndVertex = &model->m_VertexBuffer.GetVertex(CurrentBone->mWeights[o].mVertexId + TempMesh.m_MeshCore.m_VertexOffset);
-
-						///iterate through the 4 Gfx::Vertex's indices and weights
-						for (int32 k = 0; k < 4; ++k)
-						{
-							///if the Bone index is not set
-							if (SkndVertex->BoneIndex[k] < 0)
-							{
-								///Set the bone index and the corresponding weight in the skinnedVertex
-								SkndVertex->BonesWeights[k] = CurrentBone->mWeights[o].mWeight;
-								SkndVertex->BoneIndex[k] = int32(BoneList.size());
-
-								break;
-							}
-						}
-					}
-
-				}
-			}
-
-			///Iterate through the faces
-			for (uint32 o = 0; o < CurrentMesh->mNumFaces; ++o)
-			{
-				///Get every index of every face
-				for (uint32 i = 0; i < CurrentMesh->mFaces[o].mNumIndices; ++i)
-				{
-					uint32 Index;
-					Index = CurrentMesh->mFaces[o].mIndices[i];
-
-					model->m_IndexBuffer.AddIndex(Index);
-				}
-			}
-
-			///Insert the meshes in the this model's meshes vector
-			model->m_VectorMeshes.push_back(TempMesh);
-
-		}
-
 		///create a depth and a minimal depth variable
 		uint32 depth = 0, minDepth = 1000;
 		///Create a RealRoot aiBone pointer
@@ -340,14 +439,15 @@ namespace rczEngine
 		///Create a RealRoot aiNode pointer
 		aiNode* RealRootNode = NULL;
 
+		int i = 0;
 		///iterate through my BoneList
-		for (int32 i = 0; i < BoneList.size(); ++i)
+		for (auto it = Bones.begin(); it != Bones.end(); ++it, ++i)
 		{
-			aiBone* CurrentBone = BoneList[i];
+			aiBone* CurrentBone = it->second;
 			///Set the depth to 0
 			depth = 0;
 			///Create a currentNode aiNode pointer that points a its corresponding aiNode from the Scene graph
-			aiNode* CurrentNode = Scene->mRootNode->FindNode(CurrentBone->mName);
+			aiNode* CurrentNode = m_Scene->mRootNode->FindNode(CurrentBone->mName);
 
 			///while the currentNode has a valid parent
 			while (CurrentNode->mParent)
@@ -366,49 +466,25 @@ namespace rczEngine
 				///Set the RealRoot Bone to the BoneList[i]
 				RealRoot = CurrentBone;
 				///Set the RealRoot Node to the Node of this bone
-				RealRootNode = Scene->mRootNode->FindNode(CurrentBone->mName);
+				RealRootNode = m_Scene->mRootNode->FindNode(CurrentBone->mName);
 			}
 
 			///Create a TempBone
 			Bone TempBone;
 			///Give it the current bone's name
 			TempBone.m_Name = String(CurrentBone->mName.data);
-			TempBone.m_BoneIndex = i + 1;
 
 			///Set the TempBone's offset matrix to the BoneList[i]'s offset matrix.
-			memcpy(&TempBone.m_OffsetMatrix, &CurrentBone->mOffsetMatrix, sizeof(Matrix4::m_elements));
+			CopyMatrix(TempBone.m_OffsetMatrix, CurrentBone->mOffsetMatrix);
 
 			///Add the Temp bone to the m_Skeleton's Bone Map
-			model->m_MeshSkeleton.AddBone(TempBone, CurrentBone->mName.C_Str());
+			skin->m_MeshSkeleton.AddBone(TempBone, CurrentBone->mName.C_Str());
 		}
 
-		///Set the real root Node to its parent
-		if (RealRootNode->mParent)
+		/////If its named like its parent, change the parent's name
+		while (RealRootNode->mParent->mName != aiString("RootNode"))
 		{
-			//RealRootNode = RealRootNode->mParent;
-			//
-			//do
-			//{
-			//	auto ParentName = Parser::ParseToStrings<ANSICHAR>(RealRootNode->mName.data, "$", 0);
-			//	if (ParentName.size() > 2)
-			//	{
-			//		if (ParentName[1] == "AssimpFbx")
-			//		RealRootNode = RealRootNode->mParent;
-			//	}
-			//	else
-			//	{
-			//		break;
-			//	}
-			//} while (1);
-		}
-
-		///If its named like its parent, change the parent's name
-		if (RealRootNode->mParent)
-		{
-			if (RealRootNode->mParent->mName == RealRootNode->mName)
-			{
-				RealRootNode->mParent->mName.Append("1");
-			}
+			RealRootNode = RealRootNode->mParent;
 		}
 
 		///Create a tempRoot to insert the Skeleton's root bone
@@ -416,215 +492,290 @@ namespace rczEngine
 		TempRoot.m_Name = RealRootNode->mName.C_Str();
 		TempRoot.m_OffsetMatrix.Identity();
 		TempRoot.m_JointMatrix.Identity();
-		memcpy(&TempRoot.m_TransformMatrix, &RealRootNode->mTransformation, sizeof(Matrix4::m_elements));
-		TempRoot.m_AccumulatedTransform.Identity();
+		CopyMatrix(TempRoot.m_TransformMatrix, RealRootNode->mTransformation);
 
 		TempRoot.SetParent(NULL);
 		TempRoot.m_BoneIndex = 0;
-		model->m_MeshSkeleton.AddBone(TempRoot, TempRoot.m_Name);
-		model->m_MeshSkeleton.m_RootBone = &model->m_MeshSkeleton.m_Bones[TempRoot.m_Name];
+		skin->m_MeshSkeleton.AddBone(TempRoot, TempRoot.m_Name);
+		skin->m_MeshSkeleton.m_RootBone = &skin->m_MeshSkeleton.m_Bones[TempRoot.m_Name];
 		BoneNames.push_back(TempRoot.m_Name);
+		BoneIndex[TempRoot.m_Name] = 0;
 
-		///Create the hierarchy in my own skeleton
-		for (int32 i = 0; i < BoneNames.size(); ++i)
+		///Create a Temp aiNode pointer to the scene node that has this bone's name.
+		aiNode* RootNode = m_Scene->mRootNode->FindNode(TempRoot.m_Name.c_str());
+
+		Matrix4 matrice(INIT_UNIT);
+		///Create a matrix for this bone in the final bone matrix vector
+		skin->m_MeshSkeleton.m_BoneFinalMatrixVector.push_back(matrice);
+
+		///Iterate through the string of the children's name
+		for (uint32 o = 0; o < RootNode->mNumChildren; ++o)
 		{
-			///Create a vector of strings to save all the children's names
-			Vector<String> childrenStrings;
-			///Create a Temp aiNode pointer to the scene node that has this bone's name.
-			aiNode* Temp = Scene->mRootNode->FindNode(BoneNames[i].c_str());
-			///Create a temp bone
-			Bone* BoneTemp = &model->m_MeshSkeleton.m_Bones[BoneNames[i]];
+			AddBoneToSkeleton(skin, RootNode->mChildren[o], skin->m_MeshSkeleton.m_RootBone);
+		}
 
-			////Esto no tiene sentido, pero lo tenía cuando funcionaba bien.
-			//memcpy(&BoneTemp->m_JointMatrix, &Temp->mTransformation, sizeof(Matrix4));
+		for (auto it = BoneIndex.begin(); it != BoneIndex.end(); ++it)
+		{
+			skin->m_MeshSkeleton.GetBone(it->first)->m_BoneIndex = it->second;
+		}
 
-			Matrix4 PreRotation(INIT_UNIT);
-			Matrix4 Rotation(INIT_UNIT);
-			Matrix4 Translation(INIT_UNIT);
-			Matrix4 Scale(INIT_UNIT);
+		Logger::Pointer()->CloseLog("ModelSkinned");
 
-			///Check to see if this bone has prerotation and translation
-			if (Temp->mParent)
+	}
+
+	void AssimpLoader::AddVertices(Gfx::VertexBuffer<Gfx::Vertex>& vertexBuffer, aiMesh * mesh)
+	{
+		///Iterate through the vertices
+		for (uint32 i = 0; i < mesh->mNumVertices; ++i)
+		{
+			///Create a temp Gfx::Vertex and assign it the CurrentMesh Gfx::Vertex[i] position, texcoords and normals
+			Gfx::Vertex Temp;
+
+			Temp.VertexPosition.m_x = mesh->mVertices[i].x;
+			Temp.VertexPosition.m_y = mesh->mVertices[i].y;
+			Temp.VertexPosition.m_z = mesh->mVertices[i].z;
+
+			if (mesh->HasTextureCoords(0))
 			{
-				auto CurrentParent = Temp->mParent;
-				auto ParentName = Parser::ParseToStrings<ANSICHAR>(Temp->mParent->mName.data, "$", 0);
+				Temp.TextureCoordinates.m_x = mesh->mTextureCoords[0][i].x;
+				Temp.TextureCoordinates.m_y = mesh->mTextureCoords[0][i].y;
+			}
 
-				if (ParentName.size() > 2)
+			Temp.VertexNormals.m_x = mesh->mNormals[i].x;
+			Temp.VertexNormals.m_y = mesh->mNormals[i].y;
+			Temp.VertexNormals.m_z = mesh->mNormals[i].z;
+
+			if (mesh->HasTangentsAndBitangents())
+			{
+				Temp.Tangents.m_x = mesh->mTangents[i].x;
+				Temp.Tangents.m_y = mesh->mTangents[i].y;
+				Temp.Tangents.m_z = mesh->mTangents[i].z;
+
+				Temp.BiNormals.m_x = mesh->mBitangents[i].x;
+				Temp.BiNormals.m_y = mesh->mBitangents[i].y;
+				Temp.BiNormals.m_z = mesh->mBitangents[i].z;
+			}
+			else
+			{
+				Temp.Tangents.m_x = 0;
+				Temp.Tangents.m_y = 0;
+				Temp.Tangents.m_z = 1;
+
+				Temp.BiNormals.m_x = 0;
+				Temp.BiNormals.m_y = 1;
+				Temp.BiNormals.m_z = 0;
+			}
+
+			vertexBuffer.AddVertex(Temp);
+		}
+	}
+
+	void AssimpLoader::AddVertices(Gfx::VertexBuffer<Gfx::SkinnedVertex>& vertexBuffer, aiMesh * mesh)
+	{
+		///Iterate through the vertices
+		for (uint32 i = 0; i < mesh->mNumVertices; ++i)
+		{
+			///Create a temp Gfx::Vertex and assign it the CurrentMesh Gfx::Vertex[i] position, texcoords and normals
+			Gfx::SkinnedVertex Temp;
+
+			Temp.VertexPosition.m_x = mesh->mVertices[i].x;
+			Temp.VertexPosition.m_y = mesh->mVertices[i].y;
+			Temp.VertexPosition.m_z = mesh->mVertices[i].z;
+
+			if (mesh->HasTextureCoords(0))
+			{
+				Temp.TextureCoordinates.m_x = mesh->mTextureCoords[0][i].x;
+				Temp.TextureCoordinates.m_y = mesh->mTextureCoords[0][i].y;
+			}
+
+			Temp.VertexNormals.m_x = mesh->mNormals[i].x;
+			Temp.VertexNormals.m_y = mesh->mNormals[i].y;
+			Temp.VertexNormals.m_z = mesh->mNormals[i].z;
+
+			if (mesh->HasTangentsAndBitangents())
+			{
+				Temp.Tangents.m_x = mesh->mTangents[i].x;
+				Temp.Tangents.m_y = mesh->mTangents[i].y;
+				Temp.Tangents.m_z = mesh->mTangents[i].z;
+
+				Temp.BiNormals.m_x = mesh->mBitangents[i].x;
+				Temp.BiNormals.m_y = mesh->mBitangents[i].y;
+				Temp.BiNormals.m_z = mesh->mBitangents[i].z;
+			}
+			else
+			{
+				Temp.Tangents.m_x = 0;
+				Temp.Tangents.m_y = 0;
+				Temp.Tangents.m_z = 1;
+
+				Temp.BiNormals.m_x = 0;
+				Temp.BiNormals.m_y = 1;
+				Temp.BiNormals.m_z = 0;
+			}
+
+			vertexBuffer.AddVertex(Temp);
+		}
+	}
+
+	void AssimpLoader::AddIndices(Gfx::IndexBuffer& indexBuffer, aiMesh * mesh)
+	{
+		///Iterate through the faces
+		for (uint32 o = 0; o < mesh->mNumFaces; ++o)
+		{
+			///Get every index of every face
+			for (uint32 i = 0; i < mesh->mFaces[o].mNumIndices; ++i)
+			{
+				uint32 Index;
+				Index = mesh->mFaces[o].mIndices[i];
+
+				indexBuffer.AddIndex(Index);
+			}
+		}
+
+	}
+
+	void AssimpLoader::AddBones(StrPtr<SkinnedModel> model, aiMesh * mesh, uint32 vertexOffset)
+	{
+		///Check to see if it has bones
+		if (mesh->HasBones())
+		{
+			///Iterate through the bones
+			for (uint32 i = 0; i < mesh->mNumBones; ++i)
+			{
+				///Create pointer CurrentBone to mBones[i]
+				aiBone* CurrentBone = mesh->mBones[i];
+				bool boneAlreadyInVector = false;
+
+				Logger::Pointer()->LogMessageToFileLog("ModelSkinned", String("Agregando Bone: ") + CurrentBone->mName.C_Str());
+
+				auto it = Bones.find(CurrentBone->mName.C_Str());
+				if (it != Bones.end())
 				{
-					while (ParentName[1] == "AssimpFbx")
+					boneAlreadyInVector = true;
+					Logger::Pointer()->LogMessageToFileLog("ModelSkinned", String("Ya estaba en el vector"));
+				}
+
+				if (!boneAlreadyInVector)
+				{
+					///Save all the bones in a bone list
+					Bones[CurrentBone->mName.C_Str()] = CurrentBone;
+					BoneNames.push_back(CurrentBone->mName.C_Str());
+					BoneIndex[CurrentBone->mName.C_Str()] = (int)Bones.size();
+					Logger::Pointer()->LogMessageToFileLog("ModelSkinned", String("No estaba en el vector."));
+					Logger::Pointer()->LogMessageToFileLog("ModelSkinned", ("Dandole Index: "), (int32)Bones.size());
+
+				}
+				//else if (CurrentBone->mNumWeights < Bones[CurrentBone->mName.C_Str()]->mNumWeights)
+				//{
+				//	continue;
+				//}
+
+				///Create a temp Gfx::SkinnedVertex pointer
+				Gfx::SkinnedVertex* SkndVertex;
+				///Iterate through the weights in my bone
+				for (uint32 o = 0; o < CurrentBone->mNumWeights; ++o)
+				{
+					///Get the vertex in this aiWeight.VertexId
+					SkndVertex = &model->m_VertexBuffer.GetVertex(CurrentBone->mWeights[o].mVertexId + vertexOffset);
+
+					///iterate through the 4 Gfx::Vertex's indices and weights
+					for (int32 k = 0; k < 4; ++k)
 					{
-
-						if (ParentName[ParentName.size() - 1] == "_PreRotation")
+						///if the Bone index is not set
+						if (SkndVertex->BoneIndex[k] < 0)
 						{
+							///Set the bone index and the corresponding weight in the skinnedVertex
+							SkndVertex->BonesWeights[k] = CurrentBone->mWeights[o].mWeight;
+							SkndVertex->BoneIndex[k] = int32(Bones.size());
 
-							memcpy(&PreRotation, &CurrentParent->mTransformation, sizeof(Matrix4));
-
-						}
-						else if (ParentName[ParentName.size() - 1] == "_Translation")
-						{
-							memcpy(&Translation, &CurrentParent->mTransformation, sizeof(Matrix4));
-
-						}
-						else if (ParentName[ParentName.size() - 1] == "_Rotation")
-						{
-							memcpy(&Rotation, &CurrentParent->mTransformation, sizeof(Matrix4));
-						}
-						else
-						{
-							memcpy(&Scale, &CurrentParent->mTransformation, sizeof(Matrix4));
-						}
-
-						if (CurrentParent->mParent)
-						{
-							CurrentParent = CurrentParent->mParent;
-						}
-
-						ParentName = Parser::ParseToStrings<ANSICHAR>(CurrentParent->mName.data, "$", 0);
-						if (ParentName.size() < 3)
-						{
-							Matrix4 Tempi(INIT_NONE);
-							memcpy(&BoneTemp->m_TransformMatrix, &Temp->mTransformation, sizeof(Matrix4));
-							BoneTemp->m_TransformMatrix = (Scale*Rotation*Translation*PreRotation);
-							BoneTemp->m_JointIsTransform = false;
 							break;
 						}
 					}
 				}
-				else
-				{
-					BoneTemp->m_JointIsTransform = true;
-					memcpy(&BoneTemp->m_TransformMatrix, &Temp->mTransformation, sizeof(Matrix4));
-				}
 
 			}
+		}
+	}
 
-			///Iterate through the string of the children's name
-			for (int32 o = 0; o < Temp->mNumChildren; ++o)
-			{
-				aiNode* TempChildrenNode = Temp->mChildren[o];
-				auto Childrens = Parser::ParseToStrings<ANSICHAR>(TempChildrenNode->mName.data, "$", 0);
+	void AssimpLoader::AddBoneToSkeleton(StrPtr<SkinnedModel> model, aiNode * pNode, Bone* parentBone)
+	{
+		BasicString<CHAR> BoneName = pNode->mName.C_Str();
 
-				if (Childrens.size() > 1)
-				{
-					while (Childrens[1] == "AssimpFbx")
-					{
-						TempChildrenNode = TempChildrenNode->mChildren[0];
-						Childrens = Parser::ParseToStrings<ANSICHAR>(TempChildrenNode->mName.data, "$", 0);
+		auto Check = Parser::ParseToStrings<CHAR>(BoneName, String("_"), 0);
 
-						if (Childrens.size() < 2)
-						{
-							break;
-						}
-					}
-				}
+		bool IsNullNode = false;
 
-				///Put them in the vector
-				childrenStrings.push_back(TempChildrenNode->mName.C_Str());
-
-
-			}
-
-			///Iterate throuhg the childrenStrings
-			for (int o = 0; o < childrenStrings.size(); ++o)
-			{
-				///for each children string
-				///get the bone from my own skeleton's map that contains the childrenStrings[o]
-				Bone* newChild = model->m_MeshSkeleton.GetBone(childrenStrings[o].c_str());
-				///if it found something, add it to the BoneTemp children list and set its parent to BoneTemp which is
-				///the bone i'm currently iterating over.
-				if (newChild != NULL)
-				{
-					BoneTemp->AddBoneChildren(newChild);
-					newChild->SetParent(BoneTemp);
-				}
-				else
-				{
-					Bone NoBone;
-					NoBone.m_Name = childrenStrings[o];
-					NoBone.m_JointMatrix.Identity();
-					NoBone.m_OffsetMatrix.Identity();
-					NoBone.m_AccumulatedTransform.Identity();
-					NoBone.m_BoneIndex = BoneNames.size();
-					NoBone.SetParent(BoneTemp);
-
-
-					model->m_MeshSkeleton.AddBone(NoBone, childrenStrings[o]);
-					BoneTemp->AddBoneChildren(&model->m_MeshSkeleton.m_Bones[NoBone.m_Name.c_str()]);
-					BoneNames.push_back(NoBone.m_Name);
-				}
-			}
+		//if (Check.size() > 1)
+		//{
+		//	IsNullNode = Check[1] == "$AssimpFbx$";
+		//}
+		
+		if (!IsNullNode)
+		{
+			///for each children string
+			///get the bone from my own skeleton's map that contains the childrenStrings[o]
+			Bone* currentBone = model->m_MeshSkeleton.GetBone(BoneName);
 
 			Matrix4 matrice(INIT_UNIT);
 			///Create a matrix for this bone in the final bone matrix vector
 			model->m_MeshSkeleton.m_BoneFinalMatrixVector.push_back(matrice);
+
+			///if it found something, add it to the BoneTemp children list and set its parent to BoneTemp which is
+			///the bone i'm currently iterating over.
+			if (currentBone == NULL)
+			{
+				Bone NoBone;
+				NoBone.m_Name = BoneName;
+				NoBone.m_JointMatrix.Identity();
+				NoBone.m_OffsetMatrix.Identity();
+				NoBone.m_BoneIndex = 0;
+				model->m_MeshSkeleton.AddBone(NoBone, BoneName);
+				BoneNames.push_back(NoBone.m_Name.c_str());
+
+				currentBone = model->m_MeshSkeleton.GetBone(BoneName);
+			}
+
+			parentBone->AddBoneChildren(currentBone);
+			currentBone->SetParent(parentBone);
+			CopyMatrix(currentBone->m_TransformMatrix, pNode->mTransformation);
+
+			///Iterate through the string of the children's name
+			for (uint32 o = 0; o < pNode->mNumChildren; ++o)
+			{
+				AddBoneToSkeleton(model, pNode->mChildren[o], currentBone);
+			}
 		}
-
-		///Create a tempAnim pointer
-		StrPtr<Animation> TempAnim = std::make_shared<Animation>();
-		TempAnim->Load(filePath, "Anim");
-		model->m_SetAnimation = rsc->InsertResource(TempAnim);
-
-		///Create the vertex and index buffers
-		model->m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, gfx);
-		model->m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, false, gfx);
-
-		///Create the Skeleton's buffers
-		model->m_MeshSkeleton.InitSkeletonBuffer(gfx);
-
-		return model;
-	}
-
-	bool AssimpLoader::AddNodeMesh(aiNode * pNode, const char * parent)
-	{
-		const char* nodeName = pNode->mName.C_Str();
-		//FbxDouble3 translation = pNode->LclTranslation.Get();
-		//FbxDouble3 rotation = pNode->LclRotation.Get();
-		//FbxDouble3 scaling = pNode->LclScaling.Get();
-		//
-		//Vector3 trans(translation.mData[0], translation.mData[1], translation.mData[2]);
-		//Vector3 rot(rotation.mData[0], rotation.mData[1], rotation.mData[2]);
-		//Vector3 scale(scaling.mData[0], scaling.mData[1], scaling.mData[2]);
-
-		//WeakGameObjectPtr node;
-		//
-		//if (!parent)
-		//{
-		//	node = SceneManager::Pointer()->GetActiveScene()->
-		//		CreateActor(nodeName, NULL, trans, rot, scale);
-		//}
-		//else
-		//{
-		//	auto scene = SceneManager::Pointer()->GetActiveScene();
-		//
-		//	auto ptrParent = scene->FindActor(parent);
-		//
-		//	node = scene->
-		//		CreateActor(nodeName, ptrParent.lock().get(), trans, rot, scale);
-		//}
-
-
-		return false;
-	}
-
-	void AssimpLoader::LoadMaterials(Map<String, ResourceHandle>& materialMap)
-	{
-		///Adds the materials
-		for (uint32 k = 0; k < m_Scene->mNumMaterials; ++k)
+		else
 		{
-			aiMaterial* aimatTemp = m_Scene->mMaterials[k];
-
-			///Get the material's name
-			aiString name;
-			aimatTemp->Get(AI_MATKEY_NAME, name);
-
-			StrPtr<Material> Temp = std::make_shared<Material>();
-			Temp->SetName(name.C_Str());
-
-			ResourceHandle tempHandle = m_Res->InsertResource(Temp);
-
-			materialMap.insert(Pair<String, ResourceHandle>(Temp->GetName(), tempHandle));
-
-			Temp->InitMaterial(MAT_PBR_MetRough, Gfx::GfxCore::Pointer());
+			///Iterate through the string of the children's name
+			for (uint32 o = 0; o < pNode->mNumChildren; ++o)
+			{
+				AddBoneToSkeleton(model, pNode->mChildren[o], parentBone);
+			}
 		}
+
+
+	}
+
+	void AssimpLoader::CopyMatrix(Matrix4 & dest, aiMatrix4x4 & src)
+	{
+		memcpy(&dest.m_elements, &src, sizeof(Matrix4));
+		//aiVector3D translation;
+		//aiVector3D rotation;
+		//aiVector3D scaling;
+
+		//src.Decompose(scaling, rotation, translation);
+
+		//Vector3 trans(translation.x, translation.y, translation.z);
+		//Vector3 rot(
+		//	Math::RadiansToDegrees(-rotation.x),
+		//	Math::RadiansToDegrees(-rotation.y),
+		//	Math::RadiansToDegrees(-rotation.z));
+		//Vector3 scale(scaling.x, scaling.y, scaling.z);
+
+		//dest =
+		//	Matrix4::Scale3D(scale.m_x, scale.m_y, scale.m_z)*
+		//	Matrix4::Rotate3D(rot.m_x, rot.m_y, rot.m_z)*
+		//	Matrix4::Translate3D(trans.m_x, trans.m_y, trans.m_z);
 	}
 }

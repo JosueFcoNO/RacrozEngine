@@ -4,15 +4,23 @@ namespace rczEngine
 {
 	void MotionBlurPass::SetRenderingMode(RENDERING_MODE mode)
 	{
-		m_gfx->CompileAndCreatePixelShader(m_BlurShader, L"Shaders/MotionBlur.hlsl");
+		m_PShaderPath = L"Shaders/MotionBlur.hlsl";
+		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
+		m_FPSBuffer.CreateConstantBuffer(sizeof(Vector4), Gfx::USAGE_DEFAULT, Gfx::GfxCore::Pointer());
+		FPS.Set(0, 0, 0, 0);
 	}
 
 	void MotionBlurPass::PreRenderPass()
 	{
-		m_BlurShader.SetThisPixelShader(m_gfx);
+		m_PShader.SetThisPixelShader(m_gfx);
 		SetRenderTargetsInPipeline();
 		SetTexturesInPipeline();
 		SetRasterizerState();
+
+		FPS.m_x = GUIEditor::Pointer()->FPS;
+		m_FPSBuffer.UpdateConstantBuffer(&FPS, m_gfx);
+		m_FPSBuffer.SetBufferInPS(7, m_gfx);
+
 		m_gfx->ClearRenderTargetView(0, 0, 0, 0, 0);
 		m_gfx->ClearDepthTargetView();
 	}

@@ -3,7 +3,7 @@
 namespace rczEngine
 {
 	///A String Parser. Can use UNICHAR and ANSICHAR
-	class RZ_UTILITY_EXPORT Parser
+	class RZ_EXP Parser
 	{
 	public:	
 		template <typename Char>

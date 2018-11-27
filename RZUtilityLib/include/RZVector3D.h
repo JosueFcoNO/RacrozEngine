@@ -2,7 +2,7 @@
 
 namespace rczEngine {
 
-	class RZ_UTILITY_EXPORT Vector3
+	class RZ_EXP Vector3
 	{
 	public:
 		///////////////////////
@@ -17,7 +17,7 @@ namespace rczEngine {
 		Vector3(const Vector2I& v2i);
 		Vector3(const Vector4& v4);
 
-		Vector3(const float& x, const float& y, const float& z);
+		Vector3(float x, float y, float z);
 
 		void Set(const float& x, const float& y, const float& z);
 		void Set(const Vector3& v);

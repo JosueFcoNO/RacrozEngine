@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	struct RZ_UTILITY_EXPORT InputLayoutElement
+	struct RZ_EXP InputLayoutElement
 	{
 		String SemanticName;
 		uint32 SemanticIndex;
@@ -15,7 +15,7 @@ namespace rczEngine
 
 	class VertexShader;
 
-	class RZ_UTILITY_EXPORT InputLayout
+	class RZ_EXP InputLayout
 	{
 	public:
 		void AddElement(const char* SemanticName, uint32 SemanticIndex, eFORMAT Format, uint32 InputSlot,

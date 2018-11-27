@@ -202,6 +202,7 @@
     <ClInclude Include="include\RZPlanetPass.h" />
     <ClInclude Include="include\RZRacrozRenderer.h" />
     <ClInclude Include="include\RZRendererPCH.h" />
+    <ClInclude Include="include\RZRendererWindow.h" />
     <ClInclude Include="include\RZScreenQuad.h" />
     <ClInclude Include="include\RZSkyBoxPass.h" />
     <ClInclude Include="include\RZSpaceMngWindow.h" />

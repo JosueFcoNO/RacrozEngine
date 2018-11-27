@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT BloomPass : public Pass
+	class RZ_EXP BloomPass : public Pass
 	{
 	public:
 		virtual void SetRenderingMode(RENDERING_MODE mode);
@@ -21,8 +21,6 @@ namespace rczEngine
 
 	private:
 		int m_BloomPasses;
-
-		Gfx::PixelShader m_BloomShader;
 
 		StrPtr<Texture2D> m_OriginalBright;
 		StrPtr<Texture2D> m_LastBloomResult;

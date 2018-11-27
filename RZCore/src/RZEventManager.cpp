@@ -220,6 +220,7 @@ namespace rczEngine
 		}
 
 		m_Mouse = mouseData;
+
 	}
 
 	void EventManager::AddKeyStrokeToBuffer(KEY key)
@@ -227,7 +228,7 @@ namespace rczEngine
 		///If the key is a digit from 1 to 9
 		if (key >= KEY_1 && key <= KEY_9)
 		{
-			m_KeyBuffer += key + (char)47;
+			m_KeyBuffer += (char)key + (char)47;
 			return;
 		}
 

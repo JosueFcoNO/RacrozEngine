@@ -2,26 +2,29 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT SkinnedModelRenderer : public Component
+	class RZ_EXP SkinnedModelRenderer : public Component
 	{
 	public:
-		SkinnedModelRenderer() {};
+		~SkinnedModelRenderer() { Destroy(); };
 
-		void Init() { m_Model = -1; };
-		void Update(float deltaTime);
-		void Render(Gfx::GfxCore* gfx, ResVault* res, Scene* scene, MATERIAL_TYPE matType = MAT_ANY) {};
+		virtual void Init() { m_Model = INVALID_RESOURCE; };
+		virtual void Update(float deltaTime);
+		virtual void Render(Gfx::GfxCore* gfx, ResVault* res, Scene* scene, MATERIAL_TYPE matType = MAT_ANY) {};
+		void Destroy() {};
 
 		virtual void Serialize()
 		{
 			Serializer::Pointer()->SetNextObjectSerial(s_ComponentType + SERIAL_COMPONENT_OFFSET);
 		};
-
 		virtual void DeSerialize() {};
 
 		void RenderSkinned(Gfx::GfxCore* gfx, ResVault* res, Scene* scene, MATERIAL_TYPE matType = MAT_ANY)
 		{
 			if (m_Model != -1)
-			res->GetResource<SkinnedModel>(m_Model).lock()->DrawModel(gfx, res, &m_Materials, matType);
+			{
+				auto Skinned = res->GetResource<SkinnedModel>(m_Model).lock();
+				Skinned->DrawModel(gfx, res, &m_Materials, matType);
+			}
 		};
 
 		void SetModel(ResourceHandle model, ResVault* resManager)
@@ -55,7 +58,7 @@ namespace rczEngine
 
 			if (ImGui::Button("Change Model"))
 			{
-				SetModel(LoadFile("New Model", "Modelo", ResVault::Pointer()), ResVault::Pointer());
+				ResVault::Pointer()->LoadModel(m_Owner.lock(), GetFilePath("Choose Model").c_str(), true);
 			}
 		}
 #endif

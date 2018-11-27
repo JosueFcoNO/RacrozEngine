@@ -7,7 +7,7 @@
 namespace rczEngine
 {	
 	///A class to wrap graphical buffers.
-	class RZ_UTILITY_EXPORT BasicBuffer
+	class RZ_EXP BasicBuffer
 	{
 	public:
 		///Inits the Buffer

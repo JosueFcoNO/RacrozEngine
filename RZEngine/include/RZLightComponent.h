@@ -3,7 +3,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT LightComponent : public Component
+	class RZ_EXP LightComponent : public Component
 	{
 	public:
 		LightComponent() {};

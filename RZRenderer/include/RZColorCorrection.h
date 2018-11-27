@@ -10,7 +10,7 @@ namespace rczEngine
 	};
 
 	///A Base Class to derive into concrete Passes.
-	class RZ_UTILITY_EXPORT ColorCorrectionPass : public Pass
+	class RZ_EXP ColorCorrectionPass : public Pass
 	{
 	public:
 		virtual void SetRenderingMode(RENDERING_MODE mode);
@@ -25,8 +25,6 @@ namespace rczEngine
 		virtual void PostRenderPass();
 
 	private:
-		Gfx::PixelShader m_Pshader;
-
 		GammaSetting GammaData;
 		Gfx::ConstantBuffer GammaBuffer;
 

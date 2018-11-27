@@ -11,7 +11,7 @@ namespace rczEngine
 	};
 
 	///A Base Class to derive into concrete Passes.
-	class RZ_UTILITY_EXPORT Pass
+	class RZ_EXP Pass
 	{
 	public:
 		virtual ~Pass() {};
@@ -42,6 +42,34 @@ namespace rczEngine
 
 		bool UseDefaultRenderTarget = true;
 
+#ifndef EDITOR
+		virtual void RenderPassGUI()
+		{
+			ImGui::Text("%s", m_Name.c_str());
+
+			
+
+			if (ImGui::Button("Recompile Pixel Shader"))
+			{
+				m_PShader.Destroy();
+				m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
+			}
+
+			for (int i = 0; i < 8; ++i)
+			{
+				if (m_RenderTargets[i])
+				{
+					ImVec2 size = ImGui::GetWindowSize();
+					size.y *= m_RenderTargets[i]->GetTextureCore()->m_Width / m_RenderTargets[i]->GetTextureCore()->m_Height;
+					ImGui::Text("Renders Target %d: %s", i, m_RenderTargets[i]->m_Name.c_str());
+					ImGui::Image(m_RenderTargets[i]->GetTextureCore()->m_ShaderResource, size);
+				}
+			}
+		}
+#endif
+
+		String m_Name;
+
 	protected:
 		///Sets the rasterizer state.
 		void SetRasterizerState();
@@ -60,8 +88,9 @@ namespace rczEngine
 		Gfx::GfxCore* m_gfx = Gfx::GfxCore::Pointer();
 		ResVault* m_res = ResVault::Pointer();
 
-		String m_Name;
-	
+		Gfx::PixelShader m_PShader;
+		StringW m_PShaderPath;
+
 		Texture2D* m_Texture2D[MAX_TEXTURES_PASS] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 		
 		Gfx::RenderTarget* m_RenderTargets[MAX_RENDER_TARGETS] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };

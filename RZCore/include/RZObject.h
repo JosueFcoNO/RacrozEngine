@@ -6,7 +6,7 @@ namespace rczEngine
 	typedef size_t ResourceHandle;
 	typedef int32 ObjectID;
 
-	class RZ_UTILITY_EXPORT Object
+	class RZ_EXP Object
 	{
 	public:
 		virtual ~Object() {};

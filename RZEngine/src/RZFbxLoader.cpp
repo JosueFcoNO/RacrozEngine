@@ -58,10 +58,19 @@ namespace rczEngine
 		FbxString attrName = pAttribute->GetName();
 	}
 
-	bool FbxLoader::LoadModel()
+	StrPtr<Model> FbxLoader::LoadModel(const char * filePath)
 	{
+		m_Res = ResVault::Pointer();
+
+		StrPtr<Model> model = std::make_shared<Model>();
+
+		model->SetFilePath(filePath);
+		model->GetPath().GetFileName();
+
+		ResourceHandle handle = m_Res->InsertResource(model);
+
 		// Change the following filename to a suitable filename value.
-		const char* lFilename = "Models/Necris/Necris.fbx";
+		const char* lFilename = filePath;
 
 		// Initialize the SDK manager. This object handles memory management.
 		m_Manager = FbxManager::Create();
@@ -107,7 +116,7 @@ namespace rczEngine
 		// Destroy the SDK manager and all the other objects it was handling.
 		m_Manager->Destroy();
 
-		return true;
+		return model;
 	}
 
 	bool FbxLoader::AddNodeMesh(FbxNode* pNode, const char* parent)

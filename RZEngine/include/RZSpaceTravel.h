@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT SpaceTravel : public Component, public IKeyHandler, public IMouseHandler
+	class RZ_EXP SpaceTravel : public Component, public IKeyHandler, public IMouseHandler
 	{
 	public:
 		void InitSpaceTravel(Camera* camera, ResVault* res, EventManager* evnt)

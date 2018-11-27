@@ -57,6 +57,7 @@ namespace rczEngine
 		Profiler::Pointer()->StartProfiler();
 #endif
 
+		InitWindow();
 	}
 
 	void RacrozRenderer::SetRenderingMode(RENDERING_MODE renderingMode)
@@ -184,7 +185,7 @@ namespace rczEngine
 
 		m_RTs["Luminance"] = CreateRenderTargetAndTexture_XYScales("Luminance", m_Textures["Luminance"], 11, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
 		m_RTs["Bright"] = CreateRenderTargetAndTexture_XYScales("Bright", m_Textures["Bright"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
-		m_RTs["Bloom"] = CreateRenderTargetAndTexture_XYScales("Bloom", m_Textures["Bloom"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
+		m_RTs["Bloom"] = CreateRenderTargetAndTexture_XYScales("Bloom", m_Textures["Bloom"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
 		m_RTs["AvgLuminance"] = CreateRenderTargetAndTexture_XYScales("AvgLuminance", m_Textures["AvgLuminance"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
 
 		m_RTs["HDRBloom"] = CreateRenderTargetAndTexture_XYScales("HDRBloom", m_Textures["HDRBloom"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
@@ -220,17 +221,16 @@ namespace rczEngine
 		///////////////////
 
 		///Create the geometry pass
-		auto passTerrainGeometry = CreatePass("Terrain", PASSES::TERRAIN_GEOMETRY_PASS, m_CurrentRenderingMode);
-		
-		passTerrainGeometry->AddRenderTarget(m_RTs["ColorAO"].get(), 0);
-		passTerrainGeometry->AddRenderTarget(m_RTs["Position"].get(), 1);
-		passTerrainGeometry->AddRenderTarget(m_RTs["NormalsMR"].get(), 2);
-		passTerrainGeometry->AddRenderTarget(m_RTs["Emmisive"].get(), 3);
-		passTerrainGeometry->AddRenderTarget(m_RTs["Velocity"].get(), 4);
-		
-		m_PassesOrder.push_back("Terrain");
+		//auto passTerrainGeometry = CreatePass("Terrain", PASSES::TERRAIN_GEOMETRY_PASS, m_CurrentRenderingMode);
 		//
+		//passTerrainGeometry->AddRenderTarget(m_RTs["ColorAO"].get(), 0);
+		//passTerrainGeometry->AddRenderTarget(m_RTs["Position"].get(), 1);
+		//passTerrainGeometry->AddRenderTarget(m_RTs["NormalsMR"].get(), 2);
+		//passTerrainGeometry->AddRenderTarget(m_RTs["Emmisive"].get(), 3);
+		//passTerrainGeometry->AddRenderTarget(m_RTs["Velocity"].get(), 4);
 		//
+		//m_PassesOrder.push_back("Terrain");
+
 		/////Start the post processing.
 
 		///Create the geometry pass
@@ -268,23 +268,23 @@ namespace rczEngine
 		///PLANET PASS/////
 		///////////////////
 
-		auto passPlanet = CreatePass("Planet", PASSES::PLANET_PASS, m_CurrentRenderingMode);
-
-		passPlanet->AddRenderTarget(m_RTs["PBR"].get(), 0);
-		passPlanet->AddRenderTarget(m_RTs["Position"].get(), 1);
-		passPlanet->AddRenderTarget(m_RTs["NormalsMR"].get(), 2);
-
-		m_PassesOrder.push_back("Planet");
+		//auto passPlanet = CreatePass("Planet", PASSES::PLANET_PASS, m_CurrentRenderingMode);
+		//
+		//passPlanet->AddRenderTarget(m_RTs["PBR"].get(), 0);
+		//passPlanet->AddRenderTarget(m_RTs["Position"].get(), 1);
+		//passPlanet->AddRenderTarget(m_RTs["NormalsMR"].get(), 2);
+		//
+		//m_PassesOrder.push_back("Planet");
 
 		///////////////////
 		///SCATTER PASS/////
 		///////////////////
 
-		auto passAtmos = CreatePass("Atmos", PASSES::ATMOS_SCATTER_PASS, m_CurrentRenderingMode);
-
-		passAtmos->AddRenderTarget(m_RTs["PBR"].get(), 0);
-
-		m_PassesOrder.push_back("Atmos");
+		//auto passAtmos = CreatePass("Atmos", PASSES::ATMOS_SCATTER_PASS, m_CurrentRenderingMode);
+		//
+		//passAtmos->AddRenderTarget(m_RTs["PBR"].get(), 0);
+		//
+		//m_PassesOrder.push_back("Atmos");
 
 		m_PassesOrder.push_back("PostProcess");
 
@@ -567,16 +567,16 @@ namespace rczEngine
 		{
 			auto act = ObjectList[i].lock();
 
-			auto VectorToObj = (act->GetPosition() - pos);
+			auto VectorToObj = (act->GetAccumulatedPosition() - pos);
 			float Magnitude = VectorToObj.Magnitude();
 
 			float Visible = VectorToObj.GetNormalized() | dir;
 
-			ObjectMap.insert(Pair<float, WeakPtr<GameObject>>(Magnitude, act));
-			//if (Visible > 0.0f)
-			//{
-			//	ObjectMap[Magnitude] = act;
-			//}
+			//ObjectMap.insert(Pair<float, WeakPtr<GameObject>>(Magnitude, act));
+			if (Visible > 0.0f)
+			{
+				ObjectMap.insert(Pair<float, WeakPtr<GameObject>>(Magnitude, act));
+			}
 		}
 
 		if (Forward)
@@ -630,7 +630,7 @@ namespace rczEngine
 
 		bool SetToFinal = false;
 
-		if (name == "ColorCorrection")
+		if (String(name) == "ColorCorrection")
 		{
 			SetToFinal = true;
 		}
@@ -646,8 +646,6 @@ namespace rczEngine
 
 		out_Texture = std::make_shared<Texture2D>();
 		out_Texture->CreateFromRenderTarget(*renderTarget);
-
-		ResVault::Pointer()->InsertResource(out_Texture);
 
 		return renderTarget;
 	}
@@ -708,6 +706,7 @@ namespace rczEngine
 			break;
 		}
 
+		returnPass->m_Name = name;
 		returnPass->SetRenderingMode(renderMode);
 		return returnPass;
 	}
@@ -746,6 +745,11 @@ namespace rczEngine
 		m_AnisotropicClampSampler.Init(Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::COMPARISON_NEVER, Gfx::FILTER_ANISOTROPIC, Vector4(1, 1, 1, 1), 16);
 		m_AnisotropicClampSampler.CreateSamplerState(m_gfx);
 		m_AnisotropicClampSampler.PSSetThisSamplerState(3, 1, m_gfx);
+
+		///Create a AnisotropicWrapSampler and set it on slot 3
+		m_PointWrapSampler.Init(Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::COMPARISON_NEVER, Gfx::FILTER_MIN_MAG_MIP_POINT, Vector4(1, 1, 1, 1), 16);
+		m_PointWrapSampler.CreateSamplerState(m_gfx);
+		m_PointWrapSampler.PSSetThisSamplerState(4, 1, m_gfx);
 
 	}
 };

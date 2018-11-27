@@ -13,7 +13,8 @@ namespace rczEngine
 		m_gfx->CompileAndCreateDomainShader(m_Dshader, L"Shaders/ProcGen/Terrain/TerrainDomainShaderTexSampling.hlsl");
 
 		///Geometry Pixel Shader
-		m_gfx->CompileAndCreatePixelShader(m_Pshader, L"Shaders/ProcGen/Terrain/TerrainGeometryPass.hlsl");
+		m_PShaderPath = L"Shaders/ProcGen/Terrain/TerrainGeometryPass.hlsl";
+		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
 
 		wire.Init(Gfx::FILL_WIREFRAME);
 		wire.CreateRasterizerState(m_gfx);
@@ -23,7 +24,7 @@ namespace rczEngine
 	{
 
 		///Set the shaders.
-		m_Pshader.SetThisPixelShader(m_gfx);
+		m_PShader.SetThisPixelShader(m_gfx);
 		m_Vshader.SetThisVertexShaderAndInputLayout(m_gfx);
 		m_Hshader.SetThisHullShader(m_gfx);
 		m_Dshader.SetThisDomainShader(m_gfx);

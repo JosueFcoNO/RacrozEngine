@@ -284,12 +284,11 @@ namespace rczEngine
 	Matrix4 Matrix4::Rotate3D(Degree xRotation, Degree yRotation, Degree zRotation)
 	{
 		///Create a 3D rotation Matrix using the rczAXIS given
-		Matrix4 x(INIT_UNIT), y(INIT_UNIT), z(INIT_UNIT), fin(INIT_UNIT);
+		Matrix4 x(INIT_UNIT), y(INIT_UNIT), z(INIT_UNIT);
 
 		float xtheta = xRotation.ValueRadian().Value();
 		float ytheta = yRotation.ValueRadian().Value();
 		float ztheta = zRotation.ValueRadian().Value();
-
 
 		int LeftHand = -1;
 
@@ -298,7 +297,6 @@ namespace rczEngine
 			x.m_matrix[1][1] = x.m_matrix[2][2] = Math::Cos(xtheta);
 			x.m_matrix[1][2] = Math::Sin(xtheta)*LeftHand;
 			x.m_matrix[2][1] = -Math::Sin(xtheta)*LeftHand;
-			fin *= x;
 		}
 
 		if (yRotation != 0)
@@ -306,7 +304,6 @@ namespace rczEngine
 			y.m_matrix[0][0] = y.m_matrix[2][2] = Math::Cos(ytheta);
 			y.m_matrix[0][2] = -Math::Sin(ytheta)*LeftHand;
 			y.m_matrix[2][0] = Math::Sin(ytheta)*LeftHand;
-			fin *= y;
 		}
 
 		if (zRotation != 0)
@@ -314,10 +311,9 @@ namespace rczEngine
 			z.m_matrix[0][0] = z.m_matrix[1][1] = Math::Cos(ztheta);
 			z.m_matrix[0][1] = Math::Sin(ztheta)*LeftHand;
 			z.m_matrix[1][0] = -Math::Sin(ztheta)*LeftHand;
-			fin *= z;
 		}
 
-		return fin;
+		return z*y*x;
 	}
 
 	Matrix4 Matrix4::OrthoProjectedSpace(float width, float height, float ZNear, float ZFar)

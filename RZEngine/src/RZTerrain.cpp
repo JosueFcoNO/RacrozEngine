@@ -10,12 +10,12 @@ namespace rczEngine
 		StrPtr<Material> mat = std::make_shared<Material>();
 		mat->InitMaterial(MAT_PBR_MetRough, gfx);
 
-		m_Mesh.InitMeshPlane(64, 512.0f, Capi, true);
-		m_Mesh.SetMaterial(res->InsertResource(mat));
-		m_Mesh.GenerateMesh();
+		//m_Mesh.InitMeshPlane(64, 512.0f, Vector3(0,0,0), Ypos);
+		//m_Mesh.SetMaterial(res->InsertResource(mat));
+		//m_Mesh.GenerateMesh();
 		
 		m_Perlin.InitPerlinNoise(619);
-		m_Mesh.HeightMap = m_Perlin.GetPerlinNoiseAsTextureR8UNORM(1024, 1024, 8, m_gfx, m_res);
+
 		m_gfx = gfx;
 		m_res = res;
 		m_Capi = Capi;
@@ -27,7 +27,7 @@ namespace rczEngine
 
 	void Terrain::RenderTerrain()
 	{
-		m_Mesh.RenderMeshPlane();
+		m_Mesh.Render();
 	}
 
 }

@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	namespace Gfx
 	{
-		class RZ_UTILITY_EXPORT DepthStencyl
+		class RZ_EXP DepthStencyl
 		{
 		public:
 			TextureCore2D* GetTexture() { return &m_DepthStencylTexture; };

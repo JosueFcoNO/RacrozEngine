@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	namespace Core
 	{
-		class RZ_UTILITY_EXPORT AppWindows : public App
+		class RZ_EXP AppWindows : public App
 		{
 		public:
 			void StartApp() {};

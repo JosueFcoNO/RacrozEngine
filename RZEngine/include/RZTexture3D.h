@@ -3,9 +3,7 @@
 
 namespace rczEngine
 {
-	class ResVault;
-
-	class RZ_UTILITY_EXPORT Texture3D : public Resource
+	class RZ_EXP Texture3D : public Resource
 	{
 	public:
 		Texture3D() { m_Type = ResourceType::RES_TEXTURE; };

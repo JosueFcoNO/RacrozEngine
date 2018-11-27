@@ -3,7 +3,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT FontRender
+	class RZ_EXP FontRender
 	{
 	public:
 		~FontRender()

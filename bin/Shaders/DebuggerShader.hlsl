@@ -13,5 +13,5 @@ struct PS_Input
 
 float4 PS_Main(PS_Input frag) : SV_TARGET
 {
-	return Color;
+	return float4(Color.xyz, 0.5f);
 }

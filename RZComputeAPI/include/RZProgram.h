@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT Program
+	class RZ_EXP Program
 	{
 	public:
 		~Program() { Destroy(); };

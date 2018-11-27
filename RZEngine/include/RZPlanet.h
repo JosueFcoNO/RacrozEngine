@@ -3,9 +3,9 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT SpaceManager;
+	class RZ_EXP SpaceManager;
 
-	class RZ_UTILITY_EXPORT PlanetVertex
+	class RZ_EXP PlanetVertex
 	{
 	public:
 		Vector3 VertexPosition;
@@ -16,7 +16,7 @@ namespace rczEngine
 		int Gradient[4];
 	};
 
-	class RZ_UTILITY_EXPORT Planet
+	class RZ_EXP Planet
 	{
 	public:
 		void InitPlanet(int32 seed, float x, float y, float z, SpaceManager* spaceMng);
@@ -38,6 +38,11 @@ namespace rczEngine
 		ResourceHandle m_Materials;
 		ResourceHandle m_HeightMap;
 		Vector4 m_HeightScale;
+
+		PlanetQuadTreeNode Quadtree[6];
+
+		int32 Seed = 0;
+		PerlinNoise3D noise;
 
 	private:
 		void LoadAndProcessModel();
@@ -67,5 +72,6 @@ namespace rczEngine
 		Matrix4 m_PlanetMatrix;
 
 		ResourceHandle Water;
+		StrPtr<CameraCmp> PlayerCamera;
 	};
 }

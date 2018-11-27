@@ -12,7 +12,7 @@ namespace rczEngine
 		m_BlurInfoCB.UpdateConstantBuffer(&m_BlurInfo, m_gfx);
 
 		m_Blur = RacrozRenderer::Pointer()->
-			CreateRenderTargetAndTexture_XYScales("BlurMid", m_BlurTex, 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
+			CreateRenderTargetAndTexture_XYScales("BlurMid", m_BlurTex, 9, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
 	}
 
 	void GaussPass::BlurPass(StrPtr<Gfx::RenderTarget> outRenderTarget, StrPtr<Texture2D> inTexture, int width, int height)
@@ -27,6 +27,7 @@ namespace rczEngine
 		m_gfx->GenerateMipMaps(inTexture->GetTextureCore());
 
 		DoBlur(BLUR_V, outRenderTarget, m_BlurTex);
+		m_gfx->GenerateMipMaps(m_BlurTex->GetTextureCore());
 	}
 
 	void GaussPass::DoBlur(BLUR_PASS pass, StrPtr<Gfx::RenderTarget> outRenderTarget, StrPtr<Texture2D> inTexture)

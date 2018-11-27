@@ -3,7 +3,7 @@
 namespace rczEngine
 {
 	///The Vertex structure
-	class RZ_UTILITY_EXPORT Vertex
+	class RZ_EXP Vertex
 	{
 	public:
 		Vertex() : VertexPosition(INIT_ZERO), TextureCoordinates(INIT_ZERO), VertexNormals(INIT_ZERO)
@@ -17,7 +17,7 @@ namespace rczEngine
 		Vector3 BiNormals;
 	};
 
-	class RZ_UTILITY_EXPORT SkinnedVertex
+	class RZ_EXP SkinnedVertex
 	{
 	public:
 		SkinnedVertex() : VertexPosition(INIT_ZERO), TextureCoordinates(INIT_ZERO), VertexNormals(INIT_ZERO)

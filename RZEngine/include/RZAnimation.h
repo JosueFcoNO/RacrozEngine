@@ -5,7 +5,7 @@ namespace rczEngine
 	typedef Vector<KeyFrame> KeyFrameVector;
 	typedef Map<String, KeyFrameVector> AnimationTimeline; //TODO: turn animationTimeline into a class of its own?
 
-	class RZ_UTILITY_EXPORT Animation : public Resource
+	class RZ_EXP Animation : public Resource
 	{
 	public:
 		void AddKeyFrame(KeyFrame& keyFrame, String boneName);

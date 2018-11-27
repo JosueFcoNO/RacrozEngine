@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	////////////////MESH
 	///A class Mesh that contains the material name of the mesh. 
-	class RZ_UTILITY_EXPORT Mesh : public Serializable
+	class RZ_EXP Mesh : public Serializable
 	{
 	public:
 		Mesh() {};

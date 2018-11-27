@@ -6,7 +6,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT ConstantBuffer : public BasicBuffer
+	class RZ_EXP ConstantBuffer : public BasicBuffer
 	{
 	public:
 		///Creates a Constant Buffer of size and usage

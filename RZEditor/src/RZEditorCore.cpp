@@ -26,7 +26,7 @@ namespace rczEngine
 		input->InitInput();
 	
 		ComputeAPI::Start();
-		ComputeAPI::Pointer()->InitComputeAPI(Gfx::GfxCore::Pointer());
+		//ComputeAPI::Pointer()->InitComputeAPI(Gfx::GfxCore::Pointer());
 
 		SoundAPI* SndAPI = new SoundAPI;
 		SndAPI->InitSound();
@@ -73,7 +73,7 @@ namespace rczEngine
 		{
 			Quit = Input::Pointer()->CheckKeyboardState(DIK_ESCAPE);
 			float deltaTime = (float)Time.GetFrameTime();
-
+			
 			EventManager::Pointer()->CheckEvents();
 			m_scnManager->GetActiveScene()->Update(deltaTime);
 
@@ -100,6 +100,10 @@ namespace rczEngine
 
 		ResVault::ShutDown();
 
+		CameraManager::ShutDown();
+
+		LightManager::ShutDown();
+
 		RacrozRenderer::ShutDown();
 
 		Input::ShutDown();
@@ -109,10 +113,6 @@ namespace rczEngine
 		GUIEditor::ShutDown();
 
 		GraphicDebugger::ShutDown();
-
-		CameraManager::ShutDown();
-
-		LightManager::ShutDown();
 
 		Logger::ShutDown();
 

@@ -4,9 +4,11 @@ namespace rczEngine
 {
 	class RacrozRenderer;
 
-	class RZ_UTILITY_EXPORT SpaceMngWindow
+	class RZ_EXP SpaceMngWindow
 	{
 	public:
+
+
 		void RenderWindow()
 		{
 

@@ -8,7 +8,7 @@ namespace rczEngine
 {
 	namespace Gfx
 	{
-		class RZ_UTILITY_EXPORT IndexBuffer : public BasicBuffer
+		class RZ_EXP IndexBuffer : public BasicBuffer
 		{
 		public:
 			virtual ~IndexBuffer() { };
@@ -18,7 +18,7 @@ namespace rczEngine
 			bool SetThisIndexBuffer(GfxCore* gfx);
 			void AddIndex(uint32 newIndex);
 
-			uint32 GetSize() { return int32(m_IndexList.size()); };
+			uint32 GetSize() { return m_IndexSize; };
 			int32 GetIndex(int32 index) { return m_IndexList[index]; };
 
 			void ClearIndexList();

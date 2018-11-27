@@ -84,8 +84,7 @@ namespace rczEngine
 				{
 					auto DestroyedID = m_ActiveGameObject->GetID();
 
-					m_ActiveGameObject->GetParent().lock()->RemoveChild(DestroyedID);
-					Scene->m_SceneActorMap.erase(DestroyedID);
+					m_ActiveGameObject->Destroy(true);
 
 					m_ActiveGameObject.reset();
 				}

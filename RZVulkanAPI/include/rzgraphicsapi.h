@@ -2,10 +2,10 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT FontRender;
+	class RZ_EXP FontRender;
 
 	///The DirectX Graphical API
-	class RZ_UTILITY_EXPORT GfxCore
+	class RZ_EXP GfxCore
 	{
 	public:
 

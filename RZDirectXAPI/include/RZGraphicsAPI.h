@@ -13,7 +13,7 @@ namespace rczEngine
 	namespace Gfx
 	{
 		///The DirectX Graphics Core
-		class RZ_UTILITY_EXPORT GfxCore
+		class RZ_EXP GfxCore
 		{
 		private:
 			static GfxCore*& _Instance();

@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT Music : public Resource
+	class RZ_EXP Music : public Resource
 	{
 	public:
 		void Play();

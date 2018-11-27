@@ -72,7 +72,7 @@ namespace rczEngine
 		float paddings[2];
 	};
 
-	class RZ_UTILITY_EXPORT Material : public Resource, public Serializable
+	class RZ_EXP Material : public Resource
 	{
 	public:
 		Material() { m_Type = ResourceType::RES_MATERIAL; };

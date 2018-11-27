@@ -323,6 +323,21 @@
     <ClInclude Include="include\RZTextureLoader.h">
       <Filter>Archivos de encabezado\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="include\RZPlanetQuadTreeNode.h">
+      <Filter>Archivos de encabezado\Planet Generation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZPerlinNoise3D.h">
+      <Filter>Archivos de encabezado\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSkinnedBoneComponent.h">
+      <Filter>Archivos de encabezado\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZEngineFwdDcl.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZConsoleGUI.h">
+      <Filter>Archivos de encabezado\Imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZEnginePCH.cpp">
@@ -474,6 +489,18 @@
     </ClCompile>
     <ClCompile Include="src\RZTextureLoader.cpp">
       <Filter>Archivos de código fuente\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZPlanetQuadTreeNode.cpp">
+      <Filter>Archivos de código fuente\Planet Generation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZPerlinNoise3D.cpp">
+      <Filter>Archivos de código fuente\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZSkinnedBoneComponent.cpp">
+      <Filter>Archivos de código fuente\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZConsoleGUI.cpp">
+      <Filter>Archivos de código fuente\Imgui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

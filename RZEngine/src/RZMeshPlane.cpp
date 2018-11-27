@@ -2,29 +2,29 @@
 
 namespace rczEngine
 {
-	void MeshPlane::InitMeshPlane(int32 vertices, float size, ComputeAPI* compute, bool CreateIndexBuffer)
+
+	void MeshPlane::InitMeshPlane(int32 vertices, double size, double HalfSize, Vector3 startPos, eMeshPlaneOrientation orientation, bool CreateIndexBuffer)
 	{
 		m_gfx = Gfx::GfxCore::Pointer();
 		m_res = ResVault::Pointer();
-		m_capi = compute;
+		m_capi = ComputeAPI::Pointer();
 
 		m_MeshBuffer.Size = vertices;
-		m_MeshBuffer.distVertex = size / (vertices-1) + 0.0015f;
+		m_MeshBuffer.distVertex = size / double(vertices - 1);
+		m_MeshBuffer.HalfSize = HalfSize;
 		m_MeshBuffer.Range = 1.0f;
 		m_MeshBuffer.Octaves = 1;
 		m_MeshBuffer.Persistance = 1.0f;
 
 		Gfx::Vertex TempVertex;
 
-		int SizeSquared = m_MeshBuffer.Size*m_MeshBuffer.Size;
+		int SizeSquared = m_MeshBuffer.Size * m_MeshBuffer.Size;
 
 #pragma omp parallel for
 		for (int32 i = 0; i < SizeSquared; ++i)
 		{
 			m_VertexBuffer.AddVertex(TempVertex);
 		}
-
-		//m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DYNAMIC, false, m_gfx);
 
 		if (CreateIndexBuffer)
 		{
@@ -36,28 +36,26 @@ namespace rczEngine
 			m_IndexBuffer = nullptr;
 		}
 
+		m_MeshAABB.SetAABB(Vector3(10, 10, 10), Vector3(-10, -10, -10));
+		GenerateMesh(startPos, orientation);
+		GenerateNormals();
+		GenerateSmoothNormals();
+		m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, false, m_gfx);
 
-
-		StrPtr<Texture2D> TexNoise = std::make_shared<Texture2D>();
-		m_gfx->CreateTexture(m_NoisePatch, HEIGHTMAP_RES * sizeof(float), 1, TexNoise->m_TextureCore, HEIGHTMAP_RES, HEIGHTMAP_RES, Gfx::BIND_SHADER_RESOURCE, Gfx::FORMAT_R32_FLOAT);
-		HeightMap = m_res->InsertResource(TexNoise);
-		
-		//Texture2D* TexNormal = new Texture2D;
-		//m_gfx->CreateTexture(m_NormalTex, HEIGHTMAP_RES * sizeof(Vector3), 1, TexNormal->m_TextureCore, HEIGHTMAP_RES, HEIGHTMAP_RES, Gfx::BIND_SHADER_RESOURCE, Gfx::FORMAT_R32G32B32_FLOAT);
-		//NormalMap = m_res->InsertResource(TexNormal);
+		m_StartPos = startPos;
 
 	}
 
-	void MeshPlane::RenderMeshPlane(uint32 size)
+	void MeshPlane::DestroyMeshPlane() noexcept
+	{
+		m_VertexBuffer.Destroy();
+		m_IndexBuffer->Destroy();
+	}
+
+	void MeshPlane::Render()
 	{
 		///Set the material and vertex buffer on the pipeline.
-		m_res->GetResource<Material>(m_Material).lock()->SetThisMaterial(m_gfx, m_res);
-		
-		if (HeightMap)
-		{
-			m_res->GetResource<Texture2D>(HeightMap).lock()->SetThisTextureInDS(1, 1, m_gfx);
-			m_res->GetResource<Texture2D>(HeightMap).lock()->SetThisTextureInPS(0, 1, m_gfx);
-		}
+		//m_res->GetResource<Material>(m_Material).lock()->SetThisMaterial(m_gfx, m_res);
 
 		m_VertexBuffer.SetThisVertexBuffer(m_gfx, 0);
 
@@ -70,7 +68,7 @@ namespace rczEngine
 		}
 		else
 		{
-			vertexSize = size;
+			vertexSize = m_MeshBuffer.Size;
 		}
 
 		m_gfx->DrawIndexed(vertexSize, 0, 0);
@@ -148,7 +146,7 @@ namespace rczEngine
 		indexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, Gfx::GfxCore::Pointer());
 	}
 
-	void MeshPlane::GenerateMesh()
+	void MeshPlane::GenerateMesh(Vector3 startPos, eMeshPlaneOrientation orientation)
 	{
 		Gfx::Vertex* TempVertex;
 		auto size = m_MeshBuffer.Size;
@@ -161,15 +159,58 @@ namespace rczEngine
 			int32 x = i / size;
 			int32 y = i % size;
 
-			TempVertex->VertexPosition.m_x = float(m_MeshBuffer.distVertex*x);
-			TempVertex->VertexPosition.m_y = 1.0f;
-			TempVertex->VertexPosition.m_z = float(m_MeshBuffer.distVertex*y);
+			// double(size) / 2.0 * m_MeshBuffer.distVertex;
+			double Size = size * m_MeshBuffer.distVertex;
+			double halfSize = m_MeshBuffer.HalfSize;
+
+			switch (orientation)
+			{
+			case eMeshPlaneOrientation::Ypos:
+				TempVertex->VertexPosition.m_x = CastStatic<float>((m_MeshBuffer.distVertex*x) - halfSize);
+				TempVertex->VertexPosition.m_y = 0.0f;
+				TempVertex->VertexPosition.m_z = CastStatic<float>((m_MeshBuffer.distVertex*y) - halfSize);
+				break;
+			case eMeshPlaneOrientation::Yneg:
+				TempVertex->VertexPosition.m_x = CastStatic<float>(((m_MeshBuffer.distVertex*(size - y)) - halfSize) - m_MeshBuffer.distVertex);
+				TempVertex->VertexPosition.m_y = 0.0f;
+				TempVertex->VertexPosition.m_z = CastStatic<float>(((m_MeshBuffer.distVertex*(size - x)) - halfSize) - m_MeshBuffer.distVertex);
+				break;
+			case eMeshPlaneOrientation::Xpos:
+				TempVertex->VertexPosition.m_x = 0.0f;
+				TempVertex->VertexPosition.m_y = CastStatic<float>((m_MeshBuffer.distVertex*y) - halfSize);
+				TempVertex->VertexPosition.m_z = CastStatic<float>((m_MeshBuffer.distVertex*x) - halfSize);
+				break;
+			case eMeshPlaneOrientation::Xneg:
+				TempVertex->VertexPosition.m_x = 0.0f;
+				TempVertex->VertexPosition.m_y = CastStatic<float>(((m_MeshBuffer.distVertex*(size-x)) - halfSize) - m_MeshBuffer.distVertex);
+				TempVertex->VertexPosition.m_z = CastStatic<float>(((m_MeshBuffer.distVertex*(size-y)) - halfSize) - m_MeshBuffer.distVertex);
+				break;
+			case eMeshPlaneOrientation::Zpos:
+				TempVertex->VertexPosition.m_x = CastStatic<float>((m_MeshBuffer.distVertex*y) - halfSize);
+				TempVertex->VertexPosition.m_y = CastStatic<float>((m_MeshBuffer.distVertex*x) - halfSize);
+				TempVertex->VertexPosition.m_z = 0.0f; 
+				break;
+			case eMeshPlaneOrientation::Zneg:
+				TempVertex->VertexPosition.m_x = CastStatic<float>(((m_MeshBuffer.distVertex*(size-x)) - halfSize) - m_MeshBuffer.distVertex);
+				TempVertex->VertexPosition.m_y = CastStatic<float>(((m_MeshBuffer.distVertex*(size-y)) - halfSize) - m_MeshBuffer.distVertex);
+				TempVertex->VertexPosition.m_z = 0.0f;
+				break;
+			}
+
+			TempVertex->VertexPosition += startPos;
+
+			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition);
+
+			m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
 			TempVertex->TextureCoordinates.m_x = float(y) / m_MeshBuffer.Size;
 			TempVertex->TextureCoordinates.m_y = float(x) / m_MeshBuffer.Size;
 		}
-	
-		m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, false, m_gfx);
+	}
+
+	Vector3 MeshPlane::CalculateVertexPos(Vector3 pos)
+	{
+		return pos;
 	}
 
 	void MeshPlane::GenerateNormals()
@@ -275,15 +316,15 @@ namespace rczEngine
 
 			}
 
-			normalAvg   /= float(VerticesUsed + 1);
+			normalAvg /= float(VerticesUsed + 1);
 			binormalAvg /= float(VerticesUsed + 1);
-			TangentAvg  /= float(VerticesUsed + 1);
+			TangentAvg /= float(VerticesUsed + 1);
 
 			ThisVertex->VertexNormals = normalAvg;
 			ThisVertex->BiNormals = binormalAvg;
 			ThisVertex->Tangents = TangentAvg;
 		}
 	}
-	
+
 
 }

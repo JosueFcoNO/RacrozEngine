@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT ResVault
+	class RZ_EXP ResVault
 	{
 	private:
 		static ResVault*& _Instance();
@@ -19,6 +19,7 @@ namespace rczEngine
 		void Destroy();
 		ResourceHandle LoadResource(const char * filePath, const char* resName = NULL);
 		void FreeResource(ResourceHandle handleToDelete);
+		void LoadModel(StrPtr<GameObject> gameobject, const char* filePath, bool withHierarchy = false);
 		
 		
 		template <class type>
@@ -41,13 +42,13 @@ namespace rczEngine
 		}
 
 		template <class type>
-		WeakPtr<type> FindResourceByName(char* name)
+		WeakPtr<type> FindResourceByName(const char* name)
 		{
 			WeakPtr<type> res;
 
 			for (auto i = m_ResourceMap.begin(); i != m_ResourceMap.end(); ++i)
 			{
-				if (i->second->GetName() == name)
+				if (String(i->second->GetName()) == name)
 				{
 					res = std::static_pointer_cast<type, Resource>(i->second);
 					return res;
@@ -83,5 +84,7 @@ namespace rczEngine
 		ResourceType GetResourceType(const char* fileExtension);
 	};
 
-	ResourceHandle RZ_UTILITY_EXPORT LoadFile(char* instruction, const char* name, ResVault* res);
+	String RZ_EXP GetFilePath(char* instruction);
+	ResourceHandle RZ_EXP LoadFile(char* instruction, const char* name, ResVault* res);
+
 };

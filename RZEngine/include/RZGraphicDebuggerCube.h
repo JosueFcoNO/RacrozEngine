@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT DebuggerCube : public GraphicDebuggerElement
+	class RZ_EXP DebuggerCube : public GraphicDebuggerElement
 	{
 	public:
 		void Render(Gfx::GfxCore* graphicsapi_instance);

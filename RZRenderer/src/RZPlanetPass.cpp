@@ -6,10 +6,14 @@ namespace rczEngine
 	{
 		m_ActiveScene = SceneManager::Pointer()->GetActiveScene();
 		
-		m_gfx->CompileAndCreateHullShader(m_PlanetHshader, L"Shaders/ProcGen/Planet/PlanetHullShader.hlsl");
-		m_gfx->CompileAndCreateVertexShader(m_PlanetVshader, L"Shaders/ProcGen/Planet/PlanetVertexShader.hlsl");
-		m_gfx->CompileAndCreatePixelShader(m_PlanetPshader, L"Shaders/ProcGen/Planet/PlanetPixelShader.hlsl");
-		m_gfx->CompileAndCreateDomainShader(m_PlanetDshader, L"Shaders/ProcGen/Planet/PlanetDomainShader.hlsl");
+		//m_gfx->CompileAndCreateHullShader(m_PlanetHshader, L"Shaders/ProcGen/Planet/PlanetHullShader.hlsl");
+		m_gfx->CompileAndCreateVertexShader(m_PlanetVshader, L"Shaders/GPassMetRough.hlsl");
+
+
+		m_PShaderPath = L"Shaders/ProcGen/Planet/PlanetPixelShader.hlsl";
+		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
+
+		//m_gfx->CompileAndCreateDomainShader(m_PlanetDshader, L"Shaders/ProcGen/Planet/PlanetDomainShader.hlsl");
 		m_PlanetVshader.ReflectLayout(0, m_gfx);
 
 	}
@@ -34,12 +38,6 @@ namespace rczEngine
 			m_gfx->CompileAndCreateDomainShader(m_PlanetDshader, L"Shaders/ProcGen/Planet/PlanetDomainShader.hlsl");
 		}
 
-		if (Input::Pointer()->CheckKeyboardState(KEY_NUMPAD2))
-		{
-			m_PlanetPshader.Destroy();
-			m_gfx->CompileAndCreatePixelShader(m_PlanetPshader, L"Shaders/ProcGen/Planet/PlanetPixelShader.hlsl");
-		}
-
 		if (Input::Pointer()->CheckKeyboardState(KEY_NUMPAD3))
 		{
 			m_PlanetHshader.Destroy();
@@ -50,15 +48,15 @@ namespace rczEngine
 
 		if (space)
 		{
-			m_PlanetHshader.SetThisHullShader(m_gfx);
-			m_PlanetDshader.SetThisDomainShader(m_gfx);
+			//m_PlanetHshader.SetThisHullShader(m_gfx);
+			//m_PlanetDshader.SetThisDomainShader(m_gfx);
 			m_PlanetVshader.SetThisVertexShaderAndInputLayout(m_gfx);
-			m_PlanetPshader.SetThisPixelShader(m_gfx);
+			m_PShader.SetThisPixelShader(m_gfx);
 
 			space->Render();
 
-			m_gfx->RemoveDomainShader();
-			m_gfx->RemoveHullShader();
+			//m_gfx->RemoveDomainShader();
+			//m_gfx->RemoveHullShader();
 		}
 
 	}

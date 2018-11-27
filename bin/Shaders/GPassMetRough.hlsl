@@ -193,8 +193,8 @@ PS_OUTPUT PS_Main(PS_Input frag) : SV_TARGET
 
 	float2 a = (frag.newPos.xy / frag.newPos.w) * 0.5f + 0.5f;
 	float2 b = (frag.prevPos.xy / frag.prevPos.w) * 0.5f + 0.5f;
-	output.Velocity.xy = 0; //(a - b) * 10.0f;
-	output.Velocity.zw = 0;// float2(0.0f, 1.0f);
+	output.Velocity.xy = (a - b);
+	output.Velocity.zw = float2(0.0f, 1.0f);
 
 	return output;
 }

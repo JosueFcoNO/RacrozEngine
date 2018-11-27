@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT Serializable
+	class RZ_EXP Serializable
 	{
 	public:
 		virtual void Serialize() = 0;

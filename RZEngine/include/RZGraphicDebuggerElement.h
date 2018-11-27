@@ -9,7 +9,7 @@ namespace rczEngine
 		DEBUG_CUBE
 	};
 
-	class RZ_UTILITY_EXPORT GraphicDebuggerElement
+	class RZ_EXP GraphicDebuggerElement
 	{
 	public:
 		GraphicDebuggerElement() : m_Color(INIT_ZERO)

@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT SkyBox
+	class RZ_EXP SkyBox
 	{
 	public:
 		void InitSkyBox(char* cubeMapPath, char* cubeMapName, Gfx::GfxCore* gfx, ResVault* res);

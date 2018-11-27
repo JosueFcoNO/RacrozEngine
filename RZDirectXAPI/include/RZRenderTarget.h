@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	namespace Gfx
 	{
-		class RZ_UTILITY_EXPORT RenderTarget
+		class RZ_EXP RenderTarget
 		{
 		public:
 			TextureCore2D* GetTextureCore() { return &m_RenderTargetTexture; };

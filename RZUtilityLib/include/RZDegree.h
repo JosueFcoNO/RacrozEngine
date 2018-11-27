@@ -3,7 +3,7 @@
 namespace rczEngine{
 
 	///Class to use Degrees and make sure there's no confusion on what a function returns, also adds some functionality
-	class RZ_UTILITY_EXPORT Degree
+	class RZ_EXP Degree
 	{
 	public:
 		Degree() { m_Value = 0.0f; };

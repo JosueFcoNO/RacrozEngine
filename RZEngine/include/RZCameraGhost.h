@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT CameraGhost : public CameraCmp, public IKeyHandler, public IMouseHandler
+	class RZ_EXP CameraGhost : public CameraCmp, public IKeyHandler, public IMouseHandler
 	{
 	public:
 		void InitCameraGhost()
@@ -128,6 +128,11 @@ namespace rczEngine
 				break;
 			}
 		};
+
+		virtual void OnClick(int32 mb = 0, int32 mx = 0, int32 my = 0) {};
+		virtual void OnHold(int32 mb = 0, int32 mx = 0, int32 my = 0) {};
+		virtual void OnReleased(int32 mb = 0, int32 mx = 0, int32 my = 0) {};
+		virtual void OnMoved(int32 mb = 0, int32 mx = 0, int32 my = 0) {};
 
 	private:
 		float m_xAxis = 0.0f;

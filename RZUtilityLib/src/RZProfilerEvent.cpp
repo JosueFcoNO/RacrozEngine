@@ -22,9 +22,9 @@ namespace rczEngine
 	{
 		auto logg = Logger::Pointer();
 
-		logg->LogMessage(loggerFile, "Average Time: ", (float)m_AverageTime*1000.0f);
+		logg->LogMessageToFileLog(loggerFile, "Average Time: ", (float)m_AverageTime*1000.0f);
 
-		//logg->LogMessage(loggerFile, "Largest Time: ", (float)m_LargestTime);
-		//logg->LogMessage(loggerFile, "Shortest Time: ", (float)m_ShortestTime);
+		//logg->LogMessageToFileLog(loggerFile, "Largest Time: ", (float)m_LargestTime);
+		//logg->LogMessageToFileLog(loggerFile, "Shortest Time: ", (float)m_ShortestTime);
 	}
 };

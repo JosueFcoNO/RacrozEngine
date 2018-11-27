@@ -286,6 +286,8 @@ namespace rczEngine
 					const D3D11_RECT r = { (LONG)pcmd->ClipRect.x, (LONG)pcmd->ClipRect.y, (LONG)pcmd->ClipRect.z, (LONG)pcmd->ClipRect.w };
 					m_gfx->m_DeviceContext->PSSetShaderResources(0, 1, (ID3D11ShaderResourceView**)&pcmd->TextureId);
 					m_gfx->m_DeviceContext->RSSetScissorRects(1, &r);
+					if (pcmd->TextureId == ImGui::GetIO().Fonts->TexID) m_TextBlendState.SetThisBlendState(m_gfx);
+					else m_NormalBlendState.SetThisBlendState(m_gfx);
 					m_gfx->m_DeviceContext->DrawIndexed(pcmd->ElemCount, idx_offset, vtx_offset);
 				}
 				idx_offset += pcmd->ElemCount;
@@ -322,8 +324,9 @@ namespace rczEngine
 
 	void GUIEditor::RenderEditor(RendererConfig * user)
 	{
-		NewFrame(m_gfx);
+		FPS = ImGui::GetIO().Framerate;
 
+		NewFrame(m_gfx);
 		{
 			ImGui::Text("PBR Config");
 
@@ -337,11 +340,12 @@ namespace rczEngine
 
 			ImGui::Checkbox("Wireframe", &user->Wireframe);
 
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / FPS, FPS);
 
 			ImGui::SliderInt("Correction Mode:", &ColorMode, 0, 3);
 			ImGui::SliderFloat("Exposure", &Exposure, 0.1f, 5.0f);
 		}
+
 
 		ImGui::Begin("Play Mode");
 		{
@@ -361,7 +365,12 @@ namespace rczEngine
 			m_GameObjectGUI.SetNewGameObject(m_SceneGraphGUI.m_ActiveGameObject);
 		m_GameObjectGUI.RenderWindow();
 		m_ResourcesGUI.RenderResources();
+		m_ConsoleGUI.RenderWindow();
 
+		for (auto it = m_Windows.begin(); it != m_Windows.end(); ++it)
+		{
+			it->second->RenderWindow();
+		}
 
 	}
 
@@ -478,12 +487,16 @@ namespace rczEngine
 
 
 		// Create the blending setup
-		m_BlendState.InitBlendState(true,
+		m_NormalBlendState.InitBlendState(false,
 			Gfx::BLEND_OP_ADD, Gfx::BLEND_OP_ADD, Gfx::BLEND_INV_SRC_ALPHA, Gfx::BLEND_ZERO, Gfx::BLEND_SRC_ALPHA, Gfx::BLEND_INV_SRC_ALPHA);
 
-		m_BlendState.CreateBlendState(gfx);
+		m_TextBlendState.InitBlendState(true,
+			Gfx::BLEND_OP_ADD, Gfx::BLEND_OP_ADD, Gfx::BLEND_INV_SRC_ALPHA, Gfx::BLEND_ZERO, Gfx::BLEND_SRC_ALPHA, Gfx::BLEND_INV_SRC_ALPHA);
 
-		g_pBlendState = m_BlendState.m_BlendState;
+		m_NormalBlendState.CreateBlendState(gfx);
+		m_TextBlendState.CreateBlendState(gfx);
+
+		g_pBlendState = m_NormalBlendState.m_BlendState;
 
 		// Create the rasterizer state
 		{

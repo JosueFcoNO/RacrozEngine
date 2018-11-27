@@ -5,22 +5,22 @@ namespace rczEngine
 	typedef List<EventSub*> EventSubscribers;
 	typedef UoMap<EVENT_TYPE, EventSubscribers> SubcriptionMap;
 
-	class RZ_UTILITY_EXPORT EventManager
+	class EventManager
 	{
 	private:
 		static EventManager*& _Instance();
 
 	public:
-		static void Start();
-		static EventManager* Pointer();
-		static void ShutDown();
+		RZ_EXP static void Start();
+		RZ_EXP static EventManager* Pointer();
+		RZ_EXP static void ShutDown();
 
-		void InitEventManager();
-		void CheckEvents();
-		void SubscribeToEvent(IEventHandler* subscriber, EVENT_TYPE eType, int32 parameterToSub);
-		void FlushKeyBuffer() { m_KeyBuffer.clear(); };
-		char* GetKeyBuffer() { return &m_KeyBuffer[0]; };
-		void SetKeyBuffer(char* str);
+		RZ_EXP void InitEventManager();
+		RZ_EXP void CheckEvents();
+		RZ_EXP void SubscribeToEvent(IEventHandler* subscriber, EVENT_TYPE eType, int32 parameterToSub);
+		RZ_EXP void FlushKeyBuffer() { m_KeyBuffer.clear(); };
+		RZ_EXP char* GetKeyBuffer() { return &m_KeyBuffer[0]; };
+		RZ_EXP void SetKeyBuffer(char* str);
 
 	private:
 		void AddNewKeySub(EVENT_TYPE eType, KeyCallback& f, int32 key);

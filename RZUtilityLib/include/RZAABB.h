@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT AABB
+	class RZ_EXP AABB
 	{
 	public:
 		AABB() : m_PointMax(INIT_NONE), m_PointMin(INIT_NONE)
@@ -11,7 +11,7 @@ namespace rczEngine
 			m_PointMax.Set(1,1,1);
 		};
 
-		void SetAABB(Vector3 min, Vector3 max);
+		void SetAABB(Vector3 minV, Vector3 maxV);
 		void SetAABB(float xMin, float yMin, float zMin, float xMax, float yMax, float zMax);
 
 		void SetAABBc(Vector3 center, Vector3 size);
@@ -21,6 +21,8 @@ namespace rczEngine
 		void Clear();
 
 		void TransformAndRecalculateAABB(Matrix3 newMatrix);
+
+		bool CheckPointCollision(const Vector3& point);
 
 		Vector3 GetCenter();
 		Vector3 GetSize();

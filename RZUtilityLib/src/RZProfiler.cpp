@@ -50,21 +50,21 @@ namespace rczEngine
 		
 		///Start the profiler Log
 		logger->StartLog(LoggerFile.c_str());
-		logger->LogMessage(LoggerFile.c_str(), "+++PROFILER LOG+++", Logger::e_ERROR);
+		logger->LogMessageToFileLog(LoggerFile.c_str(), "+++PROFILER LOG+++", log_ERROR);
 
 		///Log every Game Event
-		logger->LogMessage(LoggerFile.c_str(), "+Game Events+", Logger::e_ERROR);
+		logger->LogMessageToFileLog(LoggerFile.c_str(), "+Game Events+", log_ERROR);
 		for (auto it = m_GameEvents.begin(); it != m_GameEvents.end(); ++it)
 		{
-			logger->LogMessage(LoggerFile.c_str(), String("+Event: "+(it->first)));
+			logger->LogMessageToFileLog(LoggerFile.c_str(), String("+Event: "+(it->first)));
 			it->second.SaveResults(LoggerFile.c_str());
 		}
 
 		///Log every Gfx Event
-		logger->LogMessage(LoggerFile.c_str(), "+Gfx Events+", Logger::e_ERROR);
+		logger->LogMessageToFileLog(LoggerFile.c_str(), "+Gfx Events+", log_ERROR);
 		for (auto it = m_GfxEvents.begin(); it != m_GfxEvents.end(); ++it)
 		{
-			logger->LogMessage(LoggerFile.c_str(), String("+Event: " + (it->first)));
+			logger->LogMessageToFileLog(LoggerFile.c_str(), String("+Event: " + (it->first)));
 			it->second.SaveResults(LoggerFile.c_str());
 		}
 

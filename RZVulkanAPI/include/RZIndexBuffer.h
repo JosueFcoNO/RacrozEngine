@@ -6,7 +6,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT IndexBuffer : public BasicBuffer
+	class RZ_EXP IndexBuffer : public BasicBuffer
 	{
 	public:
 		bool CreateIndexBuffer(eBUFFER_USAGE usage, GfxCore* gfx);

@@ -58,7 +58,7 @@ namespace rczEngine
 		FbxString attrName = pAttribute->GetName();
 	}
 
-	StrPtr<Model> FbxLoader::LoadModel(const char * filePath)
+	StrPtr<Model> FbxLoader::LoadModel(const String& filePath)
 	{
 		m_Res = ResVault::Pointer();
 
@@ -70,7 +70,7 @@ namespace rczEngine
 		ResourceHandle handle = m_Res->InsertResource(model);
 
 		// Change the following filename to a suitable filename value.
-		const char* lFilename = filePath;
+		const String lFilename = filePath;
 
 		// Initialize the SDK manager. This object handles memory management.
 		m_Manager = FbxManager::Create();
@@ -83,9 +83,9 @@ namespace rczEngine
 		FbxImporter* lImporter = FbxImporter::Create(m_Manager, "");
 
 		// Use the first argument as the filename for the importer.
-		if (!lImporter->Initialize(lFilename, -1, m_Manager->GetIOSettings())) {
-			printf("Call to FbxImporter::Initialize() failed.\n");
-			printf("Error returned: %s\n\n", lImporter->GetStatus().GetErrorString());
+		if (!lImporter->Initialize(lFilename.c_str(), -1, m_Manager->GetIOSettings())) {
+			Logger::Pointer()->Log("Call to FbxImporter::Initialize() failed.\n");
+			Logger::Pointer()->Log("Error returned: " + String(lImporter->GetStatus().GetErrorString()));
 			exit(-1);
 		}
 
@@ -119,52 +119,42 @@ namespace rczEngine
 		return model;
 	}
 
-	bool FbxLoader::AddNodeMesh(FbxNode* pNode, const char* parent)
+	ResourceHandle FbxLoader::LoadMesh(fbxsdk::FbxNode * pNode, bool bones)
 	{
-		const char* nodeName = pNode->GetName();
-		FbxDouble3 translation = pNode->LclTranslation.Get();
-		FbxDouble3 rotation = pNode->LclRotation.Get();
-		FbxDouble3 scaling = pNode->LclScaling.Get();
-
-		Vector3 trans(translation.mData[0], translation.mData[1], translation.mData[2]);
-		Vector3 rot(rotation.mData[0], rotation.mData[1], rotation.mData[2]);
-		Vector3 scale(scaling.mData[0], scaling.mData[1], scaling.mData[2]);
-
-		WeakGameObjectPtr node;
-
-		if (!parent)
-		{
-			node = SceneManager::Pointer()->GetActiveScene()->
-				CreateActor(nodeName, NULL, trans, rot, scale);
-		}
-		else
-		{
-			auto scene = SceneManager::Pointer()->GetActiveScene();
-
-			auto ptrParent = scene->FindActor(parent);
-
-			node = scene->
-				CreateActor(nodeName, ptrParent.lock().get(), trans, rot, scale);
-		}
-
-		ResVault* res = ResVault::Pointer();
+		m_Res = ResVault::Pointer();
 		Gfx::GfxCore* gfx = Gfx::GfxCore::Pointer();
 
-		Model* modelo;
+		StrPtr<Model> model = std::make_shared<Model>();
+
+		model->SetFilePath(String(pNode->GetNameOnly()));
+
+		ResourceHandle handle = m_Res->InsertResource(model);
+
+		///Clear the index and vertex buffer's lists
+		model->m_IndexBuffer.ClearIndexList();
+		model->m_VertexBuffer.ClearVertexList();
+		model->m_VectorMeshes.clear();
+
+		///Set the VertexOffset, IndexOffset and IndexCount local variables to 0. These help creating the meshes and managing a single index and a single vertex buffer.
+		uint32 VertexOffset = 0;
+		uint32 IndexOffset = 0;
+		uint32 IndexCount = 0;
 
 		for (int i = 0; i < pNode->GetNodeAttributeCount(); i++)
 		{
-			FbxNodeAttribute* attribute = (pNode->GetNodeAttributeByIndex(i));
+			fbxsdk::FbxNodeAttribute* attribute = (pNode->GetNodeAttributeByIndex(i));
 
 			FbxString typeName = GetAttributeTypeName(attribute->GetAttributeType());
 
 			if (typeName == "mesh")
 			{
-				FbxMesh* mesh = (FbxMesh*)attribute;
+				fbxsdk::FbxMesh* mesh = (fbxsdk::FbxMesh*)attribute;
 
 				mesh->SplitPoints();
-
 				auto vertices = mesh->GetControlPoints();
+
+				fbxsdk::FbxGeometryConverter* conv = new fbxsdk::FbxGeometryConverter(m_Manager);
+				conv->ComputeEdgeSmoothingFromNormals(mesh);
 
 				fbxsdk::FbxLayerElementArrayTemplate<FbxVector4>* normals;
 				mesh->GetNormals(&normals);
@@ -178,9 +168,6 @@ namespace rczEngine
 				fbxsdk::FbxLayerElementArrayTemplate<FbxVector2>* texCoords;
 				mesh->GetTextureUV(&texCoords);
 
-				modelo = new Model;
-
-
 				Gfx::Vertex CurrentVertex;
 				for (int i = 0; i < mesh->GetControlPointsCount(); ++i)
 				{
@@ -189,14 +176,15 @@ namespace rczEngine
 					CurrentVertex.VertexPosition.m_z = float(vertices[i].mData[2]);
 
 					CurrentVertex.TextureCoordinates.m_x = float(texCoords[0][i].mData[0]);
-					CurrentVertex.TextureCoordinates.m_y = 1.0f-float(texCoords[0][i].mData[1]);
+					CurrentVertex.TextureCoordinates.m_y = 1.0f - float(texCoords[0][i].mData[1]);
 
 					if (!binormals || !tangents)
 					{
+
 						mesh->InitBinormals();
 						mesh->InitTangents();
 
-						mesh->GenerateNormals(false, true);
+						mesh->GenerateNormals(true, true, true);
 						mesh->GenerateTangentsDataForAllUVSets(true);
 
 						mesh->GetNormals(&normals);
@@ -220,17 +208,17 @@ namespace rczEngine
 					CurrentVertex.Tangents.Normalize();
 
 
-					modelo->m_VertexBuffer.AddVertex(CurrentVertex);
+					model->m_VertexBuffer.AddVertex(CurrentVertex);
 				}
 
 				int* CurrentIndex = mesh->GetPolygonVertices();
 				for (int32 k = 0; k < mesh->GetPolygonVertexCount(); ++k)
 				{
-					modelo->m_IndexBuffer.AddIndex(CurrentIndex[k]);
+					model->m_IndexBuffer.AddIndex(CurrentIndex[k]);
 				}
 
-				modelo->m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, false, gfx);
-				modelo->m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, gfx);
+				model->m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, false, gfx);
+				model->m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, gfx);
 
 				Mesh meshReal;
 				meshReal.m_Material = "mat";
@@ -239,21 +227,55 @@ namespace rczEngine
 				meshReal.m_MeshCore.m_IndexOffset = 0;
 				meshReal.m_MeshCore.m_VertexOffset = 0;
 
-				modelo->m_VectorMeshes.push_back(meshReal);
+				model->m_VectorMeshes.push_back(meshReal);
 
 				StrPtr<Material> mat = std::make_shared<Material>();
 				mat->InitMaterial(MAT_PBR_MetRough, gfx);
-				modelo->m_MaterialMap["mat"] = res->InsertResource(mat);
-
-				//node.lock()->AddComponent<ModelRenderer>().lock()->SetModel(res->InsertResource(modelo), res);
+				model->m_MaterialMap["mat"] = m_Res->InsertResource(mat);
 			}
-
-			return true;
 		}
 
+		return model->GetHandle();
+	}
+
+	bool FbxLoader::AddNodeMesh(fbxsdk::FbxNode* pNode, const String& parent = "")
+	{
+		const char* nodeName = pNode->GetName();
+		FbxDouble3 translation = pNode->LclTranslation.Get();
+		FbxDouble3 rotation = pNode->LclRotation.Get();
+		FbxDouble3 scaling = pNode->LclScaling.Get();
+
+		Vector3 trans(translation.mData[0], translation.mData[1], translation.mData[2]);
+		Vector3 rot(rotation.mData[0], rotation.mData[1], rotation.mData[2]);
+		Vector3 scale(scaling.mData[0], scaling.mData[1], scaling.mData[2]);
+
+		WeakGameObjPtr node;
+
+		if (parent == "")
+		{
+			node = SceneManager::Pointer()->GetActiveScene()->
+				CreateActor(nodeName, NULL, trans, rot, scale);
+		}
+		else
+		{
+			auto scene = SceneManager::Pointer()->GetActiveScene();
+
+			auto ptrParent = scene->FindActor(parent);
+			if (ptrParent.expired())
+			{
+				node = scene->CreateActor(nodeName, ptrParent.lock().get(), trans, rot, scale);
+			}
+		}
+
+		
+		ResourceHandle handle = LoadMesh(pNode, false);
+		SceneManager::Pointer()->GetActiveScene()->CreateComponent(CMP_MODEL_RENDERER, node.lock());
+		node.lock()->GetComponent<ModelRenderer>(CMP_MODEL_RENDERER).lock()->SetModel(handle, m_Res);
 
 		// Recursively print the children.
 		for (int j = 0; j < pNode->GetChildCount(); j++)
 			AddNodeMesh(pNode->GetChild(j), nodeName);
+
+		return true;
 	}
 }

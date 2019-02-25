@@ -7,8 +7,8 @@ namespace rczEngine
 	{
 		PixelShader::PixelShader()
 		{
-			m_PixelShader = NULL;
-			m_ShaderBlob = NULL;
+			m_PixelShader = nullptr;
+			m_ShaderBlob = nullptr;
 		}
 
 		PixelShader::~PixelShader()
@@ -23,7 +23,7 @@ namespace rczEngine
 
 		void PixelShader::SetThisPixelShader(GfxCore* gfx)
 		{
-			if (m_PixelShader == NULL || m_ShaderBlob == NULL)
+			if (m_PixelShader == nullptr || m_ShaderBlob == nullptr)
 				return;
 
 			gfx->SetPixelShader(*this);

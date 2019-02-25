@@ -7,9 +7,9 @@ namespace rczEngine
 		class RZ_EXP SamplerState
 		{
 		public:
-			SamplerState() : m_BorderColor(INIT_ZERO)
+			SamplerState() : m_BorderColor(eInit::Zero)
 			{
-				m_SamplerState = NULL;
+				m_SamplerState = nullptr;
 			};
 
 			~SamplerState()
@@ -35,10 +35,10 @@ namespace rczEngine
 				float minLOD = -FLT_MAX,
 				float mipLODBias = 0);
 
-			bool CreateSamplerState(GfxCore* gfx = NULL);
-			void PSSetThisSamplerState(uint32 startSlot, uint32 NumView, GfxCore* gfx = NULL);
-			void HSSetThisSamplerState(uint32 startSlot, uint32 NumView, GfxCore* gfx = NULL);
-			void DSSetThisSamplerState(uint32 startSlot, uint32 NumView, GfxCore* gfx = NULL);
+			bool CreateSamplerState(GfxCore* gfx = nullptr);
+			void PSSetThisSamplerState(uint32 startSlot, uint32 NumView, GfxCore* gfx = nullptr);
+			void HSSetThisSamplerState(uint32 startSlot, uint32 NumView, GfxCore* gfx = nullptr);
+			void DSSetThisSamplerState(uint32 startSlot, uint32 NumView, GfxCore* gfx = nullptr);
 
 			ID3D11SamplerState* m_SamplerState;
 

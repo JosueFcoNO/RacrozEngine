@@ -25,7 +25,7 @@ namespace rczEngine
 					
 				///If there is one, cut from the last index to the new index.
 					TempVectorString.push_back(stringToParse.substr(LastIndex, stringToParse.find(Separator, LastIndex)-LastIndex));
-					BasicString<Char> T = TempVectorString[TempVectorString.size()-1];
+					BasicString<Char> T = gsl::at(TempVectorString, TempVectorString.size() - 1);
 
 					///While Repeat
 					if (TempStringIndex == String::npos)

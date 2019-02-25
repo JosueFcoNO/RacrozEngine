@@ -8,8 +8,8 @@ namespace rczEngine
 		CubeMap() { m_Type = ResourceType::RES_CUBEMAP; };
 		virtual ~CubeMap() {};
 
-		void LoadCubeMapFromDDS(const char* filePath, const char* resName);
-		void LoadCubeMapFrom6Images(char* front, char* back, char* left, char* right, char* top, char* down, char* resName);
+		void LoadCubeMapFromDDS(const String& filePath, const String& resName);
+		void LoadCubeMapFrom6Images(const String& front, const String& back, const String& left, const String& right, const String& top, const String& down, const String& resName);
 
 #ifndef RZ_EDITOR
 		virtual void RenderResourceGUI()

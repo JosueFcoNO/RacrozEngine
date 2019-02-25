@@ -38,7 +38,7 @@ namespace rczEngine
 #endif
 			m_PlatformData = platform;
 
-			CreateDevice(width, height, 2, 60, 1, 0, isWindowed);
+			CreateDevice(width, height, 2, 144, 1, 0, isWindowed);
 			GetBackBufferInterface();
 			SetRenderTargetViewAndDepthStencil();
 			SetViewPortDefault();
@@ -87,8 +87,8 @@ namespace rczEngine
 			SwapChainDesc.Flags = 0;
 
 			///Create the device and context. If succeful return true, else return false.
-			return D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE, NULL, D3D11_CREATE_DEVICE_DEBUG, 
-				NULL, 0, D3D11_SDK_VERSION, &SwapChainDesc, &m_SwapChain, &m_Device, NULL, &m_DeviceContext) == S_OK;
+			return D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_DEBUG, 
+				nullptr, 0, D3D11_SDK_VERSION, &SwapChainDesc, &m_SwapChain, &m_Device, nullptr, &m_DeviceContext) == S_OK;
 		}
 
 		bool GfxCore::CreateDeviceContext()
@@ -124,7 +124,7 @@ namespace rczEngine
 			BackBufferDesc.SampleDesc.Quality = 0;
 
 			///Create a Texture2D into BackBuffer
-			m_Device->CreateTexture2D(&BackBufferDesc, NULL, &m_BackBuffer);
+			m_Device->CreateTexture2D(&BackBufferDesc, nullptr, &m_BackBuffer);
 
 			///Get the BackBuffer from the swapchain and into the Texture
 			m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_BackBuffer);
@@ -137,7 +137,7 @@ namespace rczEngine
 #endif
 
 			///Create the RenderTargetView from the backbufffer
-			m_Device->CreateRenderTargetView(m_BackBuffer, NULL, &m_RenderTargetView[0]);
+			m_Device->CreateRenderTargetView(m_BackBuffer, nullptr, &m_RenderTargetView[0]);
 
 			///Copy the descriptor from the back buffer
 			D3D11_TEXTURE2D_DESC DepthStencilDesc;
@@ -148,7 +148,7 @@ namespace rczEngine
 			DepthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 			///Create the resource and save it in m_DepthStencil
-			m_Device->CreateTexture2D(&DepthStencilDesc, NULL, &m_DepthStencil);
+			m_Device->CreateTexture2D(&DepthStencilDesc, nullptr, &m_DepthStencil);
 
 			D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
 			ZeroMemory(&descDSV, sizeof(descDSV));
@@ -285,7 +285,7 @@ namespace rczEngine
 			TexDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 			///Create the resource and save it in m_DepthStencil
-			m_Device->CreateTexture2D(&TexDesc, NULL, &out_depthStencyl.GetTexture()->m_Texture);
+			m_Device->CreateTexture2D(&TexDesc, nullptr, &out_depthStencyl.GetTexture()->m_Texture);
 
 			D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
 			ZeroMemory(&descDSV, sizeof(descDSV));
@@ -307,7 +307,7 @@ namespace rczEngine
 			m_DeviceContext->IASetInputLayout(iLayout.m_InputLayout);
 		}
 
-		bool GfxCore::CreateRenderTarget(RenderTarget & out_renderTarget, const char* name, bool drawToBackBuffer, int mipMaps, int32 width, int32 height, eFORMAT format, eBUFFER_USAGE usage, eCPU_ACCESS_FLAGS cpu_access, int32 sample_count, int32 sample_quality)
+		bool GfxCore::CreateRenderTarget(RenderTarget & out_renderTarget, const String& name, bool drawToBackBuffer, int mipMaps, int32 width, int32 height, eFORMAT format, eBUFFER_USAGE usage, eCPU_ACCESS_FLAGS cpu_access, int32 sample_count, int32 sample_quality)
 		{
 #ifdef LOGGING
 			Logger::Pointer()->LogMessageToFileLog("Gfx", String( "Creating Render Target.") + name);
@@ -359,7 +359,7 @@ namespace rczEngine
 			}
 
 			///Create a Texture2D into the Texture in the Render Target
-			hr = m_Device->CreateTexture2D(&TexDesc, NULL, &out_renderTarget.GetTextureCore()->m_Texture);
+			hr = m_Device->CreateTexture2D(&TexDesc, nullptr, &out_renderTarget.GetTextureCore()->m_Texture);
 
 			if (hr != S_OK)
 			{
@@ -386,7 +386,7 @@ namespace rczEngine
 			}
 
 			///Create the RenderTargetView from the backbufffer
-			hr = m_Device->CreateRenderTargetView(out_renderTarget.GetTextureCore()->m_Texture, NULL, &out_renderTarget.GetRenderTargetView()->m_RenderTargetView);
+			hr = m_Device->CreateRenderTargetView(out_renderTarget.GetTextureCore()->m_Texture, nullptr, &out_renderTarget.GetRenderTargetView()->m_RenderTargetView);
 
 			return S_OK(hr);
 		}
@@ -405,7 +405,7 @@ namespace rczEngine
 			if (UseDepthStencyl)
 				m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, m_DepthStencilView);
 			else
-				m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, NULL);
+				m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, nullptr);
 
 			return true;
 		}
@@ -413,7 +413,7 @@ namespace rczEngine
 		void GfxCore::UnbindRenderTargets()
 		{
 			ID3D11RenderTargetView *pSRV[1] = { nullptr };
-			m_DeviceContext->OMSetRenderTargets(1, pSRV, NULL);
+			m_DeviceContext->OMSetRenderTargets(1, pSRV, nullptr);
 		}
 
 		void GfxCore::SetNumberOfRenderTargets(int32 numberRenderTargets)
@@ -436,7 +436,7 @@ namespace rczEngine
 		{
 			if (buffer->m_Usage == USAGE_DEFAULT)
 			{
-				m_DeviceContext->UpdateSubresource(buffer->m_Buffer, 0, NULL, ptrToData, pitch, slice);
+				m_DeviceContext->UpdateSubresource(buffer->m_Buffer, 0, nullptr, ptrToData, pitch, slice);
 			}
 			else if (buffer->m_Usage == USAGE_DYNAMIC)
 			{
@@ -648,7 +648,7 @@ namespace rczEngine
 
 		void GfxCore::RemoveHullShader()
 		{
-			m_DeviceContext->HSSetShader(NULL, 0, 0);
+			m_DeviceContext->HSSetShader(nullptr, 0, 0);
 
 			SetPrimitiveTopology(eTOPOLOGY::TOPO_TRIANGLELIST);
 		}
@@ -714,7 +714,7 @@ namespace rczEngine
 
 		void GfxCore::RemoveDomainShader()
 		{
-			m_DeviceContext->DSSetShader(NULL, 0, 0);
+			m_DeviceContext->DSSetShader(nullptr, 0, 0);
 		}
 
 		void GfxCore::SetDSShaderResource(uint32 startSlot, uint32 NumView, ShaderResource* shaderResource)
@@ -778,7 +778,7 @@ namespace rczEngine
 
 		void GfxCore::ClearGeometryShader()
 		{
-			m_DeviceContext->GSSetShader(NULL, 0, 0);
+			m_DeviceContext->GSSetShader(nullptr, 0, 0);
 		}
 
 #pragma endregion
@@ -853,13 +853,13 @@ namespace rczEngine
 
 		bool GfxCore::SetBlendState(const BlendState & blendState)
 		{
-			m_DeviceContext->OMSetBlendState(blendState.m_BlendState, NULL, 0xffffffff);
+			m_DeviceContext->OMSetBlendState(blendState.m_BlendState, nullptr, 0xffffffff);
 			return true;
 		}
 
 		void GfxCore::SetBlendStateDefault()
 		{
-			m_DeviceContext->OMSetBlendState(NULL, NULL, 0xffffffff);
+			m_DeviceContext->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 		}
 
 #pragma endregion
@@ -893,7 +893,7 @@ namespace rczEngine
 			return S_OK(hr);
 		}
 
-		bool GfxCore::CompileShader(Shader & out_ShaderObj, const UNICHAR * pszShaderFile, const char * version, const char * entryPoint)
+		bool GfxCore::CompileShader(Shader & out_ShaderObj, const UNICHAR * pszShaderFile, const String& version, const String& entryPoint)
 		{
 			ID3D10Blob* errorBuffer = 0;
 			HRESULT result;
@@ -923,7 +923,7 @@ namespace rczEngine
 		bool GfxCore::ReflectShader(InputLayout & out_InputLayout, Shader & shaderToReflect)
 		{
 			///Reflect the shader using its stored blob
-			ID3D11ShaderReflection* Reflection = NULL;
+			ID3D11ShaderReflection* Reflection = nullptr;
 			HRESULT result;
 			result = D3DReflect(shaderToReflect.m_ShaderBlob->GetBufferPointer(), shaderToReflect.m_ShaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&Reflection);
 
@@ -980,7 +980,7 @@ namespace rczEngine
 
 			HRESULT hr;
 
-			if (arrayOfElements != NULL)
+			if (arrayOfElements != nullptr)
 			{
 				D3D11_SUBRESOURCE_DATA BufferData;
 				ZeroMemory(&BufferData, sizeof(BufferData));
@@ -992,7 +992,7 @@ namespace rczEngine
 			}
 			else
 			{
-				hr = m_Device->CreateBuffer(&BufferDesc, NULL, &out_Buffer.m_Buffer);
+				hr = m_Device->CreateBuffer(&BufferDesc, nullptr, &out_Buffer.m_Buffer);
 			}
 
 			if (!FAILED(hr))
@@ -1040,8 +1040,8 @@ namespace rczEngine
 		{
 			//Create the new Staging buffer.
 			Gfx::BasicBuffer tempBuffer;
-			tempBuffer.Create(buffer.m_SizeOfElement, buffer.m_NumOfElements, NULL, 
-				buffer.m_ElementsPitch, buffer.m_ElementSlice, USAGE_STAGING, (eBIND_FLAGS)NULL, this);
+			tempBuffer.Create(buffer.m_SizeOfElement, buffer.m_NumOfElements, nullptr, 
+				buffer.m_ElementsPitch, buffer.m_ElementSlice, USAGE_STAGING, (eBIND_FLAGS)0, this);
 
 			//Copy the resource.
 			m_DeviceContext->CopyResource(tempBuffer.m_Buffer, buffer.m_Buffer);
@@ -1072,7 +1072,7 @@ namespace rczEngine
 
 			D3D11_SUBRESOURCE_DATA SubData;
 			ZeroMemory(&SubData, sizeof(SubData));
-			SubData.pSysMem = NULL;
+			SubData.pSysMem = nullptr;
 			SubData.SysMemPitch = texture.m_TextureBytePitch;
 			SubData.SysMemSlicePitch = 1;
 
@@ -1084,7 +1084,7 @@ namespace rczEngine
 			D3D11_TEXTURE2D_DESC Descriptor;
 			ZeroMemory(&Descriptor, sizeof(Descriptor));
 			Descriptor.ArraySize = 1;
-			Descriptor.BindFlags = NULL;
+			Descriptor.BindFlags = 0;
 			Descriptor.CPUAccessFlags = CPU_READ;
 			Descriptor.Format = (DXGI_FORMAT)texture.m_Format;
 			Descriptor.Height = texture.m_Height;
@@ -1094,7 +1094,7 @@ namespace rczEngine
 			Descriptor.SampleDesc = SamplerDesc;
 			Descriptor.MiscFlags = 0;
 
-			HRESULT result = m_Device->CreateTexture2D(&Descriptor, NULL, &tempCore.m_Texture);
+			HRESULT result = m_Device->CreateTexture2D(&Descriptor, nullptr, &tempCore.m_Texture);
 
 			//Copy the resource.
 			m_DeviceContext->CopyResource(tempCore.m_Texture, texture.m_Texture);
@@ -1123,20 +1123,20 @@ namespace rczEngine
 
 #pragma region =	| Texture Functions |
 
-		bool GfxCore::CreateTextureFromFile(const char * pszFilePath, TextureCore2D & out_Texture, eBUFFER_USAGE usage, eBIND_FLAGS bind_flags, eCPU_ACCESS_FLAGS cpu_access_flags)
+		bool GfxCore::CreateTextureFromFile(const String& pszFilePath, TextureCore2D & out_Texture, eBUFFER_USAGE usage, eBIND_FLAGS bind_flags, eCPU_ACCESS_FLAGS cpu_access_flags)
 		{
 			// Basic usage (see HDR discussion below for HDR usage):
 			//    int x,y,n;
 			//    unsigned char *data = stbi_load(filename, &x, &y, &n, 0);
-			//    // ... process data if not NULL ...
+			//    // ... process data if not nullptr ...
 			//    // ... x = width, y = height, n = # 8-bit components per pixel ...
 			//    // ... replace '0' with '1'..'4' to force that many components per pixel
 			//    // ... but 'n' will always be the number that it would have been if you said 0
 			//    stbi_image_free(data)
 			int Width, Height, OriginalNumComponents;
-			UCHAR* Data = stbi_load(pszFilePath, &Width, &Height, &OriginalNumComponents, 4);
+			UCHAR* Data = stbi_load(pszFilePath.c_str(), &Width, &Height, &OriginalNumComponents, 4);
 
-			if (Data == NULL)
+			if (Data == nullptr)
 			{
 				return false;
 			}
@@ -1173,7 +1173,7 @@ namespace rczEngine
 			out_Texture.m_BindFlags = (Gfx::eBIND_FLAGS)Descriptor.BindFlags;
 			out_Texture.m_AccessFlags = cpu_access_flags;
 
-			HRESULT result = m_Device->CreateTexture2D(&Descriptor, NULL, &out_Texture.m_Texture);
+			HRESULT result = m_Device->CreateTexture2D(&Descriptor, nullptr, &out_Texture.m_Texture);
 
 			D3D11_BOX box;
 			box.left = 0;
@@ -1198,7 +1198,7 @@ namespace rczEngine
 			SRV.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 			SRV.Texture2D.MipLevels = 0;
 
-			result = m_Device->CreateShaderResourceView(out_Texture.m_Texture, NULL, &out_Texture.m_ShaderResource);
+			result = m_Device->CreateShaderResourceView(out_Texture.m_Texture, nullptr, &out_Texture.m_ShaderResource);
 			STBI_FREE(Data);
 			GenerateMipMaps(&out_Texture);
 
@@ -1283,7 +1283,7 @@ namespace rczEngine
 			out_Texture.m_BindFlags = (Gfx::eBIND_FLAGS)Descriptor.BindFlags;
 			out_Texture.m_AccessFlags = cpu_access_flags;
 
-			HRESULT result = m_Device->CreateTexture2D(&Descriptor, NULL, &out_Texture.m_Texture);
+			HRESULT result = m_Device->CreateTexture2D(&Descriptor, nullptr, &out_Texture.m_Texture);
 
 			D3D11_BOX box;
 			box.left = 0;
@@ -1308,7 +1308,7 @@ namespace rczEngine
 			SRV.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 			SRV.Texture2D.MipLevels = 0;
 
-			result = m_Device->CreateShaderResourceView(out_Texture.m_Texture, NULL, &out_Texture.m_ShaderResource);
+			result = m_Device->CreateShaderResourceView(out_Texture.m_Texture, nullptr, &out_Texture.m_ShaderResource);
 			GenerateMipMaps(&out_Texture);
 
 			return (S_OK(result));
@@ -1346,13 +1346,13 @@ namespace rczEngine
 			return S_OK(result);
 		}
 
-		bool GfxCore::CreateTexture3DFromFile(const char * pszFilePath1, const char * pszFilePath2, const char * pszFilePath3, const char * pszFilePath4, TextureCore3D & out_Texture, eBUFFER_USAGE usage, eBIND_FLAGS bind_flags, eCPU_ACCESS_FLAGS cpu_access_flags)
+		bool GfxCore::CreateTexture3DFromFile(const String& pszFilePath1, const String& pszFilePath2, const String& pszFilePath3, const String& pszFilePath4, TextureCore3D & out_Texture, eBUFFER_USAGE usage, eBIND_FLAGS bind_flags, eCPU_ACCESS_FLAGS cpu_access_flags)
 		{
 			int Width, Height, OriginalNumComponents;
-			UCHAR* Data1 = stbi_load(pszFilePath1, &Width, &Height, &OriginalNumComponents, 4);
-			UCHAR* Data2 = stbi_load(pszFilePath2, &Width, &Height, &OriginalNumComponents, 4);
-			UCHAR* Data3 = stbi_load(pszFilePath3, &Width, &Height, &OriginalNumComponents, 4);
-			UCHAR* Data4 = stbi_load(pszFilePath4, &Width, &Height, &OriginalNumComponents, 4);
+			UCHAR* Data1 = stbi_load(pszFilePath1.c_str(), &Width, &Height, &OriginalNumComponents, 4);
+			UCHAR* Data2 = stbi_load(pszFilePath2.c_str(), &Width, &Height, &OriginalNumComponents, 4);
+			UCHAR* Data3 = stbi_load(pszFilePath3.c_str(), &Width, &Height, &OriginalNumComponents, 4);
+			UCHAR* Data4 = stbi_load(pszFilePath4.c_str(), &Width, &Height, &OriginalNumComponents, 4);
 
 			UCHAR* Data = (UCHAR*)malloc(Width*Height * 4 * 4);
 
@@ -1392,7 +1392,7 @@ namespace rczEngine
 			Descriptor.Usage = (D3D11_USAGE)usage;
 			Descriptor.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
-			HRESULT result = m_Device->CreateTexture3D(&Descriptor, NULL, &out_Texture.m_Texture);
+			HRESULT result = m_Device->CreateTexture3D(&Descriptor, nullptr, &out_Texture.m_Texture);
 
 			D3D11_BOX box;
 			box.left = 0;
@@ -1417,7 +1417,7 @@ namespace rczEngine
 			SRV.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE3D;
 			SRV.Texture2D.MipLevels = 0;
 
-			result = m_Device->CreateShaderResourceView(out_Texture.m_Texture, NULL, &out_Texture.m_ShaderResource);
+			result = m_Device->CreateShaderResourceView(out_Texture.m_Texture, nullptr, &out_Texture.m_ShaderResource);
 
 			STBI_FREE(Data);
 			GenerateMipMaps(&out_Texture);
@@ -1470,7 +1470,7 @@ namespace rczEngine
 
 			Descriptor.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
-			result = m_Device->CreateTexture2D(&Descriptor, NULL, textures);
+			result = m_Device->CreateTexture2D(&Descriptor, nullptr, textures);
 
 			D3D11_SHADER_RESOURCE_VIEW_DESC SRV;
 			ZeroMemory(&SRV, sizeof(SRV));
@@ -1522,7 +1522,7 @@ namespace rczEngine
 
 			Descriptor.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
-			result = m_Device->CreateTexture2D(&Descriptor, NULL, &out_Cubemap.m_Texture);
+			result = m_Device->CreateTexture2D(&Descriptor, nullptr, &out_Cubemap.m_Texture);
 
 			D3D11_BOX box;
 			box.left = 0;
@@ -1561,12 +1561,11 @@ namespace rczEngine
 			return false;
 		}
 
-		bool GfxCore::CreateCubeMapFromDDS(const char* pszFilePath, TextureCore2D& out_Cubemap, eFORMAT format, eBUFFER_USAGE usage, eBIND_FLAGS bind_flags, eCPU_ACCESS_FLAGS cpu_access_flags)
+		bool GfxCore::CreateCubeMapFromDDS(const String& pszFilePath, TextureCore2D& out_Cubemap, eFORMAT format, eBUFFER_USAGE usage, eBIND_FLAGS bind_flags, eCPU_ACCESS_FLAGS cpu_access_flags)
 		{
-			wchar_t  ws[100];
-			swprintf(ws, 100, L"%hs", pszFilePath);
+			StringW str = TextTool::AnsiToUni(pszFilePath.c_str());
 
-			HRESULT hr = DirectX::CreateDDSTextureFromFile(m_Device, m_DeviceContext, ws, (ID3D11Resource**)&out_Cubemap.m_Texture, &out_Cubemap.m_ShaderResource);
+			HRESULT hr = DirectX::CreateDDSTextureFromFile(m_Device, m_DeviceContext, str.c_str(), (ID3D11Resource**)&out_Cubemap.m_Texture, &out_Cubemap.m_ShaderResource);
 
 			if (FAILED(hr))
 			{

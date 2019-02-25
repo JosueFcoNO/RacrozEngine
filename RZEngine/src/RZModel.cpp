@@ -2,10 +2,11 @@
 
 namespace rczEngine
 {
-	void Model::DrawModel(Gfx::GfxCore* gfx, void* res, Map<String, ResourceHandle>* materialOverride, MATERIAL_TYPE matType)
+	void Model::DrawModel(Map<String, ResourceHandle>* materialOverride, MATERIAL_TYPE matType)
 	{
 		//TODO: Pasarle el material override ya me hace sucio o no?
-		ResVault* Res = (ResVault*)res;
+		auto res = ResVault::Pointer();
+		auto gfx = Gfx::GfxCore::Pointer();
 
 		///Sets his own buffers
 		m_VertexBuffer.SetThisVertexBuffer(gfx, 0);
@@ -15,12 +16,12 @@ namespace rczEngine
 
 		for (int i = 0; i < m_VectorMeshes.size(); i++)
 		{
-			auto mat = Res->GetResource<Material>(materials->at(m_VectorMeshes[i].m_Material)).lock();
+			auto mat = res->GetResource<Material>(materials->at(m_VectorMeshes[i].m_Material)).lock();
 
 			if (mat->m_MatType == matType || matType == MAT_ANY)
 			{
 				if (mat->m_MatType != MAT_PLANET)
-					mat->SetThisMaterial(gfx, Res);
+					mat->SetThisMaterial(gfx, res);
 
 				m_VectorMeshes[i].Draw(gfx);
 			}
@@ -145,7 +146,7 @@ namespace rczEngine
 		}
 	}
 
-	void Model::Load(const char * fileName, const char* resName)
+	void Model::Load(const String& fileName, const String& resName)
 	{
 		ResVault* rsc = ResVault::Pointer();
 		Gfx::GfxCore* gfx = Gfx::GfxCore::Pointer();

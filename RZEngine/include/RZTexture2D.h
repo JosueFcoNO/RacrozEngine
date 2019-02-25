@@ -45,7 +45,7 @@ namespace rczEngine
 		}
 #endif
 
-		virtual void Load(const char* filePath, const char* resName);
+		virtual void Load(const String& filePath, const String& resName);
 		virtual void Release() 
 		{ 
 			if (m_TextureCore.m_ShaderResource)

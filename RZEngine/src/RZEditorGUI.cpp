@@ -338,7 +338,7 @@ namespace rczEngine
 			ImGui::SliderInt("G", &user->G, 0, 1);
 			ImGui::SliderInt("B", &user->B, 0, 1);
 
-			ImGui::Checkbox("Wireframe", &user->Wireframe);
+			ImGui::Checkbox("Wireframe", &Wireframe);
 
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / FPS, FPS);
 
@@ -365,7 +365,7 @@ namespace rczEngine
 			m_GameObjectGUI.SetNewGameObject(m_SceneGraphGUI.m_ActiveGameObject);
 		m_GameObjectGUI.RenderWindow();
 		m_ResourcesGUI.RenderResources();
-		m_ConsoleGUI.RenderWindow();
+		//m_ConsoleGUI.RenderWindow();
 
 		for (auto it = m_Windows.begin(); it != m_Windows.end(); ++it)
 		{

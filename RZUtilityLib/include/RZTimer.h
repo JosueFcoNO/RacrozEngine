@@ -2,12 +2,16 @@
 
 namespace rczEngine
 {
+	///A high res timer class.
 	class RZ_EXP Timer
 	{
 	public:
-		void StartTimer();
-		double GetTime();
-		double GetFrameTime();
+		///Starts the timer.
+		void StartTimer() noexcept;
+		///Returns the time since the timer was started.
+		double GetTime() noexcept;
+		///Returns the time since the last GetFrameTime.
+		double GetFrameTime() noexcept;
 
 	private:
 		double m_CountsPerSecond = 0.0;

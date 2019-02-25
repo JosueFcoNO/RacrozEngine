@@ -79,6 +79,7 @@ namespace rczEngine
 		int ColorMode = 0;
 		float Exposure = 1.0f;
 		float FPS = 0.0f;
+		bool Wireframe = false;
 
 	private:
 		void CreateFontsTexture();

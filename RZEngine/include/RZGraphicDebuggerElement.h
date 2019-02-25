@@ -12,7 +12,7 @@ namespace rczEngine
 	class RZ_EXP GraphicDebuggerElement
 	{
 	public:
-		GraphicDebuggerElement() : m_Color(INIT_ZERO)
+		GraphicDebuggerElement() : m_Color(eInit::Zero)
 		{
 		};
 		~GraphicDebuggerElement()

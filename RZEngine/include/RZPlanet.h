@@ -7,7 +7,6 @@ namespace rczEngine
 
 	class RZ_EXP PlanetVertex
 	{
-	public:
 		Vector3 VertexPosition;
 		Vector2 TextureCoordinates;
 		Vector3 VertexNormals;
@@ -16,15 +15,44 @@ namespace rczEngine
 		int Gradient[4];
 	};
 
+	struct RZ_EXP PatchData
+	{
+		Vector<Gfx::Vertex> Vertices;
+		String VertexStartHash;
+		String VertexEndHash;
+		int DepthOfData;
+		bool First;
+	};
+
+	///Primero. Todos los bordes los registro como BorderData con los vertices, el lado y el depth del node.
+	//Segundo. Cuando subdivido le mando el hash del padre a los hijos, para que busquen colisiones con ese.
+	//Tercero. Si encuentro una colisión, checo mi Side y lo comparo con el registrado para saber en que orden tomar los elementos del vector.
+	//Cuarto. Si es del mismo depth nomás copio los vectores, si es un depth mayor, empiezo desde la mitad de los elementos y solamente agarro 1 de cada 2.
+	//Quinto. Ya que tengo todos los vertices setteados y listos, creo el vertex buffer y termino la generación.
+
+	//Problemas:
+	///Handle los nodos hermanos al mismo nivel. Yo digo que tambien se registren de una vez y el que llegue segundo se setee.
+	///Las normales averaged tal vez no funcionen. Yo digo que para las normales puedo hacer un average entre las dos normales, a ver como se ve. 
+	///O mucho más complicado, buscar la forma de rehacer el average tomando en cuenta ambos parches. 
+	///Idea: guardar en el parche la normal sumada para el avg sin la division  y solamente sumar las dos normales sumadas de los dos vertices, pero eso no cambiaría el node que ya está generado, tal vez mandar el updateresource es inevitable. 
+	///Solamente cambiaría los edges entonces puede estar bien.
+
+
 	class RZ_EXP Planet
 	{
 	public:
+		Planet* instance;
+		PlanetQuadTreeNode* ActiveQuadTree;
+
 		void InitPlanet(int32 seed, float x, float y, float z, SpaceManager* spaceMng);
 		void RenderPlanet(float scale);
 		void RenderPlanetWater(float scale);
 		void RenderAtmosphere(float scale);
 
 		void CreateMaterial();
+
+		void ProcessBorderData(String hash, PlanetQuadTreeNode* node, eSide side, String Start, String End);
+		const PatchData* GetPatchData(String hash);
 
 		FORCEINLINE Vector3 GetSpacePosition() { return m_SpacePosition; };
 
@@ -44,9 +72,12 @@ namespace rczEngine
 		int32 Seed = 0;
 		PerlinNoise3D noise;
 
+		MMap<float, PlanetQuadTreeNode*> m_NodeAdyacency;
+		Map<String, PatchData> m_PatchInfo;
+
 	private:
 		void LoadAndProcessModel();
-
+		
 		bool m_OnLand = false;
 
 		StrPtr<Model> m_Planet;

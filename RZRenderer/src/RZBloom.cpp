@@ -8,7 +8,7 @@ namespace rczEngine
 		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
 
 		m_BlurredBloomRT = RacrozRenderer::Pointer()->CreateRenderTargetAndTexture_XYScales("BlurredBloom", m_BlurredBloom, 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
-		AddTexture2D(m_BlurredBloom.get(), 1);
+		AddTexture2D(m_BlurredBloom, 1);
 
 		m_BloomPasses = 0;
 	}

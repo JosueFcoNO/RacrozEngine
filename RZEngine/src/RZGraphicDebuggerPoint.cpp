@@ -4,6 +4,6 @@ namespace rczEngine
 {
 	void DebuggerPoint::Render(Gfx::GfxCore * graphicsapi_instance)
 	{
-		ResVault::Pointer()->GetResource<Model>(NULL).lock()->DrawModel(graphicsapi_instance, ResVault::Pointer(), NULL);
+		ResVault::Pointer()->GetResource<Model>(0).lock()->DrawModel(NULL);
 	}
 }

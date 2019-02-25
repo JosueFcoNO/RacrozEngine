@@ -9,7 +9,8 @@ sampler Sampler_ : register(s0);
 
 cbuffer cbChangeEveryFrame : register(b2)
 {
-    matrix worldMatrix;
+	matrix worldMatrix;
+	matrix previousWorldMatrix;
 };
 
 struct Light
@@ -29,20 +30,40 @@ cbuffer cbLights : register(b3)
 
 cbuffer cbMaterial : register(b4)
 {
-	float4 DiffuseColor : packoffset(c0);
-    float4 AmbientColor : packoffset(c1);
-    float3 SpecularColor : packoffset(c2);
-    float SpecularStrength : packoffset(c2.w);
+	float3 g_Albedo;
+	float OverrideAlbedo;
+
+	float3 g_Specular;
+	float OverrideMetallicSpecular;
+
+	float3 g_Emmisive;
+	float OverriveEmmisive;
+
+	float g_RoughGloss;
+	float g_Metallic;
+	float g_Opacity;
+	float g_TesselationFactor;
+
+	float OverrideOpacity;
+	float AOStrength;
+	float tileX;
+	float tileY;
+
+	float OverrideNormal;
+	float OverrideRoughGloss;
+	float paddings[2];
 };
 
 cbuffer cbCamera : register(b5)
 {
-    float4 ViewPosition;
-    float4 ViewDirection;
-    float4 NearPlane;
-    float4 FarPlane;
-    matrix ViewMatrix;
-    matrix ProjectionMatrix;
+	float4 ViewPosition;
+	float4 ViewDirection;
+	float4 NearPlane;
+	float4 FarPlane;
+	matrix ViewMatrix;
+	matrix ProjectionMatrix;
+	matrix PreviousViewMatrix;
+	matrix PreviousProjectionMatrix;
 };
 
 struct VS_Input
@@ -54,6 +75,7 @@ struct VS_Input
 	float3 binormal : BINORMAL;
 };
 
+
 struct PS_Input
 {
 	float4 pos : SV_POSITION;
@@ -61,16 +83,21 @@ struct PS_Input
 	float3 normal : NORMAL;
 	float3x3 TBN : TEXCOORD1;
 	float3 wpos : POSITION1;
-    float depth : TEXCOORD5;
+	float depth : TEXCOORD5;
+	float4 prevPos : TEXCOORD4;
+	float4 newPos  : TEXCOORD6;
+
 };
 
 struct PS_OUTPUT
 {
-    float4 Color : COLOR0;
-    float4 Position : COLOR1;
-    float4 Normal : COLOR2;
-    float4 Emmisive : COLOR3;
-    float4 Specular : COLOR4;
+	float4 Color : COLOR0;
+	float4 Position : COLOR1;
+	float4 Normal : COLOR2;
+	float4 Emmisive : COLOR3;
+	float4 Velocity : COLOR4;
+	float4 Specular : COLOR5;
+
 };
 
 PS_Input VS_Main(VS_Input vertex)
@@ -128,9 +155,12 @@ PS_OUTPUT PS_Main(PS_Input frag) : SV_TARGET
     PS_OUTPUT output = (PS_OUTPUT) 0;
 
     float2 tex = frag.tex0;
+	tex.x *= tileX;
+	tex.y *= tileY;
 
     ///Set the color to the first output color
-    float3 albedo = AlbedoTexture.Sample(Sampler_, tex);
+	float3 albedo = AlbedoTexture.Sample(Sampler_, tex)  * (1.0f - OverrideAlbedo) +
+		g_Albedo * OverrideAlbedo;
 
     output.Specular = SpecularTexture.Sample(Sampler_, tex);
     output.Color.xyz = albedo.xyz;
@@ -142,11 +172,20 @@ PS_OUTPUT PS_Main(PS_Input frag) : SV_TARGET
     NormalFinal = normalize(2.0f * NormalFinal - 1.0f);
     NormalFinal = normalize(mul(NormalFinal, frag.TBN));
 
-    output.Normal = float4(Encode(NormalFinal), 0.0f, 1.0f - SmoothnessTexture.Sample(Sampler_, tex).x);
+	float smooth = SmoothnessTexture.Sample(Sampler_, tex).x * (1.0f - OverrideRoughGloss) +
+		g_RoughGloss * OverrideRoughGloss;
+
+    output.Normal = float4(Encode(NormalFinal), 0.0f, 1.0f - smooth);
 
     output.Position = float4(frag.wpos, frag.depth);
 
-    output.Emmisive = float4(EMTexture.Sample(Sampler_, tex));
+	output.Emmisive.xyz = EMTexture.Sample(Sampler_, tex).xyz * (1.0f - OverriveEmmisive) +
+		g_Emmisive * OverriveEmmisive;
+
+	float2 a = (frag.newPos.xy / frag.newPos.w) * 0.5f + 0.5f;
+	float2 b = (frag.prevPos.xy / frag.prevPos.w) * 0.5f + 0.5f;
+	output.Velocity.xy = (a - b);
+	output.Velocity.zw = float2(0.0f, 1.0f);
 
 	return output;
 }

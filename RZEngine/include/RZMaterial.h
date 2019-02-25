@@ -11,12 +11,13 @@ namespace rczEngine
 		MAT_PBR_MetRoughBlend,
 
 		MAT_PBR_SpecSmooth,
-		MAT_PBR_SpecSmoothAlpha,
+		MAT_PBR_SpecSmooth_Alpha,
 		MAT_PBR_SpecSmoothBlend,
 
-		MAT_DISNEY_PBR,
-		MAT_PBR_TESS,
-		MAT_PBR_TRANSPARENT,
+		MAT_PBR_MetRough_Tess,
+		MAT_PBR_MetRough_Trans,
+		MAT_PBR_SpecSmooth_Tess,
+		MAT_PBR_SpecSmooth_Trans,
 		MAT_PLANET,
 		MAT_ANY,
 		MAT_UI
@@ -69,7 +70,16 @@ namespace rczEngine
 
 		float OverrideNormal = 0.0f;
 		float OverrideRoughGloss = 0.0f;
-		float paddings[2];
+		float g_SpecularTint = 0.0f;
+		float g_SheenTint = 0.0f;
+
+		float g_Anisotropic = 0.0f;
+		float g_Sheen = 0.0f;
+		float g_ClearcoatGloss = 0.0f;
+		float g_Subsurface = 0.0f;
+
+		float g_Clearcoat = 0.0f;
+		float padding[3];
 	};
 
 	class RZ_EXP Material : public Resource
@@ -90,7 +100,7 @@ namespace rczEngine
 
 		void SetPlanetMaterial();
 
-		virtual void Load(const char* filePath, const char* resName);
+		virtual void Load(const String& filePath, const String& resName);
 		virtual void Release() { m_MaterialCB.Destroy(); };
 
 		virtual void Serialize();
@@ -102,19 +112,34 @@ namespace rczEngine
 		{
 			ImGui::Text("Material Resource");
 
-			if (ImGui::Button("Tess"))
-			{
-				m_MatType = MAT_PBR_TESS;
-			}
-
 			if (ImGui::Button("MetRough"))
 			{
 				m_MatType = MAT_PBR_MetRough;
 			}
-
+			ImGui::SameLine();
 			if (ImGui::Button("Transparent"))
 			{
-				m_MatType = MAT_PBR_TRANSPARENT;
+				m_MatType = MAT_PBR_MetRough_Trans;
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Tess"))
+			{
+				m_MatType = MAT_PBR_MetRough_Tess;
+			}
+
+			if (ImGui::Button("SpecGloss"))
+			{
+				m_MatType = MAT_PBR_SpecSmooth;
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Alpha"))
+			{
+				m_MatType = MAT_PBR_SpecSmooth_Alpha;
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Transparent"))
+			{
+				m_MatType = MAT_PBR_SpecSmooth_Trans;
 			}
 
 			auto ptrRes = ResVault::Pointer();
@@ -124,9 +149,7 @@ namespace rczEngine
 			/// ALBEDO ///
 
 			ResourceHandle Albedo;
-
 			(m_TextureAlbedo != INVALID_RESOURCE) ? Albedo = m_TextureAlbedo : Albedo = ptrRes->m_WhiteTex;
-			
 			if (ImGui::ImageButton(ptrRes->GetResource<Texture2D>(Albedo).lock().get()->m_TextureCore.m_ShaderResource,
 				texSize))
 			{
@@ -134,45 +157,37 @@ namespace rczEngine
 			}
 
 			/// NORMALS ///
+			ImGui::SameLine();
 
 			ResourceHandle Normals;
-
 			(m_TextureNormal != INVALID_RESOURCE) ? Normals = m_TextureNormal : Normals = ptrRes->m_NormalTex;
-			
-			ImGui::SameLine();
 			if (ImGui::ImageButton(ptrRes->GetResource<Texture2D>(Normals).lock().get()->m_TextureCore.m_ShaderResource,
 				texSize))
 			{
 				m_TextureNormal = LoadFile("Normals Texture", (m_Name + String("_Normals")).c_str(), ptrRes);
 			}
 			
-			if (m_MatType != MAT_PBR_SpecSmoothAlpha)
+			if (m_MatType != MAT_PBR_SpecSmooth_Alpha)
 			{
+				ImGui::SameLine();
 
 				/// ROUGHNESS ///
-
-				ResourceHandle Roughness;
-
-				(m_TextureRoughSmooth != INVALID_RESOURCE) ? Roughness = m_TextureRoughSmooth : Roughness = ptrRes->m_GreyTex;
-				
-				ImGui::SameLine();
-				if (ImGui::ImageButton(ptrRes->GetResource<Texture2D>(Roughness).lock().get()->m_TextureCore.m_ShaderResource,
+				ResourceHandle RoughGloss;
+				(m_TextureRoughSmooth != INVALID_RESOURCE) ? RoughGloss = m_TextureRoughSmooth : RoughGloss = ptrRes->m_GreyTex;
+				if (ImGui::ImageButton(ptrRes->GetResource<Texture2D>(RoughGloss).lock().get()->m_TextureCore.m_ShaderResource,
 					texSize))
 				{
-					m_TextureRoughSmooth = LoadFile("Roughness Texture", (m_Name + String("_Roughness")).c_str(), ptrRes);
+					m_TextureRoughSmooth = LoadFile("RoughGloss Texture", (m_Name + String("_Roughness")).c_str(), ptrRes);
 				}
 			}
 
 			/// METALNESS ///
-
-			ResourceHandle Metallic;
-
-			(m_TextureMetSpec != INVALID_RESOURCE) ? Metallic = m_TextureMetSpec : Metallic = ptrRes->m_BlackTex;
-
-			if (ImGui::ImageButton(ptrRes->GetResource<Texture2D>(Metallic).lock().get()->m_TextureCore.m_ShaderResource,
+			ResourceHandle MetSpec;
+			(m_TextureMetSpec != INVALID_RESOURCE) ? MetSpec = m_TextureMetSpec : MetSpec = ptrRes->m_BlackTex;
+			if (ImGui::ImageButton(ptrRes->GetResource<Texture2D>(MetSpec).lock().get()->m_TextureCore.m_ShaderResource,
 				texSize))
 			{
-				m_TextureMetSpec = LoadFile("Metallic Texture", (m_Name + String("_Metallic")).c_str(), ptrRes);
+				m_TextureMetSpec = LoadFile("MetSpec Texture", (m_Name + String("_Metallic")).c_str(), ptrRes);
 			}
 
 			/// AO ///
@@ -190,25 +205,21 @@ namespace rczEngine
 
 			/// EM ///
 
-			ResourceHandle Em;
-
-			(m_TextureEm != INVALID_RESOURCE) ? Em = m_TextureEm : Em = ptrRes->m_BlackTex;
-
 			ImGui::SameLine();
+
+			ResourceHandle Em;
+			(m_TextureEm != INVALID_RESOURCE) ? Em = m_TextureEm : Em = ptrRes->m_BlackTex;
 			if (ImGui::ImageButton(ptrRes->GetResource<Texture2D>(Em).lock().get()->m_TextureCore.m_ShaderResource,
 				texSize))
 			{
 				m_TextureEm = LoadFile("Em Texture", (m_Name + String("_EM")).c_str(), ptrRes);
 			}
 
-			if (m_MatType == MAT_PBR_TESS)
+			if (m_MatType == MAT_PBR_MetRough_Tess || m_MatType == MAT_PBR_SpecSmooth_Tess)
 			{
 				/// HEIGHT ///
-
 				ResourceHandle He;
-
 				(m_TextureH != INVALID_RESOURCE) ? He = m_TextureH : He = ptrRes->m_GreyTex;
-
 				if (ImGui::ImageButton(ptrRes->GetResource<Texture2D>(He).lock().get()->m_TextureCore.m_ShaderResource,
 					texSize))
 				{
@@ -216,14 +227,11 @@ namespace rczEngine
 				}
 			}
 
-			if (m_MatType == MAT_PBR_TRANSPARENT)
+			if (m_MatType == MAT_PBR_MetRough_Trans || m_MatType == MAT_PBR_SpecSmooth_Trans)
 			{
 				/// OPACITY ///
-
 				ResourceHandle O;
-
 				(m_TextureO != INVALID_RESOURCE) ? O = m_TextureO : O = ptrRes->m_WhiteTex;
-
 				if (ImGui::ImageButton(ptrRes->GetResource<Texture2D>(O).lock().get()->m_TextureCore.m_ShaderResource,
 					texSize))
 				{
@@ -234,28 +242,41 @@ namespace rczEngine
 			ImGui::ColorEdit3("Albedo", (float*)&m_core.g_Albedo);
 			ImGui::DragFloat("Override Albedo", &m_core.OverrideAlbedo, 0.05f, 0.0f, 1.0f);
 
-			if (m_MatType == MAT_PBR_MetRough || m_MatType == MAT_PBR_TESS)
-			{
-				ImGui::DragFloat("Roughness", &m_core.g_RoughGloss, 0.05f, 0.0f, 1.0f);
-				ImGui::DragFloat("Override Rough", &m_core.OverrideRoughGloss, 0.05f, 0.0f, 1.0f);
+			ImGui::DragFloat("Rough/Gloss", &m_core.g_RoughGloss, 0.05f, 0.0f, 1.0f);
+			ImGui::DragFloat("Override Rough/Gloss", &m_core.OverrideRoughGloss, 0.05f, 0.0f, 1.0f);
 
+			if (m_MatType == MAT_PBR_MetRough || 
+				m_MatType == MAT_PBR_MetRough_Tess || 
+				m_MatType == MAT_PBR_MetRough_Trans ||
+				m_MatType == MAT_PBR_MetRoughAlpha ||
+				m_MatType == MAT_PBR_MetRoughBlend)
+			{
 				ImGui::DragFloat("Metallic", &m_core.g_Metallic, 0.05f, 0.0f, 1.0f);
-				ImGui::DragFloat("Override Met", &m_core.OverrideMetallicSpecular, 0.05f, 0.0f, 1.0f);
+				ImGui::DragFloat("Override Metallic", &m_core.OverrideMetallicSpecular, 0.05f, 0.0f, 1.0f);
 			}
-			else if (m_MatType == MAT_PBR_SpecSmooth)
+			else 
+				if (m_MatType == MAT_PBR_SpecSmooth || 
+					m_MatType == MAT_PBR_SpecSmooth_Alpha ||
+					m_MatType == MAT_PBR_SpecSmooth_Tess ||
+					m_MatType == MAT_PBR_SpecSmooth_Trans ||
+					m_MatType == MAT_PBR_SpecSmoothBlend)
 			{
 				ImGui::ColorEdit3("Specular", (float*)&m_core.g_Specular);
 				ImGui::DragFloat("Override Spec", &m_core.OverrideMetallicSpecular, 0.05f, 0.0f, 1.0f);
-
-				ImGui::DragFloat("Glossiness", &m_core.g_RoughGloss, 0.05f, 0.0f, 1.0f);
-				ImGui::DragFloat("Override Gloss", &m_core.OverrideRoughGloss, 0.05f, 0.0f, 1.0f);
 			}
 
 			ImGui::ColorEdit3("Emmisive", (float*)&m_core.g_Emmisive);
 			ImGui::DragFloat("Override Emmisive", &m_core.OverriveEmmisive, 0.05f, 0.0f, 1.0f);
 			
 			ImGui::DragFloat("Opacity", &m_core.g_Opacity, 0.05f, 0.0f, 1.0f);
-			ImGui::DragFloat("Normal Strength", &m_core.OverrideNormal, 0.05f, 0.0f, 1.0f);
+			//ImGui::DragFloat("Normal Strength", &m_core.OverrideNormal, 0.05f, 0.0f, 1.0f);
+			//ImGui::DragFloat("SpecularTint", &m_core.g_SpecularTint, 0.05f, 0.0f, 1.0f);
+			//ImGui::DragFloat("SheenTint", &m_core.g_SheenTint, 0.05f, 0.0f, 1.0f);
+			//ImGui::DragFloat("Anisotropic", &m_core.g_Anisotropic, 0.05f, 0.0f, 1.0f);
+			//ImGui::DragFloat("Sheen", &m_core.g_Sheen, 0.05f, 0.0f, 1.0f);
+			//ImGui::DragFloat("ClearCoatGloss", &m_core.g_ClearcoatGloss, 0.05f, 0.0f, 1.0f);
+			//ImGui::DragFloat("Subsurface", &m_core.g_Subsurface, 0.05f, 0.0f, 1.0f);
+			//ImGui::DragFloat("Clearcoat", &m_core.g_Clearcoat, 0.05f, 0.0f, 1.0f);
 
 			ImGui::DragFloat("AO Strength", &m_core.AOStrength, 0.05f, 0.0f, 1.0f);
 

@@ -17,9 +17,9 @@ namespace rczEngine
 		FORCEINLINE void SetThisTextureInPS(int startSlot, int NumView, Gfx::GfxCore* gfx);
 		FORCEINLINE void SetThisTextureInVS(int startSlot, int NumView, Gfx::GfxCore* gfx);
 
-		void LoadTexture3D(char* filepath1, char* filepath2, char* filepath3, char* filepath4, char*resName, bool addToResourceManager = true);
+		void LoadTexture3D(const String& filepath1, const String& filepath2, const String& filepath3, const String& filepath4, const String& resName, bool addToResourceManager = true);
 
-		virtual void Load(const char* filePath, const char* resName) {};
+		virtual void Load(const String& filePath, const String& resName) {};
 		virtual void Release() { m_TextureCore.m_ShaderResource->Release(); m_TextureCore.m_Texture->Release(); };
 
 		virtual void Serialize();

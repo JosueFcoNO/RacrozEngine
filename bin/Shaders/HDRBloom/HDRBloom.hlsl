@@ -70,8 +70,11 @@ PS_Output PS_Main(PS_Input Input)
 
 	float scale = saturate(AvgLuminanceTex.SampleLevel(Sampler_, float2(0,0), 0.0f).r);
 	float3 L = scale.xxx * pow(Lw, 1.0f / 2.2f) + bloom;
+	//float3 L = scale.xxx * Lw + bloom;
 
-    psout.FinalColor = float4(pow(L.xyz, 2.2f), 1.0f);
+	//psout.FinalColor = float4(pow(L.xyz, 2.2f), 1.0f);
+	psout.FinalColor = float4(Lw.xyz + bloom, 1.0f);
+
     return psout;
 };
 

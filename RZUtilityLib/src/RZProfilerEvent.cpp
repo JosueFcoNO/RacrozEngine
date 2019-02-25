@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void ProfilerEvent::AddTimeEntry(double time)
+	void ProfilerEvent::AddTimeEntry(long double time) noexcept
 	{
 		///Add the time to the array.
 		m_EventTimeLine[m_CurrentEntry] = time;
@@ -15,16 +15,16 @@ namespace rczEngine
 		else if (time > m_LargestTime) m_LargestTime = time;
 
 		///Compute the new Average time using the new time entry.
-		m_AverageTime = (m_AverageTime + time) / 2.0f;
+		if (m_CurrentEntry > 1)
+			m_AverageTime = (m_AverageTime + time) / 2.0f;
+		else
+			m_AverageTime = time;
 	}
 
-	void ProfilerEvent::SaveResults(const char * loggerFile)
+	void ProfilerEvent::SaveResults(const String& loggerFile, Logger& logger) noexcept
 	{
-		auto logg = Logger::Pointer();
-
-		logg->LogMessageToFileLog(loggerFile, "Average Time: ", (float)m_AverageTime*1000.0f);
-
-		//logg->LogMessageToFileLog(loggerFile, "Largest Time: ", (float)m_LargestTime);
-		//logg->LogMessageToFileLog(loggerFile, "Shortest Time: ", (float)m_ShortestTime);
+		logger.LogMessageToFileLog(loggerFile, "Average Time: ", m_AverageTime * 10);
+		logger.LogMessageToFileLog(loggerFile, "Largest Time: ", m_LargestTime * 10);
+		logger.LogMessageToFileLog(loggerFile, "Shortest Time: ", m_ShortestTime * 10);
 	}
 };

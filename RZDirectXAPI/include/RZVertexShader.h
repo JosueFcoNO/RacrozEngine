@@ -8,12 +8,12 @@ namespace rczEngine
 		class RZ_EXP VertexShader : public Shader
 		{
 		public:
-			///Inits everything to NULL
+			///Inits everything to nullptr
 			VertexShader();
 			///Calls Destroy()
 			~VertexShader();
 			///Creates and compiles the vertex shader found in pszFileString
-			bool CreateVertexShader(const WCHAR* pszFileString, GfxCore* gfx = NULL);
+			bool CreateVertexShader(const WCHAR* pszFileString, GfxCore* gfx = nullptr);
 			///Releases data
 			void Destroy();
 			///Set This Vertex Shader In The Input Assembly

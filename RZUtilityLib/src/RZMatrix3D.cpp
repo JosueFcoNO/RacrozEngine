@@ -8,47 +8,44 @@ namespace rczEngine
 	////// Matrix 3D
 	///////////////////////
 
-	const Matrix3 Matrix3::IDENTITY(Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 1));
-	const Matrix3 Matrix3::ZERO(INIT_ZERO);
-
-	Matrix3::Matrix3(eINIT init)
+	Matrix3::Matrix3(eInit init) noexcept
 	{
-		if (init == INIT_NONE)
+		if (init == eInit::None)
 		{
 			return;
 		}
 		else
-			if (init == INIT_UNIT)
+			if (init == eInit::Unit)
 			{
-				*this = IDENTITY;
+				*this = IDENTITY();
 			}
 			else
 			{
-				*this = ZERO;
+				*this = ZERO();
 			}
 	}
 
-	Matrix3::Matrix3(const Matrix4 & m4)
+	Matrix3::Matrix3(const Matrix4 & m4) noexcept
 	{
 		m_rows[0] = Vector3(m4.m_rows[0]);
 		m_rows[1] = Vector3(m4.m_rows[1]);
 		m_rows[2] = Vector3(m4.m_rows[2]);
 	}
 
-	Matrix3::Matrix3(const Vector3& top, const Vector3& mid, const Vector3& bottom)
+	Matrix3::Matrix3(const Vector3& top, const Vector3& mid, const Vector3& bottom) noexcept
 	{
 		m_rows[0] = top;
 		m_rows[1] = mid;
 		m_rows[2] = bottom;
 	}
 
-	float Matrix3::CoFactor2x2(uint32 nRow, uint32 nCol) const
+	float Matrix3::CoFactor2x2(uint32 nRow, uint32 nCol) const noexcept
 	{
 		///Create a 4 float array that will store the 2x2 matrix linearly.
 		///Like So:
 		/// [ A11 A12 ]
 		/// [ A21 A22 ]
-		float TrimedMatrix[4];
+		float TrimedMatrix[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 		uint8 TrimedMatrixCounter = 0;
 
 		///Go through the matrix like Neo. 2 Nested Fors
@@ -78,7 +75,7 @@ namespace rczEngine
 		return TrimedMatrix[0] * TrimedMatrix[3] - TrimedMatrix[1] * TrimedMatrix[2];
 	}
 
-	void Matrix3::Transpose()
+	void Matrix3::Transpose() noexcept
 	{
 		///Transpose the matrix
 		Matrix3 R = *this;
@@ -88,7 +85,7 @@ namespace rczEngine
 				m_matrix[j][i] = R.m_matrix[i][j];
 	}
 
-	void Matrix3::Identity()
+	void Matrix3::Identity() noexcept
 	{
 		for (int i = 0; i < 9; i++)
 		{
@@ -100,7 +97,7 @@ namespace rczEngine
 		m_matrix[2][2] = 1.0f;
 	}
 
-	Matrix3 Matrix3::GetTransposed() const
+	Matrix3 Matrix3::GetTransposed() const noexcept
 	{
 		///Return a copy of *this tranposed
 		Matrix3 R = *this;
@@ -110,7 +107,7 @@ namespace rczEngine
 		return R;
 	}
 
-	float Matrix3::Determinant() const
+	float Matrix3::Determinant() const noexcept
 	{
 		///Calculate the Determinant
 		float Det = 0;
@@ -123,16 +120,16 @@ namespace rczEngine
 		return Det;
 	}
 
-	Matrix3 Matrix3::GetAdjoint() const
+	Matrix3 Matrix3::GetAdjoint() const noexcept
 	{
 		///Create an new matrix object
-		Matrix3 Adjoint(INIT_NONE);
+		Matrix3 Adjoint(eInit::None);
 
 		///Form the Adjoint with the cofactors of the matrix. Adjoint[i][J] = CoFactor(i,j)
 		for (uint32 i = 0; i < 3; i++)
 			for (uint32 j = 0; j < 3; j++)
 			{
-				Adjoint.m_matrix[i][j] = Math::Pow(-1, float(i + j))*CoFactor2x2(i, j);
+				Adjoint.m_matrix[i][j] = Math::Pow(-1, gsl::narrow_cast<float>(i + j))*CoFactor2x2(i, j);
 			}
 
 
@@ -140,15 +137,15 @@ namespace rczEngine
 		return Adjoint.GetTransposed();
 	}
 
-	Matrix3 Matrix3::GetInverse() const
+	Matrix3 Matrix3::GetInverse() const noexcept
 	{
 		///Get the determinant
-		float Det = Determinant();
+		const float Det = Determinant();
 
 		///If it is 0 then return zero matrix.
 		if (Det == 0)
 		{
-			return ZERO;
+			return ZERO();
 		}
 
 		///Get the adjoint
@@ -161,16 +158,16 @@ namespace rczEngine
 		return Adjoint;
 	}
 
-	Quaternion Matrix3::GetAsQuaternion()
+	Quaternion Matrix3::GetAsQuaternion() const noexcept
 	{
 		// Output quaternion
 		float w = 0.0f, x = 0.0f, y = 0.0f, z = 0.0f;
 
 		// Determine which of w, x, y, or z has the largest absolute value
-		float fourWSquaredMinus1 = m_elements.m00 + m_elements.m11 + m_elements.m22;
-		float fourXSquaredMinus1 = m_elements.m00 - m_elements.m11 - m_elements.m22;
-		float fourYSquaredMinus1 = m_elements.m11 - m_elements.m00 - m_elements.m22;
-		float fourZSquaredMinus1 = m_elements.m22 - m_elements.m00 - m_elements.m11;
+		const float fourWSquaredMinus1 = m_elements.m00 + m_elements.m11 + m_elements.m22;
+		const float fourXSquaredMinus1 = m_elements.m00 - m_elements.m11 - m_elements.m22;
+		const float fourYSquaredMinus1 = m_elements.m11 - m_elements.m00 - m_elements.m22;
+		const float fourZSquaredMinus1 = m_elements.m22 - m_elements.m00 - m_elements.m11;
 
 		int biggestIndex = 0;
 
@@ -190,8 +187,8 @@ namespace rczEngine
 		}
 
 		// Perform square root and division
-		float biggestVal = sqrt(fourBiggestSquaredMinus1 + 1.0f) * 0.5f;
-		float mult = 0.25f / biggestVal;
+		const float biggestVal = sqrt(fourBiggestSquaredMinus1 + 1.0f) * 0.5f;
+		const float mult = 0.25f / biggestVal;
 
 		// Apply table to compute quaternion values
 		switch (biggestIndex) {
@@ -227,7 +224,7 @@ namespace rczEngine
 	Matrix3 Matrix3::Translate2D(float xDelta, float yDelta)
 	{
 		///Create an Identity Matrix
-		Matrix3 Temp(INIT_UNIT);
+		Matrix3 Temp(eInit::Unit);
 
 		///Make it a Translation Matrix
 		/// [ 1 0 xDelta ]
@@ -243,7 +240,7 @@ namespace rczEngine
 	Matrix3 Matrix3::Scale2D(float xScale, float yScale)
 	{
 		///Create an Identity Matrix
-		Matrix3 Temp(INIT_UNIT);
+		Matrix3 Temp(eInit::Unit);
 
 		///Make it a Scale Matrix
 		/// [ xScale 0		0 ]
@@ -259,9 +256,9 @@ namespace rczEngine
 	Matrix3 Matrix3::Rotate2D(Degree deg)
 	{
 		///Create a 2D rotation Matrix
-		Matrix3 R(INIT_UNIT);
+		Matrix3 R(eInit::Unit);
 
-		float theta = deg.ValueRadian().Value();
+		const float theta = deg.ValueRadian().Value();
 
 		R.m_matrix[0][0] = R.m_matrix[1][1] = Math::Cos(theta);
 		R.m_matrix[0][1] = Math::Sin(theta);
@@ -273,7 +270,7 @@ namespace rczEngine
 	Matrix3 Matrix3::ShearX2D(float xShear)
 	{
 		///Create an Identity Matrix
-		Matrix3 Temp(INIT_UNIT);
+		Matrix3 Temp(eInit::Unit);
 
 		///Make it a X Shear Matrix
 		/// [ 1		0	xShear ]
@@ -288,7 +285,7 @@ namespace rczEngine
 	Matrix3 Matrix3::ShearY2D(float yShear)
 	{
 		///Create an Identity Matrix
-		Matrix3 Temp(INIT_UNIT);
+		Matrix3 Temp(eInit::Unit);
 
 		///Make it a Y Shear Matrix
 		/// [ 1		0	   0   ]
@@ -303,13 +300,13 @@ namespace rczEngine
 	Matrix3 Matrix3::Rotate3D(Degree xRotation, Degree yRotation, Degree zRotation)
 	{
 		///Create a 3D rotation Matrix using the rczAXIS given
-		Matrix3 x(INIT_UNIT), y(INIT_UNIT), z(INIT_UNIT), fin(INIT_UNIT);
+		Matrix3 x(eInit::Unit), y(eInit::Unit), z(eInit::Unit), fin(eInit::Unit);
 
-		float xtheta = xRotation.ValueRadian().Value();
-		float ytheta = yRotation.ValueRadian().Value();
-		float ztheta = zRotation.ValueRadian().Value();
+		const float xtheta = xRotation.ValueRadian().Value();
+		const float ytheta = yRotation.ValueRadian().Value();
+		const float ztheta = zRotation.ValueRadian().Value();
 
-		int LeftHand = -1;
+		const int LeftHand = -1;
 
 		if (xRotation != 0)
 		{
@@ -338,7 +335,7 @@ namespace rczEngine
 		return fin;
 	}
 
-	Matrix3 Matrix3::operator*(const float& scalar) const
+	Matrix3 Matrix3::operator*(const float& scalar) const noexcept
 	{
 		Matrix3 Temp = *this;
 
@@ -350,11 +347,11 @@ namespace rczEngine
 		return Temp;
 	}
 
-	Matrix3 Matrix3::operator* (const Matrix3& M) const
+	Matrix3 Matrix3::operator* (const Matrix3& M) const noexcept
 	{
-		Matrix3 Temp = M.GetTransposed();
-		Matrix3 This = *this;
-		Matrix3 TempReturn(INIT_NONE);
+		const Matrix3 Temp = M.GetTransposed();
+		const Matrix3 This = *this;
+		Matrix3 TempReturn(eInit::None);
 
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 3; j++)
@@ -365,21 +362,22 @@ namespace rczEngine
 		return TempReturn;
 	}
 
-	Vector3 Matrix3::operator* (const Vector3& V) const
+	Vector3 Matrix3::operator* (const Vector3& V) const noexcept
 	{
-		Matrix3 Temp = GetTransposed();
-		Vector3 NewVector(INIT_NONE);
+		Vector3 transformedVector(eInit::None);
 
-		NewVector.m_x = m_rows[0] | V;
-		NewVector.m_y = m_rows[1] | V;
-		NewVector.m_z = m_rows[2] | V;
+#pragma omp simd
+		for (int32 i = 0; i < 3; ++i)
+		{
+			transformedVector.m_elements[i] = m_rows[i] | V;
+		}
 
-		return NewVector;
+		return transformedVector;
 	}
 
-	Matrix3 Matrix3::operator+(const Matrix3 & M) const
+	Matrix3 Matrix3::operator+(const Matrix3 & M) const noexcept
 	{
-		Matrix3 sum(INIT_NONE);
+		Matrix3 sum(eInit::None);
 		sum.m_rows[0] = m_rows[0] + M.m_rows[0];
 		sum.m_rows[1] = m_rows[1] + M.m_rows[1];
 		sum.m_rows[2] = m_rows[2] + M.m_rows[2];
@@ -387,9 +385,9 @@ namespace rczEngine
 		return sum;
 	}
 
-	Matrix3 Matrix3::operator-(const Matrix3 & M) const
+	Matrix3 Matrix3::operator-(const Matrix3 & M) const noexcept
 	{
-		Matrix3 subs(INIT_NONE);
+		Matrix3 subs(eInit::None);
 		subs.m_rows[0] = m_rows[0] - M.m_rows[0];
 		subs.m_rows[1] = m_rows[1] - M.m_rows[1];
 		subs.m_rows[2] = m_rows[2] - M.m_rows[2];
@@ -397,7 +395,7 @@ namespace rczEngine
 		return subs;
 	}
 
-	void Matrix3::operator*=(const float& scalar)
+	void Matrix3::operator*=(const float& scalar) noexcept
 	{
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 3; j++)
@@ -407,14 +405,14 @@ namespace rczEngine
 
 	}
 
-	void Matrix3::operator*=(const Matrix3& M)
+	void Matrix3::operator*=(const Matrix3& M) noexcept
 	{
-		Matrix3 Temp = *this;
+		const Matrix3 Temp = *this;
 
 		*this = Temp*M;
 	}
 
-	Matrix3& Matrix3::operator+=(const Matrix3 & M)
+	Matrix3& Matrix3::operator+=(const Matrix3 & M) noexcept
 	{
 		m_rows[0] = m_rows[0] + M.m_rows[0];
 		m_rows[1] = m_rows[1] + M.m_rows[1];
@@ -423,7 +421,7 @@ namespace rczEngine
 		return *this;
 	}
 
-	Matrix3 & Matrix3::operator-=(const Matrix3 & M)
+	Matrix3 & Matrix3::operator-=(const Matrix3 & M) noexcept
 	{
 		m_rows[0] = m_rows[0] + M.m_rows[0];
 		m_rows[1] = m_rows[1] + M.m_rows[1];

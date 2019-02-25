@@ -9,50 +9,56 @@ namespace rczEngine {
 		////// Vector2 Constructors
 		///////////////////////
 
-		Vector2() {};
+		Vector2() noexcept {};
 
-		Vector2(eINIT init);
+		Vector2(eInit init) noexcept;
+		Vector2(const Vector2I& v2i) noexcept;
+		Vector2(const Vector3& v3) noexcept;
+		Vector2(const Vector4& v4) noexcept;
+		Vector2(float x, float y) noexcept : m_x(x), m_y(y) {};
 
-		Vector2(const Vector2I& v2i);
-		Vector2(const Vector3& v3);
-		Vector2(const Vector4& v4);
+		FORCEINLINE void Set(float x, float y) { m_x = x; m_y = y; }
+		FORCEINLINE void Scale(float scale) { *this *= scale; }
 
-		Vector2(float x, float y);
+		FORCEINLINE Vector2 operator+(const Vector2& v) const noexcept { return Vector2{ m_x, m_y } += v; }
+		FORCEINLINE Vector2 operator-(const Vector2& v) const noexcept { return Vector2{ m_x, m_y } -= v; }
+		FORCEINLINE Vector2 operator*(const Vector2& v) const noexcept { return Vector2{ m_x, m_y } *= v; }
+		FORCEINLINE Vector2 operator/(const Vector2& v) const noexcept { return Vector2{ m_x, m_y } /= v; }
+		
+		FORCEINLINE Vector2 operator*(const float& f) const noexcept { return Vector2{ m_x, m_y } *= f; }
+		FORCEINLINE Vector2 operator/(const float& f) const noexcept { return Vector2{ m_x, m_y } /= f; }
 
-		void Set(float x, float y);
-		void Scale(float Scale);
+		Vector2& operator+=(Vector2 v) noexcept;
+		Vector2& operator-=(Vector2 v) noexcept;
+		Vector2& operator*=(Vector2 v) noexcept;
+		Vector2& operator*=(float f) noexcept;
+		Vector2& operator/=(Vector2 v) noexcept;
+		Vector2& operator/=(float f) noexcept;
 
-		Vector2 operator+(const Vector2& v) const;
-		Vector2 operator-(const Vector2& v) const;
-		Vector2 operator*(const Vector2& v) const;
-		Vector2 operator*(const float& f) const;
-		Vector2 operator/(const Vector2& v) const;
-		Vector2 operator/(const float& f) const;
+		FORCEINLINE bool operator==(Vector2 v) noexcept { return !(m_x == v.m_x && m_y == v.m_y); }
+		FORCEINLINE bool operator!=(Vector2 v) noexcept { return (m_x == v.m_x && m_y == v.m_y); }
+		FORCEINLINE bool operator<(Vector2 v) noexcept { return (m_x < v.m_x && m_y < v.m_y); }
+		FORCEINLINE bool operator>(Vector2 v) noexcept { return (m_x > v.m_x && m_y > v.m_y); }
+		FORCEINLINE bool operator<=(Vector2 v) noexcept { return (m_x <= v.m_x && m_y <= v.m_y); }
+		FORCEINLINE bool operator>=(Vector2 v) noexcept { return (m_x >= v.m_x && m_y >= v.m_y); }
 
-		Vector2& operator+=(Vector2 v);
-		Vector2& operator-=(Vector2 v);
-		Vector2& operator*=(Vector2 v);
-		Vector2& operator*=(float f);
-		Vector2& operator/=(Vector2 v);
-		Vector2& operator/=(float f);
+		float operator|(Vector2 v) noexcept { return m_x * v.m_x + m_y * v.m_y; }
+		float operator^(Vector2 v) noexcept { return m_x * v.m_y - m_y * v.m_x; }
 
-		bool operator==(Vector2 v);
-		bool operator!=(Vector2 v);
-		bool operator<(Vector2 v);
-		bool operator>(Vector2 v);
-		bool operator<=(Vector2 v);
-		bool operator>=(Vector2 v);
-
-		float operator|(Vector2 v);
-		float operator^(Vector2 v);
-
-		void Normalize();
-		Vector2 GetNormalized();
+		void Normalize() noexcept;
+		Vector2 GetNormalized() noexcept;
 
 
-		float Magnitude();
+		float Magnitude() noexcept;
 
-		float m_x, m_y;
+		union
+		{
+			struct
+			{
+				float m_x, m_y;
+			};
+			float m_elements[2];
+		};
 	};
 
 }

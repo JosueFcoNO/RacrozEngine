@@ -15,7 +15,7 @@ namespace rczEngine
 			m_VectorElements.clear();
 		}
 
-		void InputLayout::AddElement(const char* SemanticName, uint32 SemanticIndex, eFORMAT Format, uint32 InputSlot, uint32 AlignedByteOffset, eINPUT_CLASSIFICATION InputSlotClass, uint32 InstanceDataStepRate)
+		void InputLayout::AddElement(const String& SemanticName, uint32 SemanticIndex, eFORMAT Format, uint32 InputSlot, uint32 AlignedByteOffset, eINPUT_CLASSIFICATION InputSlotClass, uint32 InstanceDataStepRate)
 		{
 			InputLayoutElement Temp;
 			Temp.SemanticName = SemanticName;

@@ -2,10 +2,11 @@
 
 namespace rczEngine
 {
-	StrPtr<Model> AssimpLoader::LoadModel(const char * filePath)
+	StrPtr<Model> AssimpLoader::LoadModel(const String& filePath)
 	{
 		m_Res = ResVault::Pointer();
-		Gfx::GfxCore* gfx = Gfx::GfxCore::Pointer();
+
+		m_FilePath = filePath;
 
 		StrPtr<Model> model = std::make_shared<Model>();
 		model->SetFilePath(filePath);
@@ -63,19 +64,21 @@ namespace rczEngine
 			m_Scene->mMaterials[CurrentMesh->mMaterialIndex]->Get(AI_MATKEY_NAME, matName);
 			TempMesh.m_Material = matName.C_Str();
 
-			///Insert the meshes in the this model's meshes vector
+			///Insert the meshes in this model's meshes vector
 			model->m_VectorMeshes.push_back(TempMesh);
 
 			AddVertices(model->m_VertexBuffer, CurrentMesh);
 			AddIndices(model->m_IndexBuffer, CurrentMesh);
 		}
 
+		Gfx::GfxCore* gfx = Gfx::GfxCore::Pointer();
 		model->m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, gfx);
 		model->m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, true, gfx);
+
 		return model;
 	}
 
-	bool AssimpLoader::LoadModelWithHierarchy(StrGameObjectPtr gameObject, const char * filePath)
+	bool AssimpLoader::LoadModelWithHierarchy(StrGameObjectPtr gameObject, const String& filePath)
 	{
 		m_Res = ResVault::Pointer();
 
@@ -101,7 +104,7 @@ namespace rczEngine
 		return true;
 	}
 
-	bool AssimpLoader::LoadSkinnedModel(StrGameObjectPtr gameObject, const char * filePath)
+	bool AssimpLoader::LoadSkinnedModel(StrGameObjectPtr gameObject, const String& filePath)
 	{
 		m_Res = ResVault::Pointer();
 		m_Gfx = Gfx::GfxCore::Pointer();
@@ -120,12 +123,12 @@ namespace rczEngine
 			aiProcess_GenSmoothNormals | 
 			aiProcess_FlipUVs | 
 			aiProcess_CalcTangentSpace | 
-			aiProcess_LimitBoneWeights | 
-			 
+			aiProcess_LimitBoneWeights | 			 
 			aiProcess_OptimizeMeshes
 			);
 
 		LoadMaterials();
+		model->m_MaterialMap = materialMap;
 
 		///Set the VertexOffset, IndexOffset and IndexCount local variables to 0. These help creating the meshes and managing a single index and a single vertex buffer.
 		uint32 VertexOffset = 0;
@@ -202,9 +205,9 @@ namespace rczEngine
 		return true;
 	}
 
-	bool AssimpLoader::AddNodeMesh(aiNode * pNode, const char * parent, bool addMeshes, bool addBones)
+	bool AssimpLoader::AddNodeMesh(aiNode * pNode, const String& parent, bool addMeshes, bool addBones)
 	{
-		const char* nodeName = pNode->mName.C_Str();
+		const String& nodeName = pNode->mName.C_Str();
 
 		aiVector3D translation;
 		aiVector3D rotation;
@@ -219,11 +222,11 @@ namespace rczEngine
 			Math::RadiansToDegrees(-rotation.z));
 		Vector3 scale(scaling.x, scaling.y, scaling.z);
 
-		WeakGameObjectPtr node;
+		WeakGameObjPtr node;
 
 		auto scene = SceneManager::Pointer()->GetActiveScene();
 
-		if (!parent)
+		if (parent == "")
 		{
 			node = SceneManager::Pointer()->GetActiveScene()->
 				CreateActor(nodeName, NULL, trans, rot, scale);
@@ -231,9 +234,10 @@ namespace rczEngine
 		else
 		{
 			auto ptrParent = scene->FindActor(parent);
-
-			node = scene->
-				CreateActor(nodeName, ptrParent.lock().get(), trans, rot, scale);
+			if (ptrParent.expired())
+			{
+				node = scene->CreateActor(nodeName, ptrParent.lock().get(), trans, rot, scale);
+			}
 		}
 
 		if (pNode->mNumMeshes && addMeshes)
@@ -278,10 +282,85 @@ namespace rczEngine
 
 			ResourceHandle tempHandle = m_Res->InsertResource(Temp);
 			materialMap.insert(Pair<String, ResourceHandle>(Temp->GetName(), tempHandle));
-			Temp->InitMaterial(MAT_PBR_MetRough, Gfx::GfxCore::Pointer());
+			Temp->InitMaterial(MAT_PBR_SpecSmooth_Alpha, Gfx::GfxCore::Pointer());
+
+
+			aiColor4D outV = { 0, 0, 0, 0};
+			aimatTemp->Get(AI_MATKEY_COLOR_SPECULAR, outV);
+			Temp->m_core.g_Specular.Set(outV.r, outV.g, outV.b);
+			Logger::Pointer()->Log("Spec R: " + std::to_string(outV.r));
+			Logger::Pointer()->Log("Spec G: " + std::to_string(outV.g));
+			Logger::Pointer()->Log("Spec B: " + std::to_string(outV.b));
+			Logger::Pointer()->Log("Spec A: " + std::to_string(outV.a));
+
+			//outV = { 0, 0, 0, 0 };
+			//aimatTemp->Get(AI_MATKEY_COLOR_DIFFUSE, outV);
+			//Temp->m_core.g_Albedo.Set(outV.r, outV.g, outV.b);
+			//Logger::Pointer()->Log("Diff R: " + std::to_string(outV.r));
+			//Logger::Pointer()->Log("Diff G: " + std::to_string(outV.g));
+			//Logger::Pointer()->Log("Diff B: " + std::to_string(outV.b));
+			//Logger::Pointer()->Log("Diff A: " + std::to_string(outV.a));
+			//
+			////outV = { 0, 0, 0, 0 };
+			//aimatTemp->Get(AI_MATKEY_COLOR_AMBIENT, outV);
+			//Temp->m_core.g_Albedo.Set(outV.r, outV.g, outV.b);
+			//Logger::Pointer()->Log("Amb R: " + std::to_string(outV.r));
+			//Logger::Pointer()->Log("Amb G: " + std::to_string(outV.g));
+			//Logger::Pointer()->Log("Amb B: " + std::to_string(outV.b));
+			//Logger::Pointer()->Log("Amb A: " + std::to_string(outV.a));
+			//
+			//outV = { 0, 0, 0, 0 };
+			//aimatTemp->Get(AI_MATKEY_COLOR_REFLECTIVE, outV);
+			//Temp->m_core.g_Albedo.Set(outV.r, outV.g, outV.b);
+			//Logger::Pointer()->Log("Ref R: " + std::to_string(outV.r));
+			//Logger::Pointer()->Log("ref G: " + std::to_string(outV.g));
+			//Logger::Pointer()->Log("Ref B: " + std::to_string(outV.b));
+			//Logger::Pointer()->Log("Ref A: " + std::to_string(outV.a));
+
+			//outV = { 0, 0, 0, 0 };
+			//aimatTemp->Get(AI_MATKEY_COLOR_EMISSIVE, outV);
+			//Temp->m_core.g_Emmisive.Set(outV.r, outV.g, outV.b);
+			//Logger::Pointer()->Log("Em R: " + std::to_string(outV.r));
+			//Logger::Pointer()->Log("Em G: " + std::to_string(outV.g));
+			//Logger::Pointer()->Log("Em B: " + std::to_string(outV.b));
+			//Logger::Pointer()->Log("Em A: " + std::to_string(outV.a));
+			//
+			outV = { 0, 0, 0, 0 };
+			aimatTemp->Get(AI_MATKEY_COLOR_TRANSPARENT, outV);
+			//Temp->m_core.g_Opacity = outV.r;
+			Logger::Pointer()->Log("Trans R: " + std::to_string(outV.r));
+			Logger::Pointer()->Log("Trans G: " + std::to_string(outV.g));
+			Logger::Pointer()->Log("Trans B: " + std::to_string(outV.b));
+			Logger::Pointer()->Log("Trans A: " + std::to_string(outV.a));
+
+			//ai_real out = 0.5;
+			//aimatTemp->Get(AI_MATKEY_SHININESS, out);
+			//Logger::Pointer()->Log("Gloss1: " + std::to_string(out));
+			//
+			//ai_real out2 = 0.5;
+			//aimatTemp->Get(AI_MATKEY_SHININESS_STRENGTH, out2);
+			//Logger::Pointer()->Log("Gloss2: " + std::to_string(out2));
+			//
+			//out2 = 0.5;
+			//aimatTemp->Get(AI_MATKEY_REFLECTIVITY, out2);
+			//Temp->m_core.g_RoughGloss = out2;
+			//Logger::Pointer()->Log("Reflectivity: " + std::to_string(out2));
+			//
+			//out2 = 0.5;
+			//aimatTemp->Get(AI_MATKEY_REFRACTI, out2);
+			//Logger::Pointer()->Log("Refraction: " + std::to_string(out2));
+			//
+			//out2 = 0.5;
+			//aimatTemp->Get(AI_MATKEY_BUMPSCALING, out2);
+			//Logger::Pointer()->Log("BumpScaling: " + std::to_string(out2));
+			//
+			//out2 = 0.5;
+			//aimatTemp->Get(AI_MATKEY_OPACITY, out2);
+			//Logger::Pointer()->Log("Opacity: " + std::to_string(out2));
 
 			aiString Path;
 			aimatTemp->GetTexture(aiTextureType_DIFFUSE, 0, &Path);
+
 			String path = Path.C_Str();
 			String Dir = m_FilePath.GetFileDir();
 			String RealPath;
@@ -292,7 +371,12 @@ namespace rczEngine
 				if (Path::FileExists(RealPath.c_str()))
 					Temp->m_TextureAlbedo = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
 			}
+			else
+			{
+				//Temp->m_core.OverrideAlbedo = 1.0f;
+			}
 
+			Path = "";
 			aimatTemp->GetTexture(aiTextureType_NORMALS, 0, &Path);
 			path = Path.C_Str();
 
@@ -303,6 +387,7 @@ namespace rczEngine
 					Temp->m_TextureNormal = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
 			}
 
+			Path = "";
 			aimatTemp->GetTexture(aiTextureType_SPECULAR, 0, &Path);
 			path = Path.C_Str();
 
@@ -311,6 +396,68 @@ namespace rczEngine
 				RealPath = Dir + path.c_str();
 				if (Path::FileExists(RealPath.c_str()))
 					Temp->m_TextureMetSpec = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
+			}
+			else
+			{
+				Temp->m_core.OverrideMetallicSpecular = 1.0f;
+				Temp->m_core.OverrideRoughGloss = 1.0f;
+				Temp->m_core.g_RoughGloss = 0.5f;
+			}
+			
+
+			Path = "";
+			aimatTemp->GetTexture(aiTextureType_EMISSIVE, 0, &Path);
+			path = Path.C_Str();
+			if (path != "")
+			{
+				RealPath = Dir + path.c_str();
+				if (Path::FileExists(RealPath.c_str()))
+					Temp->m_TextureEm = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
+			}
+			else
+			{
+				Temp->m_core.OverriveEmmisive = 1.0f;
+			}
+
+
+			Path = "";
+			aimatTemp->GetTexture(aiTextureType_OPACITY, 0, &Path);
+			path = Path.C_Str();
+			if (path != "")
+			{
+				RealPath = Dir + path.c_str();
+				if (Path::FileExists(RealPath.c_str()))
+					Temp->m_TextureO = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
+			}
+			else
+			{
+				Temp->m_core.g_Opacity = 0.5f;
+			}
+
+			for (int i = 0; i < aimatTemp->GetTextureCount(aiTextureType_UNKNOWN); ++i)
+			{
+				Path = "";
+				aimatTemp->GetTexture(aiTextureType::aiTextureType_UNKNOWN, i, &Path);
+				path = Path.C_Str();
+				if (path != "")
+				{
+					RealPath = Dir + path.c_str();
+					if (Path::FileExists(RealPath.c_str()))
+						Temp->m_TextureEm = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
+				}
+			}
+
+			for (int i = 0; i < aimatTemp->GetTextureCount(aiTextureType_NONE); ++i)
+			{
+				Path = "";
+				aimatTemp->GetTexture(aiTextureType::aiTextureType_NONE, i, &Path);
+				path = Path.C_Str();
+				if (path != "")
+				{
+					RealPath = Dir + path.c_str();
+					if (Path::FileExists(RealPath.c_str()))
+						Temp->m_TextureEm = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
+				}
 			}
 		}
 
@@ -504,7 +651,7 @@ namespace rczEngine
 		///Create a Temp aiNode pointer to the scene node that has this bone's name.
 		aiNode* RootNode = m_Scene->mRootNode->FindNode(TempRoot.m_Name.c_str());
 
-		Matrix4 matrice(INIT_UNIT);
+		Matrix4 matrice(eInit::Unit);
 		///Create a matrix for this bone in the final bone matrix vector
 		skin->m_MeshSkeleton.m_BoneFinalMatrixVector.push_back(matrice);
 
@@ -716,7 +863,7 @@ namespace rczEngine
 			///get the bone from my own skeleton's map that contains the childrenStrings[o]
 			Bone* currentBone = model->m_MeshSkeleton.GetBone(BoneName);
 
-			Matrix4 matrice(INIT_UNIT);
+			Matrix4 matrice(eInit::Unit);
 			///Create a matrix for this bone in the final bone matrix vector
 			model->m_MeshSkeleton.m_BoneFinalMatrixVector.push_back(matrice);
 

@@ -392,10 +392,11 @@ float3 Decode(float2 encN)
 	return n;
 }
 
-float3 PBR_rm(float3 _position, float3 _albedoColor, float3 _normal, float _roughness, float _metallic)
+//, float3 _tangent, float3 _binormal
+float3 PBR_rm(float3 _position, float3 _albedoColor, float3 _normal, float _roughness, float _metallic, float3 _specular)
 {
 	//Calculate the Specular Color from the metallic.
-	float3 specularColor = lerp(0.04f, _albedoColor, _metallic).xyz;
+	float3 specularColor = _specular;
 
 	//Calculate the viewDir.
 	double3 viewDir = normalize(double3(ViewPosition.xyz) - double3(_position.xyz));
@@ -437,7 +438,7 @@ float3 PBR_rm(float3 _position, float3 _albedoColor, float3 _normal, float _roug
 		}
 
 #ifndef DISNEY_BRDF
-		//Light1 += ComputeLight(albedoColor.xyz, realSpecularColor, normal, roughness, g_Lights[i].LightPosition.xyz, g_Lights[i].LightColor.xyz, lightDir, viewDir, metallic);
+		//Light1 += DisneyBRDF(_albedoColor.xyz, specularColor.xyz, _normal, _roughness, lightDir, viewDir, _tangent, _binormal, diffuse, g_Lights[i].LightColor.xyz);
 #else
 		float3 spec = 0.0f.xxx;
 		float3 diffuse = 0.0f.xxx;
@@ -453,7 +454,7 @@ float3 PBR_rm(float3 _position, float3 _albedoColor, float3 _normal, float _roug
 	float mipIndex = _roughness * PBR_ENV_MIP_MAPS;
 	double3 reflectVector = reflect(-viewDir, double3(_normal.xyz));
 
-	float4 envVector = float4(reflectVector.xyz, mipIndex);
+	float4 envVector = (float4(reflectVector.xyz, mipIndex));
 
 	float3 Enviroment = EnviromentCube.SampleLevel(LinearWrapSampler, envVector.xyz, mipIndex).xyz;
 	Enviroment = pow(Enviroment, 2.2f);

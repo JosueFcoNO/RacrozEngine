@@ -24,7 +24,7 @@ namespace rczEngine
 
 			void Destroy();
 
-			void AddElement(const char* SemanticName, uint32 SemanticIndex, eFORMAT Format, uint32 InputSlot,
+			void AddElement(const String& SemanticName, uint32 SemanticIndex, eFORMAT Format, uint32 InputSlot,
 				uint32 AlignedByteOffset, eINPUT_CLASSIFICATION InputSlotClass, uint32 InstanceDataStepRate);
 			void ClearElementList();
 			bool CreateInputLayout(VertexShader& VShader, GfxCore* gfx);

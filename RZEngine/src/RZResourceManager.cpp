@@ -96,7 +96,7 @@ namespace rczEngine
 		//}
 	};
 
-	ResourceHandle ResVault::LoadResource(const char * filePath, const char* resName)
+	ResourceHandle ResVault::LoadResource(const String& filePath, const String& resName)
 	{
 		try
 		{
@@ -117,10 +117,10 @@ namespace rczEngine
 			String fileExtension = parsedFilePath[parsedFilePath.size() - 1];
 
 			///If there's not a name parameter, set the resource name to its filePath minus the extension.
-			const char* ResName;
-			if (resName == NULL)
+			String ResName;
+			if (resName == "")
 			{
-				ResName = parsedFilePath[0].c_str();
+				ResName = parsedFilePath[0];
 			}
 			else
 			{
@@ -147,7 +147,7 @@ namespace rczEngine
 				}
 
 				NewRes = std::make_shared<CubeMap>();
-				CastStaticPtr<CubeMap>(NewRes)->LoadCubeMapFromDDS(filePath, (char*)ResName);
+				CastStaticPtr<CubeMap>(NewRes)->LoadCubeMapFromDDS(filePath, ResName);
 				break;
 
 			case RES_3DMODEL:
@@ -180,7 +180,7 @@ namespace rczEngine
 				Logger::Pointer()->LogMessageToFileLog("Material", String("Loading Texture: ") + String(filePath).c_str());
 
 				NewRes = std::make_shared<Texture2D>();
-				NewRes->Load(filePath, (char*)ResName);
+				NewRes->Load(filePath, ResName);
 				break;
 
 			case RES_UNKNOWN:
@@ -203,7 +203,7 @@ namespace rczEngine
 		m_ResourceMap.erase(handleToDelete);
 	}
 
-	void ResVault::LoadModel(StrPtr<GameObject> gameobject, const char * filePath, bool withHierarchy)
+	void ResVault::LoadModel(StrPtr<GameObject> gameobject, const String& filePath, bool withHierarchy)
 	{
 		try
 		{
@@ -213,14 +213,14 @@ namespace rczEngine
 
 
 			UniquePtr<ModelLoader> loader;
-			if (fileExtension == "fbxkm")
-			{
-				loader = std::make_unique<FbxLoader>();
-			}
-			else
-			{
+			//if (fileExtension == "fbx")
+			//{
+			//	loader = std::make_unique<FbxLoader>();
+			//}
+			//else
+			//{
 				loader = std::make_unique<AssimpLoader>();
-			}
+			//}
 
 			bool bones = false;
 			bool textures, animations;
@@ -240,7 +240,7 @@ namespace rczEngine
 		}
 		catch (std::exception exc)
 		{
-			Logger::Pointer()->Log("Could not load model", log_ERROR);
+			Logger::Pointer()->Log("Could not load model", eLogMsgType::Error);
 		}
 	}
 
@@ -252,7 +252,7 @@ namespace rczEngine
 		return handle;
 	}
 
-	ResourceType ResVault::QueryModel(const char* filePath, bool& out_hasBones, bool& out_hasTextures, bool& out_hasAnimations)
+	ResourceType ResVault::QueryModel(const String& filePath, bool& out_hasBones, bool& out_hasTextures, bool& out_hasAnimations)
 	{
 		Assimp::Importer Imp;
 		const aiScene* boneChecker = Imp.ReadFile(filePath, aiProcess_Triangulate);
@@ -276,7 +276,7 @@ namespace rczEngine
 		return RES_3DMODEL;
 	}
 
-	ResourceType ResVault::GetResourceType(const char * fileExtension)
+	ResourceType ResVault::GetResourceType(const String& fileExtension)
 	{
 		if (fileExtension == (const char*)"dds")
 		{
@@ -306,7 +306,7 @@ namespace rczEngine
 		return RES_CUBEMAP;
 	}
 
-	ResourceHandle LoadFile(char * instruction, const char * name, ResVault * res)
+	ResourceHandle LoadFile(const String& instruction, const String& name, ResVault * res)
 	{
 		ANSICHAR filename[MAX_PATH];
 
@@ -318,7 +318,7 @@ namespace rczEngine
 		ofn.lpstrFilter = "Any File\0*.*\0";
 		ofn.lpstrFile = filename;
 		ofn.nMaxFile = MAX_PATH;
-		ofn.lpstrTitle = instruction;
+		ofn.lpstrTitle = instruction.c_str();
 		ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
 		if (GetOpenFileNameA(&ofn))
@@ -333,7 +333,7 @@ namespace rczEngine
 		return INVALID_RESOURCE;
 	};
 
-	String GetFilePath(char * instruction)
+	String GetFilePath(const String& instruction)
 	{
 		ANSICHAR filename[MAX_PATH];
 
@@ -345,7 +345,7 @@ namespace rczEngine
 		ofn.lpstrFilter = "Any File\0*.*\0";
 		ofn.lpstrFile = filename;
 		ofn.nMaxFile = MAX_PATH;
-		ofn.lpstrTitle = instruction;
+		ofn.lpstrTitle = instruction.c_str();
 		ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
 		if (GetOpenFileNameA(&ofn))

@@ -13,12 +13,12 @@ namespace rczEngine
 			m_gfx->SetBlendState(*m_BlendState);
 	}
 
-	void Pass::AddTexture2D(Texture2D * texture, int32 slot)
+	void Pass::AddTexture2D(StrPtr<Texture2D>& texture, int32 slot)
 	{
 		m_Texture2D[slot] = texture;
 	}
 
-	void Pass::AddRenderTarget(Gfx::RenderTarget * renderTarget, int32 slot)
+	void Pass::AddRenderTarget(StrPtr<Gfx::RenderTarget>& renderTarget, int32 slot)
 	{
 		m_RenderTargets[slot] = renderTarget;
 	}

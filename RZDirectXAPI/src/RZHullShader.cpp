@@ -7,8 +7,8 @@ namespace rczEngine
 	{
 		HullShader::HullShader()
 		{
-			m_HullShader = NULL;
-			m_ShaderBlob = NULL;
+			m_HullShader = nullptr;
+			m_ShaderBlob = nullptr;
 		}
 
 		HullShader::~HullShader()
@@ -23,7 +23,7 @@ namespace rczEngine
 
 		bool HullShader::SetThisHullShader(GfxCore * gfx)
 		{
-			if (m_HullShader == NULL || m_ShaderBlob == NULL)
+			if (m_HullShader == nullptr || m_ShaderBlob == nullptr)
 				return false;
 
 			return gfx->SetHullShader(*this);

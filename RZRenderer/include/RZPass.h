@@ -29,10 +29,10 @@ namespace rczEngine
 		virtual void PostRenderPass() = 0;
 
 		///Adds a texture to set on before rendering this pass on the specified slot.
-		void AddTexture2D(Texture2D* texture, int32 slot);
+		void AddTexture2D(StrPtr<Texture2D>&  texture, int32 slot);
 
 		///Binds a Render Target to a slot for this pass to render to.
-		void AddRenderTarget(Gfx::RenderTarget* renderTarget, int32 slot);
+		void AddRenderTarget(StrPtr<Gfx::RenderTarget>& renderTarget, int32 slot);
 
 		///Adds a RasterizerState for this pass to use. If there's not one set, it will use the default rasterizer.
 		void AddRasterizerState(Gfx::RasterizerState* rasterizer);
@@ -91,10 +91,10 @@ namespace rczEngine
 		Gfx::PixelShader m_PShader;
 		StringW m_PShaderPath;
 
-		Texture2D* m_Texture2D[MAX_TEXTURES_PASS] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+		StrPtr<Texture2D> m_Texture2D[MAX_TEXTURES_PASS] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 		
-		Gfx::RenderTarget* m_RenderTargets[MAX_RENDER_TARGETS] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
-		Gfx::RasterizerState* m_RasterizerState = NULL;
-		Gfx::BlendState* m_BlendState = NULL;
+		StrPtr<Gfx::RenderTarget> m_RenderTargets[MAX_RENDER_TARGETS] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+		Gfx::RasterizerState* m_RasterizerState = nullptr;
+		Gfx::BlendState* m_BlendState = nullptr;
 	};
 }

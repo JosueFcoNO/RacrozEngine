@@ -17,7 +17,7 @@ namespace rczEngine
 			///Calls the Destroy Function
 			virtual ~BasicBuffer();
 			///Creates the Buffer.
-			virtual bool Create(uint32 sizeOfElement, uint32 numOfElements, void* arrayOfElements, uint32 elementsPitch, uint32 elementsSlice, eBUFFER_USAGE usage, eBIND_FLAGS bindflags, GfxCore* gfx = NULL);
+			virtual bool Create(uint32 sizeOfElement, uint32 numOfElements, void* arrayOfElements, uint32 elementsPitch, uint32 elementsSlice, eBUFFER_USAGE usage, eBIND_FLAGS bindflags, GfxCore* gfx = nullptr);
 			///Releases the Buffer
 			virtual void Destroy();
 

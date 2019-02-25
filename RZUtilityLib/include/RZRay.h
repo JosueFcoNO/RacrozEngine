@@ -6,9 +6,9 @@ namespace rczEngine
 	class RZ_EXP Ray
 	{
 	public:
-		Ray();
-		Ray(Vector3 start, Vector3 direction);
-		Ray(float startx, float starty, float startz, float directionx, float directiony, float directionz);
+		Ray() noexcept;
+		Ray(Vector3 start, Vector3 direction) noexcept;
+		Ray(float startx, float starty, float startz, float directionx, float directiony, float directionz) noexcept;
 
 
 		Vector3 m_StartPoint;

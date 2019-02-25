@@ -11,13 +11,15 @@ namespace rczEngine
 			{
 				ImGui::Text("Resources Loaded");
 
-				static int comboint = -1;
+				static int comboint = 0;
 				static bool AddComponentMenu = false;
 				static int componentIds[5] = { -1, RES_3DMODEL, RES_SKINNEDMODEL, RES_MATERIAL, RES_TEXTURE };
 
 				ImGui::Combo("Filter", &comboint, "None \0Model \0Skinned Model \0Material \0Texture2D");
 
 				UoMap<ResourceHandle, StrPtr<Resource>>* map = &ResVault::Pointer()->m_ResourceMap; 
+				Map<String, StrPtr<Resource>> map2;
+
 				if (ImGui::TreeNode("Resource List"))
 				{
 					int i = 0;
@@ -25,14 +27,19 @@ namespace rczEngine
 					{
 						if (it->second->m_Type == (ResourceType)componentIds[comboint] || componentIds[comboint] == -1)
 						{
-							ImGui::PushID(i);
-							if (ImGui::Selectable(it->second->GetName()))
-							{
-								ImGui::TreeAdvanceToLabelPos();
-								m_ActiveResource = it->second.get();
-							}
-							ImGui::PopID();
+							map2[String(it->second->GetName())] = it->second;
 						}
+					}
+
+					for (auto& m : map2)
+					{
+						ImGui::PushID(i);
+						if (ImGui::Selectable(m.first.c_str()))
+						{
+							ImGui::TreeAdvanceToLabelPos();
+							m_ActiveResource = m.second.get();
+						}
+						ImGui::PopID();
 					}
 
 					ImGui::TreePop();

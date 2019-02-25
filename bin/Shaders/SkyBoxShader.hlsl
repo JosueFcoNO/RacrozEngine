@@ -1,4 +1,4 @@
-TextureCube EnviromentCube : register(t5);
+TextureCube EnviromentCube : register(t12);
 
 SamplerState LinealSamplerWrap : register(s0);
 SamplerState AnisotropicSamplerWrap : register(s1);

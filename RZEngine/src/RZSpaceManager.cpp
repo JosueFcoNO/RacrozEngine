@@ -57,7 +57,7 @@ namespace rczEngine
 	{
 		for (int32 i = 0; i < m_Planets.size(); ++i)
 		{
-			m_Planets[i]->RenderAtmosphere(surfaceScale + offset);
+			m_Planets[i]->RenderAtmosphere(offset);
 		}
 	}
 

@@ -9,46 +9,35 @@ namespace rczEngine
 		///////////////////////
 		////// Matrix3 Constructors
 		///////////////////////
-		Matrix3() {};
 
-		///Int Constructor, can INIT_ZERO and INIT_ONE
-		Matrix3(eINIT init);
+		///Int Constructor, can Zero and INIT_ONE
+		Matrix3(eInit init) noexcept;
 		///Constructs a Matrix3 from a Matrix4
-		Matrix3(const Matrix4& m4);
+		Matrix3(const Matrix4& m4) noexcept;
 		///Vector Constructor: Takes 3 Vector3. Top, Middle and Bottom Row. 
-		Matrix3(const Vector3& top, const Vector3& mid, const Vector3& bottom);
+		Matrix3(const Vector3& top, const Vector3& mid, const Vector3& bottom) noexcept;
 
-		Matrix3(const Matrix3& other)
-		{
-			m_elements = other.m_elements;
-		};
-
-		Matrix3& operator=(const Matrix3& other) 
-		{ 
-			m_elements = other.m_elements; 
-			return *this;
-		};
 
 		///////////////////////
 		////// Matrix Operations
 		///////////////////////
 
 		///Returns the cofactor of the nRow and nCol from this Matrix
-		float CoFactor2x2(uint32 nRow, uint32 nCol) const;
+		float CoFactor2x2(uint32 nRow, uint32 nCol) const noexcept ;
 		///Transposes this Matrix
-		void Transpose();
+		void Transpose() noexcept;
 		///Makes it an Identity Matrix
-		void Identity();
+		void Identity() noexcept;
 		///Returns a copy of this Matrix Transposed
-		Matrix3 GetTransposed() const;
+		Matrix3 GetTransposed() const noexcept;
 		///Returns the Determinant of this Matrix
-		float Determinant() const;
+		float Determinant() const noexcept;
 		///Returns the Adjoint of this Matrix
-		Matrix3 GetAdjoint() const;
+		Matrix3 GetAdjoint() const noexcept;
 		///Returns the inverse of this Matrix
-		Matrix3 GetInverse() const;
+		Matrix3 GetInverse() const noexcept;
 
-		Quaternion GetAsQuaternion();
+		Quaternion GetAsQuaternion() const noexcept;
 
 		///////////////////////
 		////// 2D Graphics Operations
@@ -71,24 +60,24 @@ namespace rczEngine
 		///////////////////////
 
 		///Multiplies the matrix and scalar. Constant.
-		Matrix3 operator*(const float& scalar) const;
+		Matrix3 operator*(const float& scalar) const noexcept;
 		///Multiplies the matrix and another 3x3 Matrix. Constant.
-		Matrix3 operator* (const Matrix3& M) const;
+		Matrix3 operator* (const Matrix3& M) const noexcept;
 		///Multiplies the matrix and a Vector3: Vector * Matrix so it returns a Vector3 . Constant.
-		Vector3 operator* (const Vector3& V) const;
+		Vector3 operator* (const Vector3& V) const noexcept;
 		///Adds the matrices
-		Matrix3 operator+(const Matrix3& M) const;
+		Matrix3 operator+(const Matrix3& M) const noexcept;
 		///Substracts the matrices
-		Matrix3 operator-(const Matrix3& M) const;
+		Matrix3 operator-(const Matrix3& M) const noexcept;
 
 		///Multiplies the Matrix and a Scalar.
-		void operator*=(const float& scalar);
+		void operator*=(const float& scalar) noexcept;
 		///Multiplies the Matrix and another Matrix.
-		void operator*=(const Matrix3& M);
+		void operator*=(const Matrix3& M) noexcept;
 		///Adds the matrices
-		Matrix3& operator+=(const Matrix3& M);
+		Matrix3& operator+=(const Matrix3& M) noexcept;
 		///Substracts the matrices
-		Matrix3& operator-=(const Matrix3& M);
+		Matrix3& operator-=(const Matrix3& M) noexcept;
 
 
 		union {
@@ -102,8 +91,18 @@ namespace rczEngine
 			} m_elements;
 		};
 
-		static const Matrix3 IDENTITY;
-		static const Matrix3 ZERO;
+		static const Matrix3& IDENTITY() noexcept { static Matrix3 Identity(
+			{ 1.0f, 0.0f, 0.0f }, 
+			{ 0.0f, 1.0f, 0.0f }, 
+			{ 0.0f, 0.0f, 1.0f }); 
+		return Identity; };
+
+		static const Matrix3& ZERO() noexcept { static Matrix3 Zero(
+			{ 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f });
+		return Zero;
+	};
 	};
 
 

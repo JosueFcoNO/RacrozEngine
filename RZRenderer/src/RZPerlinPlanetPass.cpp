@@ -18,7 +18,7 @@ namespace rczEngine
 
 		rzState.Init(Gfx::FILL_SOLID, Gfx::CULL_NONE);
 		rzState.CreateRasterizerState(m_gfx);
-		m_Planet = ResVault::Pointer()->LoadResource("Models/Planet/PlanetSurfaceH.dae");
+		//m_Planet = resMng->LoadResource("Models/Planet/PlanetSurfaceH.dae");
 
 	}
 
@@ -38,7 +38,7 @@ namespace rczEngine
 
 	void PerlinPlanetPass::RenderPass()
 	{
-		ResVault::Pointer()->GetResource<Model>(m_Planet).lock()->DrawModel(m_gfx, m_res, NULL);
+		ResVault::Pointer()->GetResource<Model>(m_Planet).lock()->DrawModel(NULL);
 	}
 
 	void PerlinPlanetPass::PostRenderPass()

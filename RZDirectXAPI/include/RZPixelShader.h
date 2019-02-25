@@ -9,14 +9,14 @@ namespace rczEngine
 		class RZ_EXP PixelShader : public Shader
 		{
 		public:
-			///Inits everything to NULL
+			///Inits everything to nullptr
 			PixelShader();
 			///Calls Destroy()
 			~PixelShader();
 			///Creates and compiles the pixel shader found in pszFileString
-			bool CreatePixelShader(const WCHAR* pszFileString, GfxCore* gfx = NULL);
+			bool CreatePixelShader(const WCHAR* pszFileString, GfxCore* gfx = nullptr);
 			///Set this pixel shader in the input assembler.
-			void SetThisPixelShader(GfxCore* gfx = NULL);
+			void SetThisPixelShader(GfxCore* gfx = nullptr);
 			///Releases data
 			void Destroy();
 

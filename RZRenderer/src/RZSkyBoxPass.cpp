@@ -30,7 +30,7 @@ namespace rczEngine
 		m_PShader.SetThisPixelShader(m_gfx);
 
 		SetRenderTargetsInPipeline();
-		SetTexturesInPipeline();
+		RacrozRenderer::Pointer()->GetSkyBox().lock()->SetThisTextureInPS(12, 1, m_gfx);
 		SetRasterizerState();
 
 		m_gfx->ClearRenderTargetView(0, 0, 0, 0, 0);
@@ -47,20 +47,12 @@ namespace rczEngine
 
 	void SkyBoxPass::RenderPass()
 	{
-		m_res->GetResource<Model>(m_res->m_ModelCube).lock()->DrawModel(m_gfx, m_res, NULL);
+		m_res->GetResource<Model>(m_res->m_ModelCube).lock()->DrawModel(NULL);
 	}
 
 	void SkyBoxPass::PostRenderPass()
 	{
 		m_gfx->UnbindRenderTargets();
-		for (int32 i = 0; i < MAX_TEXTURES_PASS; ++i)
-			m_gfx->UnbindPSShaderResource(i);
-
-		if (m_RasterizerState)
-			m_gfx->SetRSStateDefault();
-
-		if (m_BlendState)
-			m_gfx->SetBlendStateDefault();
 	}
 
 }

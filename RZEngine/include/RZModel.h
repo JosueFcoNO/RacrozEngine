@@ -2,17 +2,17 @@
 namespace rczEngine
 {
 	///A class Mesh that contains Gfx::Vertex and Index buffers.
-	class RZ_EXP Model : public Resource
+	class Model : public Resource
 	{
 	public:
-		Model() { m_Type = ResourceType::RES_3DMODEL; };
-		void DrawModel(Gfx::GfxCore* gfx, void* res, Map<String, ResourceHandle>* materialOverride, MATERIAL_TYPE matType = MAT_ANY);
+		RZ_EXP Model() { m_Type = ResourceType::RES_3DMODEL; };
+		RZ_EXP void DrawModel(Map<String, ResourceHandle>* materialOverride, MATERIAL_TYPE matType = MAT_ANY);
 
-		virtual void Serialize();
-		virtual void DeSerialize();
+		RZ_EXP virtual void Serialize();
+		RZ_EXP virtual void DeSerialize();
 		
-		virtual void Load(const char* filePath, const char* resName);
-		virtual void Release() { m_VertexBuffer.Destroy(); m_IndexBuffer.Destroy(); m_VectorMeshes.clear(); };
+		RZ_EXP virtual void Load(const String& filePath, const String& resName);
+		RZ_EXP virtual void Release() { m_VertexBuffer.Destroy(); m_IndexBuffer.Destroy(); m_VectorMeshes.clear(); };
 		
 		Gfx::VertexBuffer<Gfx::Vertex> m_VertexBuffer;
 		Gfx::IndexBuffer m_IndexBuffer;

@@ -28,7 +28,7 @@ namespace rczEngine
 		}
 	}
 
-	void SkinnedModel::Load(const char* filePath, const char* resName)
+	void SkinnedModel::Load(const String& filePath, const String& resName)
 	{
 		//ResVault* rsc = ResVault::Pointer();
 		//Gfx::GfxCore* gfx = Gfx::GfxCore::Pointer();
@@ -333,10 +333,10 @@ namespace rczEngine
 		//	////Esto no tiene sentido, pero lo tenía cuando funcionaba bien.
 		//	//memcpy(&BoneTemp->m_JointMatrix, &Temp->mTransformation, sizeof(Matrix4));
 		//
-		//	Matrix4 PreRotation(INIT_UNIT);
-		//	Matrix4 Rotation(INIT_UNIT);
-		//	Matrix4 Translation(INIT_UNIT);
-		//	Matrix4 Scale(INIT_UNIT);
+		//	Matrix4 PreRotation(Unit);
+		//	Matrix4 Rotation(Unit);
+		//	Matrix4 Translation(Unit);
+		//	Matrix4 Scale(Unit);
 		//
 		//	///Check to see if this bone has prerotation and translation
 		//	if (Temp->mParent)
@@ -377,7 +377,7 @@ namespace rczEngine
 		//				ParentName = Parser::ParseToStrings<ANSICHAR>(CurrentParent->mName.data, "$", 0);
 		//				if (ParentName.size() < 3)
 		//				{
-		//					Matrix4 Tempi(INIT_NONE);
+		//					Matrix4 Tempi(None);
 		//					memcpy(&BoneTemp->m_TransformMatrix, &Temp->mTransformation, sizeof(Matrix4));
 		//					BoneTemp->m_TransformMatrix = (Scale*Rotation*Translation*PreRotation);
 		//					BoneTemp->m_JointIsTransform = false;
@@ -449,7 +449,7 @@ namespace rczEngine
 		//		}
 		//	}
 		//
-		//	Matrix4 matrice(INIT_UNIT);
+		//	Matrix4 matrice(Unit);
 		//	///Create a matrix for this bone in the final bone matrix vector
 		//	m_MeshSkeleton.m_BoneFinalMatrixVector.push_back(matrice);
 		//}
@@ -486,9 +486,6 @@ namespace rczEngine
 		///Load the scene
 		Assimp::Importer B;
 		const aiScene* Scene = B.ReadFile(filePath, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
-
-		///Create a tempAnim pointer
-		Animation* TempAnim;
 
 		///If the scene has animations
 		if (Scene->HasAnimations())

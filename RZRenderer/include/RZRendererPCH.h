@@ -26,6 +26,8 @@
 
 #include "RZMotionBlur.h"
 
+#include "RZSSAO.h"
+
 #include "RZColorCorrection.h"
 
 #include "RZPerlinPlanetPass.h"

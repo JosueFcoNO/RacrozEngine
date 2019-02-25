@@ -9,204 +9,113 @@ namespace rczEngine
 	////////////////////////////////////////////////
 	////////////////////////////////////////////////
 
-	Vector2I::Vector2I(eINIT init)
+	Vector2I::Vector2I(eInit init) noexcept
 	{
-		if (init == INIT_NONE)
+		if (init == eInit::None)
 		{
 			return;
 		}
-		else if (init == INIT_UNIT)
+		else if (init == eInit::Unit)
 		{
-			m_x = 1;
-			m_y = 0;
+			m.x = 1;
+			m.y = 0;
 		}
 		else
 		{
-			m_x = 0;
-			m_y = 0;
+			m.x = 0;
+			m.y = 0;
 		}
 	}
 
-	Vector2I::Vector2I(Vector2& v2)
+	Vector2I::Vector2I(Vector2& v2) noexcept
 	{
-		m_x = (int32)v2.m_x;
-		m_y = (int32)v2.m_y;
+		m.x = Math::Truncate(v2.m_x);
+		m.y = Math::Truncate(v2.m_y);
 	}
 
-	Vector2I::Vector2I(Vector3& v3)
+	Vector2I::Vector2I(Vector3& v3) noexcept
 	{
-		m_x = (int32)v3.m_x;
-		m_y = (int32)v3.m_y;
+		m.x = Math::Truncate(v3.m_x);
+		m.y = Math::Truncate(v3.m_y);
 	}
 
-	Vector2I::Vector2I(Vector4& v4)
+	Vector2I::Vector2I(Vector4& v4) noexcept
 	{
-		m_x = (int32)v4.m_x;
-		m_y = (int32)v4.m_y;
+		m.x = Math::Truncate(v4.m_x);
+		m.y = Math::Truncate(v4.m_y);
 	}
 
-	Vector2I::Vector2I(int x, int y)
+	Vector2I::Vector2I(int x, int y) noexcept
 	{
-		m_x = x;
-		m_y = y;
+		m.x = x;
+		m.y = y;
 	}
 
-	void Vector2I::Set(int x, int y)
+	Vector2I& Vector2I::operator+=(const Vector2I& v) noexcept
 	{
-		m_x = x;
-		m_y = y;
-	}
-
-	void Vector2I::Scale(float Scale)
-	{
-		m_x *= Math::Truncate(Scale);
-		m_y *= Math::Truncate(Scale);
-	}
-
-	Vector2I Vector2I::operator+(const Vector2I& v)
-	{
-		return Vector2I(m_x + v.m_x, m_y + v.m_y);
-	}
-
-	Vector2I Vector2I::operator-(const Vector2I& v)
-	{
-		return Vector2I(m_x - v.m_x, m_y - v.m_y);
-	}
-
-	Vector2I Vector2I::operator*(const Vector2I& v)
-	{
-		return Vector2I(m_x * v.m_x, m_y * v.m_y);
-	}
-
-	Vector2I Vector2I::operator*(float f)
-	{
-		return Vector2I(Math::Truncate(m_x * f), Math::Truncate(m_y * f));
-	}
-
-	Vector2I Vector2I::operator/(const Vector2I& v)
-	{
-		return Vector2I(m_x / v.m_x, m_y / v.m_y);
-	}
-
-	Vector2I Vector2I::operator/(float f)
-	{
-		return Vector2I(Math::Truncate(m_x / f), Math::Truncate(m_y / f));
-	}
-
-	Vector2I& Vector2I::operator+=(const Vector2I& v)
-	{
-		m_x += v.m_x;
-		m_y += v.m_y;
+		m.x += v.m.x;
+		m.y += v.m.y;
 
 		return *this;
 	}
 
-	Vector2I& Vector2I::operator-=(const Vector2I& v)
+	Vector2I& Vector2I::operator-=(const Vector2I& v) noexcept
 	{
-		m_x -= v.m_x;
-		m_y -= v.m_y;
+		m.x -= v.m.x;
+		m.y -= v.m.y;
 
 		return *this;
 	}
 
-
-
-	Vector2I& Vector2I::operator*=(const Vector2I& v)
+	Vector2I& Vector2I::operator*=(const Vector2I& v) noexcept
 	{
-		m_x *= v.m_x;
-		m_y *= v.m_y;
+		m.x *= v.m.x;
+		m.y *= v.m.y;
 
 		return *this;
 	}
 
-	Vector2I& Vector2I::operator*=(float f)
+	Vector2I& Vector2I::operator*=(float f) noexcept
 	{
-		m_x *= Math::Truncate(f);
-		m_y *= Math::Truncate(f);
+		m.x *= Math::Truncate(f);
+		m.y *= Math::Truncate(f);
 
 		return *this;
 	}
 
-	Vector2I& Vector2I::operator/=(const Vector2I& v)
+	Vector2I& Vector2I::operator/=(const Vector2I& v) noexcept
 	{
-		m_x /= v.m_x;
-		m_y /= v.m_y;
+		m.x /= v.m.x;
+		m.y /= v.m.y;
 
 		return *this;
 	}
 
-	Vector2I& Vector2I::operator/=(float f)
+	Vector2I& Vector2I::operator/=(float f) noexcept
 	{
-		m_x /= Math::Truncate(f);
-		m_y /= Math::Truncate(f);
+		m.x /= Math::Truncate(f);
+		m.y /= Math::Truncate(f);
 
 		return *this;
 	}
 
-	bool Vector2I::operator==(const Vector2I& v)
+	float Vector2I::Magnitude() const noexcept
 	{
-		return (m_x == v.m_x && m_y == v.m_y);
+		return Math::Sqrt(gsl::narrow_cast<float>(Math::Square(m.x) + Math::Square(m.y)));
 	}
 
-	bool Vector2I::operator!=(const Vector2I& v)
+	void Vector2I::Normalize() noexcept
 	{
-		return !(m_x == v.m_x && m_y == v.m_y);
+		const float Mag = Magnitude();
+		m.x /= Math::Truncate(Mag);
+		m.y /= Math::Truncate(Mag);
 	}
 
-	bool Vector2I::operator<(const Vector2I& v)
+	Vector2I Vector2I::GetNormalized() const noexcept
 	{
-		return (m_x < v.m_x && m_y < v.m_y);
-	}
-
-	bool Vector2I::operator>(const Vector2I& v)
-	{
-		return (m_x > v.m_x && m_y > v.m_y);
-	}
-
-	bool Vector2I::operator<=(const Vector2I& v)
-	{
-		return (m_x <= v.m_x && m_y <= v.m_y);
-	}
-
-	bool Vector2I::operator>=(const Vector2I& v)
-	{
-		return (m_x >= v.m_x && m_y >= v.m_y);
-	}
-
-	float Vector2I::operator|(const Vector2I& v)
-	{
-		float Dot = 0;
-
-		Dot = float(m_x * v.m_x + m_y * v.m_y);
-
-		return Dot;
-	}
-
-	float Vector2I::operator^(const Vector2I& v)
-	{
-		return float(m_x*v.m_y - m_y*v.m_x);
-	}
-
-	void Vector2I::Normalize()
-	{
-		float Mag = Magnitude();
-		m_x /= Math::Truncate(Mag);
-		m_y /= Math::Truncate(Mag);
-	}
-
-	Vector2I Vector2I::GetNormalized()
-	{
-		Vector2I Temp(INIT_NONE);
-		Temp = *this;
-
+		Vector2I Temp(*this);
 		Temp.Normalize();
 		return Temp;
-	}
-
-
-	float Vector2I::Magnitude()
-	{
-		return Math::Sqrt((float)(Math::Square(m_x) + Math::Square(m_y)));
 	}
 
 }

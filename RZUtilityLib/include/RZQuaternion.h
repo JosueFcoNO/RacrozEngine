@@ -5,48 +5,34 @@ namespace rczEngine
 	class RZ_EXP Quaternion
 	{
 	public:
-		Quaternion(eINIT init);
-		Quaternion(float x, float  y, float  z, float  w);
-		Quaternion(Vector3 V, float w);
+		Quaternion(eInit init) noexcept;
+		Quaternion(float x, float  y, float  z, float  w) noexcept;
+		Quaternion(Vector3 V, float w) noexcept;
 
-		Quaternion(const Quaternion& other)
-		{
-			m_v = other.m_v;
-			m_w = other.m_w;
-		};
-
-		Quaternion& operator=(const Quaternion& other)
-		{
-			m_v = other.m_v;
-			m_w = other.m_w;
-
-			return *this;
-		};
-
-		float Magnitude();
-		void Negate();
-		void Conjugate();
-		Quaternion GetConjugate();
-		void Inverse();
-		Quaternion GetInverse();
-		void Pow(float exp);
-		Quaternion GetPow(float exp);
+		float Magnitude() noexcept;
+		void Negate() noexcept;
+		void Conjugate() noexcept;
+		Quaternion GetConjugate() noexcept;
+		void Inverse() noexcept;
+		Quaternion GetInverse() noexcept;
+		void Pow(float exp) noexcept;
+		Quaternion GetPow(float exp) noexcept;
 		
-		void Normalize();
-		Quaternion GetNormalized();
+		void Normalize() noexcept;
+		Quaternion GetNormalized() noexcept;
 
 		Matrix4 GetAsMatrix4();
 		Matrix3 GetAsMatrix3();
 
-		float operator|(Quaternion rh);
-		Quaternion operator*(Quaternion rh);
-		void operator*=(Quaternion rh);
+		float operator|(Quaternion rh) noexcept;
+		Quaternion operator*(Quaternion rh) noexcept;
+		void operator*=(Quaternion rh) noexcept;
 
-		Quaternion operator*(float rh);
-		void operator*=(float rh);
+		Quaternion operator*(float rh) noexcept;
+		void operator*=(float rh) noexcept;
 
-		static Quaternion GetDifference(Quaternion lh, Quaternion rh);
-		static Quaternion Slerp(Quaternion q1, Quaternion q2, float t);
+		static Quaternion GetDifference(Quaternion lh, Quaternion rh) noexcept;
+		static Quaternion Slerp(Quaternion q1, Quaternion q2, float t) noexcept;
 
 		Vector3 m_v;
 		float m_w;

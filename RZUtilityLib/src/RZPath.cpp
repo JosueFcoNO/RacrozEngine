@@ -2,17 +2,12 @@
 
 namespace rczEngine
 {
-	Path::Path(String str)
+	Path::Path(const String& str) : m_Hash(size_t{ 0 })
 	{
 		ResetPath(str);
 	}
 
-	Path::Path(const char * str)
-	{
-		ResetPath(str);
-	}
-
-	void Path::ResetPath(const char * filePath)
+	void Path::ResetPath(const String& filePath)
 	{
 		m_FilePath = filePath;
 
@@ -25,11 +20,6 @@ namespace rczEngine
 
 		std::hash<String> hash;
 		m_Hash = hash(m_FilePath);
-	}
-
-	void Path::ResetPath(String filePath)
-	{
-		ResetPath(filePath.c_str());
 	}
 
 	void Path::ResetPath()
@@ -95,39 +85,27 @@ namespace rczEngine
 	bool Path::FileExists() const
 	{
 		std::ifstream infile(m_FilePath);
-		bool FileExists = infile.good();
+		const bool FileExists = infile.good();
 		infile.close();
 		return FileExists;
 	}
 
-	bool Path::FileExists(const char * filePath)
+	bool Path::FileExists(const String& filePath)
 	{
 		std::ifstream infile(filePath);
-		bool FileExists = infile.good();
+		const bool FileExists = infile.good();
 		infile.close();
 		return FileExists;
 	}
 
-	bool Path::operator==(const Path & other) const
+	bool Path::operator==(const Path & other) const noexcept
 	{
 		return (m_Hash == other.m_Hash);
 	}
 
-	bool Path::operator!=(const Path & other) const
+	bool Path::operator!=(const Path & other) const noexcept
 	{
 		return !(m_Hash == other.m_Hash);
-	}
-
-	void Path::Serialize() const
-	{
-		size_t hash = m_Hash;
-		auto ser = Serializer::Pointer();
-		//Write the path serial.
-		ser->SetNextObjectSerial(SERIAL_PATH);
-		//Serialize the filePath String.
-		ser->SerializeString(m_FilePath);
-		//Serialize the hash.
-		ser->WriteData(&hash, sizeof(m_Hash));
 	}
 
 	void Path::Serialize()
@@ -138,7 +116,7 @@ namespace rczEngine
 		//Serialize the filePath String.
 		ser->SerializeString(m_FilePath);
 		//Serialize the hash.
-		ser->WriteData(&m_Hash, sizeof(m_Hash));
+		ser->WriteData((char*)&m_Hash, sizeof(m_Hash));
 	}
 
 	void Path::DeSerialize()
@@ -149,7 +127,7 @@ namespace rczEngine
 		//Serialize the filePath String.
 		ser->DeSerializeString(m_FilePath);
 		//DeSerialize the hash.
-		ser->ReadData(&m_Hash, sizeof(m_Hash));
+		ser->ReadData((char*)&m_Hash, sizeof(m_Hash));
 		ResetPath();
 	}
 

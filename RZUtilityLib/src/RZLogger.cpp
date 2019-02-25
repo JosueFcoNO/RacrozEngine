@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	Logger*& Logger::_Instance()
+	Logger*& Logger::_Instance() noexcept
 	{
 		static Logger* instance = nullptr;
 		return instance;
@@ -13,9 +13,19 @@ namespace rczEngine
 		(_Instance()) = new Logger;
 	}
 
-	Logger* Logger::Pointer()
+	gsl::not_null<Logger*> Logger::Pointer()
 	{
 		return _Instance();
+	}
+
+	gsl::not_null<Logger*> Logger::PointerOrCreate()
+	{
+		if (_Instance() == nullptr)
+		{
+			Start();
+		}
+
+		return Pointer();
 	}
 
 	void Logger::ShutDown()
@@ -23,32 +33,33 @@ namespace rczEngine
 		delete _Instance();
 	}
 
-	RZ_EXP void Logger::Log(const String & string, eLogMessageType type)
+	RZ_EXP void Logger::Log(const String & string, eLogMsgType type)
 	{
-		LogObject newLog;
-		newLog.Init(string, type);
-		m_LoggedStrings.push_back(newLog);
+		m_LoggedStrings.push_back(LogObject{ string, type });
 	}
 
-	void Logger::StartLog(const char * pszFileName)
+	void Logger::StartLog(const String& pszFileName)
 	{
 		///Create the fstream obj
-		auto ptr = Pair<String, FileStream*>(pszFileName, new FileStream());
-		m_Logs.insert(ptr);
+		m_Logs[pszFileName] = std::make_unique<FileStream>();
 
 		///Create and open the new file as pszFileName+HH:MM:SS/DD/MM/YYYY
-		m_Logs[pszFileName]->open(String(pszFileName) + ".html", std::ios_base::out | std::ios_base::trunc);
+		auto file = pszFileName + __DATE__ + " " + __TIME__ + ".html";
+		
+		for (auto& c : file)
+		{
+			if (c == ':') c = '-';
+		}
+
+		m_Logs[pszFileName]->open(file, std::ios_base::out | std::ios_base::trunc);
+
+		if (!m_Logs[pszFileName]) throw new std::exception(file.c_str());
 
 		///Write the header and html labels of the Log
 		*m_Logs[pszFileName] << "<html><header><h3>Racroz Engine Logger</h3>  <link rel=\"stylesheet\" type=\"text/css\" href=\"Log.css\"></header><body><p>Body Start</p>";
 	}
 
-	void Logger::LogMessageToFileLog(const char* pszFileName, const char* strMessage, eLogMessageType messageType)
-	{
-		LogMessageToFileLog(pszFileName, String(strMessage), messageType);
-	}
-
-	void Logger::LogMessageToFileLog(String pszFileName, String strMessage, eLogMessageType messageType)
+	void Logger::LogMessageToFileLog(const String& pszFileName, const String& strMessage, eLogMsgType messageType)
 	{
 		auto it = m_Logs.find(pszFileName);
 
@@ -59,16 +70,16 @@ namespace rczEngine
 		switch (messageType)
 		{
 		default:
-		case log_MESSAGE:
+		case eLogMsgType::Message:
 			*m_Logs[pszFileName] << "<div class = \"Message\">";
 			break;
-		case log_WARNING:
+		case eLogMsgType::Warning:
 			*m_Logs[pszFileName] << "<div class = \"Warning\"> ";
 			break;
-		case log_ERROR:
+		case eLogMsgType::Error:
 			*m_Logs[pszFileName] << "<div class = \"Error\"> ";
 			break;
-		case log_CRITICALERROR:
+		case eLogMsgType::CriticalError:
 			*m_Logs[pszFileName] << "<div class = \"FError\"> ";
 			break;
 		}
@@ -79,17 +90,7 @@ namespace rczEngine
 		Log(strMessage, messageType);
 	}
 
-	void Logger::LogMessageToFileLog(const char* pszFileName, const char* strMessage, int32 i, eLogMessageType messageType)
-	{
-		LogMessageToFileLog(pszFileName, String(strMessage) + TextTool::IntTo(i), messageType);
-	}
-
-	void Logger::LogMessageToFileLog(const char* pszFileName, const char* strMessage, float f, eLogMessageType messageType)
-	{
-		LogMessageToFileLog(pszFileName, String(strMessage) + TextTool::FloatTo(f), messageType);
-	}
-
-	void Logger::CloseLog(const char* pszFileName)
+	void Logger::CloseLog(const String& pszFileName)
 	{
 		*m_Logs[pszFileName] << "</table></body></html>";
 

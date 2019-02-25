@@ -5,7 +5,7 @@ namespace rczEngine
 	class RZ_EXP SamplerState
 	{
 	public:
-		SamplerState() : m_BorderColor(INIT_ZERO)
+		SamplerState() : m_BorderColor(Zero)
 		{ 
 			m_SamplerState = NULL; 
 		};

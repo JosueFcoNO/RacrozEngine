@@ -8,7 +8,7 @@ namespace rczEngine
 	{
 		bool ConstantBuffer::CreateConstantBuffer(uint32 size, eBUFFER_USAGE usage, GfxCore* gfx)
 		{
-			return Create(size, 1, NULL, 0, 0, usage, BIND_CONSTANT_BUFFER, gfx);
+			return Create(size, 1, nullptr, 0, 0, usage, BIND_CONSTANT_BUFFER, gfx);
 		}
 
 		void ConstantBuffer::UpdateConstantBuffer(void* srcData, GfxCore* gfx)

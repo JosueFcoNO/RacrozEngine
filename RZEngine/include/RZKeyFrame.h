@@ -5,7 +5,7 @@ namespace rczEngine
 	class RZ_EXP KeyFrame : public Serializable
 	{
 	public:
-		KeyFrame() : m_Scale(INIT_ZERO), m_Position(INIT_ZERO), m_Rotation(INIT_ZERO)
+		KeyFrame() : m_Scale(eInit::Zero), m_Position(eInit::Zero), m_Rotation(eInit::Zero)
 		{
 		}
 

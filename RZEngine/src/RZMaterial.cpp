@@ -55,13 +55,13 @@ namespace rczEngine
 			}
 			else
 			{
-				if (m_MatType == MAT_PBR_MetRough || m_MatType == MAT_PBR_TESS)
+				if (m_MatType == MAT_PBR_MetRough || m_MatType == MAT_PBR_MetRough_Tess)
 					Res->GetResource<Texture2D>(Res->m_BlackTex).lock()->SetThisTextureInPS(TEX_MET_SPEC, 1, gfx);
 				else
 					Res->GetResource<Texture2D>(Res->m_GreyTex).lock()->SetThisTextureInPS(TEX_MET_SPEC, 1, gfx);
 			}
 
-			if (m_MatType != MAT_PBR_SpecSmoothAlpha)
+			if (m_MatType != MAT_PBR_SpecSmooth_Alpha)
 			{
 				if (m_TextureRoughSmooth != INVALID_RESOURCE)
 				{
@@ -91,7 +91,7 @@ namespace rczEngine
 				Res->GetResource<Texture2D>(Res->m_BlackTex).lock()->SetThisTextureInPS(TEX_EMISSIVE, 1, gfx);
 			}
 
-			if (m_MatType == MATERIAL_TYPE::MAT_PBR_TESS)
+			if (m_MatType == MATERIAL_TYPE::MAT_PBR_MetRough_Tess)
 			{
 				if (m_TextureH != INVALID_RESOURCE)
 				{
@@ -103,7 +103,7 @@ namespace rczEngine
 				}
 			}
 
-			if (m_MatType == MATERIAL_TYPE::MAT_PBR_TRANSPARENT)
+			if (m_MatType == MATERIAL_TYPE::MAT_PBR_MetRough_Trans)
 			{
 				if (m_TextureO != INVALID_RESOURCE)
 				{
@@ -231,7 +231,7 @@ namespace rczEngine
 		}
 	}
 
-	void Material::Load(const char* filePath, const char* resName)
+	void Material::Load(const String& filePath, const String& resName)
 	{
 	}
 

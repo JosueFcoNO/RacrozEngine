@@ -4,12 +4,7 @@
 
 namespace rczEngine
 {
-	Sphere::Sphere() : m_Position(INIT_ZERO)
-	{
-		m_Radius = 1.0f;
-	}
-
-	Sphere::Sphere(float x, float y, float z, float Radius) : m_Position(INIT_NONE)
+	void Sphere::Set(float x, float y, float z, float Radius) noexcept
 	{
 		m_Radius = Radius;
 		m_Position.m_x = x;
@@ -17,33 +12,17 @@ namespace rczEngine
 		m_Position.m_z = z;
 	}
 
-	void Sphere::Set(float x, float y, float z, float Radius)
+	bool Sphere::CheckSphereCollision(Sphere sph) const noexcept
 	{
-		m_Radius = Radius;
-		m_Position.m_x = x;
-		m_Position.m_y = y;
-		m_Position.m_z = z;
+		return (Vector3::Distance(sph.m_Position, m_Position) <= m_Radius + sph.m_Radius);
 	}
 
-	bool Sphere::CheckSphereCollision(Sphere sph)
-	{
-		Vector3 Temp = sph.m_Position - m_Position;
-		if (Temp.Magnitude() <= m_Radius + sph.m_Radius)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	Vector3 Sphere::GetPosition()
+	Vector3 Sphere::GetPosition() const noexcept
 	{
 		return m_Position;
 	}
 
-	float Sphere::GetRadius()
+	float Sphere::GetRadius() const noexcept
 	{
 		return m_Radius;
 	}

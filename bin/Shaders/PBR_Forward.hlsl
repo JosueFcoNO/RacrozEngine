@@ -4,7 +4,7 @@ Texture2D MetallicTexture : register(t2);
 Texture2D RoughnessTexture : register(t3);
 Texture2D AOTexture : register(t4);
 
-TextureCube EnviromentCube : register(t5);
+TextureCube EnviromentCube : register(t12);
 
 Texture2D OpacityTexture : register(t6);
 
@@ -61,7 +61,16 @@ cbuffer cbMaterial : register(b4)
 
 	float OverrideNormal;
 	float OverrideRoughGloss;
-	float paddings[2];
+	float g_SpecularTint;
+	float g_SheenTint;
+
+	float g_Anisotropic;
+	float g_Sheen;
+	float g_ClearcoatGloss;
+	float g_Subsurface;
+
+	float g_Clearcoat;
+	float padding[3];
 };
 
 cbuffer cbCamera : register(b5)
@@ -136,8 +145,10 @@ PS_Output PS_Main(PS_Input Input)
 	roughness = 1.0f - roughness;
 #endif
 
+	
+
 	float4 FinalColor;
-	FinalColor.xyz = PBR_rm(Input.wpos.xyz, albedoColor, normal, roughness, metallic);
+	FinalColor.xyz = PBR_rm(Input.wpos.xyz, albedoColor, normal, roughness, metallic, lerp(0.04f, albedoColor, metallic));
 
 	//float SSAO = 1.0f - SSAOTex.Sample(LinearSampler, Input.Texcoord).r;
 	//SSAO = pow(SSAO, 2.2f);

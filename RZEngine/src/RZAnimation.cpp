@@ -75,7 +75,7 @@ namespace rczEngine
 		return Temp;
 	}
 
-	void Animation::Load(const char* filePath, const char* resName)
+	void Animation::Load(const String& filePath, const String& resName)
 	{
 		///Change the m_Name to the resource name
 		m_Name = resName;
@@ -266,7 +266,7 @@ namespace rczEngine
 			ser->ReadData(&sizeKeyframes, sizeof(sizeKeyframes));
 
 			//Write the vector of keyframes
-			for (int32 i = 0; i < sizeKeyframes; ++i)
+			for (int32 k = 0; k < sizeKeyframes; ++k)
 			{
 				KeyFrame tempKeyframe;
 				tempKeyframe.DeSerialize();

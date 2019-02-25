@@ -29,6 +29,6 @@ namespace rczEngine
 
 		m_CubeMap.lock()->SetThisTextureInPS(5, 0, gfx);
 
-		cube.lock()->DrawModel(gfx, res, NULL);
+		cube.lock()->DrawModel(NULL);
 	}
 }

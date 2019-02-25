@@ -11,7 +11,7 @@ namespace rczEngine
 
 		void DrawModel(Gfx::GfxCore* gfx, void* res, Map<String, ResourceHandle>* materialOverride, MATERIAL_TYPE matType = MAT_ANY);
 
-		void Load(const char* filePath, const char* resName);
+		void Load(const String& filePath, const String& resName);
 		void Release() { m_MeshSkeleton.DestroySkeletonBuffers(); m_VertexBuffer.Destroy(); m_IndexBuffer.Destroy(); };
 
 		virtual void Serialize();
@@ -36,10 +36,10 @@ namespace rczEngine
 		Skeleton m_MeshSkeleton;
 
 	private:
-		Vector<Texture2D*> LoadTextures(char* filePath);
+		Vector<Texture2D*> LoadTextures(const String& filePath);
 
 		Vector<StrPtr<Animation>> LoadAnimations(char* filePath);
 
-		Vector<Material*> LoadMaterials(char* filePath);
+		Vector<Material*> LoadMaterials(const String& filePath);
 	};
 }

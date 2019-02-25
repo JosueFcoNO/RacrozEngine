@@ -15,8 +15,8 @@ namespace rczEngine
 		m_SkyFromSpaceVS.ReflectLayout(0, m_gfx);
 
 		m_AtmosValues.CreateConstantBuffer(sizeof(AtmosData), Gfx::USAGE_DEFAULT, m_gfx);
-		data.InvWaveLength.Set(5.602, 9.478, 19.646);
-		m_AtmosValues.UpdateConstantBuffer(&data, m_gfx);
+		atmosData.InvWaveLength.Set(5.602, 9.478, 19.646);
+		m_AtmosValues.UpdateConstantBuffer(&atmosData, m_gfx);
 		
 		Transparent.InitBlendState();
 		Transparent.CreateBlendState(m_gfx);
@@ -65,8 +65,8 @@ namespace rczEngine
 		//}
 		//
 		//
-		//auto space = SpaceManager::Pointer();
-		//
+		auto space = SpaceManager::Pointer();
+		
 		//if (space)
 		//{
 		//	m_AtmosValues.SetBufferInVS(10, m_gfx);
@@ -84,7 +84,7 @@ namespace rczEngine
 		//	m_SkyFromSpacePS.SetThisPixelShader(m_gfx);
 		//	m_CullBack.SetThisRasterizerState(m_gfx);
 		//
-		//	space->RenderAtmos(105.0f);
+		//	space->RenderAtmos(1.05f);
 		//
 		//	m_gfx->UnbindRenderTargets();
 		//

@@ -7,14 +7,14 @@ namespace rczEngine
 		int nSamples = 3;
 		float fSamples = 3.0f;
 
-		float SkyScale = 5.0f;
-		float OuterRadius = 205;
+		float SkyScale = 0.05f;
+		float OuterRadius = 1.05f;
 
 		Vector3 InvWaveLength;
-		float OuterRadiusSquared = 42025.0;
+		float OuterRadiusSquared = 1.05f*1.05f;
 
-		float InnerRadius = 200.0;
-		float InnerRadiusSquared = 40000.0;
+		float InnerRadius = 1.0f;
+		float InnerRadiusSquared = 1.0f;
 		float KrESun = .0375;
 		float KmESun = .0225;
 
@@ -58,7 +58,7 @@ namespace rczEngine
 		Gfx::PixelShader  m_SkyFromAtmospherePS;
 
 		Gfx::ConstantBuffer m_AtmosValues;
-		AtmosData data;
+		AtmosData atmosData;
 
 		StrPtr<Scene> m_ActiveScene;
 		Gfx::BlendState Transparent;

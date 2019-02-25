@@ -31,7 +31,7 @@ namespace rczEngine
 	void CameraManager::Destroy()
 	{
 		m_CameraBuffer.Destroy();
-		m_ActiveCamera = NULL;
+		m_ActiveCamera = nullptr;
 		m_Cameras.clear();
 	}
 

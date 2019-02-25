@@ -6,9 +6,13 @@ namespace rczEngine
 
 	void Planet::InitPlanet(int32 seed, float x, float y, float z, SpaceManager* spaceMng)
 	{
+		instance = this;
+
 		m_SpaceMng = spaceMng;
 		m_CurrentScene = SceneManager::Pointer()->GetActiveScene();
 		m_GfxCore = Gfx::GfxCore::Pointer();
+
+		LoadAndProcessModel();
 
 		PlayerCamera = CameraManager::Pointer()->GetActiveCamera().lock();
 
@@ -16,15 +20,8 @@ namespace rczEngine
 
 		for (int i = 0; i < 6; ++i)
 		{
-			Quadtree[i].InitQuadTree(&noise, Vector3(0,0,0), 0, 0, (eMeshPlaneOrientation)i);
+			Quadtree[i].InitQuadTree(this, &noise, Vector3(0, 0, 0), 0, 0, (eMeshPlaneOrientation)i, ParentSidesData());
 		}
-
-		Quadtree[(int)Xpos].SetAdyacents(&Quadtree[(int)Zneg], &Quadtree[(int)Zpos], &Quadtree[(int)Ypos], &Quadtree[(int)Yneg]);
-		Quadtree[(int)Xneg].SetAdyacents(&Quadtree[(int)Zpos], &Quadtree[(int)Zneg], &Quadtree[(int)Ypos], &Quadtree[(int)Yneg]);
-		Quadtree[(int)Ypos].SetAdyacents(&Quadtree[(int)Zneg], &Quadtree[(int)Zpos], &Quadtree[(int)Xpos], &Quadtree[(int)Xneg]);
-		Quadtree[(int)Yneg].SetAdyacents(&Quadtree[(int)Zpos], &Quadtree[(int)Zneg], &Quadtree[(int)Xneg], &Quadtree[(int)Xpos]);
-		Quadtree[(int)Zpos].SetAdyacents(&Quadtree[(int)Xneg], &Quadtree[(int)Xpos], &Quadtree[(int)Ypos], &Quadtree[(int)Yneg]);
-		Quadtree[(int)Zneg].SetAdyacents(&Quadtree[(int)Xpos], &Quadtree[(int)Xneg], &Quadtree[(int)Ypos], &Quadtree[(int)Yneg]);
 
 		m_HeightCameracb.CreateConstantBuffer(sizeof(Vector4), Gfx::USAGE_DEFAULT, m_GfxCore);
 
@@ -77,21 +74,26 @@ namespace rczEngine
 
 		static Gfx::RasterizerState wireframe;
 		static bool Done = false;
-		
+
 		if (!Done)
 		{
 			Done = true;
 			wireframe.Init(Gfx::FILL_WIREFRAME, Gfx::CULL_BACK);
 			wireframe.CreateRasterizerState(m_GfxCore);
 		}
-		
-		wireframe.SetThisRasterizerState(m_GfxCore);
+
+		if (GUIEditor::Pointer()->Wireframe)
+			wireframe.SetThisRasterizerState(m_GfxCore);
 
 		Vector3 PlayerPos = PlayerCamera->GetPosition();
 
 		for (int i = 0; i < 6; ++i)
 		{
 			Quadtree[i].Update(PlayerPos);
+		}
+
+		for (int i = 0; i < 6; ++i)
+		{
 			Quadtree[i].Render();
 		}
 
@@ -101,14 +103,14 @@ namespace rczEngine
 	void Planet::RenderPlanetWater(float scale)
 	{
 		ResVault::Pointer()->GetResource<Material>(Water).lock()->SetThisMaterial();
-		m_Planet->DrawModel(m_GfxCore, ResVault::Pointer(), NULL);
+		m_Planet->DrawModel(NULL);
 	}
 
 	void Planet::RenderAtmosphere(float scale)
 	{
 		///Render the planet sphere.
 		Matrix4 ScaleMatrix;
-		ScaleMatrix = Matrix4::Scale3D(scale + 0, scale + 0, scale + 0)*Matrix4::Translate3D(m_SpacePosition.m_x, m_SpacePosition.m_y, m_SpacePosition.m_z);
+		ScaleMatrix = Matrix4::Scale3D(scale + 0.5f, scale + 0.5f, scale + 0.5f)*Matrix4::Translate3D(m_SpacePosition.m_x, m_SpacePosition.m_y, m_SpacePosition.m_z);
 		ScaleMatrix.Transpose();
 
 		Vector3 cPos = CameraManager::Pointer()->GetActiveCamera().lock()->GetPosition();
@@ -119,11 +121,10 @@ namespace rczEngine
 		m_HeightCameracb.UpdateConstantBuffer(&m_HeightCamera, m_GfxCore);
 		m_HeightCameracb.SetBufferInVS(11, m_GfxCore);
 
-
 		m_CurrentScene->m_WorldMatrix.UpdateConstantBuffer(&ScaleMatrix, m_GfxCore);
 		m_CurrentScene->m_WorldMatrix.SetBufferInVS(2, m_GfxCore);
 
-		m_Planet->DrawModel(m_GfxCore, ResVault::Pointer(), NULL);
+		m_Planet->DrawModel(NULL);
 	}
 
 	void Planet::CreateMaterial()
@@ -168,9 +169,54 @@ namespace rczEngine
 		//Water = res->InsertResource(mat);
 	}
 
+	void Planet::ProcessBorderData(String hash, PlanetQuadTreeNode * node, eSide side, String Start, String End)
+	{
+		auto found = m_PatchInfo.find(hash);
+
+		if (found == m_PatchInfo.end())
+		{
+			PatchData newPatch;
+			newPatch.DepthOfData = node->GetQuadTreeDepth();
+
+			node->GetSide(side, newPatch.Vertices);
+			newPatch.VertexStartHash = Start;
+			newPatch.VertexEndHash = End;
+			newPatch.First = true;
+			m_PatchInfo[hash] = newPatch;
+
+			return;
+		}
+		else
+		{
+			if (found->second.DepthOfData <= node->GetQuadTreeDepth())
+			{
+				found->second.DepthOfData = node->GetQuadTreeDepth();
+				found->second.Vertices.clear();
+				found->second.First = false;
+				node->GetSide(side, found->second.Vertices);
+				found->second.VertexStartHash = Start;
+				found->second.VertexEndHash = End;
+			}
+		}
+	}
+
+	const PatchData * Planet::GetPatchData(String hash)
+	{
+		auto found = m_PatchInfo.find(hash);
+
+		if (found != m_PatchInfo.end())
+		{
+			return &found->second;
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
 	void Planet::LoadAndProcessModel()
 	{
 		m_Planet = std::make_shared<Model>();
-		m_Planet->Load("Models/Planet/PlanetSurfaceH.dae", "PlanetModel");
+		m_Planet->Load("RacrozEngineAssets/EsferaLowPoly.fbx", "PlanetModel");
 	}
 }

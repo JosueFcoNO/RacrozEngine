@@ -6,8 +6,8 @@ namespace rczEngine
 	{
 		GeometryShader::GeometryShader()
 		{
-			m_GeometryShader = NULL;
-			m_ShaderBlob = NULL;
+			m_GeometryShader = nullptr;
+			m_ShaderBlob = nullptr;
 		}
 
 		GeometryShader::~GeometryShader()
@@ -22,7 +22,7 @@ namespace rczEngine
 
 		bool GeometryShader::SetThisGeometryShader(GfxCore * gfx)
 		{
-			if (m_GeometryShader == NULL || m_ShaderBlob == NULL)
+			if (m_GeometryShader == nullptr || m_ShaderBlob == nullptr)
 				return false;
 
 			return gfx->SetGeometryShader(*this);

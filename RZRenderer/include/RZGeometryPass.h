@@ -25,6 +25,9 @@ namespace rczEngine
 		Gfx::DomainShader m_Dshader;
 		Gfx::HullShader   m_Hshader;
 
+		Gfx::PixelShader m_SmoothPS;
+		Gfx::PixelShader m_SmoothSpecAlphaPS;
+
 		StrPtr<Scene> m_ActiveScene;
 
 	};

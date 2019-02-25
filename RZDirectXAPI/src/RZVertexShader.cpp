@@ -29,7 +29,7 @@ namespace rczEngine
 
 		void VertexShader::SetThisVertexShader(GfxCore* gfx)
 		{
-			if (m_VertexShader == NULL || m_ShaderBlob == NULL)
+			if (m_VertexShader == nullptr || m_ShaderBlob == nullptr)
 			{
 				return;
 			}
@@ -53,7 +53,7 @@ namespace rczEngine
 			HRESULT hr;
 
 			///Do the reflection
-			ID3D11ShaderReflection* reflect = NULL;
+			ID3D11ShaderReflection* reflect = nullptr;
 			hr = D3DReflect(m_ShaderBlob->GetBufferPointer(), m_ShaderBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&reflect);
 
 			///Get the reflection's descriptor

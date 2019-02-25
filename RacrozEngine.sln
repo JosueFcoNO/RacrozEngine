@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RZUtilityLib", "RZUtilityLib\RZUtilityLib.vcxproj", "{55735495-7D6E-4418-B0CB-FD761AEBCC36}"
 EndProject
@@ -12,6 +12,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RZDirectXAPI", "RZDirectXAPI\RZDirectXAPI.vcxproj", "{13831E5B-23BC-45C3-8EF1-6541328A1C38}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RZUtilityLib-UnitTest2", "RZUtilityLib-UnitTest2\RZUtilityLib-UnitTest2.vcxproj", "{344DF09A-A0AF-40BF-8074-69D9D1A5621B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{55735495-7D6E-4418-B0CB-FD761AEBCC36} = {55735495-7D6E-4418-B0CB-FD761AEBCC36}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RZEngine", "RZEngine\RZEngine.vcxproj", "{18F0EAF3-B122-4C92-BF32-2F2AFF22D15F}"
 EndProject
@@ -186,5 +189,8 @@ Global
 		{58A149C3-97D9-4BF4-8957-C67E938C4DA1} = {7F6ACBAC-C623-4449-8476-6AF1D5059F69}
 		{D8086649-B35F-40FF-AD8C-869EEB67A70B} = {24D62CE6-08ED-44B8-981E-A802421D376B}
 		{7BBEB7B9-7A0C-4EE5-B260-78C0F8DED98F} = {C23D73A1-13AD-450B-A4B4-351255D0D38F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {08CB3B65-0AA8-4937-AFCE-AED55345DFEA}
 	EndGlobalSection
 EndGlobal

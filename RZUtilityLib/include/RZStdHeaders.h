@@ -14,6 +14,9 @@
 #include <array>
 #include <thread>   
 #include <mutex>
+#include <optional>
+#include <gsl/gsl>
+#include <variant>
 
 #if (RZ_COMPILER == RZ_COMPILER_GCC)
 #if RZ_COMPILER_VER >= 430

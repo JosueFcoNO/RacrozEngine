@@ -95,6 +95,8 @@ struct PS_OUTPUT
     float4 Normal : COLOR2;
     float4 Emmisive : COLOR3;
     float4 Velocity : COLOR4;
+	float4 Specular : COLOR5;
+
 };
 
 PS_Input VS_Main(VS_Input vertex)
@@ -195,6 +197,8 @@ PS_OUTPUT PS_Main(PS_Input frag) : SV_TARGET
 	float2 b = (frag.prevPos.xy / frag.prevPos.w) * 0.5f + 0.5f;
 	output.Velocity.xy = (a - b);
 	output.Velocity.zw = float2(0.0f, 1.0f);
+
+	output.Specular = float4(lerp(0.04f, albedo, metallic), 1.0f);
 
 	return output;
 }

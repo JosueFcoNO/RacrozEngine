@@ -65,7 +65,7 @@ namespace rczEngine
 		///Change the Topology to linelist
 		graphicsapi_instance->SetPrimitiveTopology(Gfx::eTOPOLOGY::TOPO_LINELIST);
 
-		Matrix4 M(INIT_UNIT);
+		Matrix4 M(eInit::Unit);
 		m_WorldMatrixCB.SetBufferInVS(2, graphicsapi_instance);
 		m_WorldMatrixCB.UpdateConstantBuffer(&M, graphicsapi_instance);
 	
@@ -334,7 +334,7 @@ namespace rczEngine
 		Temp->m_Position.m_x = x;
 		Temp->m_Position.m_y = y;
 		Temp->m_Position.m_z = z;
-		Temp->m_Radius = radius*10;
+		Temp->m_Radius = radius;
 
 		Temp->m_Color.m_x = r;
 		Temp->m_Color.m_z = b;

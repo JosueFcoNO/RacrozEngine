@@ -9,57 +9,77 @@ namespace rczEngine {
 		////// Vector3 Constructors
 		///////////////////////
 
-		Vector3() {};
+		Vector3() noexcept :
+			m_x(0.0f),
+			m_y(0.0f),
+			m_z(0.0f) {};
 
-		Vector3(eINIT init);
+		Vector3(eInit init) noexcept;
 
-		Vector3(const Vector2& v2);
-		Vector3(const Vector2I& v2i);
-		Vector3(const Vector4& v4);
+		Vector3(const Vector2& v2) noexcept :
+			m_x(v2.m_x),
+			m_y(v2.m_y),
+			m_z(0.0f) {};
 
-		Vector3(float x, float y, float z);
+		Vector3(const Vector2I& v2i) noexcept :
+			m_x(gsl::narrow_cast<float>(v2i.m.x)),
+			m_y(gsl::narrow_cast<float>(v2i.m.y)),
+			m_z(0.0f) {};
 
-		void Set(const float& x, const float& y, const float& z);
-		void Set(const Vector3& v);
-		void Scale(const float& Scale);
-		static float Distance(const Vector3& v1, const Vector3& v2);
+		Vector3(const Vector4& v4) noexcept;
+
+		Vector3(float x, float y, float z) noexcept :
+			m_x(x),
+			m_y(y),
+			m_z(z) {};
+
+		static float Distance(const Vector3& vhead, const Vector3& vtail);
 		static float Anglexz(const Vector3& v, bool getAsDegree);
+		static uint32 Hash(const Vector3& v) noexcept;
 
+		void Set(const float& x, const float& y, const float& z) noexcept;
+		void Set(const Vector3& v) noexcept;
+		void Scale(const float& Scale) noexcept;
+		void Normalize() noexcept;
+		Vector3 GetNormalized() const noexcept;
+		FORCEINLINE float Magnitude() const noexcept;
 
-		Vector3 operator+(const Vector3& v) const;
-		Vector3 operator-(const Vector3& v) const;
-		Vector3 operator*(const Vector3& v) const;
-		Vector3 operator*(const float& f) const;
-		Vector3 operator/(const Vector3& v) const;
-		Vector3 operator/(const float& f) const;
+		FORCEINLINE Vector3 operator+(const Vector3& v) const noexcept { return Vector3(*this) += v; }
+		FORCEINLINE Vector3 operator-(const Vector3& v) const noexcept { return Vector3(*this) -= v; }
+		FORCEINLINE Vector3 operator*(const Vector3& v) const noexcept { return Vector3(*this) *= v; }
+		FORCEINLINE Vector3 operator/(const Vector3& v) const noexcept { return Vector3(*this) /= v; }
 
-		Vector3& operator+=(const Vector3& v);
-		Vector3& operator-=(const Vector3& v);
-		Vector3& operator*=(const Vector3& v);
-		Vector3& operator*=(const float& f);
-		Vector3& operator/=(const Vector3& v);
-		Vector3& operator/=(const float& f);
+		FORCEINLINE Vector3 operator*(const float& f) const noexcept { return Vector3(*this) *= f; }
+		FORCEINLINE Vector3 operator/(const float& f) const noexcept { return Vector3(*this) /= f; }
 
-		bool operator==(const Vector3& v) const;
-		bool operator!=(const Vector3& v) const;
-		bool operator<(const Vector3& v) const;
-		bool operator>(const Vector3& v) const ;
-		bool operator<=(const Vector3& v) const;
-		bool operator>=(const Vector3& v) const;
+		Vector3& operator+=(const Vector3& v) noexcept;
+		Vector3& operator-=(const Vector3& v) noexcept;
+		Vector3& operator*=(const Vector3& v) noexcept;
+		Vector3& operator/=(const Vector3& v) noexcept;
 
-		float operator|(const Vector3& v) const;
-		Vector3 operator^(const Vector3& v) const;
+		Vector3& operator*=(const float& f) noexcept;
+		Vector3& operator/=(const float& f) noexcept;
 
-		void Normalize();
-		Vector3 GetNormalized();
+		FORCEINLINE bool operator==(const Vector3& v) const noexcept { return (m_x == v.m_x && m_y == v.m_y && m_z == v.m_z); }
+		FORCEINLINE bool operator!=(const Vector3& v) const noexcept { return !(m_x == v.m_x && m_y == v.m_y && m_z == v.m_z); }
+		FORCEINLINE bool operator<(const Vector3& v)  const noexcept { return (m_x < v.m_x && m_y < v.m_y && m_z < v.m_z); }
+		FORCEINLINE bool operator>(const Vector3& v)  const noexcept { return (m_x > v.m_x && m_y > v.m_y && m_z > v.m_z); }
+		FORCEINLINE bool operator<=(const Vector3& v) const noexcept { return (m_x <= v.m_x && m_y <= v.m_y && m_z <= v.m_z); }
+		FORCEINLINE bool operator>=(const Vector3& v) const noexcept { return (m_x >= v.m_x && m_y >= v.m_y && m_z >= v.m_z); }
 
+		FORCEINLINE float operator|(const Vector3& v) const noexcept { return m_x * v.m_x + m_y * v.m_y + m_z * v.m_z; }
+		FORCEINLINE Vector3 operator^(const Vector3& v) const noexcept;
 
-		float Magnitude();
-
-		float m_x, m_y, m_z;
-
-		static const Vector3 ZERO;
-
+		union
+		{
+			struct
+			{
+				float m_x;
+				float m_y;
+				float m_z;
+			};
+			float m_elements[3];
+		};
 	};
 
 }

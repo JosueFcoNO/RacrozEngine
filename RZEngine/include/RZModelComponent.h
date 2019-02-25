@@ -27,7 +27,7 @@ namespace rczEngine
 			ImGui::Text("Model Renderer");
 
 			auto ModelObj = ResVault::Pointer()->GetResource<Model>(m_Model).lock();
-			ImGui::Text("Current Model: %s", ModelObj->GetName());
+			ImGui::Text("Current Model: %s", ModelObj->GetName().c_str());
 
 			if (ImGui::Button("Change Model"))
 			{

@@ -12,7 +12,7 @@ namespace rczEngine
 		~GameObject() {  };
 
 		///The Node constructor takes an id and a name. There can't be a game object without a name.
-		GameObject(GameObjectID actorID = INVALID_ID, String actorName = "GameObj") : m_Position(INIT_NONE), m_Orientation(INIT_NONE), m_Scale(INIT_NONE), m_ToLocal(INIT_NONE)
+		GameObject(GameObjectID actorID = INVALID_ID, String actorName = "GameObj") : m_Position(eInit::None), m_Orientation(eInit::None), m_Scale(eInit::None), m_ToLocal(eInit::None), m_ToWorld{ Matrix4(eInit::Zero), Matrix4(eInit::Zero) }
 		{
 			m_GameObjectID = actorID;
 			m_Name = actorName;
@@ -33,12 +33,12 @@ namespace rczEngine
 
 		FORCEINLINE void SetParent(StrGameObjectPtr parent) { m_ParentNode = parent; m_ParentID = m_ParentNode.lock()->GetID(); };
 		///Returns the parent of the node
-		FORCEINLINE WeakGameObjectPtr GetParent() { return m_ParentNode; };
+		FORCEINLINE WeakGameObjPtr GetParent() { return m_ParentNode; };
 		///Returns a pointer to the GameObjectVector Containing the children of this node
 		FORCEINLINE GameObjectVector GetChildren() { return m_ChildrenVector; };
 
 		///Adds a new node child
-		void AddChild(WeakGameObjectPtr babyNode)
+		void AddChild(WeakGameObjPtr babyNode)
 		{
 			m_ChildrenVector.push_back(babyNode);
 			m_ChildrenIDs.push_back(babyNode.lock()->GetID());
@@ -163,7 +163,7 @@ namespace rczEngine
 		GameObjectID m_GameObjectID;
 
 		///A pointer to the parent
-		WeakGameObjectPtr m_ParentNode;
+		WeakGameObjPtr m_ParentNode;
 
 		GameObjectID m_ParentID;
 

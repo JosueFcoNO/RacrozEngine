@@ -7,12 +7,12 @@ namespace rczEngine
 	class RZ_EXP AssimpLoader : public ModelLoader
 	{
 	public:
-		virtual StrPtr<Model> LoadModel(const char* filePath);
-		virtual bool LoadModelWithHierarchy(StrGameObjectPtr gameObject, const char* filePath);
-		virtual bool LoadSkinnedModel(StrGameObjectPtr gameObject, const char* filePath);
+		virtual StrPtr<Model> LoadModel(const String& filePath);
+		virtual bool LoadModelWithHierarchy(StrGameObjectPtr gameObject, const String& filePath);
+		virtual bool LoadSkinnedModel(StrGameObjectPtr gameObject, const String& filePath);
 
 	private:
-		bool AddNodeMesh(aiNode* pNode, const char* parent, bool addMeshes, bool addBones = false);
+		bool AddNodeMesh(aiNode* pNode, const String& parent, bool addMeshes, bool addBones = false);
 		void LoadMaterials();
 		ResourceHandle LoadMesh(aiNode* pNode, bool bones = false);
 

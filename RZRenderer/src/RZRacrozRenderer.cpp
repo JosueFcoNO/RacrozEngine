@@ -113,7 +113,7 @@ namespace rczEngine
 			SpaceManager::Pointer()->InitSpaceManager();
 		}
 
-		static StrPtr<PBR_Pass> pbr = std::dynamic_pointer_cast<PBR_Pass, Pass>(m_Passes["PBR"]);
+		static auto pbr = std::dynamic_pointer_cast<PBR_Pass, Pass>(m_Passes["PBR"]);
 
 		//If there exists an editor, render it.
 		if (editor)
@@ -142,9 +142,10 @@ namespace rczEngine
 				{
 					if (ImGui::Button("Start Space"))
 					{
-						StrPtr<SkyBox> Sky = std::make_shared<SkyBox>();
-						Sky->InitSkyBox(ResVault::Pointer()->LoadResource("Cubemaps/OldSpace.dds"), Gfx::GfxCore::Pointer(), ResVault::Pointer());
-						ChangeSkyBox(Sky);
+						//StrPtr<SkyBox> Sky = std::make_shared<SkyBox>();
+						String str = "Cubemaps/OldSpace.dds";
+						//Sky->InitSkyBox(ResVault::Pointer()->LoadResource(str), Gfx::GfxCore::Pointer(), ResVault::Pointer());
+						//ChangeSkyBox(Sky);
 
 						StartingSpaceManager = true;
 
@@ -176,6 +177,7 @@ namespace rczEngine
 		m_RTs["NormalsMR"] = CreateRenderTargetAndTexture_XYScales("Normals", m_Textures["NormalsMR"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32B32A32_FLOAT);
 		m_RTs["Emmisive"] = CreateRenderTargetAndTexture_XYScales("EmmisiveTex", m_Textures["Emmisive"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
 		m_RTs["Velocity"] = CreateRenderTargetAndTexture_XYScales("Velocity", m_Textures["Velocity"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32_FLOAT);
+		m_RTs["Specular"] = CreateRenderTargetAndTexture_XYScales("Specular", m_Textures["Specular"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
 
 		m_RTs["ColorCorrection"] = CreateRenderTargetAndTexture_XYScales("ColorCorrection", m_Textures["ColorCorrection"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
 
@@ -190,13 +192,16 @@ namespace rczEngine
 
 		m_RTs["HDRBloom"] = CreateRenderTargetAndTexture_XYScales("HDRBloom", m_Textures["HDRBloom"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
 
+		const String SSAO = "SSAO";
+		m_RTs[SSAO] = CreateRenderTargetAndTexture_XYScales(SSAO.c_str(), m_Textures[SSAO], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32_FLOAT);
+
 		/////////////////
 		///SKYBOX PASS///
 		/////////////////
 
 		auto passSkyBox = CreatePass("SkyBox", PASSES::SKYBOX, m_CurrentRenderingMode);
 
-		passSkyBox->AddRenderTarget(m_RTs["ColorAO"].get(), 0);
+		passSkyBox->AddRenderTarget(m_RTs["ColorAO"], 0);
 		passSkyBox->AddRasterizerState(&m_RSSolidCullNone);
 
 		m_PassesOrder.push_back("SkyBox");
@@ -208,11 +213,12 @@ namespace rczEngine
 		///Create the geometry pass
 		auto passGeometry = CreatePass("Geometry", PASSES::GEOMETRY_PASS, m_CurrentRenderingMode);
 
-		passGeometry->AddRenderTarget(m_RTs["ColorAO"].get(), 0);
-		passGeometry->AddRenderTarget(m_RTs["Position"].get(), 1);
-		passGeometry->AddRenderTarget(m_RTs["NormalsMR"].get(), 2);
-		passGeometry->AddRenderTarget(m_RTs["Emmisive"].get(), 3);
-		passGeometry->AddRenderTarget(m_RTs["Velocity"].get(), 4);
+		passGeometry->AddRenderTarget(m_RTs["ColorAO"], 0);
+		passGeometry->AddRenderTarget(m_RTs["Position"], 1);
+		passGeometry->AddRenderTarget(m_RTs["NormalsMR"], 2);
+		passGeometry->AddRenderTarget(m_RTs["Emmisive"], 3);
+		passGeometry->AddRenderTarget(m_RTs["Velocity"], 4);
+		passGeometry->AddRenderTarget(m_RTs["Specular"], 5);
 
 		m_PassesOrder.push_back("Geometry");
 
@@ -223,11 +229,11 @@ namespace rczEngine
 		///Create the geometry pass
 		//auto passTerrainGeometry = CreatePass("Terrain", PASSES::TERRAIN_GEOMETRY_PASS, m_CurrentRenderingMode);
 		//
-		//passTerrainGeometry->AddRenderTarget(m_RTs["ColorAO"].get(), 0);
-		//passTerrainGeometry->AddRenderTarget(m_RTs["Position"].get(), 1);
-		//passTerrainGeometry->AddRenderTarget(m_RTs["NormalsMR"].get(), 2);
-		//passTerrainGeometry->AddRenderTarget(m_RTs["Emmisive"].get(), 3);
-		//passTerrainGeometry->AddRenderTarget(m_RTs["Velocity"].get(), 4);
+		//passTerrainGeometry->AddRenderTarget(m_RTs["ColorAO"], 0);
+		//passTerrainGeometry->AddRenderTarget(m_RTs["Position"], 1);
+		//passTerrainGeometry->AddRenderTarget(m_RTs["NormalsMR"], 2);
+		//passTerrainGeometry->AddRenderTarget(m_RTs["Emmisive"], 3);
+		//passTerrainGeometry->AddRenderTarget(m_RTs["Velocity"], 4);
 		//
 		//m_PassesOrder.push_back("Terrain");
 
@@ -236,6 +242,20 @@ namespace rczEngine
 		///Create the geometry pass
 		m_PassesOrder.push_back("PostProcess");
 
+
+		//////////////////////
+		///SS Ambient Occlusion PASS
+		//////////////////////
+
+		///Create the geometry pass
+		auto passSSAO = CreatePass(SSAO.c_str(), PASSES::SSAO, m_CurrentRenderingMode);
+
+		passSSAO->AddRenderTarget(m_RTs[SSAO], 0);
+
+		passSSAO->AddTexture2D(m_Textures["Position"], 0);
+		passSSAO->AddTexture2D(m_Textures["NormalsMR"], 1);
+		m_PassesOrder.push_back(SSAO);
+
 		/////////
 		///PBR///
 		/////////
@@ -243,12 +263,13 @@ namespace rczEngine
 		///Create the PBR pass
 		auto passPBR = CreatePass("PBR", PASSES::PBR, m_CurrentRenderingMode);
 
-		passPBR->AddRenderTarget(m_RTs["PBR"].get(), 0);
+		passPBR->AddRenderTarget(m_RTs["PBR"], 0);
 
-		passPBR->AddTexture2D(m_Textures["ColorAO"].get(), 0);
-		passPBR->AddTexture2D(m_Textures["NormalsMR"].get(), 1);
-		passPBR->AddTexture2D(m_Textures["Position"].get(), 2);
-		//passPBRLight.AddTexture2D(BlurVTex, 5); //Final SSAO Blur
+		passPBR->AddTexture2D(m_Textures["ColorAO"], 0);
+		passPBR->AddTexture2D(m_Textures["NormalsMR"], 1);
+		passPBR->AddTexture2D(m_Textures["Position"], 2);
+		passPBR->AddTexture2D(m_Textures["Specular"], 3);
+		passPBR->AddTexture2D(m_Textures["SSAO"], 5); //Final SSAO Blur
 		//passPBRLight.AddTexture2D(ShadowFinalTex, 6);
 
 		m_PassesOrder.push_back("PBR");
@@ -260,7 +281,9 @@ namespace rczEngine
 		///Create the geometry pass
 		auto passTransparent = CreatePass("Transparent", PASSES::PBR_TRANSPARENT, m_CurrentRenderingMode);
 
-		passTransparent->AddRenderTarget(m_RTs["PBR"].get(), 0);
+		passTransparent->AddRenderTarget(m_RTs["PBR"], 0);
+		passTransparent->AddRenderTarget(m_RTs["Position"], 1);
+		passTransparent->AddRenderTarget(m_RTs["NormalsMR"], 2);
 
 		m_PassesOrder.push_back("Transparent");
 
@@ -268,23 +291,23 @@ namespace rczEngine
 		///PLANET PASS/////
 		///////////////////
 
-		//auto passPlanet = CreatePass("Planet", PASSES::PLANET_PASS, m_CurrentRenderingMode);
-		//
-		//passPlanet->AddRenderTarget(m_RTs["PBR"].get(), 0);
-		//passPlanet->AddRenderTarget(m_RTs["Position"].get(), 1);
-		//passPlanet->AddRenderTarget(m_RTs["NormalsMR"].get(), 2);
-		//
-		//m_PassesOrder.push_back("Planet");
+		auto passPlanet = CreatePass("Planet", PASSES::PLANET_PASS, m_CurrentRenderingMode);
+		
+		passPlanet->AddRenderTarget(m_RTs["PBR"], 0);
+		passPlanet->AddRenderTarget(m_RTs["Position"], 1);
+		passPlanet->AddRenderTarget(m_RTs["NormalsMR"], 2);
+		
+		m_PassesOrder.push_back("Planet");
 
 		///////////////////
 		///SCATTER PASS/////
 		///////////////////
 
-		//auto passAtmos = CreatePass("Atmos", PASSES::ATMOS_SCATTER_PASS, m_CurrentRenderingMode);
-		//
-		//passAtmos->AddRenderTarget(m_RTs["PBR"].get(), 0);
-		//
-		//m_PassesOrder.push_back("Atmos");
+		auto passAtmos = CreatePass("Atmos", PASSES::ATMOS_SCATTER_PASS, m_CurrentRenderingMode);
+		
+		passAtmos->AddRenderTarget(m_RTs["PBR"], 0);
+		
+		m_PassesOrder.push_back("Atmos");
 
 		m_PassesOrder.push_back("PostProcess");
 
@@ -295,10 +318,10 @@ namespace rczEngine
 		///Create the PBR pass
 		auto passMotionBlur = CreatePass("MotionBlur", PASSES::MOTION_BLUR, m_CurrentRenderingMode);
 
-		passMotionBlur->AddRenderTarget(m_RTs["MotionBlur"].get(), 0);
+		passMotionBlur->AddRenderTarget(m_RTs["MotionBlur"], 0);
 
-		passMotionBlur->AddTexture2D(m_Textures["PBR"].get(), 0);
-		passMotionBlur->AddTexture2D(m_Textures["Velocity"].get(), 1);
+		passMotionBlur->AddTexture2D(m_Textures["PBR"], 0);
+		passMotionBlur->AddTexture2D(m_Textures["Velocity"], 1);
 
 		m_PassesOrder.push_back("MotionBlur");
 
@@ -311,8 +334,8 @@ namespace rczEngine
 		///Create the Luminance pass
 		auto passLuminance = CreatePass("Luminance", PASSES::LUMINANCE, m_CurrentRenderingMode);
 
-		passLuminance->AddRenderTarget(m_RTs["Luminance"].get(), 0);
-		passLuminance->AddTexture2D(m_Textures["MotionBlur"].get(), 0);
+		passLuminance->AddRenderTarget(m_RTs["Luminance"], 0);
+		passLuminance->AddTexture2D(m_Textures["MotionBlur"], 0);
 
 		m_PassesOrder.push_back("Luminance");
 
@@ -325,10 +348,10 @@ namespace rczEngine
 		///Create the Bright pass
 		auto passBright = CreatePass("Bright", PASSES::BRIGHT, m_CurrentRenderingMode);
 
-		passBright->AddRenderTarget(m_RTs["Bright"].get(), 0);
+		passBright->AddRenderTarget(m_RTs["Bright"], 0);
 
-		passBright->AddTexture2D(m_Textures["Luminance"].get(), 0);
-		passBright->AddTexture2D(m_Textures["Emmisive"].get(), 1);
+		passBright->AddTexture2D(m_Textures["Luminance"], 0);
+		passBright->AddTexture2D(m_Textures["Emmisive"], 1);
 
 		m_PassesOrder.push_back("Bright");
 
@@ -340,9 +363,9 @@ namespace rczEngine
 
 		StrPtr<BloomPass> passBloom = std::static_pointer_cast<BloomPass, Pass>(CreatePass("Bloom", PASSES::BLOOM, m_CurrentRenderingMode));
 
-		passBloom->AddRenderTarget(m_RTs["Bloom"].get(), 0);
+		passBloom->AddRenderTarget(m_RTs["Bloom"], 0);
 
-		passBloom->AddTexture2D(m_Textures["Bright"].get(), 0);
+		passBloom->AddTexture2D(m_Textures["Bright"], 0);
 
 		passBloom->SetOriginalBloom(m_Textures["Bright"]);
 		passBloom->SetLastBloomResult(m_Textures["Bloom"]);
@@ -360,9 +383,9 @@ namespace rczEngine
 
 		auto passAvgLuminance = CreatePass("AvgLuminance", PASSES::AVG_LUMINANCE, m_CurrentRenderingMode);
 
-		passAvgLuminance->AddRenderTarget(m_RTs["AvgLuminance"].get(), 0);
+		passAvgLuminance->AddRenderTarget(m_RTs["AvgLuminance"], 0);
 
-		passAvgLuminance->AddTexture2D(m_Textures["Luminance"].get(), 0);
+		passAvgLuminance->AddTexture2D(m_Textures["Luminance"], 0);
 
 		m_PassesOrder.push_back("AvgLuminance");
 
@@ -375,11 +398,11 @@ namespace rczEngine
 		///Create the Bright pass
 		auto passHDRBloom = CreatePass("HDRBloom", PASSES::HDR_BLOOM, m_CurrentRenderingMode);
 
-		passHDRBloom->AddRenderTarget(m_RTs["HDRBloom"].get(), 0);
+		passHDRBloom->AddRenderTarget(m_RTs["HDRBloom"], 0);
 
-		passHDRBloom->AddTexture2D(m_Textures["MotionBlur"].get(), 0);
-		passHDRBloom->AddTexture2D(m_Textures["Bloom"].get(), 1);
-		passHDRBloom->AddTexture2D(m_Textures["AvgLuminance"].get(), 2);
+		passHDRBloom->AddTexture2D(m_Textures["MotionBlur"], 0);
+		passHDRBloom->AddTexture2D(m_Textures["Bloom"], 1);
+		passHDRBloom->AddTexture2D(m_Textures["AvgLuminance"], 2);
 
 		m_PassesOrder.push_back("HDRBloom");
 
@@ -390,8 +413,8 @@ namespace rczEngine
 		///Create the PBR pass
 		auto passColorCorrection = CreatePass("ColorCorrection", PASSES::COLOR_CORRECTION, m_CurrentRenderingMode);
 
-		passColorCorrection->AddRenderTarget(m_RTs["ColorCorrection"].get(), 0);
-		passColorCorrection->AddTexture2D(m_Textures["HDRBloom"].get(), 0);
+		passColorCorrection->AddRenderTarget(m_RTs["ColorCorrection"], 0);
+		passColorCorrection->AddTexture2D(m_Textures["HDRBloom"], 0);
 
 		m_PassesOrder.push_back("ColorCorrection");
 
@@ -417,7 +440,7 @@ namespace rczEngine
 
 		auto passSkyBox = CreatePass("SkyBox", PASSES::SKYBOX, m_CurrentRenderingMode);
 
-		passSkyBox->AddRenderTarget(m_RTs["ColorPBR"].get(), 0);
+		passSkyBox->AddRenderTarget(m_RTs["ColorPBR"], 0);
 		passSkyBox->AddRasterizerState(&m_RSSolidCullNone);
 
 		m_PassesOrder.push_back("SkyBox");
@@ -427,11 +450,11 @@ namespace rczEngine
 		/////////
 
 		///Create the PBR pass
-		auto passPBR = CreatePass("ColorPBR", PASSES::PBR_FORWARD, m_CurrentRenderingMode);
+		auto passPBR = CreatePass("PBR", PASSES::PBR_FORWARD, m_CurrentRenderingMode);
 
-		passPBR->AddRenderTarget(m_RTs["ColorPBR"].get(), 0);
+		passPBR->AddRenderTarget(m_RTs["ColorPBR"], 0);
 
-		m_PassesOrder.push_back("ColorPBR");
+		m_PassesOrder.push_back("PBR");
 
 		///Start the post processing.
 		m_PassesOrder.push_back("PostProcess");
@@ -443,8 +466,8 @@ namespace rczEngine
 		///Create the PBR pass
 		auto passColorCorrection = CreatePass("ColorCorrection", PASSES::COLOR_CORRECTION, m_CurrentRenderingMode);
 
-		passColorCorrection->AddRenderTarget(m_RTs["ColorCorrection"].get(), 0);
-		passColorCorrection->AddTexture2D(m_Textures["ColorPBR"].get(), 0);
+		passColorCorrection->AddRenderTarget(m_RTs["ColorCorrection"], 0);
+		passColorCorrection->AddTexture2D(m_Textures["ColorPBR"], 0);
 
 		m_PassesOrder.push_back("ColorCorrection");
 	}
@@ -454,7 +477,7 @@ namespace rczEngine
 
 	}
 
-	ResourceHandle RacrozRenderer::CreateCubeMap(const char* name, Scene * sceneGraph, Vector<String>& RenderPasses, int width, int height)
+	ResourceHandle RacrozRenderer::CreateCubeMap(const String& name, Scene * sceneGraph, Vector<String>& RenderPasses, int width, int height)
 	{
 		m_gfx->SetViewPort(width, height);
 
@@ -572,11 +595,11 @@ namespace rczEngine
 
 			float Visible = VectorToObj.GetNormalized() | dir;
 
-			//ObjectMap.insert(Pair<float, WeakPtr<GameObject>>(Magnitude, act));
-			if (Visible > 0.0f)
-			{
-				ObjectMap.insert(Pair<float, WeakPtr<GameObject>>(Magnitude, act));
-			}
+			ObjectMap.insert(Pair<float, WeakPtr<GameObject>>(Magnitude, act));
+			//if (Visible > 0.0f)
+			//{
+			//	ObjectMap.insert(Pair<float, WeakPtr<GameObject>>(Magnitude, act));
+			//}
 		}
 
 		if (Forward)
@@ -615,12 +638,12 @@ namespace rczEngine
 		//m_gfx->ClearDepthTargetView();
 	}
 
-	StrPtr<Gfx::RenderTarget> RacrozRenderer::CreateRenderTargetAndTexture_XYScales(const char* name, StrPtr<Texture2D>& out_Texture, int mipMaps, float screenWidthScale, float screenHeightScale, Gfx::eFORMAT format)
+	StrPtr<Gfx::RenderTarget> RacrozRenderer::CreateRenderTargetAndTexture_XYScales(const String& name, StrPtr<Texture2D>& out_Texture, int mipMaps, float screenWidthScale, float screenHeightScale, Gfx::eFORMAT format)
 	{
 		return CreateRenderTargetAndTexture_WidthHeight(name, out_Texture, mipMaps, Math::Truncate(m_Width*screenWidthScale), Math::Truncate(m_Height*screenHeightScale), format);
 	}
 
-	StrPtr<Gfx::RenderTarget> RacrozRenderer::CreateRenderTargetAndTexture_WidthHeight(const char * name, StrPtr<Texture2D>& out_Texture, int mipMaps, int32 width, int32 height, Gfx::eFORMAT format)
+	StrPtr<Gfx::RenderTarget> RacrozRenderer::CreateRenderTargetAndTexture_WidthHeight(const String& name, StrPtr<Texture2D>& out_Texture, int mipMaps, int32 width, int32 height, Gfx::eFORMAT format)
 	{
 		///Allocate a new RenderTarget Object
 		auto renderTarget = std::make_shared<Gfx::RenderTarget>();
@@ -650,7 +673,7 @@ namespace rczEngine
 		return renderTarget;
 	}
 
-	StrPtr<Pass> RacrozRenderer::CreatePass(const char * name, PASSES pass, RENDERING_MODE renderMode)
+	StrPtr<Pass> RacrozRenderer::CreatePass(const String& name, PASSES pass, RENDERING_MODE renderMode)
 	{
 		StrPtr<Pass> returnPass;
 
@@ -703,6 +726,9 @@ namespace rczEngine
 			break;
 		case PASSES::PERLIN3D:
 			returnPass = m_Passes[name] = std::make_shared<PerlinPlanetPass>();
+			break;
+		case PASSES::SSAO:
+			returnPass = m_Passes[name] = std::make_shared<SSAOPass>();
 			break;
 		}
 

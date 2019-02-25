@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void CubeMap::LoadCubeMapFromDDS(const char * filePath, const char * resName)
+	void CubeMap::LoadCubeMapFromDDS(const String& filePath, const String& resName)
 	{
 		m_FilePath = filePath;
 		m_Name = resName;
@@ -12,7 +12,7 @@ namespace rczEngine
 		Gfx::GfxCore::Pointer()->CreateCubeMapFromDDS(filePath, m_TextureCore);
 	}
 
-	void CubeMap::LoadCubeMapFrom6Images(char * front, char * back, char * left, char * right, char * top, char * down, char * resName)
+	void CubeMap::LoadCubeMapFrom6Images(const String& front, const String& back, const String& left, const String& right, const String&top, const String& down, const String& resName)
 	{
 	}
 

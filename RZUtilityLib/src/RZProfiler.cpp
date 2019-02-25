@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	Profiler*& Profiler::_Instance()
+	Profiler*& Profiler::_Instance() noexcept
 	{
 		static Profiler* instance = nullptr;
 		return instance;
@@ -13,7 +13,7 @@ namespace rczEngine
 		(_Instance()) = new Profiler;
 	}
 
-	Profiler* Profiler::Pointer()
+	Profiler* Profiler::Pointer() noexcept
 	{
 		return _Instance();
 	}
@@ -23,65 +23,67 @@ namespace rczEngine
 		delete _Instance();
 	}
 
-	void Profiler::Destroy()
+	void Profiler::Destroy() noexcept
 	{
+		SaveResults();
 		m_GfxEvents.clear();
 		m_GameEvents.clear();
-		SaveResults();
 	}
 
-	void Profiler::StartProfiler()
+	void Profiler::StartProfiler() noexcept
 	{
 		m_Time.StartTimer();
 		m_FrameTime.StartTimer();
 	}
 
-	void Profiler::Reset()
+	void Profiler::Reset() noexcept
 	{
 		m_Time.StartTimer();
 		m_GameEvents.clear();
 		m_GfxEvents.clear();
 	}
 
-	void Profiler::SaveResults()
+	void Profiler::SaveResults(const String& filePath)
 	{
-		String LoggerFile("ProfilerLog.html");
-		auto logger = Logger::Pointer();
+		const String LoggerFile(filePath);
+		const auto logger = Logger::PointerOrCreate();
 		
+		const String eventStr("Event: ");
+
 		///Start the profiler Log
-		logger->StartLog(LoggerFile.c_str());
-		logger->LogMessageToFileLog(LoggerFile.c_str(), "+++PROFILER LOG+++", log_ERROR);
+		logger->StartLog(LoggerFile);
+		logger->LogMessageToFileLog(LoggerFile, "+++PROFILER LOG+++", eLogMsgType::Error);
 
 		///Log every Game Event
-		logger->LogMessageToFileLog(LoggerFile.c_str(), "+Game Events+", log_ERROR);
-		for (auto it = m_GameEvents.begin(); it != m_GameEvents.end(); ++it)
+		logger->LogMessageToFileLog(LoggerFile, "+Game Events+", eLogMsgType::Error);
+		for (auto event : m_GameEvents)
 		{
-			logger->LogMessageToFileLog(LoggerFile.c_str(), String("+Event: "+(it->first)));
-			it->second.SaveResults(LoggerFile.c_str());
+			logger->LogMessageToFileLog(LoggerFile, eventStr + event.first, eLogMsgType::Warning);
+			event.second.SaveResults(LoggerFile, *logger);
 		}
 
 		///Log every Gfx Event
-		logger->LogMessageToFileLog(LoggerFile.c_str(), "+Gfx Events+", log_ERROR);
-		for (auto it = m_GfxEvents.begin(); it != m_GfxEvents.end(); ++it)
+		logger->LogMessageToFileLog(LoggerFile, "+Gfx Events+", eLogMsgType::Error);
+		for (auto event : m_GfxEvents)
 		{
-			logger->LogMessageToFileLog(LoggerFile.c_str(), String("+Event: " + (it->first)));
-			it->second.SaveResults(LoggerFile.c_str());
+			logger->LogMessageToFileLog(LoggerFile, eventStr + event.first, eLogMsgType::Warning);
+			event.second.SaveResults(LoggerFile, *logger);
 		}
 
-		logger->CloseLog(LoggerFile.c_str());
+		logger->CloseLog(LoggerFile);
 	}
 
-	void Profiler::NewFrameStart()
+	void Profiler::NewFrameStart() noexcept
 	{
 		m_AverageFrameTime = (m_AverageFrameTime + m_FrameTime.GetFrameTime())/2.0f;
 	}
 
-	void Profiler::AddTime(String event, PROFILE_EVENTS eventType)
+	void Profiler::AddTime(const String& event, PROFILE_EVENTS eventType) noexcept
 	{
 		AddTime(event, m_Time.GetFrameTime(), eventType);
 	}
 
-	void Profiler::AddTime(String event, double time, PROFILE_EVENTS eventType)
+	void Profiler::AddTime(const String& event, long double time, PROFILE_EVENTS eventType) noexcept
 	{
 		switch (eventType)
 		{

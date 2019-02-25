@@ -12,13 +12,7 @@ namespace rczEngine
 		static const uint32 f_FileAppend = std::ios_base::app;
 	};
 
-	FileManager::FileManager()
-	{
-		m_strFileName = std::make_unique<String>();
-		m_File = std::make_unique<FileStream>();
-	}
-
-	void FileManager::OpenFile(const char * pszFileName, uint32 fileFlags)
+	void FileManager::OpenFile(const String& pszFileName, uint32 fileFlags)
 	{
 		m_fFlags = fileFlags;
 		m_File->open(pszFileName, fileFlags);
@@ -27,22 +21,21 @@ namespace rczEngine
 		m_iFileIndex = 0;
 	}
 
-	void FileManager::OpenBinaryFile(const char * pszFileName, uint32 fileFlags)
+	void FileManager::OpenBinaryFile(const String& pszFileName, uint32 fileFlags)
 	{
 		return OpenFile(pszFileName, fileFlags | FileFlags::f_FileBinary);
 	}
 
-	void FileManager::WriteTextInFile(char* pszTextIn)
+	void FileManager::WriteTextInFile(const String& textIn)
 	{	
-		std::string S = pszTextIn;
-		*m_File << S;
-		m_iFileIndex += static_cast<uint32>(S.size());
+		*m_File << textIn;
+		m_iFileIndex += gsl::narrow_cast<uint32>( textIn.size() );
 	}
 
-	void FileManager::WriteBinaryInFile(void * memory, SIZE_T size)
+	void FileManager::WriteBinaryInFile(const char * memory, SIZE_T size)
 	{
-		m_File->write((const char*)memory, size);
-		m_iFileIndex += size;
+		m_File->write(memory, size);
+		m_iFileIndex += gsl::narrow_cast<uint32>(size);
 	}
 
 	void FileManager::ReadTextInFile(char * outBuffer, uint32 charsToRead)
@@ -50,9 +43,9 @@ namespace rczEngine
 		m_File->read(outBuffer, charsToRead);
 	}
 
-	void FileManager::ReadBinaryInFile(void * outBuffer, SIZE_T size)
+	void FileManager::ReadBinaryInFile(char * outBuffer, SIZE_T size)
 	{
-		m_File->read((char*)outBuffer, size);
+		m_File->read(outBuffer, size);
 	}
 
 	void FileManager::SeekInFile(uint32 fileIndex)
@@ -60,7 +53,7 @@ namespace rczEngine
 		m_File->seekp(fileIndex);
 	}
 
-	uint32 FileManager::GetIndexPos()
+	uint32 FileManager::GetIndexPos() const noexcept
 	{
 		return m_iFileIndex;
 	}

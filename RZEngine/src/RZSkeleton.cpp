@@ -34,7 +34,7 @@ namespace rczEngine
 
 	Bone* Skeleton::GetBone(String name)
 	{
-		///Find the bone by name and return a simple pointer to it. Or a NULL in case it's not found.
+		///Find the bone by name and return a simple pointer to it. Or a nullptr in case it's not found.
 		auto p = m_Bones.find(name);
 		if (p != m_Bones.end())
 		{
@@ -43,7 +43,7 @@ namespace rczEngine
 		}
 		else
 		{
-			return NULL;
+			return nullptr;
 		}
 	}
 

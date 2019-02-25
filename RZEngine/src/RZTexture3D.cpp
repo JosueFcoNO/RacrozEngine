@@ -12,7 +12,7 @@ namespace rczEngine
 		gfx->SetVSShaderResource(startSlot, NumView, &m_TextureCore);
 	}
 
-	void Texture3D::LoadTexture3D(char * filepath1, char * filepath2, char * filepath3, char * filepath4, char * resName, bool addToResourceManager)
+	void Texture3D::LoadTexture3D(const String& filepath1, const String& filepath2, const String& filepath3, const String& filepath4, const String& resName, bool addToResourceManager)
 	{
 		m_FilePath = filepath1;
 		m_Name = resName;

@@ -9,7 +9,7 @@ namespace rczEngine
 
 		BasicBuffer::BasicBuffer()
 		{
-			m_Buffer = NULL;
+			m_Buffer = nullptr;
 		}
 
 		BasicBuffer::~BasicBuffer()
@@ -33,7 +33,7 @@ namespace rczEngine
 			if (m_Buffer)
 			{
 				m_Buffer->Release();
-				m_Buffer = NULL;
+				m_Buffer = nullptr;
 			}
 		}
 

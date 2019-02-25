@@ -8,7 +8,7 @@ namespace rczEngine
 		class RZ_EXP BlendState
 		{
 		public:
-			BlendState() { m_BlendState = NULL; };
+			BlendState() { m_BlendState = nullptr; };
 			~BlendState() { if (m_BlendState) m_BlendState->Release(); };
 
 			void InitBlendState(

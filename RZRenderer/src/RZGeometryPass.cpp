@@ -18,6 +18,9 @@ namespace rczEngine
 		m_PShaderPath = L"Shaders/GPassMetRough.hlsl";
 		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
 
+		m_gfx->CompileAndCreatePixelShader(m_SmoothPS, L"Shaders/GPassSpecSmooth.hlsl");
+		m_gfx->CompileAndCreatePixelShader(m_SmoothSpecAlphaPS, L"Shaders/GPassSpecSmoothAlpha.hlsl");
+
 		m_gfx->CompileAndCreateHullShader(m_Hshader, L"Shaders/Tess/TessHS.hlsl");
 		m_gfx->CompileAndCreateVertexShader(m_VTessShader, L"Shaders/Tess/TessVS.hlsl");
 		m_VTessShader.ReflectLayout(0, m_gfx);
@@ -48,21 +51,22 @@ namespace rczEngine
 	{
 		auto activeScene = m_ActiveScene.get();
 
-		///NORMAL MATERIALS
 		m_PShader.SetThisPixelShader(m_gfx);
 		RacrozRenderer::RenderScene(activeScene, CMP_MODEL_RENDERER, MAT_PBR_MetRough, true);
 
-		///NORMAL MATERIALS
+		m_SmoothPS.SetThisPixelShader(m_gfx);
+		RacrozRenderer::RenderScene(activeScene, CMP_MODEL_RENDERER, MAT_PBR_SpecSmooth, true);
+
+		m_SmoothSpecAlphaPS.SetThisPixelShader(m_gfx);
+		RacrozRenderer::RenderScene(activeScene, CMP_MODEL_RENDERER, MAT_PBR_SpecSmooth_Alpha, true);
 
 		m_VTessShader.SetThisVertexShaderAndInputLayout(m_gfx);
 		m_Hshader.SetThisHullShader(m_gfx);
 		m_Dshader.SetThisDomainShader(m_gfx);
-		RacrozRenderer::RenderScene(activeScene, CMP_MODEL_RENDERER, MAT_PBR_TESS, true);
-
+		RacrozRenderer::RenderScene(activeScene, CMP_MODEL_RENDERER, MAT_PBR_MetRough_Tess, true);
 		m_gfx->RemoveDomainShader();
 		m_gfx->RemoveHullShader();
-
-		m_PShader.SetThisPixelShader(m_gfx);
+		
 		m_SkinnedVshader.SetThisVertexShaderAndInputLayout(m_gfx);
 		RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_SKINNED_MODEL_RENDERER, MAT_PBR_MetRough, true);
 

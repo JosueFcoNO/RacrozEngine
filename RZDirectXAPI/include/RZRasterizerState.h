@@ -7,7 +7,7 @@ namespace rczEngine
 		class RZ_EXP RasterizerState
 		{
 		public:
-			RasterizerState() { m_RasterizerState = NULL; };
+			RasterizerState() { m_RasterizerState = nullptr; };
 			~RasterizerState() { if (m_RasterizerState) m_RasterizerState->Release(); };
 
 			void Init(
@@ -22,8 +22,8 @@ namespace rczEngine
 				bool multisampleEnable = false,
 				bool antialiasedLineEnable = false);
 
-			bool CreateRasterizerState(GfxCore* gfx = NULL);
-			bool SetThisRasterizerState(GfxCore* gfx = NULL);
+			bool CreateRasterizerState(GfxCore* gfx = nullptr);
+			bool SetThisRasterizerState(GfxCore* gfx = nullptr);
 
 			ID3D11RasterizerState* m_RasterizerState;
 

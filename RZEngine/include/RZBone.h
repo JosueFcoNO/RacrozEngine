@@ -7,7 +7,7 @@ namespace rczEngine
 	class RZ_EXP Bone
 	{
 	public:
-		Bone() : m_OffsetMatrix(INIT_UNIT), m_JointMatrix(INIT_UNIT), m_AccumulatedMatrix(INIT_UNIT)
+		Bone() : m_OffsetMatrix(eInit::Unit), m_JointMatrix(eInit::Unit), m_AccumulatedMatrix(eInit::Unit)
 		{
 
 		};

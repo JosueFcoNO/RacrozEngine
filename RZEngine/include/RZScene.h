@@ -1,4 +1,5 @@
 #pragma once
+#include <optional>
 
 namespace rczEngine
 {
@@ -11,17 +12,17 @@ namespace rczEngine
 			Destroy();
 		}; 
 
-		void InitScene(const char* name);
+		void InitScene(const String& name);
 		void ClearScene();
 		void Update(float deltaTime);
 		void Destroy();
 
-		WeakGameObjectPtr CreateActor(const char* name = "GameObj", GameObject* parent = NULL, Vector3 position = { 0,0,0 }, Vector3 orientation = { 0,0,0 }, Vector3 scale = { 1,1,1 });
+		WeakGameObjPtr CreateActor(const String& name = "GameObj", GameObject* parent = NULL, Vector3 position = { 0,0,0 }, Vector3 orientation = { 0,0,0 }, Vector3 scale = { 1,1,1 });
 		StrCmpPtr CreateComponent(eCOMPONENT_ID type, GameObjectID owner);
 		StrCmpPtr CreateComponent(eCOMPONENT_ID type, StrGameObjectPtr owner);
 
-		WeakGameObjectPtr FindActor(GameObjectID id);
-		WeakGameObjectPtr FindActor(const char* name);
+		WeakGameObjPtr FindActor(GameObjectID id);
+		WeakGameObjPtr FindActor(const String& name);
 
 		void AddRootNodeChild(StrGameObjectPtr node);
 		void RemoveGameObject(GameObjectID actorId);

@@ -16,11 +16,11 @@ namespace rczEngine
 	{
 		if (m_Materials.size())
 		{
-			res->GetResource<Model>(m_Model).lock()->DrawModel(gfx, res, &m_Materials, matType);
+			res->GetResource<Model>(m_Model).lock()->DrawModel(&m_Materials, matType);
 		}
 		else
 		{
-			res->GetResource<Model>(m_Model).lock()->DrawModel(gfx, res, NULL, matType);
+			res->GetResource<Model>(m_Model).lock()->DrawModel(nullptr, matType);
 		}
 	}
 

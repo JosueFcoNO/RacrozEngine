@@ -4,7 +4,7 @@
 
 namespace rczEngine
 {
-	Radian::Radian(float F)
+	Radian::Radian(float F) noexcept
 	{
 		m_Value = F;
 	};
@@ -14,7 +14,7 @@ namespace rczEngine
 		m_Value = Math::UnwindRadian(f);
 	};
 
-	Degree Radian::ValueDegree()
+	Degree Radian::ValueDegree() const noexcept
 	{
 		return Math::RadiansToDegrees(m_Value);
 	};

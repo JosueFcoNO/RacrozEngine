@@ -2,14 +2,6 @@
 
 namespace rczEngine
 {
-	struct SSAOsettings
-	{
-		float Sampler_Radius;
-		float Bias;
-		float Intensity;
-		float Scale;
-	};
-
 	enum PASSES
 	{
 		SKYBOX,
@@ -27,7 +19,8 @@ namespace rczEngine
 		MOTION_BLUR,
 		PLANET_PASS,
 		ATMOS_SCATTER_PASS,
-		PERLIN3D
+		PERLIN3D,
+		SSAO
 	};
 
 	enum TEXTURES_PASS
@@ -109,15 +102,14 @@ namespace rczEngine
 		void ChangeSkyBox(StrPtr<SkyBox> cube)
 		{
 			m_ActiveSkyBox = cube;
-
-			m_Passes["SkyBox"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 5);
-			m_Passes["PBR"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 3);
-			m_Passes["Transparent"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 5);
-			//m_Passes["Planet"]->AddTexture2D(m_ActiveSkyBox->GetCubeMap().lock().get(), 5);
-
 		}
 
-		ResourceHandle CreateCubeMap(const char* name, Scene* sceneGraph, Vector<String>& RenderPasses, int width, int height);
+		WeakPtr<CubeMap> GetSkyBox()
+		{
+			return m_ActiveSkyBox->GetCubeMap();
+		}
+
+		ResourceHandle CreateCubeMap(const String& name, Scene* sceneGraph, Vector<String>& RenderPasses, int width, int height);
 
 		///Draws the sceneGraph
 		static void RenderScene(Scene * sceneGraph, eCOMPONENT_ID componentID, MATERIAL_TYPE matType, bool Forward);
@@ -125,10 +117,10 @@ namespace rczEngine
 		static void RenderScreenAlignedQuad();
 
 		///Returns a created Render Target and its corresponding texture, you can specify number of mip maps, width and height and format.
-		StrPtr<Gfx::RenderTarget> CreateRenderTargetAndTexture_XYScales(const char* name, StrPtr<Texture2D>& out_Texture, int mipMaps, float screenWidthScale = 1, float screenHeightScale = 1, Gfx::eFORMAT format = Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
+		StrPtr<Gfx::RenderTarget> CreateRenderTargetAndTexture_XYScales(const String& name, StrPtr<Texture2D>& out_Texture, int mipMaps, float screenWidthScale = 1, float screenHeightScale = 1, Gfx::eFORMAT format = Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
 
 		///Returns a created Render Target and its corresponding texture, you can specify number of mip maps, width and height and format.
-		StrPtr<Gfx::RenderTarget> CreateRenderTargetAndTexture_WidthHeight(const char* name, StrPtr<Texture2D>& out_Texture, int mipMaps, int32 width, int32 height, Gfx::eFORMAT format = Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
+		StrPtr<Gfx::RenderTarget> CreateRenderTargetAndTexture_WidthHeight(const String& name, StrPtr<Texture2D>& out_Texture, int mipMaps, int32 width, int32 height, Gfx::eFORMAT format = Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
 
 		///Does a blur render pass, with the texture passes
 		void DoBlurPass(StrPtr<Gfx::RenderTarget> outRenderTarget, StrPtr<Texture2D> inTexture, int width, int height);
@@ -151,7 +143,7 @@ namespace rczEngine
 		void StartPostProcessing();
 		Gfx::VertexShader m_ScreenQuadVS;
 
-		StrPtr<Pass> CreatePass(const char* name, PASSES pass, RENDERING_MODE renderMode = DEFERRED);
+		StrPtr<Pass> CreatePass(const String& name, PASSES pass, RENDERING_MODE renderMode = DEFERRED);
 
 		void InitRasterizers();
 		void InitSamplerStates();

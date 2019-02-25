@@ -38,7 +38,7 @@ namespace rczEngine
 #if ((RZ_ARCH_TYPE == RZ_ARCHITECTURE_x86_64) && (RZ_COMPILER == RZ_COMPILER_MVSC))
 	typedef unsigned __int64 SIZE_T;
 #else
-	typedef unsigned long SIZE_T;
+	typedef size_t SIZE_T;
 #endif
 
 

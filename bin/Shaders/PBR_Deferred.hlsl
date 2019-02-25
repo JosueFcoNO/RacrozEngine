@@ -12,11 +12,10 @@
 Texture2D AlbedoTexture : register(t0);
 Texture2D NormalMRTexture : register(t1);
 Texture2D PositionTexture : register(t2);
-Texture2D SpecularTexture : register(t8);
-
-TextureCube EnviromentCube : register(t3);
-//Texture2D SSAOTex : register(t5);
+Texture2D SpecularTexture : register(t3);
+Texture2D SSAOTex : register(t5);
 //Texture2D ShadowMapTex : register(t6);
+TextureCube EnviromentCube : register(t12);
 
 cbuffer cbChangesSometimes : register(b0)
 {
@@ -86,6 +85,8 @@ PS_Output PS_Main(PS_Input Input)
 		return psout;
     }
 
+	float4 specular = SpecularTexture.Sample(LinearWrapSampler, Input.Texcoord);
+
 	//Sample the original normal value from the texture
 	float4 NMR = NormalMRTexture.SampleLevel(LinearWrapSampler, Input.Texcoord, 0);
 	
@@ -103,14 +104,13 @@ PS_Output PS_Main(PS_Input Input)
 	float3 pos = PositionTexture.SampleLevel(LinearWrapSampler, Input.Texcoord, 0.0f).xyz;
 
 	//Calculate the PBR result
-	psout.PBR.xyz = PBR_rm(pos, albedoColor.xyz, normal, roughness, metallic);
+	psout.PBR.xyz = PBR_rm(pos, albedoColor.xyz, normal,roughness, metallic, specular.xyz);
 
-    //float SSAO = 1.0f - SSAOTex.Sample(LinearSampler, Input.Texcoord).r;
-    //SSAO = pow(SSAO, 2.2f);
+    float SSAO = SSAOTex.Sample(LinearWrapSampler, Input.Texcoord).r;
+    SSAO = pow(SSAO, 4.0f);
 
-	psout.PBR.xyz *= pow(albedoColor.w, 2.0f);
+	psout.PBR.xyz *= albedoColor.w * (SSAO);
     //FinalColor *= ShadowMapTex.Sample(LinearSampler, Input.Texcoord).r;
-
     return psout;
 }
 

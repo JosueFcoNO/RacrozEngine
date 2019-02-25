@@ -82,7 +82,7 @@ namespace rczEngine
 			void SetInputLayout(const InputLayout& iLayout);
 
 			///Creates a Render Target And Render Target View
-			bool CreateRenderTarget(RenderTarget & out_renderTarget, const char* name, bool drawToBackBuffer = false, int mipMaps = 1, int32 width = -1, int32 height = -1, eFORMAT format = eFORMAT::FORMAT_R8G8B8A8_UNORM, eBUFFER_USAGE usage = USAGE_DEFAULT, eCPU_ACCESS_FLAGS cpu_access = CPU_DEFAULT, int32 sample_count = 1, int32 sample_quality = 0);
+			bool CreateRenderTarget(RenderTarget & out_renderTarget, const String& name, bool drawToBackBuffer = false, int mipMaps = 1, int32 width = -1, int32 height = -1, eFORMAT format = eFORMAT::FORMAT_R8G8B8A8_UNORM, eBUFFER_USAGE usage = USAGE_DEFAULT, eCPU_ACCESS_FLAGS cpu_access = CPU_DEFAULT, int32 sample_count = 1, int32 sample_quality = 0);
 
 			///Adds the Render Target View to a internal array of render targets, to be set later.
 			bool AddRenderTarget(RenderTarget& renderTarget, int32 renderTargetSlot);
@@ -290,7 +290,7 @@ namespace rczEngine
 			bool CreateSamplerState(SamplerState& out_samplerState);
 
 			///Compiles a Shader.
-			bool CompileShader(Shader& out_ShaderObj, const UNICHAR* pszShaderFile, const char* version, const char* entryPoint);
+			bool CompileShader(Shader& out_ShaderObj, const UNICHAR* pszShaderFile, const String& version, const String& entryPoint);
 
 			///Reflects a shader
 			bool ReflectShader(InputLayout& out_InputLayout, Shader& shaderToReflect);
@@ -310,7 +310,7 @@ namespace rczEngine
 #pragma region =	| Texture Functions |
 
 			///Create a Texture from a file
-			bool CreateTextureFromFile(const char* pszFilePath, TextureCore2D& out_Texture, eBUFFER_USAGE usage, eBIND_FLAGS bind_flags,
+			bool CreateTextureFromFile(const String& pszFilePath, TextureCore2D& out_Texture, eBUFFER_USAGE usage, eBIND_FLAGS bind_flags,
 				eCPU_ACCESS_FLAGS cpu_access_flags);
 
 			///Create a Texture from memory
@@ -324,7 +324,7 @@ namespace rczEngine
 			bool CreateTexture3D(void* memory, int32 pitch, int32 slice, TextureCore3D & out_Texture, int width, int height, eBIND_FLAGS bind_flags, eFORMAT format, int MipLevels = 1, eBUFFER_USAGE usage = USAGE_DEFAULT, eCPU_ACCESS_FLAGS cpu_access_flags = eCPU_ACCESS_FLAGS::CPU_DEFAULT);
 
 			///Create a 3D Texture from a file
-			bool CreateTexture3DFromFile(const char* pszFilePath1, const char* pszFilePath2, const char* pszFilePath3, const char* pszFilePath4, TextureCore3D& out_Texture, eBUFFER_USAGE usage, eBIND_FLAGS bind_flags,
+			bool CreateTexture3DFromFile(const String& pszFilePath1, const String& pszFilePath2, const String& pszFilePath3, const String& pszFilePath4, TextureCore3D& out_Texture, eBUFFER_USAGE usage, eBIND_FLAGS bind_flags,
 				eCPU_ACCESS_FLAGS cpu_access_flags);
 
 			///Create a Cubemap from 6 image paths.
@@ -337,7 +337,7 @@ namespace rczEngine
 			bool CreateCubeMapFrom6MemoryPtr(void * front, void * back, void * left, void * right, void * top, void * bottom, TextureCore2D & out_Cubemap, eFORMAT format, eBUFFER_USAGE usage = USAGE_DEFAULT, eBIND_FLAGS bind_flags = eBIND_FLAGS::BIND_SHADER_RESOURCE, eCPU_ACCESS_FLAGS cpu_access_flags = eCPU_ACCESS_FLAGS::CPU_DEFAULT);
 
 			///Create a Cubemap from a DDS file path
-			bool CreateCubeMapFromDDS(const char* pszFilePath, TextureCore2D& out_Cubemap, eFORMAT format = FORMAT_R8G8B8A8_UNORM, eBUFFER_USAGE usage = USAGE_DEFAULT, eBIND_FLAGS bind_flags = eBIND_FLAGS::BIND_SHADER_RESOURCE, eCPU_ACCESS_FLAGS cpu_access_flags = eCPU_ACCESS_FLAGS::CPU_DEFAULT);
+			bool CreateCubeMapFromDDS(const String& pszFilePath, TextureCore2D& out_Cubemap, eFORMAT format = FORMAT_R8G8B8A8_UNORM, eBUFFER_USAGE usage = USAGE_DEFAULT, eBIND_FLAGS bind_flags = eBIND_FLAGS::BIND_SHADER_RESOURCE, eCPU_ACCESS_FLAGS cpu_access_flags = eCPU_ACCESS_FLAGS::CPU_DEFAULT);
 
 			///Generates MipMaps
 			void GenerateMipMaps(ShaderResource* texCore);

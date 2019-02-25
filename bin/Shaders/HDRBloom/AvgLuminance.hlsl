@@ -45,7 +45,7 @@ PS_Output PS_Main(PS_Input Input)
     float lum = Luminance;
     //psout.AvgLuminance = 0.5f / (exp(lum) + 0.0001f);
 
-	psout.AvgLuminance = 0.1f / ((lum) + 0.0001f);
+	psout.AvgLuminance = 0.5f / (exp(lum) + 0.0001f);
 
     psout.AvgLuminance.a = 1.0f;
 

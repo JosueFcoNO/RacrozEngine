@@ -5,7 +5,7 @@ namespace rczEngine
 	class RZ_EXP DebuggerPoint : public GraphicDebuggerElement
 	{
 	public:
-		DebuggerPoint() : m_Position(INIT_ZERO)
+		DebuggerPoint() : m_Position(eInit::Zero)
 		{
 		};
 

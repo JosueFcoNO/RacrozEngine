@@ -436,28 +436,36 @@ void MatrixUnitText()
 
 int main(void)
 {
-	//double Pid = (4.0f * atanf(1.0f));
-	//float Pi = (4.0f * atanf(1.0f));
 
-	//MathUnitTest();
-	//VectorUnitTest();
-	//MatrixUnitText();
+	using namespace rczEngine;
 
-	//float angle = 3.14f;
+	Profiler::Start();
+	Logger::Start();
 
-	//float sin = 0;
-	//float cos = 0;
+	Profiler::Pointer()->StartProfiler();
+	Profiler::Pointer()->NewFrameStart();
+	double Pid = (4.0f * atanf(1.0f));
+	float Pi = (4.0f * atanf(1.0f));
 
-	//for (float k = 0; k < 2*3.1416; k+=.5f)
-	//{
-	//	std::cout <<"fast seno "<< rczEngine::Math::FastSin0(k) << std::endl;
-	//	std::cout << "seno " <<sinf(k) << std::endl;
+	MathUnitTest();
+	VectorUnitTest();
+	MatrixUnitText();
 
-	//	std::cout << "fast cos" << rczEngine::Math::FastCos0(k) << std::endl;
-	//	std::cout << "cos "<< cosf(k) << std::endl;
+	/*float angle = 3.14f;
 
-	//	system("cls");
-	//}
+	float sin = 0;
+	float cos = 0;
+
+	for (float k = 0; k < 2*3.1416; k+=.5f)
+	{
+		std::cout <<"fast seno "<< rczEngine::Math::FastSin0(k) << std::endl;
+		std::cout << "seno " <<sinf(k) << std::endl;
+
+		std::cout << "fast cos" << rczEngine::Math::FastCos0(k) << std::endl;
+		std::cout << "cos "<< cosf(k) << std::endl;
+
+		system("cls");
+	}
 
 	using namespace rczEngine;
 
@@ -466,6 +474,10 @@ int main(void)
 	for (int i = 0; i < 100; ++i)
 	{
 		std::cout<<box.GetRandomNumberN()<<std::endl;
-	}
-	std::cin.get();
+	}*/
+
+	Profiler::Pointer()->AddTime("Utilities", PROFILE_EVENTS::PROF_GAME);
+
+	Profiler::ShutDown();
+	Logger::ShutDown();
 }

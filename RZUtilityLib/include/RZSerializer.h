@@ -30,13 +30,13 @@ namespace rczEngine
 	{
 	public:
 		RZ_EXP static void Start();
-		RZ_EXP static Serializer* Pointer();
+		RZ_EXP static Serializer* Pointer() noexcept;
 		RZ_EXP static void ShutDown();
 
 		//Open and truncate the new file.
-		RZ_EXP void StartFile(const char* pszFilePath);
+		RZ_EXP void StartFile(const String& pszFilePath);
 		//Load the file.
-		RZ_EXP void LoadFile(const char* pszFilePath);
+		RZ_EXP void LoadFile(const String& pszFilePath);
 		//Close the file. It is not automatic.
 		RZ_EXP void CloseFile();
 
@@ -51,12 +51,21 @@ namespace rczEngine
 		RZ_EXP void DeSerializeString(String& str);
 
 		//Write data.
-		RZ_EXP void WriteData(void* pointer, size_t size);
+		template <typename t>
+		void WriteData(const t* pointer, size_t size)
+		{
+			m_fileManager.WriteBinaryInFile((const char*)pointer, size);
+		}
+
 		//Read Data.
-		RZ_EXP void ReadData(void* pointer, size_t size);
+		template <typename t>
+		void ReadData(t* pointer, size_t size)
+		{
+			m_fileManager.ReadBinaryInFile((char*)pointer, size);
+		}
 
 	private:
-		static Serializer*& _Instance();
+		static Serializer*& _Instance() noexcept;
 
 		FileManager m_fileManager;
 	};

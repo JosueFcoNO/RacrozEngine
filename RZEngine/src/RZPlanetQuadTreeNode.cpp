@@ -2,10 +2,12 @@
 
 namespace rczEngine
 {
-	void PlanetQuadTreeNode::InitQuadTree(PerlinNoise3D* noise, Vector3 StartPos, int32 ChildNumber, int32 depth, eMeshPlaneOrientation side)
+	void PlanetQuadTreeNode::InitQuadTree(Planet* planetRef, PerlinNoise3D* noise, Vector3 StartPos, int32 ChildNumber, int32 depth, eMeshPlaneOrientation side, ParentSidesData sideData)
 	{
 		for (int i = 0; i < 4; ++i)
 			SetChildrenReady(i, false);
+
+		PlanetOwner = planetRef;
 
 		m_QuadTreeDepth = depth;
 
@@ -61,40 +63,237 @@ namespace rczEngine
 		}
 
 		Noise = noise;
-		InitMeshPlane(32, planeSize, planeSize / 2.0, startPos, side);
+		InitMeshPlane(MESH_RES, planeSize, planeSize / 2.0, startPos, side, true, false);
 
-		auto v1 = m_VertexBuffer.GetVertex(0);
-		auto v2 = m_VertexBuffer.GetVertex(31);
-		auto v3 = m_VertexBuffer.GetVertex(32 * 32 - 1);
-		auto v4 = m_VertexBuffer.GetVertex(32 * 32 - 32);
+		for (int i = 0; i < 4; ++i)
+		{
+			if (sideData.Hashes[i] == "") continue;
 
-		Planes[0].ConstructFromPoints(v1.VertexPosition, v2.VertexPosition, v1.VertexPosition.GetNormalized() * 2);
-		Planes[1].ConstructFromPoints(v2.VertexPosition, v3.VertexPosition, v2.VertexPosition.GetNormalized() * 2);
-		Planes[2].ConstructFromPoints(v3.VertexPosition, v4.VertexPosition, v3.VertexPosition.GetNormalized() * 2);
-		Planes[3].ConstructFromPoints(v4.VertexPosition, v1.VertexPosition, v4.VertexPosition.GetNormalized() * 2);
+			auto patch = PlanetOwner->GetPatchData(sideData.Hashes[i]);
 
-		Planes[4].ConstructFromPoints(v1.VertexPosition, v2.VertexPosition, v3.VertexPosition);
+			if (patch->Vertices.size() > 0)
+				for (auto k = 0; k < MESH_RES; ++k)
+				{
+					switch ((eSide)(k))
+					{
+					case eSide::Up:
+						GetVertex(k, 0) = patch->Vertices[k];
+						break;
+					case eSide::Left:
+						GetVertex(0, k) = patch->Vertices[k];
+						break;
+					case eSide::Right:
+						GetVertex(MESH_ROW_SIZE, k) = patch->Vertices[k];
+						break;
+					case eSide::Down:
+						GetVertex(k, MESH_ROW_SIZE) = patch->Vertices[k];
+						break;
+					}
+				}
+		}
+
+		m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, false, m_gfx);
+
+		auto topleft = GetVertex(0, 0).VertexPosition;
+		auto topright = GetVertex(MESH_ROW_SIZE, 0).VertexPosition;
+		auto bottomright = GetVertex(MESH_ROW_SIZE, MESH_ROW_SIZE).VertexPosition;
+		auto bottomleft = GetVertex(0, MESH_ROW_SIZE).VertexPosition;
+
+		Planes[0].ConstructFromPoints(topleft, topright, topleft.GetNormalized() * 2);
+		Planes[1].ConstructFromPoints(topright, bottomright, topright.GetNormalized() * 2);
+		Planes[2].ConstructFromPoints(bottomright, bottomleft, bottomright.GetNormalized() * 2);
+		Planes[3].ConstructFromPoints(bottomleft, topleft, bottomleft.GetNormalized() * 2);
+
+		Planes[4].ConstructFromPoints(topleft, topright, bottomright);
+
+		m_CornersID[0] = HashCorner(topleft.GetNormalized());
+		PlanetOwner->m_NodeAdyacency.insert(Pair<float, PlanetQuadTreeNode*>(m_CornersID[0], this));
+
+		m_CornersID[1] = HashCorner(topright.GetNormalized());
+		PlanetOwner->m_NodeAdyacency.insert(Pair<float, PlanetQuadTreeNode*>(m_CornersID[1], this));
+
+		m_CornersID[2] = HashCorner(bottomright.GetNormalized());
+		PlanetOwner->m_NodeAdyacency.insert(Pair<float, PlanetQuadTreeNode*>(m_CornersID[2], this));
+
+		m_CornersID[3] = HashCorner(bottomleft.GetNormalized());
+		PlanetOwner->m_NodeAdyacency.insert(Pair<float, PlanetQuadTreeNode*>(m_CornersID[3], this));
+
+		auto cLeftUp = std::to_string(m_CornersID[0]);
+		auto cRightUp = std::to_string(m_CornersID[1]);
+		auto cRightDown = std::to_string(m_CornersID[2]);
+		auto cLeftDown = std::to_string(m_CornersID[3]);
+
+		String hash;
+
+		if (m_CornersID[0] < m_CornersID[3])
+		{
+			hash = cLeftUp + "|" + cLeftDown;
+			PlanetOwner->ProcessBorderData(hash, this, eSide::Left, cLeftUp, cLeftDown);
+		}
+		else
+		{
+			hash = cLeftDown + "|" + cLeftUp;
+			PlanetOwner->ProcessBorderData(hash, this, eSide::Left, cLeftDown, cLeftUp);
+		}
+
+		sideHashData.Hashes[(int)eSide::Left] = hash;
+
+		if (m_CornersID[1] < m_CornersID[2])
+		{
+			hash = cRightUp + "|" + cRightDown;
+			PlanetOwner->ProcessBorderData(hash, this, eSide::Right, cRightUp, cRightDown);
+		}
+		else
+		{
+			hash = cRightDown + "|" + cRightUp;
+			PlanetOwner->ProcessBorderData(hash, this, eSide::Right, cRightDown, cRightUp);
+		}
+
+		sideHashData.Hashes[(int)eSide::Right] = hash;
+
+		if (m_CornersID[3] < m_CornersID[2])
+		{
+			hash = cLeftDown + "|" + cRightDown;
+			PlanetOwner->ProcessBorderData(hash, this, eSide::Down, cLeftDown, cRightDown);
+		}
+		else
+		{
+			hash = cRightDown + "|" + cLeftDown;
+			PlanetOwner->ProcessBorderData(hash, this, eSide::Down, cRightDown, cLeftDown);
+		}
+
+		sideHashData.Hashes[(int)eSide::Down] = hash;
+
+		if (m_CornersID[0] < m_CornersID[1])
+		{
+			hash = cLeftUp + "|" + cRightUp;
+			PlanetOwner->ProcessBorderData(hash, this, eSide::Up, cLeftUp, cRightUp);
+		}
+		else
+		{
+			hash = cRightUp + "|" + cLeftUp;
+			PlanetOwner->ProcessBorderData(hash, this, eSide::Up, cRightUp, cLeftUp);
+		}
+
+		sideHashData.Hashes[(int)eSide::Up] = hash;
+		
+		for (int i = 0; i < 4; ++i)
+		{
+			if (sideHashData.Hashes[i] == "") continue;
+		
+			auto patch = PlanetOwner->GetPatchData(sideHashData.Hashes[i]);
+
+			if (patch->First) continue;
+		
+			if (patch->Vertices.size() > 0)
+			{
+				eSide side = eSide::Down;
+				bool Reverse = false;
+		
+				if (patch->VertexStartHash == cLeftUp && patch->VertexEndHash == cLeftDown)
+				{
+					side = eSide::Left;
+				}
+				else
+				if (patch->VertexEndHash == cLeftUp && patch->VertexStartHash == cLeftDown)
+				{
+					side = eSide::Left;
+					Reverse = true;
+				}
+		
+				if (patch->VertexStartHash == cLeftUp && patch->VertexEndHash == cRightUp)
+				{
+					side = eSide::Up;
+				} else if (patch->VertexEndHash == cLeftUp && patch->VertexStartHash == cRightUp)
+				{
+					side = eSide::Up;
+					Reverse = true;
+				}
+		
+				if (patch->VertexStartHash == cRightUp && patch->VertexEndHash == cRightDown)
+				{
+					side = eSide::Right;
+				}
+				else if (patch->VertexEndHash == cRightUp && patch->VertexStartHash == cRightDown)
+				{
+					side = eSide::Right;
+					Reverse = true;
+				}
+		
+				if (patch->VertexStartHash == cLeftDown && patch->VertexEndHash == cRightDown)
+				{
+					side = eSide::Down;
+				}
+				else if (patch->VertexEndHash == cLeftDown && patch->VertexStartHash == cRightDown)
+				{
+					side = eSide::Down;
+					Reverse = true;
+				}
+		
+				for (auto k = 0; k < MESH_RES; ++k)
+				{
+					switch (side)
+					{
+					case eSide::Up:
+						if (!Reverse || true)
+						{
+							auto normal = patch->Vertices[k].VertexNormals;
+							GetVertex(k, 0) = patch->Vertices[k];
+							GetVertex(k, 0).VertexNormals = ((normal + GetVertex(k, 0).VertexNormals) / 2.0f).GetNormalized();
+						}
+						else
+						{
+							GetVertex(k, 0) = patch->Vertices[PlanetQuadTreeNode::MESH_ROW_SIZE - k];
+						}
+						break;
+					case eSide::Left:
+						if (!Reverse || true)
+						{
+							auto normal = patch->Vertices[k].VertexNormals;
+							GetVertex(0, k) = patch->Vertices[k];
+							GetVertex(0, k).VertexNormals = ((normal + GetVertex(0, k).VertexNormals) / 2.0f).GetNormalized();
+						}
+						else
+						{
+							GetVertex(0, k) = patch->Vertices[PlanetQuadTreeNode::MESH_ROW_SIZE - k];
+						}
+						break;
+					case eSide::Right:
+						if (!Reverse || true)
+						{
+							auto normal = patch->Vertices[k].VertexNormals;
+							GetVertex(MESH_ROW_SIZE, k) = patch->Vertices[k];
+							GetVertex(MESH_ROW_SIZE, k).VertexNormals = ((normal + GetVertex(MESH_ROW_SIZE, k).VertexNormals) / 2.0f).GetNormalized();
+						}
+						else
+						{
+							GetVertex(MESH_ROW_SIZE, k) = patch->Vertices[PlanetQuadTreeNode::MESH_ROW_SIZE - k];
+						}
+						break;
+					case eSide::Down:
+						if (!Reverse || true)
+						{
+							auto normal = patch->Vertices[k].VertexNormals;
+							GetVertex(k, MESH_ROW_SIZE) = patch->Vertices[k];
+							GetVertex(k, MESH_ROW_SIZE).VertexNormals = ((normal + GetVertex(k, MESH_ROW_SIZE).VertexNormals) / 2.0f).GetNormalized();
+						}
+						else
+						{
+							GetVertex(k, MESH_ROW_SIZE) = patch->Vertices[PlanetQuadTreeNode::MESH_ROW_SIZE - k];
+						}
+						break;
+					}
+				}
+			}
+		}
+
+		m_VertexBuffer.UpdateVertexBuffer(m_gfx);
 
 		m_Material = m_res->FindResourceByName<Material>("lambert1").lock()->GetHandle();
 	}
 
-	void PlanetQuadTreeNode::SetAdyacents(PlanetQuadTreeNode * Left, PlanetQuadTreeNode * Right, PlanetQuadTreeNode * Up, PlanetQuadTreeNode * Down)
-	{
-		Adyacents[0] = Up;
-		Adyacents[1] = Right;
-		Adyacents[2] = Down;
-		Adyacents[3] = Left;
-	}
-
 	void PlanetQuadTreeNode::Update(Vector3 playerPos)
 	{
-		Test(playerPos);
-
-		if (AdyTimer.GetTime() > 0.1f)
-		{
-			IsAdy = false;
-		}
-
 		if (m_ChildGenerated)
 		{
 			if (CheckChildrenReady())
@@ -102,41 +301,16 @@ namespace rczEngine
 				for (int i = 0; i < 4; ++i)
 				{
 					if (Child[i].joinable())
-						Child[i].join();
-
-					switch (i)
-					{
-					case 0:
-						//Children[i]->SetAdyacents(Adyacents[3], Children[2], Adyacents[2], Children[1]);
-						Children[i]->SetAdyacents(Adyacents[0], Children[2], Adyacents[0], Children[1]);
-
-						break;
-					case 1:
-						Children[i]->SetAdyacents(Children[0], Adyacents[3], Adyacents[1], Children[3]);
-						break;
-					case 2:
-						Children[i]->SetAdyacents(Children[3], Adyacents[0], Children[1], Adyacents[0]);
-						break;
-					case 3:
-						Children[i]->SetAdyacents(Adyacents[0], Children[1], Children[2], Adyacents[0]);
-						break;
-					}
+						Child[i].join();	
 				}
 
-				if (Adyacents[0]->m_QuadTreeDepth < m_QuadTreeDepth)
-					Adyacents[0]->Override = true;
-
-				if (Adyacents[1]->m_QuadTreeDepth < m_QuadTreeDepth)
-					Adyacents[1]->Override = true;
-
-				if (Adyacents[2]->m_QuadTreeDepth < m_QuadTreeDepth)
-					Adyacents[2]->Override = true;
-
-				if (Adyacents[3]->m_QuadTreeDepth < m_QuadTreeDepth)
-					Adyacents[3]->Override = true;
-
 			}
+		} else
+		{
+			//CalculateLOD(playerPos);
 		}
+
+		CalculateLOD(playerPos);
 
 		if (m_Dirty)
 			for (int i = 0; i < 4; ++i)
@@ -151,49 +325,148 @@ namespace rczEngine
 		DestroyMeshPlane();
 	}
 
-	void PlanetQuadTreeNode::Test(Vector3 pos)
+	bool PlanetQuadTreeNode::TestIfAdyacent(PlanetQuadTreeNode * Node)
 	{
-		if (m_QuadTreeDepth > 16) return;
+		auto centerVertex = m_VertexBuffer.GetVertex(MESH_RES * MESH_RES / 2 + MESH_ROW_SIZE / 2 + 1).VertexPosition;
 
-		//if (!Override)
-		//	m_Dirty = m_MeshAABB.CheckPointCollision(pos);
-		//else
-		//	m_Dirty = true;
+		auto diff = (centerVertex - m_VertexBuffer.GetVertex(MESH_RES * MESH_RES / 2 + MESH_ROW_SIZE / 2 + 2).VertexPosition).Magnitude();
 
-		if (Planes[0].SignedDistance(pos) < 0 &&
-			Planes[1].SignedDistance(pos) < 0 && 
-			Planes[2].SignedDistance(pos) < 0 && 
-			Planes[3].SignedDistance(pos) < 0 && 
-			Planes[4].SignedDistance(pos) > 0)
+		GraphicDebugger::Pointer()->AddFrameDebuggerPoint(centerVertex, 0.0025f, 1, 0, 0);
+
+		auto Left = m_VertexBuffer.GetVertex(MESH_ROW_SIZE / 2).VertexPosition;
+		Left += (Left - centerVertex).GetNormalized()*diff;
+		Left *= 1.5f;
+
+		GraphicDebugger::Pointer()->AddFrameDebuggerPoint(Left, 0.0025f, 1, 0, 0);
+		if (Node->TestIfInside(Left))
+		{
+			return true;
+		}
+
+		auto Right = m_VertexBuffer.GetVertex(MESH_RES * MESH_RES/2).VertexPosition;
+		Right += (Right - centerVertex).GetNormalized()*diff;
+		Right *= 1.5f;
+
+		GraphicDebugger::Pointer()->AddFrameDebuggerPoint(Right, 0.0025f, 1, 0, 0);
+		if (Node->TestIfInside(Right))
+		{
+			return true;
+		}
+
+		auto Up = m_VertexBuffer.GetVertex(MESH_RES * MESH_RES / 2 + (MESH_RES-1)).VertexPosition;
+		Up += (Up - centerVertex).GetNormalized()*diff;
+		Up *= 1.5f;
+
+		GraphicDebugger::Pointer()->AddFrameDebuggerPoint(Up, 0.0025f, 1, 0, 0);
+		if (Node->TestIfInside(Up))
+		{
+			return true;
+		}
+
+		auto Down = m_VertexBuffer.GetVertex(MESH_RES * (MESH_RES-1) + (MESH_RES / 2)).VertexPosition;
+		Down += (Down - centerVertex).GetNormalized()*diff;
+		Down *= 1.5f;
+
+		GraphicDebugger::Pointer()->AddFrameDebuggerPoint(Down, 0.0025f, 1, 0, 0);
+		if (Node->TestIfInside(Down))
+		{
+			return true;
+		}
+
+		auto A = m_VertexBuffer.GetVertex(0).VertexPosition;
+		A += (A - centerVertex).GetNormalized()*diff;
+		A *= 1.5f;
+
+		GraphicDebugger::Pointer()->AddFrameDebuggerPoint(A, 0.0025f, 1, 0, 0);
+		if (Node->TestIfInside(A))
+		{
+			return true;
+		}
+
+		auto B = m_VertexBuffer.GetVertex(MESH_ROW_SIZE).VertexPosition;
+		B += (B - centerVertex).GetNormalized()*diff;
+		B *= 1.5f;
+
+		GraphicDebugger::Pointer()->AddFrameDebuggerPoint(B, 0.0025f, 1, 0, 0);
+		if (Node->TestIfInside(B))
+		{
+			return true;
+		}
+
+		auto C = m_VertexBuffer.GetVertex(MESH_RES*(MESH_ROW_SIZE)).VertexPosition;
+		C += (C - centerVertex).GetNormalized()*diff;
+		C *= 1.5f;
+		GraphicDebugger::Pointer()->AddFrameDebuggerPoint(C, 0.0025f, 1, 0, 0);
+		if (Node->TestIfInside(C))
+		{
+			return true;
+		}
+
+		auto D = m_VertexBuffer.GetVertex(MESH_RES*MESH_RES-1).VertexPosition;
+		D += (D - centerVertex).GetNormalized()*diff;
+		D *= 1.5f;
+		GraphicDebugger::Pointer()->AddFrameDebuggerPoint(D, 0.0025f, 1, 0, 0);
+		if (Node->TestIfInside(D))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	bool PlanetQuadTreeNode::TestIfInside(Vector3 pos)
+	{
+		return (Planes[0].SignedDistance(pos) < 0 &&
+			Planes[1].SignedDistance(pos) < 0 &&
+			Planes[2].SignedDistance(pos) < 0 &&
+			Planes[3].SignedDistance(pos) < 0 &&
+			Planes[4].SignedDistance(pos) > 0);
+	}
+
+	void PlanetQuadTreeNode::CalculateLOD(Vector3 pos)
+	{
+		if (TestIfInside(pos))
 		{
 			ActiveTouch = true;
 
 			auto mag = pos.Magnitude() - 1;
 
-			if (0.75f / (m_QuadTreeDepth+1) > mag)
+			if (1.0f / (m_QuadTreeDepth+1) > mag)
 			{
-				m_Dirty = true;
+				//m_Dirty = true;
 			}
-
-			if (!m_ChildGenerated)
+			else
 			{
-				for (int i = 0; i < 4; ++i)
-				{
-					Adyacents[i]->IsAdy = true;
-					Adyacents[i]->AdyTimer.StartTimer();
-				}
+				PlanetOwner->ActiveQuadTree = this;
 			}
 		}
 		else
 		{
 			ActiveTouch = false;
+
+			int targetDepth = 0;
+
+			for (int i = 0; i < 4; ++i)
+			{
+				auto ady = PlanetOwner->m_NodeAdyacency.equal_range(m_CornersID[i]);
+
+				for (auto node = ady.first; node != ady.second && node != PlanetOwner->m_NodeAdyacency.end(); ++node)
+				{
+					if (node->second->m_QuadTreeDepth > m_QuadTreeDepth * 2)
+					{
+						//m_Dirty = true;
+						i = 5; //Exit both fors
+						break;
+					}
+				};
+			}
 		}
 
 		if (m_Dirty)
 		{
 			DeathTimer.StartTimer();
 
-			if (!m_ChildGenerated)
+			if (!m_ChildGenerated && m_QuadTreeDepth < 64)
 			{
 				m_ChildGenerated = true;
 				GenerateChildren();
@@ -213,16 +486,33 @@ namespace rczEngine
 		}
 	}
 
+	void PlanetQuadTreeNode::GetSide(eSide side, Vector<Gfx::Vertex>& out_VertexList)
+	{
+		switch (side)
+		{
+		case eSide::Up:
+			for (int32 i = 0; i < MESH_RES; ++i) out_VertexList.push_back(GetVertex(i, 0));
+			break;
+		case eSide::Down:
+			for (int32 i = 0; i < MESH_RES; ++i) out_VertexList.push_back(GetVertex(i, MESH_ROW_SIZE));
+			break;
+		case eSide::Left:
+			for (int32 i = 0; i < MESH_RES; ++i) out_VertexList.push_back(GetVertex(0, i));
+			break;
+		case eSide::Right:
+			for (int32 i = 0; i < MESH_RES; ++i) out_VertexList.push_back(GetVertex(MESH_ROW_SIZE, i));
+			break;
+		default:
+			break;
+		}
+	}
+
 	void PlanetQuadTreeNode::Render()
 	{
 		auto ptr = m_res->GetResource<Material>(m_Material).lock();
 
-		//GraphicDebugger::Pointer()->AddFrameDebuggerPoint(m_MeshAABB.GetCenter(), 0.001f, 1.0, 0, 0);
-
 		if (ActiveTouch)
 			ptr->m_core.g_Albedo.Set(1.0f, 0.0f, 0.0f);
-		else if (IsAdy)
-			ptr->m_core.g_Albedo.Set(0.0f, 0.0f, 1.0f);
 		else
 			ptr->m_core.g_Albedo.Set(1.0f, 1.0f, 1.0f);
 
@@ -252,7 +542,7 @@ namespace rczEngine
 			pow(Noise->RidgedOctaveNoise(NoisePos*12.0f, 2, 0.2f), 2) *
 			pow(Noise->OctaveNoise(NoisePos, 2, 1), 2);
 
-		return PosNormal + (PosNormal.GetNormalized())*noise*.02f;
+		return PosNormal + (PosNormal.GetNormalized())*noise*.01f;
 	}
 
 	void PlanetQuadTreeNode::GenerateChildren()
@@ -260,6 +550,7 @@ namespace rczEngine
 		DeathTimer.StartTimer();
 
 		int32 depth;
+
 
 		if (m_QuadTreeDepth == 0)
 			depth = 1;
@@ -295,6 +586,7 @@ namespace rczEngine
 		}
 	}
 
+
 	void PlanetQuadTreeNode::RenderChildren()
 	{
 		for (int i = 0; i < 4; ++i)
@@ -306,7 +598,7 @@ namespace rczEngine
 	void PlanetQuadTreeNode::GenerateChild(int index, int depth)
 	{
 		Children[index] = new PlanetQuadTreeNode();
-		Children[index]->InitQuadTree(Noise, m_StartPos, index, depth, m_Side);
+		Children[index]->InitQuadTree(PlanetOwner, Noise, m_StartPos, index, depth, m_Side, sideHashData);
 		SetChildrenReady(index, true);
 	}
 
@@ -333,5 +625,11 @@ namespace rczEngine
 		BuenMutex.lock();
 		ChildrenReady[indexOfChild] = value;
 		BuenMutex.unlock();
+	}
+
+	float PlanetQuadTreeNode::HashCorner(Vector3 v)
+	{
+		auto temp = (v + Vector3(1.0f, 1.0f, 1.0f)) * 1000000;
+		return Vector3::Hash(temp);
 	}
 }

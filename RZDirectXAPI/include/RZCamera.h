@@ -5,7 +5,7 @@ namespace rczEngine
 	class RZ_EXP Camera
 	{
 	public:
-		Camera() :m_Position(INIT_ZERO), m_Target(INIT_ZERO), m_Up(INIT_ZERO), m_Pitch(INIT_UNIT), m_Yaw(INIT_UNIT), m_Roll(INIT_UNIT)
+		Camera() : m_Position(eInit::Zero), m_Target(eInit::Zero), m_Up(eInit::Zero), m_Pitch(eInit::Unit), m_Yaw(eInit::Unit), m_Roll(eInit::Unit)
 		{
 
 		};

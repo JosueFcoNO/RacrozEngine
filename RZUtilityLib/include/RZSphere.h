@@ -2,16 +2,22 @@
 
 namespace rczEngine
 {
-	class RZ_EXP Sphere
+	class Sphere
 	{
 	public:
-		Sphere();
-		Sphere(float x, float y, float z, float Radius);
+		RZ_EXP Sphere() noexcept : m_Position(eInit::Zero)
+		{
+			m_Radius = 1.0f;
+		}
 
-		void Set(float x, float y, float z, float Radius);
-		bool CheckSphereCollision(Sphere sph);
-		Vector3 GetPosition();
-		float GetRadius();
+		RZ_EXP Sphere(float x, float y, float z, float Radius) noexcept :
+			m_Position(x, y, z), 
+			m_Radius(Radius) {};
+
+		RZ_EXP FORCEINLINE void Set(float x, float y, float z, float Radius) noexcept;
+		RZ_EXP FORCEINLINE bool CheckSphereCollision(Sphere sph) const noexcept;
+		RZ_EXP FORCEINLINE Vector3 GetPosition() const noexcept;
+		RZ_EXP FORCEINLINE float GetRadius() const noexcept;
 
 	private:
 		Vector3 m_Position;

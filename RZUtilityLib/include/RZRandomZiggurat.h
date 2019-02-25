@@ -5,11 +5,11 @@ namespace rczEngine
 	class RandomZiggurat : public RandomNumberGen
 	{
 	public:
-		virtual uint32 GetRandomNumber();
-		virtual float GetRandomNumberN();
+		uint32 GetRandomNumber() noexcept override;
+		float GetRandomNumberN() noexcept override;
 
 	private:
-		float TestX(float x);
+		float TestX(float x) noexcept;
 
 	};
 }

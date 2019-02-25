@@ -5,22 +5,22 @@ namespace rczEngine
 	typedef Vector<KeyFrame> KeyFrameVector;
 	typedef Map<String, KeyFrameVector> AnimationTimeline; //TODO: turn animationTimeline into a class of its own?
 
-	class RZ_EXP Animation : public Resource
+	class Animation : public Resource
 	{
 	public:
-		void AddKeyFrame(KeyFrame& keyFrame, String boneName);
-		KeyFrameVector& GetChannel(String boneName);
-		KeyFrame GetKeyFrame(String& boneName, float time);
-		KeyFrame GetNextKeyFrame(String& boneName, float time);
+		RZ_EXP void AddKeyFrame(KeyFrame& keyFrame, String boneName);
+		RZ_EXP KeyFrameVector& GetChannel(String boneName);
+		RZ_EXP KeyFrame GetKeyFrame(String& boneName, float time);
+		RZ_EXP KeyFrame GetNextKeyFrame(String& boneName, float time);
 
-		virtual void Load(const char* filePath, const char* resName);
-		virtual void Release() { m_Timeline.clear(); };
+		RZ_EXP virtual void Load(const String& filePath, const String& resName);
+		RZ_EXP virtual void Release() { m_Timeline.clear(); };
 
-		virtual void Serialize();
-		virtual void DeSerialize();
+		RZ_EXP virtual void Serialize();
+		RZ_EXP virtual void DeSerialize();
 
 #ifndef RZ_EDITOR
-		virtual void RenderResourceGUI()
+		RZ_EXP virtual void RenderResourceGUI()
 		{
 			ImGui::Text("Animation Resource");
 		}

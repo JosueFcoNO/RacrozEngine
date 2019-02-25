@@ -6,7 +6,7 @@ namespace rczEngine
 	class RZ_EXP Vertex
 	{
 	public:
-		Vertex() : VertexPosition(INIT_ZERO), TextureCoordinates(INIT_ZERO), VertexNormals(INIT_ZERO)
+		Vertex() : VertexPosition(Zero), TextureCoordinates(Zero), VertexNormals(Zero)
 		{
 		};
 
@@ -20,7 +20,7 @@ namespace rczEngine
 	class RZ_EXP SkinnedVertex
 	{
 	public:
-		SkinnedVertex() : VertexPosition(INIT_ZERO), TextureCoordinates(INIT_ZERO), VertexNormals(INIT_ZERO)
+		SkinnedVertex() : VertexPosition(Zero), TextureCoordinates(Zero), VertexNormals(Zero)
 		{
 		};
 

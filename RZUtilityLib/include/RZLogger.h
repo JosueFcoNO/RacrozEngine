@@ -2,58 +2,38 @@
 
 namespace rczEngine
 {
-	enum eLogMessageType
-	{
-		log_MESSAGE, log_WARNING, log_ERROR, log_CRITICALERROR
-	};
-
-	class LogObject
-	{
-	public:
-		void Init(const String& string, eLogMessageType type = log_MESSAGE, const String& logFile = "")
-		{
-			m_String = string;
-			m_LogFile = logFile;
-			m_Type = type;
-		};
-
-		FORCEINLINE String GetString() { return m_String; };
-		FORCEINLINE eLogMessageType GetType() { return m_Type; };
-
-	private:
-		String m_LogFile = "";
-		String m_String = "";
-		eLogMessageType m_Type = log_MESSAGE;
-	};
-
 	//A logger class that can write to multiple logs and is accesible everywhere. 
 	class Logger
 	{
 	public:
 		RZ_EXP static void Start();
-		RZ_EXP static Logger* Pointer();
+		RZ_EXP static gsl::not_null<Logger*> Pointer();
+		RZ_EXP static gsl::not_null<Logger*> PointerOrCreate();
 		RZ_EXP static void ShutDown();
 
-		RZ_EXP void Log(const String& string, eLogMessageType type = log_MESSAGE);
-		RZ_EXP void ClearLog() { m_LoggedStrings.clear(); };
-		RZ_EXP Vector<LogObject>& GetLoggedStrings() { return m_LoggedStrings; };
+		RZ_EXP void Log(const String& string, eLogMsgType type = eLogMsgType::Message);
+		RZ_EXP FORCEINLINE void ClearLog() noexcept { m_LoggedStrings.clear(); };
+		RZ_EXP FORCEINLINE auto& GetLoggedStrings() const noexcept { return m_LoggedStrings; };
 	
 		///Create a Log File and load it into this object
-		RZ_EXP void StartLog(const char* pszFileName);
+		RZ_EXP void StartLog(const String& pszFileName);
 
 		///Print a Log Message onto the output
-		RZ_EXP void LogMessageToFileLog(String pszFileName, String strMessage, eLogMessageType messageType = log_MESSAGE);
-		RZ_EXP void LogMessageToFileLog(const char* pszFileName, const char* strMessage, eLogMessageType messageType = log_MESSAGE);
-		RZ_EXP void LogMessageToFileLog(const char* pszFileName, const char* strMessage, int32 i, eLogMessageType messageType = log_MESSAGE);
-		RZ_EXP void LogMessageToFileLog(const char* pszFileName, const char* strMessage, float f, eLogMessageType messageType = log_MESSAGE);
+		RZ_EXP void LogMessageToFileLog(const String& pszFileName, const String& strMessage, eLogMsgType messageType = eLogMsgType::Message);
+
+		template <typename t>
+		void LogMessageToFileLog(const String& pszFileName, const String& strMessage, t value, eLogMsgType messageType = eLogMsgType::Message)
+		{
+			LogMessageToFileLog(pszFileName, strMessage + std::to_string(value), messageType);
+		}
 
 		///Closes the current Log open
-		RZ_EXP void CloseLog(const char* pszFileName);
+		RZ_EXP void CloseLog(const String& pszFileName);
 
 	private:
-		static Logger*& _Instance();
+		static Logger*& _Instance() noexcept;
 
-		Map<String, FileStream*> m_Logs;
+		Map<String, UniquePtr<FileStream>> m_Logs;
 		Vector<LogObject> m_LoggedStrings;
 	};
 };

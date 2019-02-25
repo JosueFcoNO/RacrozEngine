@@ -114,9 +114,8 @@ namespace rczEngine
 
 		GraphicDebugger::ShutDown();
 
-		Logger::ShutDown();
-
 		Profiler::ShutDown();
+		Logger::ShutDown();
 
 		Gfx::GfxCore::ShutDown();
 	}

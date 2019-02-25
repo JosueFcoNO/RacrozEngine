@@ -5,7 +5,7 @@ namespace rczEngine
 {
 	struct UI_Vertex
 	{
-		UI_Vertex() : m_Uvs(INIT_ZERO), m_Position(INIT_ZERO)
+		UI_Vertex() : m_Uvs(eInit::Zero), m_Position(eInit::Zero)
 		{};
 		Vector3 m_Position;
 		Vector2 m_Uvs;

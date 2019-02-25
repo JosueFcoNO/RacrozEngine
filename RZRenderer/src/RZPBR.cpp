@@ -11,7 +11,7 @@ namespace rczEngine
 		m_PShaderPath = L"Shaders/PBR_Deferred.hlsl";
 		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
 
-		AddTexture2D(m_LUT.get(), 7);
+		AddTexture2D(m_LUT, 7);
 
 		config.AmbientLightIntensity = 1.0f;
 		config.LightIntensity = 1.0f;

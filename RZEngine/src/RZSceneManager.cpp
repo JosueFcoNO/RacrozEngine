@@ -23,7 +23,7 @@ namespace rczEngine
 		delete _Instance();
 	}
 
-	StrPtr<Scene> SceneManager::CreateDefaultScene(const char * name)
+	StrPtr<Scene> SceneManager::CreateDefaultScene(const String& name)
 	{
 		StrPtr<Scene> DefaultScene = std::make_shared<Scene>();
 		DefaultScene->InitScene(name);
@@ -46,7 +46,7 @@ namespace rczEngine
 		return DefaultScene;
 	}
 
-	StrPtr<Scene> SceneManager::CreateEmptyScene(const char * name)
+	StrPtr<Scene> SceneManager::CreateEmptyScene(const String& name)
 	{
 		StrPtr<Scene> DefaultScene = std::make_shared<Scene>();
 		DefaultScene->InitScene(name);
@@ -69,7 +69,7 @@ namespace rczEngine
 		return m_ActiveScene;
 	}
 
-	StrPtr<Scene> SceneManager::LoadScene(const char * filePath)
+	StrPtr<Scene> SceneManager::LoadScene(const String& filePath)
 	{
 		Serializer::Start();
 		auto ser = Serializer::Pointer();
@@ -110,9 +110,9 @@ namespace rczEngine
 			m_ActiveScene->m_SceneActorMap[currentID] = gO;
 		}
 
-		for (auto it = m_ActiveScene->m_SceneActorMap.begin(); it != m_ActiveScene->m_SceneActorMap.end(); ++it)
+		for (auto it : m_ActiveScene->m_SceneActorMap)
 		{
-			it->second->GetGraphPointers(0);
+			it.second->GetGraphPointers(0);
 		}	
 
 		ser->CloseFile();
@@ -122,7 +122,7 @@ namespace rczEngine
 		return StrPtr<Scene>();
 	}
 
-	void SceneManager::SaveScene(const char * filePath)
+	void SceneManager::SaveScene(const String& filePath)
 	{
 		Serializer::Start();
 		auto ser = Serializer::Pointer();
@@ -143,9 +143,9 @@ namespace rczEngine
 			it->second->Serialize();
 		}
 
-		for (auto it = m_ActiveScene->m_SceneActorMap.begin(); it != m_ActiveScene->m_SceneActorMap.end(); ++it)
+		for (auto it : m_ActiveScene->m_SceneActorMap)
 		{
-			it->second->Serialize();
+			it.second->Serialize();
 		}
 
 		ser->CloseFile();

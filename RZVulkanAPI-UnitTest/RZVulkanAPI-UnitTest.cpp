@@ -269,7 +269,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	float DeltaButton = 0.25f;
 
-	Matrix4 Sky(INIT_UNIT);
+	Matrix4 Sky(Unit);
 
 	while (!EventMng->m_input.CheckKeyboardState(DIK_ESCAPE))
 	{

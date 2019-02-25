@@ -3,11 +3,11 @@
 
 namespace rczEngine
 {
-	enum eINIT
+	enum class eInit
 	{
-		INIT_ZERO,
-		INIT_UNIT,
-		INIT_NONE
+		Zero,
+		Unit,
+		None
 	};
 
 	class Logger;

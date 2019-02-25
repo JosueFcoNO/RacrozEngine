@@ -27,7 +27,7 @@ namespace rczEngine
 
 	void Terrain::RenderTerrain()
 	{
-		m_Mesh.Render();
+		//m_Mesh.Render();
 	}
 
 }

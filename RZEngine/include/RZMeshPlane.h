@@ -40,7 +40,7 @@ namespace rczEngine
 	public:
 		virtual ~MeshPlane() { DestroyMeshPlane(); };
 
-		void InitMeshPlane(int32 vertices, double size, double HalfSize, Vector3 startPos, eMeshPlaneOrientation orientation, bool CreateIndexBuffer = true);
+		void InitMeshPlane(int32 vertices, double size, double HalfSize, Vector3 startPos, eMeshPlaneOrientation orientation, bool CreateIndexBuffer = true, bool CreateVertexBuffer = true);
 		void DestroyMeshPlane() noexcept;
 
 		virtual void Render();
@@ -52,6 +52,8 @@ namespace rczEngine
 		MeshPlaneBuffer m_MeshBuffer;
 
 		static void GenerateIndices(int32 vertices, Gfx::IndexBuffer& indexBuffer);
+
+		Gfx::Vertex& GetVertex(int32 x, int32 y);
 
 		Gfx::VertexBuffer<Gfx::Vertex> m_VertexBuffer;
 

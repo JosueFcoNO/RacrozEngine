@@ -7,8 +7,8 @@ namespace rczEngine
 	{
 		DomainShader::DomainShader()
 		{
-			m_DomainShader = NULL;
-			m_ShaderBlob = NULL;
+			m_DomainShader = nullptr;
+			m_ShaderBlob = nullptr;
 		}
 
 		DomainShader::~DomainShader()
@@ -23,7 +23,7 @@ namespace rczEngine
 
 		bool DomainShader::SetThisDomainShader(GfxCore * gfx)
 		{
-			if (m_DomainShader == NULL || m_ShaderBlob == NULL)
+			if (m_DomainShader == nullptr || m_ShaderBlob == nullptr)
 				return false;
 
 			return gfx->SetDomainShader(*this);

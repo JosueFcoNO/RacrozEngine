@@ -8,14 +8,14 @@ namespace rczEngine
 		class RZ_EXP HullShader : public Shader
 		{
 		public:
-			///Inits everything to NULL
+			///Inits everything to nullptr
 			HullShader();
 			///Calls Destroy()
 			~HullShader();
 			///Creates and compiles the pixel shader found in pszFileString
-			bool CreateHullShader(const WCHAR* pszFileString, GfxCore* gfx = NULL);
+			bool CreateHullShader(const WCHAR* pszFileString, GfxCore* gfx = nullptr);
 			///Set this pixel shader in the input assembler.
-			bool SetThisHullShader(GfxCore* gfx = NULL);
+			bool SetThisHullShader(GfxCore* gfx = nullptr);
 			///Releases data
 			void Destroy();
 

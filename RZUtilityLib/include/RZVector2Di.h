@@ -9,48 +9,55 @@ namespace rczEngine
 		////// Vector2I Constructors
 		///////////////////////
 
-		Vector2I() {};
+		Vector2I() noexcept {};
 
-		Vector2I(eINIT init);
+		Vector2I(eInit init) noexcept;
 
-		Vector2I(Vector2& v2);
-		Vector2I(Vector3& v3);
-		Vector2I(Vector4& v4);
+		Vector2I(Vector2& v2) noexcept;
+		Vector2I(Vector3& v3) noexcept;
+		Vector2I(Vector4& v4) noexcept;
 
-		Vector2I(int x, int y);
+		Vector2I(int x, int y) noexcept;
 
-		void Set(int x, int y);
-		void Scale(float Scale);
+		FORCEINLINE void Set(int x, int y) noexcept { m.x = x; m.y = y; }
+		FORCEINLINE void Scale(float scale) noexcept { *this *= scale; }
+		FORCEINLINE float Magnitude() const noexcept;
+		void Normalize() noexcept;
+		Vector2I GetNormalized() const noexcept;
 
-		Vector2I operator+(const Vector2I& v);
-		Vector2I operator-(const Vector2I& v);
-		Vector2I operator*(const Vector2I& v);
-		Vector2I operator*(float f);
-		Vector2I operator/(const Vector2I& v);
-		Vector2I operator/(float f);
+		FORCEINLINE Vector2I operator+(const Vector2I& v) noexcept { return Vector2I(m.x, m.y) += v; }
+		FORCEINLINE Vector2I operator-(const Vector2I& v) noexcept { return Vector2I(m.x, m.y) -= v; }
+		FORCEINLINE Vector2I operator*(const Vector2I& v) noexcept { return Vector2I(m.x, m.y) *= v; }
+		FORCEINLINE Vector2I operator/(const Vector2I& v) noexcept { return Vector2I(m.x, m.y) /= v; }
 
-		Vector2I& operator+=(const Vector2I& v);
-		Vector2I& operator-=(const Vector2I& v);
-		Vector2I& operator*=(const Vector2I& v);
-		Vector2I& operator*=(float f);
-		Vector2I& operator/=(const Vector2I& v);
-		Vector2I& operator/=(float f);
+		FORCEINLINE Vector2I operator*(float f) noexcept { return Vector2I(m.x, m.y) *= f; }
+		FORCEINLINE Vector2I operator/(float f) noexcept { return Vector2I(m.x, m.y) /= f; }
 
-		bool operator==(const Vector2I& v);
-		bool operator!=(const Vector2I& v);
-		bool  operator<(const Vector2I& v);
-		bool  operator>(const Vector2I& v);
-		bool operator<=(const Vector2I& v);
-		bool operator>=(const Vector2I& v);
+		Vector2I& operator+=(const Vector2I& v) noexcept;
+		Vector2I& operator-=(const Vector2I& v) noexcept;
+		Vector2I& operator*=(const Vector2I& v) noexcept;
+		Vector2I& operator/=(const Vector2I& v) noexcept;
 
-		float operator|(const Vector2I& v);
-		float operator^(const Vector2I& v);
+		Vector2I& operator*=(float f) noexcept;
+		Vector2I& operator/=(float f) noexcept;
 
-		void Normalize();
-		Vector2I GetNormalized();
+		FORCEINLINE bool operator==(const Vector2I& v) const noexcept { return (m.x == v.m.x && m.y == v.m.y); }
+		FORCEINLINE bool operator!=(const Vector2I& v) const noexcept { return !(m.x == v.m.x && m.y == v.m.y); }
+		FORCEINLINE bool  operator<(const Vector2I& v) const noexcept { return (m.x < v.m.x && m.y < v.m.y); }
+		FORCEINLINE bool  operator>(const Vector2I& v) const noexcept { return (m.x > v.m.x && m.y > v.m.y); }
+		FORCEINLINE bool operator<=(const Vector2I& v) const noexcept { return (m.x <= v.m.x && m.y <= v.m.y); }
+		FORCEINLINE bool operator>=(const Vector2I& v) const noexcept { return (m.x >= v.m.x && m.y >= v.m.y); }
 
-		float Magnitude();
+		FORCEINLINE float operator|(const Vector2I& v) const noexcept { return gsl::narrow_cast<float>(m.x * v.m.x + m.y * v.m.y); }
+		FORCEINLINE float operator^(const Vector2I& v) const noexcept { return gsl::narrow_cast<float>(m.x*v.m.y - m.y * v.m.x); }
 
-		int m_x, m_y;
+		union
+		{
+			struct
+			{
+				int x, y;
+			} m;
+			int m_elements[2];
+		};
 	};
 }

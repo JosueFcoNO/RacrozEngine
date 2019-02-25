@@ -94,7 +94,7 @@ namespace rczEngine
 		free(ptr);
 	}
 
-	void Texture2D::Load(const char* filePath, const char* resName)
+	void Texture2D::Load(const String& filePath, const String& resName)
 	{
 		m_FilePath = filePath;
 		m_Name = resName;

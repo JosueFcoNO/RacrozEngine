@@ -121,7 +121,7 @@ namespace rczEngine
 		for (int32 i = 1; i < 256; ++i)
 		{
 			///Create a pointer to the list of subscribers
-			EventSubscribers* SubscriberList = NULL;
+			EventSubscribers* SubscriberList = nullptr;
 
 			//PRESSED
 			if ((newKeyBoard[i] & 0x80) && (Keyboard[i] & 0x80))
@@ -156,7 +156,7 @@ namespace rczEngine
 				AddKeyStrokeToBuffer((KEY)i);
 			}
 
-			if (SubscriberList == NULL)
+			if (SubscriberList == nullptr)
 			{
 				continue;
 			}

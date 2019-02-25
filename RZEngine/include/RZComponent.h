@@ -16,8 +16,8 @@ namespace rczEngine
 		virtual ComponentType GetComponentType() { return CMP_NONE; };
 		virtual ComponentId GetComponentId() { return m_ID; };
 
-		void SetOwner(WeakGameObjectPtr owner) { m_Owner = owner; };
-		WeakGameObjectPtr GetOwner() { return m_Owner; };
+		void SetOwner(WeakGameObjPtr owner) { m_Owner = owner; };
+		WeakGameObjPtr GetOwner() { return m_Owner; };
 
 #ifndef RZ_EDITOR
 		virtual void RenderComponent()
@@ -28,6 +28,6 @@ namespace rczEngine
 #endif
 
 	protected:
-		WeakGameObjectPtr m_Owner;
+		WeakGameObjPtr m_Owner;
 	};
 }

@@ -13,7 +13,7 @@ namespace rczEngine
 		m_gfx->CompileAndCreateVertexShader(m_GeometryPBRShader, L"Shaders/GeometryPass.hlsl");
 		m_GeometryPBRShader.ReflectLayout(0, m_gfx);
 
-		AddTexture2D(m_LUT.get(), 7);
+		AddTexture2D(m_LUT, 7);
 
 		config.AmbientLightIntensity = 1.0f;
 		config.LightIntensity = 1.0f;
@@ -29,12 +29,14 @@ namespace rczEngine
 		Transparent.CreateBlendState(m_gfx);
 
 		CullBack.Init();
-		CullBack.m_CullMode = Gfx::CULL_BACK;
+		CullBack.m_CullMode = Gfx::CULL_FRONT;
+		CullBack.m_FrontCounterClockwise = true;
 		CullBack.CreateRasterizerState(m_gfx);
 
 
 		CullFront.Init();
 		CullFront.m_CullMode = Gfx::CULL_FRONT;
+		CullBack.m_FrontCounterClockwise = false;
 		CullFront.CreateRasterizerState(m_gfx);
 
 		UseDepth = true;
@@ -65,12 +67,12 @@ namespace rczEngine
 
 		SetRenderTargetsInPipeline();
 		CullFront.SetThisRasterizerState(m_gfx);
-		RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_TRANSPARENT, false);
+		RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_MetRough_Trans, false);
 		//m_gfx->UnbindRenderTargets();
 
 		//SetRenderTargetsInPipeline();
 		CullBack.SetThisRasterizerState(m_gfx);
-		RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_TRANSPARENT, false);
+		RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_MetRough_Trans, false);
 
 		m_gfx->SetRSStateDefault();
 

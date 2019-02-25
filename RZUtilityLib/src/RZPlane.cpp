@@ -8,31 +8,31 @@ namespace rczEngine
 	////////Plane
 	///////////////////////////////////////////////
 
-	Plane::Plane()
+	Plane::Plane() noexcept
 	{
 		Normal.Set(0, 1, 0);
 		D = 0;
 	}
 
-	Plane::Plane(float x, float y, float z, float w)
+	Plane::Plane(float x, float y, float z, float w) noexcept
 	{
 		Normal.Set(x, y, z);
 		D = w;
 	}
 
-	Plane::Plane(const Vector3& normal, float d)
+	Plane::Plane(const Vector3& normal, float d) noexcept
 	{ 
 		Normal = normal;
 		D = d;
 	}
 
-	Plane::Plane(const Vector3& p1, const Vector3& p2, const Vector3& p3)
+	Plane::Plane(const Vector3& p1, const Vector3& p2, const Vector3& p3) noexcept : D(0)
 	{
 		ConstructFromPoints(p1, p2, p3);
 	}
 
 
-	void Plane::ConstructFromPointNormal(const Vector3 &Pt, const Vector3 &normal)
+	void Plane::ConstructFromPointNormal(const Vector3 &Pt, const Vector3 &normal) noexcept
 	{
 		Vector3 NormalizedNormal = normal;
 		NormalizedNormal.Normalize();
@@ -41,15 +41,15 @@ namespace rczEngine
 		D = -(Pt | NormalizedNormal);
 	}
 
-	void Plane::ConstructFromPointVectors(const Vector3 &Pt, const Vector3 &V1, const Vector3 &V2)
+	void Plane::ConstructFromPointVectors(const Vector3 &Pt, const Vector3 &V1, const Vector3 &V2) noexcept
 	{
-		Vector3 normal = V1^V2;
+		const Vector3 normal = V1^V2;
 		ConstructFromPointNormal(Pt, normal);
 	}
 
-	void Plane::ConstructFromPoints(const Vector3 &V0, const Vector3 &V1, const Vector3 &V2)
+	void Plane::ConstructFromPoints(const Vector3 &V0, const Vector3 &V1, const Vector3 &V2) noexcept
 	{
-		Vector3 normal = ((V1 - V0) ^ (V2 - V0)).GetNormalized();
+		const Vector3 normal = ((V1 - V0) ^ (V2 - V0)).GetNormalized();
 		return ConstructFromPointNormal(V0, normal);
 	}
 }

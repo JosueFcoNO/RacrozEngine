@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void Scene::InitScene(const char* name)
+	void Scene::InitScene(const String& name)
 	{
 		m_Name = name;
 
@@ -58,7 +58,7 @@ namespace rczEngine
 	}
 
 	
-	WeakGameObjectPtr Scene::CreateActor(const char * name, GameObject * parent, Vector3 position, Vector3 orientation, Vector3 scale)
+	WeakGameObjPtr Scene::CreateActor(const String& name, GameObject * parent, Vector3 position, Vector3 orientation, Vector3 scale)
 	{
 		auto ptr = ActorComponentFactory::Pointer()->CreateActor(name, position, orientation, scale);
 		AddActor(ptr);
@@ -84,34 +84,30 @@ namespace rczEngine
 		return ActorComponentFactory::Pointer()->CreateComponent(type, owner);
 	}
 
-	WeakGameObjectPtr Scene::FindActor(GameObjectID id)
+	WeakGameObjPtr Scene::FindActor(GameObjectID id)
 	{
 		StrGameObjectMap::iterator it;
 		it = m_SceneActorMap.find(id);
 
 		if (it == m_SceneActorMap.end())
 		{
-			return WeakGameObjectPtr();
+			return WeakGameObjPtr();
 		}
 
 		return it->second;
 	}
 
-	WeakGameObjectPtr Scene::FindActor(const char * name)
+	WeakGameObjPtr Scene::FindActor(const String& name)
 	{
-		auto it = m_SceneActorMap.begin();
-		for (; it != m_SceneActorMap.end(); ++it)
+		for (auto Actor : m_SceneActorMap)
 		{
-			if (it->second->GetName() == name)
+			if (Actor.second->GetName() == name)
 			{
-				return it->second;
+				return Actor.second;
 			}
 		}
 
-		if (it == m_SceneActorMap.end())
-		{
-			return (WeakGameObjectPtr());
-		}
+		return WeakGameObjPtr();
 	}
 
 	void Scene::AddRootNodeChild(StrGameObjectPtr node)

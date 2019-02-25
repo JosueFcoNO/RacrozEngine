@@ -17,7 +17,7 @@ namespace rczEngine
 		m_gfx->CompileAndCreateVertexShader(m_SkinnedGeometryPBRShader, L"Shaders/SkinnedVertexShader.hlsl");
 		m_SkinnedGeometryPBRShader.ReflectLayout(0, m_gfx);
 
-		AddTexture2D(m_LUT.get(), 7);
+		AddTexture2D(m_LUT, 7);
 
 		config.AmbientLightIntensity = 1.0f;
 		config.LightIntensity = 1.0f;

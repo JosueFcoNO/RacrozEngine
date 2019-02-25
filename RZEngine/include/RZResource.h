@@ -16,40 +16,38 @@ namespace rczEngine
 	};
 
 	///The resource base class. 
-	class RZ_EXP Resource : public std::enable_shared_from_this<Resource>, public Serializable
+	class Resource : public std::enable_shared_from_this<Resource>, public Serializable
 	{
 	public:
-		Resource() {};
-		virtual ~Resource() {};
+		RZ_EXP Resource() {};
+		RZ_EXP virtual ~Resource() {};
 
 		//Return the handle of the resource. If it is equal to NULL. It is not resource managed.
-		ResourceHandle GetHandle() const { return m_FilePath.GetHash(); };
+		RZ_EXP ResourceHandle GetHandle() const { return m_FilePath.GetHash(); };
 
 		//Returns the name.
-		const char* GetName() const { return m_Name.c_str(); };
+		RZ_EXP const String GetName() const { return m_Name.c_str(); };
 		//Sets the name
-		void SetName(const char* name) { m_Name = name; };
+		RZ_EXP void SetName(const String& name) { m_Name = name; };
 
 		//Returns the FilePath const char
-		String GetFilePath() const { return m_FilePath.GetFilePath(); };
+		RZ_EXP String GetFilePath() const { return m_FilePath.GetFilePath(); };
 		//Returns the FilePath Object
-		const Path& GetPath() { return m_FilePath; };
+		RZ_EXP const Path& GetPath() { return m_FilePath; };
 
 		//Init the FilePath object.
-		void SetFilePath(const char* filePath) { m_FilePath.ResetPath(filePath); };
-		//Init the FilePath object.
-		void SetFilePath(String filePath) { m_FilePath.ResetPath(filePath.c_str()); };
+		RZ_EXP void SetFilePath(const String& filePath) { m_FilePath.ResetPath(filePath); };
 
 		//Load the resource.
-		virtual void Load(const char* filePath, const char* resName) = 0;
+		RZ_EXP virtual void Load(const String& filePath, const String& resName) = 0;
 		//Release the Resource.
-		virtual void Release() = 0;
+		RZ_EXP virtual void Release() = 0;
 
 		ResourceType m_Type;
 
 #ifndef RZ_EDITOR
 		//Render the resource GUI.
-		virtual void RenderResourceGUI() = 0;
+		RZ_EXP virtual void RenderResourceGUI() = 0;
 #endif
 	protected:
 		Path m_FilePath;

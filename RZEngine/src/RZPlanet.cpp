@@ -8,6 +8,9 @@ namespace rczEngine
 	{
 		instance = this;
 
+		QuadTreesNodes = 0;
+		Connections = 0;
+
 		m_SpaceMng = spaceMng;
 		m_CurrentScene = SceneManager::Pointer()->GetActiveScene();
 		m_GfxCore = Gfx::GfxCore::Pointer();
@@ -167,51 +170,6 @@ namespace rczEngine
 		//mat->InitMaterial(MAT_PBR_MetRough, Gfx::GfxCore::Pointer());
 		//mat->SetFilePath("PlanetMaterialWater");
 		//Water = res->InsertResource(mat);
-	}
-
-	void Planet::ProcessBorderData(String hash, PlanetQuadTreeNode * node, eSide side, String Start, String End)
-	{
-		auto found = m_PatchInfo.find(hash);
-
-		if (found == m_PatchInfo.end())
-		{
-			PatchData newPatch;
-			newPatch.DepthOfData = node->GetQuadTreeDepth();
-
-			node->GetSide(side, newPatch.Vertices);
-			newPatch.VertexStartHash = Start;
-			newPatch.VertexEndHash = End;
-			newPatch.First = true;
-			m_PatchInfo[hash] = newPatch;
-
-			return;
-		}
-		else
-		{
-			if (found->second.DepthOfData <= node->GetQuadTreeDepth())
-			{
-				found->second.DepthOfData = node->GetQuadTreeDepth();
-				found->second.Vertices.clear();
-				found->second.First = false;
-				node->GetSide(side, found->second.Vertices);
-				found->second.VertexStartHash = Start;
-				found->second.VertexEndHash = End;
-			}
-		}
-	}
-
-	const PatchData * Planet::GetPatchData(String hash)
-	{
-		auto found = m_PatchInfo.find(hash);
-
-		if (found != m_PatchInfo.end())
-		{
-			return &found->second;
-		}
-		else
-		{
-			return nullptr;
-		}
 	}
 
 	void Planet::LoadAndProcessModel()

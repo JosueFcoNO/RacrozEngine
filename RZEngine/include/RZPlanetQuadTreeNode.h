@@ -8,6 +8,19 @@ namespace rczEngine
 		Right,
 		Down,
 		Left,
+		Up_Reverse = -1,
+		Right_Reverse = -2,
+		Down_Reverse = -3,
+		Left_Reverse = -4,
+		Null
+	};
+
+	enum class eCorner
+	{
+		TopLeft,
+		TopRight,
+		DownRight,
+		DownLeft
 	};
 
 	struct ParentSidesData
@@ -28,7 +41,11 @@ namespace rczEngine
 		bool TestIfInside(Vector3 pos);
 		void CalculateLOD(Vector3 pos);
 
-		void GetSide(eSide side, Vector<Gfx::Vertex>& out_VertexList);
+		void GetSide(eSide side, Vector<Gfx::Vertex*>& out_VertexList);
+
+		eSide GetSideFromCorners(uint32 cornerOne, uint32 cornerTwo);
+
+		static void Connect(PlanetQuadTreeNode* one, PlanetQuadTreeNode* two);
 
 		virtual void Render();
 		virtual Vector3 CalculateVertexPos(Vector3 pos);
@@ -43,12 +60,12 @@ namespace rczEngine
 		bool Override = false;
 		bool ActiveTouch = false;
 
-		static const int MESH_RES = 32;
+		static const int MESH_RES = 128;
 		static const int MESH_ROW_SIZE = MESH_RES - 1;
 		static const int MESH_ROW_HALF = (MESH_RES / 2) - 1;
 
 		//static void Patch(PatchData patchData);
-		static float HashCorner(Vector3 v);
+		static uint32 HashCorner(Vector3 v);
 
 	private:
 		void RenderChildren();
@@ -57,7 +74,7 @@ namespace rczEngine
 		void SetChildrenReady(int indexOfChild, bool value);
 
 
-		float m_CornersID[4];
+		uint32 m_CornersID[4];
 
 		std::thread Child[4];
 		int32 m_QuadTreeDepth = 0;

@@ -17,11 +17,8 @@ namespace rczEngine
 
 	struct RZ_EXP PatchData
 	{
-		Vector<Gfx::Vertex> Vertices;
-		String VertexStartHash;
-		String VertexEndHash;
 		int DepthOfData;
-		bool First;
+		PlanetQuadTreeNode* node;
 	};
 
 	///Primero. Todos los bordes los registro como BorderData con los vertices, el lado y el depth del node.
@@ -41,6 +38,9 @@ namespace rczEngine
 	class RZ_EXP Planet
 	{
 	public:
+		int QuadTreesNodes;
+		int Connections;
+
 		Planet* instance;
 		PlanetQuadTreeNode* ActiveQuadTree;
 
@@ -50,9 +50,6 @@ namespace rczEngine
 		void RenderAtmosphere(float scale);
 
 		void CreateMaterial();
-
-		void ProcessBorderData(String hash, PlanetQuadTreeNode* node, eSide side, String Start, String End);
-		const PatchData* GetPatchData(String hash);
 
 		FORCEINLINE Vector3 GetSpacePosition() { return m_SpacePosition; };
 
@@ -72,7 +69,7 @@ namespace rczEngine
 		int32 Seed = 0;
 		PerlinNoise3D noise;
 
-		MMap<float, PlanetQuadTreeNode*> m_NodeAdyacency;
+		MMap<uint32, PlanetQuadTreeNode*> m_NodeAdyacency;
 		Map<String, PatchData> m_PatchInfo;
 
 	private:

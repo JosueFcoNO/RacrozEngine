@@ -136,7 +136,8 @@ namespace rczEngine
 				{
 					ImGui::Text("Space Manager Active");
 
-
+					//ImGui::Value("Active Nodes: ", Planet::instance->QuadTreesNodes);
+					//ImGui::Value("Connections Made: ", Planet::instance->Connections);
 				}
 				else
 				{

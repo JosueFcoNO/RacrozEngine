@@ -32,6 +32,7 @@ namespace rczEngine
 		GenerateMesh(startPos, orientation);
 		GenerateNormals();
 		GenerateSmoothNormals();
+
 		if (CreateVertexBuffer)
 			m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DYNAMIC, false, m_gfx);
 
@@ -261,10 +262,10 @@ namespace rczEngine
 
 	Gfx::Vertex & MeshPlane::GetVertex(int32 x, int32 y)
 	{
-		int32 _x = Math::Clamp(x, 0, m_MeshBuffer.Size-1);
-		int32 _y = Math::Clamp(y, 0, m_MeshBuffer.Size-1);
+		//int32 _x = Math::Clamp(x, 0, m_MeshBuffer.Size-1);
+		//int32 _y = Math::Clamp(y, 0, m_MeshBuffer.Size-1);
 
-		return m_VertexBuffer.GetVertex(m_MeshBuffer.Size * _y + _x);
+		return m_VertexBuffer.GetVertex(m_MeshBuffer.Size * y + x);
 	}
 
 	Vector3 MeshPlane::CalculateVertexPos(Vector3 pos)
@@ -274,8 +275,10 @@ namespace rczEngine
 
 	void MeshPlane::GenerateNormals()
 	{
+		auto size = m_MeshBuffer.Size;
+
 		//Le saco normales a todo.
-#pragma omp parallel for
+//#pragma omp parallel for
 		for (uint32 i = 0; i < m_IndexBuffer->GetSize(); i += 3)
 		{
 			auto index1 = m_IndexBuffer->GetIndex(i);
@@ -289,14 +292,49 @@ namespace rczEngine
 			Vector3 V1 = Vert1->VertexPosition - Vert2->VertexPosition;
 			Vector3 V2 = Vert1->VertexPosition - Vert3->VertexPosition;
 
-			V1.Normalize();
-			V2.Normalize();
+			//V1.Normalize();
+			//V2.Normalize();
 
 			Vert1->VertexNormals = Vert2->VertexNormals = Vert3->VertexNormals = (V1^V2).GetNormalized();
 			Vert1->Tangents = Vert2->Tangents = Vert3->Tangents = (V1).GetNormalized();
 			Vert1->BiNormals = Vert2->BiNormals = Vert3->BiNormals = (V2).GetNormalized();
 
+			//int32 x = index1 % size;
+			//int32 y = index1 / size;
+
+			//if (x == 0 || x == size - 1 || y == 0 || y == size - 1)
+			//	Vert1->VertexNormals = Vert1->VertexPosition.GetNormalized();
+
+			//x = index2 % size;
+			//y = index2 / size;
+
+			//if (x == 0 || x == size - 1 || y == 0 || y == size - 1)
+			//	Vert2->VertexNormals = Vert2->VertexPosition.GetNormalized();
+
+			//x = index3 % size;
+			//y = index3 / size;
+
+			//if (x == 0 || x == size-1 || y == 0 || y == size-1)
+			//	Vert3->VertexNormals = Vert3->VertexPosition.GetNormalized();
 		}
+
+		auto index1 = m_IndexBuffer->GetIndex(m_IndexBuffer->GetSize() - 1);
+		auto index2 = m_IndexBuffer->GetIndex(m_IndexBuffer->GetSize() - 2);
+		auto index3 = m_IndexBuffer->GetIndex(m_IndexBuffer->GetSize() - 3);
+
+		Gfx::Vertex* Vert1 = &m_VertexBuffer.GetVertex(index1);
+		Gfx::Vertex* Vert2 = &m_VertexBuffer.GetVertex(index2);
+		Gfx::Vertex* Vert3 = &m_VertexBuffer.GetVertex(index3);
+
+		Vector3 V1 = Vert1->VertexPosition - Vert2->VertexPosition;
+		Vector3 V2 = Vert1->VertexPosition - Vert3->VertexPosition;
+
+		//V1.Normalize();
+		//V2.Normalize();
+
+		Vert1->VertexNormals = Vert2->VertexNormals = Vert3->VertexNormals = (V1^V2).GetNormalized();
+		Vert1->Tangents = Vert2->Tangents = Vert3->Tangents = (V1).GetNormalized();
+		Vert1->BiNormals = Vert2->BiNormals = Vert3->BiNormals = (V2).GetNormalized();
 	}
 
 	void MeshPlane::GenerateSmoothNormals()
@@ -304,13 +342,18 @@ namespace rczEngine
 		auto size = m_MeshBuffer.Size;
 
 		//Le saco normales suaves ya a todo.
-#pragma omp parallel for
+//#pragma omp parallel for
 		for (uint32 i = 0; i < m_VertexBuffer.GetSize(); ++i)
 		{
 			Gfx::Vertex* ThisVertex = &m_VertexBuffer.GetVertex(i);
 
 			int32 x = i % size;
 			int32 y = i / size;
+
+			//if (x == 0) continue;
+			//if (y == 0) continue;
+			//if (x == size - 1) continue;
+			//if (y == size - 1) continue;
 
 			Gfx::Vertex* NearbyVertices[8];
 			int32 VerticesUsed = 0;
@@ -326,7 +369,7 @@ namespace rczEngine
 				++VerticesUsed;
 			}
 
-			if (x < size)
+			if (x < size-1)
 			{
 				NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i + 1);
 				++VerticesUsed;
@@ -343,14 +386,14 @@ namespace rczEngine
 				NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i - size);
 				++VerticesUsed;
 
-				if (x < size)
+				if (x < size-1)
 				{
 					NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i + 1 - size);
 					++VerticesUsed;
 				}
 			}
 
-			if (y < size)
+			if (y < size-1)
 			{
 				if (x > 0)
 				{
@@ -361,7 +404,7 @@ namespace rczEngine
 				NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i + size);
 				++VerticesUsed;
 
-				if (x < size)
+				if (x < size-1)
 				{
 					NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i + 1 + size);
 					++VerticesUsed;
@@ -384,9 +427,9 @@ namespace rczEngine
 			binormalAvg /= float(VerticesUsed + 1);
 			TangentAvg /= float(VerticesUsed + 1);
 
-			ThisVertex->VertexNormals = normalAvg;
-			ThisVertex->BiNormals = binormalAvg;
-			ThisVertex->Tangents = TangentAvg;
+			ThisVertex->VertexNormals = normalAvg.GetNormalized();
+			ThisVertex->BiNormals = binormalAvg.GetNormalized();
+			ThisVertex->Tangents = TangentAvg.GetNormalized();
 		}
 	}
 

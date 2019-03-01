@@ -26,7 +26,7 @@ namespace rczEngine
 	void GraphicDebugger::Init()
 	{
 		auto gfx = Gfx::GfxCore::Pointer();
-		m_Shader.CreatePixelShader(L"Shaders/DebuggerShader.hlsl", gfx);
+		//m_Shader.CreatePixelShader(L"Shaders/DebuggerShader.hlsl", gfx);
 		m_ColorCB.CreateConstantBuffer(sizeof(Vector4), Gfx::USAGE_DEFAULT, gfx);
 		m_LinesRS.Init(Gfx::eFILL_MODE::FILL_WIREFRAME);
 		m_SolidRS.Init(Gfx::eFILL_MODE::FILL_SOLID);

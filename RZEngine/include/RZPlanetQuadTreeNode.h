@@ -60,7 +60,7 @@ namespace rczEngine
 		bool Override = false;
 		bool ActiveTouch = false;
 
-		static const int MESH_RES = 128;
+		static const int MESH_RES = 32;
 		static const int MESH_ROW_SIZE = MESH_RES - 1;
 		static const int MESH_ROW_HALF = (MESH_RES / 2) - 1;
 

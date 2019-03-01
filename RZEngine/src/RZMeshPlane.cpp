@@ -29,6 +29,7 @@ namespace rczEngine
 		}
 
 		m_MeshAABB.SetAABB(Vector3(10, 10, 10), Vector3(-10, -10, -10));
+
 		GenerateMesh(startPos, orientation);
 		GenerateNormals();
 		GenerateSmoothNormals();
@@ -142,6 +143,8 @@ namespace rczEngine
 
 	void MeshPlane::GenerateMesh(Vector3 startPos, eMeshPlaneOrientation orientation)
 	{
+		ProfilerObj obj("GenerateMesh", PROFILE_EVENTS::PROF_GAME);
+
 		Gfx::Vertex* TempVertex;
 		auto size = m_MeshBuffer.Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
@@ -149,7 +152,7 @@ namespace rczEngine
 		double Size = size * m_MeshBuffer.distVertex;
 		double halfSize = m_MeshBuffer.HalfSize;
 
-//#pragma omp parallel for
+#pragma omp parallel for
 		for (uint32 i = 0; i < vertexSize; ++i)
 		{
 			TempVertex = &m_VertexBuffer.GetVertex(i);
@@ -196,68 +199,11 @@ namespace rczEngine
 
 			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition);
 
-			m_MeshAABB.AddPoint(TempVertex->VertexPosition);
+			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 			
-			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
-			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
+			//TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
+			//TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
 		}
-
-		//for (uint32 i = 1; i < PlanetQuadTreeNode::MESH_ROW_SIZE-1; i+=2)
-		//{
-		//	TempVertex = &GetVertex(i, 0);
-		//
-		//	Gfx::Vertex* Prev = &GetVertex(i - 1, 0);
-		//	Gfx::Vertex* Next = &GetVertex(i + 1, 0);
-		//
-		//	TempVertex->VertexPosition = Math::Lerp(Prev->VertexPosition, Next->VertexPosition, 0.5f);
-		//	TempVertex->VertexNormals = Math::Lerp(Prev->VertexNormals, Next->VertexNormals, 0.5f);
-		//	TempVertex->TextureCoordinates = Math::Lerp(Prev->TextureCoordinates, Next->TextureCoordinates, 0.5f);
-		//	TempVertex->BiNormals = Math::Lerp(Prev->BiNormals, Next->BiNormals, 0.5f);
-		//	TempVertex->Tangents = Math::Lerp(Prev->Tangents, Next->Tangents, 0.5f);
-		//}
-		//
-		//for (uint32 i = 1; i < PlanetQuadTreeNode::MESH_ROW_SIZE - 1; i += 2)
-		//{
-		//	TempVertex = &GetVertex(i, PlanetQuadTreeNode::MESH_ROW_SIZE);
-		//
-		//	Gfx::Vertex* Prev = &GetVertex(i - 1, PlanetQuadTreeNode::MESH_ROW_SIZE);
-		//	Gfx::Vertex* Next = &GetVertex(i + 1, PlanetQuadTreeNode::MESH_ROW_SIZE);
-		//
-		//	TempVertex->VertexPosition = Math::Lerp(Prev->VertexPosition, Next->VertexPosition, 0.5f);
-		//	TempVertex->VertexNormals = Math::Lerp(Prev->VertexNormals, Next->VertexNormals, 0.5f);
-		//	TempVertex->TextureCoordinates = Math::Lerp(Prev->TextureCoordinates, Next->TextureCoordinates, 0.5f);
-		//	TempVertex->BiNormals = Math::Lerp(Prev->BiNormals, Next->BiNormals, 0.5f);
-		//	TempVertex->Tangents = Math::Lerp(Prev->Tangents, Next->Tangents, 0.5f);
-		//}
-		//
-		//for (uint32 i = 1; i < PlanetQuadTreeNode::MESH_ROW_SIZE - 1; i += 2)
-		//{
-		//	TempVertex = &GetVertex(0, i);
-		//
-		//	Gfx::Vertex* Prev = &GetVertex(0, i - 1);
-		//	Gfx::Vertex* Next = &GetVertex(0, i + 1);
-		//
-		//	TempVertex->VertexPosition = Math::Lerp(Prev->VertexPosition, Next->VertexPosition, 0.5f);
-		//	TempVertex->VertexNormals = Math::Lerp(Prev->VertexNormals, Next->VertexNormals, 0.5f);
-		//	TempVertex->TextureCoordinates = Math::Lerp(Prev->TextureCoordinates, Next->TextureCoordinates, 0.5f);
-		//	TempVertex->BiNormals = Math::Lerp(Prev->BiNormals, Next->BiNormals, 0.5f);
-		//	TempVertex->Tangents = Math::Lerp(Prev->Tangents, Next->Tangents, 0.5f);
-		//}
-		//
-		//for (uint32 i = 1; i < PlanetQuadTreeNode::MESH_ROW_SIZE - 1; i += 2)
-		//{
-		//	TempVertex = &GetVertex(PlanetQuadTreeNode::MESH_ROW_SIZE, i);
-		//
-		//	Gfx::Vertex* Prev = &GetVertex(PlanetQuadTreeNode::MESH_ROW_SIZE, i - 1);
-		//	Gfx::Vertex* Next = &GetVertex(PlanetQuadTreeNode::MESH_ROW_SIZE, i + 1);
-		//
-		//	TempVertex->VertexPosition = Math::Lerp(Prev->VertexPosition, Next->VertexPosition, 0.5f);
-		//	TempVertex->VertexNormals = Math::Lerp(Prev->VertexNormals, Next->VertexNormals, 0.5f);
-		//	TempVertex->TextureCoordinates = Math::Lerp(Prev->TextureCoordinates, Next->TextureCoordinates, 0.5f);
-		//	TempVertex->BiNormals = Math::Lerp(Prev->BiNormals, Next->BiNormals, 0.5f);
-		//	TempVertex->Tangents = Math::Lerp(Prev->Tangents, Next->Tangents, 0.5f);
-		//}
-
 	}
 
 	Gfx::Vertex & MeshPlane::GetVertex(int32 x, int32 y)
@@ -275,11 +221,14 @@ namespace rczEngine
 
 	void MeshPlane::GenerateNormals()
 	{
+		ProfilerObj obj("GenerateNormals", PROFILE_EVENTS::PROF_GAME);
+
 		auto size = m_MeshBuffer.Size;
+		auto indexSize = m_IndexBuffer->GetSize();
 
 		//Le saco normales a todo.
-//#pragma omp parallel for
-		for (uint32 i = 0; i < m_IndexBuffer->GetSize(); i += 3)
+#pragma omp parallel for
+		for (uint32 i = 0; i < indexSize; i += 3)
 		{
 			auto index1 = m_IndexBuffer->GetIndex(i);
 			auto index2 = m_IndexBuffer->GetIndex(i + 1);
@@ -289,61 +238,39 @@ namespace rczEngine
 			Gfx::Vertex* Vert2 = &m_VertexBuffer.GetVertex(index2);
 			Gfx::Vertex* Vert3 = &m_VertexBuffer.GetVertex(index3);
 
-			Vector3 V1 = Vert1->VertexPosition - Vert2->VertexPosition;
-			Vector3 V2 = Vert1->VertexPosition - Vert3->VertexPosition;
+			Vector3 V1 = (Vert1->VertexPosition - Vert2->VertexPosition);
+			Vector3 V2 = (Vert1->VertexPosition - Vert3->VertexPosition);
 
-			//V1.Normalize();
-			//V2.Normalize();
-
-			Vert1->VertexNormals = Vert2->VertexNormals = Vert3->VertexNormals = (V1^V2).GetNormalized();
-			Vert1->Tangents = Vert2->Tangents = Vert3->Tangents = (V1).GetNormalized();
-			Vert1->BiNormals = Vert2->BiNormals = Vert3->BiNormals = (V2).GetNormalized();
-
-			//int32 x = index1 % size;
-			//int32 y = index1 / size;
-
-			//if (x == 0 || x == size - 1 || y == 0 || y == size - 1)
-			//	Vert1->VertexNormals = Vert1->VertexPosition.GetNormalized();
-
-			//x = index2 % size;
-			//y = index2 / size;
-
-			//if (x == 0 || x == size - 1 || y == 0 || y == size - 1)
-			//	Vert2->VertexNormals = Vert2->VertexPosition.GetNormalized();
-
-			//x = index3 % size;
-			//y = index3 / size;
-
-			//if (x == 0 || x == size-1 || y == 0 || y == size-1)
-			//	Vert3->VertexNormals = Vert3->VertexPosition.GetNormalized();
+			Vert1->VertexNormals = Vert2->VertexNormals = Vert3->VertexNormals = (V1^V2);
+			Vert1->Tangents = Vert2->Tangents = Vert3->Tangents = (V1);
+			Vert1->BiNormals = Vert2->BiNormals = Vert3->BiNormals = (V2);
 		}
 
-		auto index1 = m_IndexBuffer->GetIndex(m_IndexBuffer->GetSize() - 1);
-		auto index2 = m_IndexBuffer->GetIndex(m_IndexBuffer->GetSize() - 2);
-		auto index3 = m_IndexBuffer->GetIndex(m_IndexBuffer->GetSize() - 3);
+		auto index1 = m_IndexBuffer->GetIndex(indexSize - 1);
+		auto index2 = m_IndexBuffer->GetIndex(indexSize - 2);
+		auto index3 = m_IndexBuffer->GetIndex(indexSize - 3);
 
 		Gfx::Vertex* Vert1 = &m_VertexBuffer.GetVertex(index1);
 		Gfx::Vertex* Vert2 = &m_VertexBuffer.GetVertex(index2);
 		Gfx::Vertex* Vert3 = &m_VertexBuffer.GetVertex(index3);
 
-		Vector3 V1 = Vert1->VertexPosition - Vert2->VertexPosition;
-		Vector3 V2 = Vert1->VertexPosition - Vert3->VertexPosition;
+		Vector3 V1 = (Vert1->VertexPosition - Vert2->VertexPosition);
+		Vector3 V2 = (Vert1->VertexPosition - Vert3->VertexPosition);
 
-		//V1.Normalize();
-		//V2.Normalize();
-
-		Vert1->VertexNormals = Vert2->VertexNormals = Vert3->VertexNormals = (V1^V2).GetNormalized();
-		Vert1->Tangents = Vert2->Tangents = Vert3->Tangents = (V1).GetNormalized();
-		Vert1->BiNormals = Vert2->BiNormals = Vert3->BiNormals = (V2).GetNormalized();
+		Vert1->VertexNormals = Vert2->VertexNormals = Vert3->VertexNormals = (V1^V2);
+		Vert1->Tangents = Vert2->Tangents = Vert3->Tangents = (V1);
+		Vert1->BiNormals = Vert2->BiNormals = Vert3->BiNormals = (V2);
 	}
 
 	void MeshPlane::GenerateSmoothNormals()
 	{
+		ProfilerObj obj("GenerateSmoothNormals", PROFILE_EVENTS::PROF_GAME);
+
 		auto size = m_MeshBuffer.Size;
+		auto bufferSize = m_VertexBuffer.GetSize();
 
 		//Le saco normales suaves ya a todo.
-//#pragma omp parallel for
-		for (uint32 i = 0; i < m_VertexBuffer.GetSize(); ++i)
+		for (uint32 i = 0; i < bufferSize; ++i)
 		{
 			Gfx::Vertex* ThisVertex = &m_VertexBuffer.GetVertex(i);
 
@@ -358,7 +285,7 @@ namespace rczEngine
 			Gfx::Vertex* NearbyVertices[8];
 			int32 VerticesUsed = 0;
 
-			if (i + size > m_VertexBuffer.GetSize())
+			if (i + size > bufferSize)
 			{
 				continue;
 			}
@@ -411,21 +338,20 @@ namespace rczEngine
 				}
 			}
 
-			Vector3 normalAvg(eInit::Zero);
-			Vector3 binormalAvg(eInit::Zero);
-			Vector3 TangentAvg(eInit::Zero);
+			Vector3 normalAvg;
+			Vector3 binormalAvg;
+			Vector3 TangentAvg;
 
 			for (int32 k = 0; k < VerticesUsed; ++k)
 			{
 				normalAvg += NearbyVertices[k]->VertexNormals;
 				binormalAvg += NearbyVertices[k]->BiNormals;
 				TangentAvg += NearbyVertices[k]->Tangents;
-
 			}
 
-			normalAvg /= float(VerticesUsed + 1);
-			binormalAvg /= float(VerticesUsed + 1);
-			TangentAvg /= float(VerticesUsed + 1);
+			//normalAvg /= float(VerticesUsed + 1);
+			//binormalAvg /= float(VerticesUsed + 1);
+			//TangentAvg /= float(VerticesUsed + 1);
 
 			ThisVertex->VertexNormals = normalAvg.GetNormalized();
 			ThisVertex->BiNormals = binormalAvg.GetNormalized();

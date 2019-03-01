@@ -4,6 +4,8 @@ namespace rczEngine
 {
 	void PlanetQuadTreeNode::InitQuadTree(Planet* planetRef, PerlinNoise3D* noise, Vector3 StartPos, int32 ChildNumber, int32 depth, eMeshPlaneOrientation side, ParentSidesData sideData)
 	{
+		ProfilerObj obj("InitQuadTree", PROFILE_EVENTS::PROF_GAME);
+
 		for (int i = 0; i < 4; ++i)
 			SetChildrenReady(i, false);
 
@@ -585,6 +587,8 @@ namespace rczEngine
 
 	Vector3 PlanetQuadTreeNode::CalculateVertexPos(Vector3 pos)
 	{
+		ProfilerObj obj("CalculateVertexPos", PROFILE_EVENTS::PROF_GAME);
+
 		Vector3 PosNormal = Math::CubeToSphere(pos);
 		Vector3 NoisePos = PosNormal + Vector3(1.0f, 1.0f, 1.0f);
 		NoisePos *= 0.5f;
@@ -592,10 +596,10 @@ namespace rczEngine
 		float noise;
 
 		noise = pow(Noise->RidgedOctaveNoise(NoisePos*128.0f, 6, 0.4f), 2)*
-			Noise->OctaveNoise(NoisePos*24.0f, 6, 0.5f) *
-			Noise->OctaveNoise(NoisePos, 2, 0.5f) +
-			pow(Noise->RidgedOctaveNoise(NoisePos*12.0f, 2, 0.2f), 2) *
-			pow(Noise->OctaveNoise(NoisePos, 2, 1), 2);
+			Noise->OctaveNoise(NoisePos*24.0f, 6, 0.5f)*
+			Noise->OctaveNoise(NoisePos, 2, 0.5f);
+			//pow(Noise->RidgedOctaveNoise(NoisePos*12.0f, 2, 0.2f), 2) *
+			//pow(Noise->OctaveNoise(NoisePos, 2, 1), 2);
 
 		return PosNormal + (PosNormal.GetNormalized())*noise*.01f;
 	}

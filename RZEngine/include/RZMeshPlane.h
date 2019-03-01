@@ -59,11 +59,18 @@ namespace rczEngine
 
 		bool m_Dirty = false;
 
-		void GenerateMesh(Vector3 startPos, eMeshPlaneOrientation orientation);
+		void GenerateMesh(const Vector3& startPos, eMeshPlaneOrientation orientation);
 
 	protected:
 		void GenerateNormals();
 		void GenerateSmoothNormals();
+
+		void GenerateMeshYPos(const Vector3 & startPos);
+		void GenerateMeshYNeg(const Vector3 & startPos);
+		void GenerateMeshXPos(const Vector3 & startPos);
+		void GenerateMeshXNeg(const Vector3 & startPos);
+		void GenerateMeshZPos(const Vector3 & startPos);
+		void GenerateMeshZNeg(const Vector3 & startPos);
 
 		Gfx::IndexBuffer* m_IndexBuffer;
 

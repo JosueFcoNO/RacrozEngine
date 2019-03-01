@@ -120,7 +120,7 @@ namespace rczEngine
 
 		std::mutex buenMutex;
 		buenMutex.lock();
-		m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, false, m_gfx);
+		m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DYNAMIC, false, m_gfx);
 		buenMutex.unlock();
 
 		m_Material = m_res->FindResourceByName<Material>("lambert1").lock()->GetHandle();
@@ -128,21 +128,23 @@ namespace rczEngine
 
 	void PlanetQuadTreeNode::Update(Vector3 playerPos)
 	{
+		ProfilerObj obj("PlanetQuadTreeNode::Update", PROFILE_EVENTS::PROF_GAME);
+
 		if (m_ChildGenerated)
 		{
-			if (CheckChildrenReady())
-			{
-				for (int i = 0; i < 4; ++i)
-				{
-					if (Child[i].joinable())
-						Child[i].join();
-				}
-
-			}
+			//if (CheckChildrenReady())
+			//{
+			//	for (int i = 0; i < 4; ++i)
+			//	{
+			//		//if (Child[i].joinable())
+			//			//Child[i].join();
+			//	}
+			//
+			//}
 		}
 		else
 		{
-			CalculateLOD(playerPos);
+			//CalculateLOD(playerPos);
 		}
 
 		CalculateLOD(playerPos);
@@ -260,6 +262,8 @@ namespace rczEngine
 
 	void PlanetQuadTreeNode::CalculateLOD(Vector3 pos)
 	{
+		ProfilerObj obj("CalculateLOD", PROFILE_EVENTS::PROF_GAME);
+
 		if (TestIfInside(pos))
 		{
 			ActiveTouch = true;
@@ -445,6 +449,8 @@ namespace rczEngine
 		}
 		else if (one->m_QuadTreeDepth == two->m_QuadTreeDepth / 2)
 		{
+			return;
+
 			//el two es el màs grande que no estoy modificando, entonces agarro el two. Saco el corner con el que correspondieron.
 			///con ese corner ya sè cual de los dos lados es el que los conecta. De esos dos lados saco el punto medio y lo hasheo. 
 			///Uno de esos dos puntos medios hasheados serà la otra esquina del one pequeño que conecta. Con eso ya puedo get los dos lados
@@ -593,13 +599,21 @@ namespace rczEngine
 		Vector3 NoisePos = PosNormal + Vector3(1.0f, 1.0f, 1.0f);
 		NoisePos *= 0.5f;
 
+		double x, y, z;
+		x = NoisePos.m_x;
+		y = NoisePos.m_y;
+		z = NoisePos.m_z;
+		Vector3 Pos128 = { gsl::narrow_cast<float>(x*128.0), gsl::narrow_cast<float>(y*128.0), gsl::narrow_cast<float>(z*128.0) };
+		Vector3 Pos12 = { gsl::narrow_cast<float>(x*12.0), gsl::narrow_cast<float>(y*12.0), gsl::narrow_cast<float>(z*12.0) };
+		Vector3 Pos24 = { gsl::narrow_cast<float>(x*24.0), gsl::narrow_cast<float>(y*24.0), gsl::narrow_cast<float>(z*24.0) };
+
 		float noise;
 
-		noise = pow(Noise->RidgedOctaveNoise(NoisePos*128.0f, 6, 0.4f), 2)*
-			Noise->OctaveNoise(NoisePos*24.0f, 6, 0.5f)*
-			Noise->OctaveNoise(NoisePos, 2, 0.5f);
-			//pow(Noise->RidgedOctaveNoise(NoisePos*12.0f, 2, 0.2f), 2) *
-			//pow(Noise->OctaveNoise(NoisePos, 2, 1), 2);
+		noise = pow(Noise->RidgedOctaveNoise(Pos128, 6, 0.4f), 2)  *
+			Noise->OctaveNoise(Pos24, 6, 0.5f) *
+			Noise->OctaveNoise(NoisePos, 2, 0.5f) *
+			pow(Noise->RidgedOctaveNoise(Pos12, 2, 0.2f), 2) *
+			pow(Noise->OctaveNoise(NoisePos, 2, 1), 2);
 
 		return PosNormal + (PosNormal.GetNormalized())*noise*.01f;
 	}

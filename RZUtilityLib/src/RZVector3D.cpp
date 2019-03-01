@@ -195,8 +195,15 @@ namespace rczEngine
 #ifdef RZ_PROFILING
 		ProfilerObj autoProfiler(RZ__FUNCTION__, PROFILE_EVENTS::PROF_GAME);
 #endif
+		float add = 0.0f;
 
-		return Math::Sqrt((Math::Square(m_x) + Math::Square(m_y) + Math::Square(m_z)));
+#pragma omp simd
+		for (int i = 0; i < 3; ++i)
+		{
+			add += Math::Square(m_elements[i]);
+		}
+
+		return Math::Sqrt(add);
 	}
 
 }

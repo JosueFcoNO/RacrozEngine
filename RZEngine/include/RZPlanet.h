@@ -42,7 +42,7 @@ namespace rczEngine
 		int Connections;
 
 		Planet* instance;
-		PlanetQuadTreeNode* ActiveQuadTree;
+		PlanetQuadTreeNode* ActiveQuadTree = nullptr;
 
 		void InitPlanet(int32 seed, float x, float y, float z, SpaceManager* spaceMng);
 		void RenderPlanet(float scale);

@@ -130,23 +130,6 @@ namespace rczEngine
 	{
 		ProfilerObj obj("PlanetQuadTreeNode::Update", PROFILE_EVENTS::PROF_GAME);
 
-		if (m_ChildGenerated)
-		{
-			//if (CheckChildrenReady())
-			//{
-			//	for (int i = 0; i < 4; ++i)
-			//	{
-			//		//if (Child[i].joinable())
-			//			//Child[i].join();
-			//	}
-			//
-			//}
-		}
-		else
-		{
-			//CalculateLOD(playerPos);
-		}
-
 		CalculateLOD(playerPos);
 
 		if (m_Dirty)
@@ -276,6 +259,7 @@ namespace rczEngine
 			}
 			else
 			{
+				m_Dirty = false;
 				PlanetOwner->ActiveQuadTree = this;
 			}
 		}
@@ -298,6 +282,14 @@ namespace rczEngine
 						break;
 					}
 				};
+			}
+
+			if (PlanetOwner->ActiveQuadTree)
+			{
+				if (PlanetOwner->ActiveQuadTree->GetQuadTreeDepth() <= m_QuadTreeDepth)
+				{
+					m_Dirty = false;
+				}
 			}
 		}
 
@@ -390,6 +382,35 @@ namespace rczEngine
 		}
 	}
 
+	bool PlanetQuadTreeNode::FindClosest(const Vector3 pos, eCorner& corner)
+	{
+		if ((pos - GetVertex(0, 0).VertexPosition).Magnitude() < m_MeshBuffer.HalfSize / 2.0)
+		{
+			corner = eCorner::TopLeft;
+			return true;
+		}
+
+		if ((pos - GetVertex(MESH_ROW_SIZE, 0).VertexPosition).Magnitude() < m_MeshBuffer.HalfSize/2.0)
+		{
+			corner = eCorner::TopRight;
+			return true;
+		}
+
+		if ((pos - GetVertex(0, MESH_ROW_SIZE).VertexPosition).Magnitude() < m_MeshBuffer.HalfSize / 2.0)
+		{
+			corner = eCorner::DownLeft;
+			return true;
+		}
+
+		if ((pos - GetVertex(MESH_ROW_SIZE, MESH_ROW_SIZE).VertexPosition).Magnitude() < m_MeshBuffer.HalfSize / 2.0)
+		{
+			corner = eCorner::DownRight;
+			return true;
+		}
+
+		return false;
+	}
+
 	void PlanetQuadTreeNode::Connect(PlanetQuadTreeNode * one, PlanetQuadTreeNode * two)
 	{
 		std::mutex buenMutex;
@@ -449,7 +470,6 @@ namespace rczEngine
 		}
 		else if (one->m_QuadTreeDepth == two->m_QuadTreeDepth / 2)
 		{
-			return;
 
 			//el two es el màs grande que no estoy modificando, entonces agarro el two. Saco el corner con el que correspondieron.
 			///con ese corner ya sè cual de los dos lados es el que los conecta. De esos dos lados saco el punto medio y lo hasheo. 
@@ -469,64 +489,87 @@ namespace rczEngine
 						CornerMatch[0] = one->m_CornersID[o];
 						CornerMatchIndex = t;
 						o = 5;
-						t = 5;
+						break;
 					}
 				}
 
-			eSide PossibleSides[2] = { eSide::Null, eSide::Null };
-			uint32 PossibleSidesHashes[2] = { 0, 0 };
-			int MatchingSideIndex = -1;
+
+			eSide CorrectSide = eSide::Null;
+			Vector3 Pos;
+			eCorner corner = eCorner::TopLeft;
 
 			switch ((eCorner)(CornerMatchIndex))
 			{
+			default:
 			case eCorner::TopLeft:
-				PossibleSides[0] = eSide::Up;
-				PossibleSides[1] = eSide::Left;
+				Pos = two->GetVertex(MESH_ROW_HALF, 0).VertexPosition;
 
-				PossibleSidesHashes[0] = HashCorner(two->GetVertex(MESH_ROW_HALF + 1, 0).VertexPosition.GetNormalized());
-				PossibleSidesHashes[1] = HashCorner(two->GetVertex(0, MESH_ROW_HALF + 1).VertexPosition.GetNormalized());
+				if (one->FindClosest(Pos, corner))
+				{
+					CorrectSide = eSide::Up;
+					break;
+				}
+
+				Pos = two->GetVertex(0, MESH_ROW_HALF).VertexPosition;
+				if (one->FindClosest(Pos, corner))
+				{
+					CorrectSide = eSide::Left;
+					break;
+				}
 
 				break;
 			case eCorner::TopRight:
-				PossibleSides[0] = eSide::Up;
-				PossibleSides[1] = eSide::Right;
+				Pos = two->GetVertex(MESH_ROW_HALF, 0).VertexPosition;
 
-				PossibleSidesHashes[0] = HashCorner(two->GetVertex(MESH_ROW_HALF + 1, 0).VertexPosition.GetNormalized());
-				PossibleSidesHashes[1] = HashCorner(two->GetVertex(MESH_ROW_SIZE, MESH_ROW_HALF + 1).VertexPosition.GetNormalized());
+				if (one->FindClosest(Pos, corner))
+				{
+					CorrectSide = eSide::Up;
+					break;
+				}
+
+				Pos = two->GetVertex(MESH_ROW_SIZE, MESH_ROW_HALF).VertexPosition;
+				if (one->FindClosest(Pos, corner))
+				{
+					CorrectSide = eSide::Right;
+					break;
+				}
 
 				break;
 			case eCorner::DownRight:
-				PossibleSides[0] = eSide::Down;
-				PossibleSides[1] = eSide::Right;
+				Pos = two->GetVertex(MESH_ROW_HALF, MESH_ROW_SIZE).VertexPosition;
 
-				PossibleSidesHashes[0] = HashCorner(two->GetVertex(MESH_ROW_HALF + 1, MESH_ROW_SIZE).VertexPosition.GetNormalized());
-				PossibleSidesHashes[1] = HashCorner(two->GetVertex(MESH_ROW_SIZE, MESH_ROW_HALF + 1).VertexPosition.GetNormalized());
-
-				break;
-			case eCorner::DownLeft:
-				PossibleSides[0] = eSide::Down;
-				PossibleSides[1] = eSide::Left;
-
-				PossibleSidesHashes[0] = HashCorner(two->GetVertex(MESH_ROW_HALF + 1, MESH_ROW_SIZE).VertexPosition.GetNormalized());
-				PossibleSidesHashes[1] = HashCorner(two->GetVertex(0, MESH_ROW_HALF + 1).VertexPosition.GetNormalized());
-
-				break;
-			default:
-				break;
-			}
-
-			///Find which corner matches with the mid point of two.
-			for (int o = 0; o < 4; ++o)
-				for (int t = 0; t < 2; ++t)
+				if (one->FindClosest(Pos, corner))
 				{
-					if (one->m_CornersID[o] == PossibleSidesHashes[t])
-					{
-						CornerMatch[1] = one->m_CornersID[o];
-						MatchingSideIndex = t;
-					}
+					CorrectSide = eSide::Down;
+					break;
 				}
 
-			auto oneSide = one->GetSideFromCorners(CornerMatch[0], CornerMatch[1]); ///Now we can retrieve the side from one. The smaller one.
+				Pos = two->GetVertex(MESH_ROW_SIZE, MESH_ROW_HALF).VertexPosition;
+				if (one->FindClosest(Pos, corner))
+				{
+					CorrectSide = eSide::Right;
+					break;
+				}
+				break;
+			case eCorner::DownLeft:
+				Pos = two->GetVertex(MESH_ROW_HALF, MESH_ROW_SIZE).VertexPosition;
+
+				if (one->FindClosest(Pos, corner))
+				{
+					CorrectSide = eSide::Down;
+					break;
+				}
+
+				Pos = two->GetVertex(0, MESH_ROW_HALF).VertexPosition;
+				if (one->FindClosest(Pos, corner))
+				{
+					CorrectSide = eSide::Left;
+					break;
+				}
+				break;
+			}
+		
+			auto oneSide = one->GetSideFromCorners(CornerMatch[0], one->m_CornersID[(int)corner]); ///Now we can retrieve the side from one. The smaller one.
 
 			if (oneSide == eSide::Null) return;
 
@@ -534,7 +577,7 @@ namespace rczEngine
 			one->GetSide(oneSide, oneVertices);
 
 			Vector<Gfx::Vertex*> twoVertices;
-			two->GetSide(PossibleSides[MatchingSideIndex], twoVertices);
+			two->GetSide(CorrectSide, twoVertices);
 
 			for (int i = 0; i < MESH_RES; ++i)
 			{
@@ -556,7 +599,8 @@ namespace rczEngine
 					auto Bin = Math::Lerp(twoVertices[indexTwo]->BiNormals, twoVertices[indexTwo + 1]->BiNormals, 0.5f);
 					auto Tex = Math::Lerp(twoVertices[indexTwo]->TextureCoordinates, twoVertices[indexTwo + 1]->TextureCoordinates, 0.5f);
 
-					*oneVertices[indexOne] = Gfx::Vertex{ Pos, Tex, Normals, Tan, Bin };
+					//*oneVertices[indexOne] = Gfx::Vertex{ Pos, Tex, Normals, Tan, Bin };
+					oneVertices[indexOne]->VertexNormals = { 1,0,0 };
 				}
 				else
 				{
@@ -572,6 +616,21 @@ namespace rczEngine
 
 	void PlanetQuadTreeNode::Render()
 	{
+		//if (Parent)
+		//{
+		//	if (!Parent->TestIfInside(CameraManager::Pointer()->GetActiveCamera().lock()->GetPosition()))
+		//	{
+		//		return;
+		//	}
+		//}
+		//else
+		//{
+		//	if (!TestIfInside(CameraManager::Pointer()->GetActiveCamera().lock()->GetPosition()))
+		//	{
+		//		return;
+		//	}
+		//}
+
 		auto ptr = m_res->GetResource<Material>(m_Material).lock();
 
 		if (ActiveTouch)
@@ -611,11 +670,10 @@ namespace rczEngine
 
 		noise = pow(Noise->RidgedOctaveNoise(Pos128, 6, 0.4f), 2)  *
 			Noise->OctaveNoise(Pos24, 6, 0.5f) *
-			Noise->OctaveNoise(NoisePos, 2, 0.5f) *
-			pow(Noise->RidgedOctaveNoise(Pos12, 2, 0.2f), 2) *
-			pow(Noise->OctaveNoise(NoisePos, 2, 1), 2);
+			Noise->OctaveNoise(NoisePos, 3, 0.5f) *
+			pow(Noise->RidgedOctaveNoise(Pos12, 2, 0.2f), 2);
 
-		return PosNormal + (PosNormal.GetNormalized())*noise*.01f;
+		return PosNormal + (PosNormal.GetNormalized())*noise*.02f;
 	}
 
 	void PlanetQuadTreeNode::GenerateChildren()
@@ -653,12 +711,10 @@ namespace rczEngine
 				}
 
 				m_ChildGenerated = false;
-
 			}
 
 		}
 	}
-
 
 	void PlanetQuadTreeNode::RenderChildren()
 	{
@@ -702,7 +758,7 @@ namespace rczEngine
 
 	uint32 PlanetQuadTreeNode::HashCorner(Vector3 v)
 	{
-		auto temp = (v + Vector3(1.0f, 1.0f, 1.0f)) * 1000;
+		auto temp = (v + Vector3(1.0f, 1.0f, 1.0f)) * 1000000;
 		return Vector3::Hash(temp);
 	}
 }

@@ -34,7 +34,7 @@ namespace rczEngine
 
 		GenerateMesh(startPos, orientation);
 		GenerateNormals();
-		GenerateSmoothNormals();
+		//GenerateSmoothNormals();
 
 		if (CreateVertexBuffer)
 			m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DYNAMIC, false, m_gfx);
@@ -52,7 +52,7 @@ namespace rczEngine
 	void MeshPlane::Render()
 	{
 		///Set the material and vertex buffer on the pipeline.
-		//m_res->GetResource<Material>(m_Material).lock()->SetThisMaterial(m_gfx, m_res);
+		m_res->GetResource<Material>(m_Material).lock()->SetThisMaterial(m_gfx, m_res);
 
 		m_VertexBuffer.SetThisVertexBuffer(m_gfx, 0);
 
@@ -147,6 +147,8 @@ namespace rczEngine
 
 	void MeshPlane::GenerateMeshYPos(const Vector3& startPos)
 	{
+		ProfilerObj meshY("GenerateMeshYPos", PROFILE_EVENTS::PROF_GAME);
+
 		Gfx::Vertex* TempVertex;
 		auto size = m_MeshBuffer.Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
@@ -154,31 +156,38 @@ namespace rczEngine
 		double Size = size * m_MeshBuffer.distVertex;
 		double halfSize = m_MeshBuffer.HalfSize;
 
-#pragma omp parallel for
-		for (uint32 i = 0; i < vertexSize; ++i)
+		double LastX = -halfSize - m_MeshBuffer.distVertex;
+		double LastZ = -halfSize;
+		
+		for (uint32 x = 0; x < size; ++x)
 		{
-			TempVertex = &m_VertexBuffer.GetVertex(i);
+			for (uint32 y = 0; y < size; ++y)
+			{
+				TempVertex = &GetVertex(x, y);
 
-			int32 x = i / size;
-			int32 y = i % size;
+				TempVertex->VertexPosition.m_x = LastX += m_MeshBuffer.distVertex;
+				TempVertex->VertexPosition.m_y = 0.0f;
+				TempVertex->VertexPosition.m_z = LastZ;
 
-			TempVertex->VertexPosition.m_x = (m_MeshBuffer.distVertex*x) - halfSize;
-			TempVertex->VertexPosition.m_y = 0.0f;
-			TempVertex->VertexPosition.m_z = (m_MeshBuffer.distVertex*y) - halfSize;
+				TempVertex->VertexPosition += startPos;
 
-			TempVertex->VertexPosition += startPos;
+				TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition);
 
-			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition);
+				//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
+				TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
+				TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
+			}
 
-			//TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
-			//TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
+			LastZ += m_MeshBuffer.distVertex;
+			LastX = -halfSize - m_MeshBuffer.distVertex;
 		}
 	}
 
 	void MeshPlane::GenerateMeshYNeg(const Vector3& startPos)
 	{
+		ProfilerObj meshY("GenerateMeshYNeg", PROFILE_EVENTS::PROF_GAME);
+
 		Gfx::Vertex* TempVertex;
 		auto size = m_MeshBuffer.Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
@@ -204,8 +213,8 @@ namespace rczEngine
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-			//TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
-			//TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
+			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
+			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
 		}
 	}
 
@@ -236,8 +245,8 @@ namespace rczEngine
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-			//TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
-			//TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
+			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
+			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
 		}
 	}
 
@@ -268,8 +277,8 @@ namespace rczEngine
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-			//TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
-			//TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
+			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
+			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
 		}
 	}
 
@@ -300,8 +309,8 @@ namespace rczEngine
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-			//TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
-			//TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
+			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
+			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
 		}
 	}
 
@@ -332,8 +341,71 @@ namespace rczEngine
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-			//TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
-			//TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
+			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
+			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
+		}
+	}
+
+	void MeshPlane::FixBorders()
+	{
+#pragma omp for
+		for (int i = 1; i < m_MeshBuffer.Size-1; i+=2)
+		{
+			auto& left = GetVertex(i - 1, 0);
+			auto& right = GetVertex(i + 1, 0);
+
+			auto& vertex = GetVertex(i, 0);
+
+			vertex.VertexPosition = Math::Lerp(left.VertexPosition, right.VertexPosition, 0.5f);
+			vertex.VertexNormals = Math::Lerp(left.VertexNormals, right.VertexNormals, 0.5f);
+			vertex.TextureCoordinates = Math::Lerp(left.TextureCoordinates, right.TextureCoordinates, 0.5f);
+			vertex.Tangents = Math::Lerp(left.Tangents, right.Tangents, 0.5f);
+			vertex.BiNormals = Math::Lerp(left.BiNormals, right.BiNormals, 0.5f);
+		}
+
+#pragma omp for
+		for (int i = 1; i < m_MeshBuffer.Size - 1; i += 2)
+		{
+			auto& left = GetVertex(0, i - 1);
+			auto& right = GetVertex(0, i + 1);
+
+			auto& vertex = GetVertex(0, i);
+
+			vertex.VertexPosition = Math::Lerp(left.VertexPosition, right.VertexPosition, 0.5f);
+			vertex.VertexNormals = Math::Lerp(left.VertexNormals, right.VertexNormals, 0.5f);
+			vertex.TextureCoordinates = Math::Lerp(left.TextureCoordinates, right.TextureCoordinates, 0.5f);
+			vertex.Tangents = Math::Lerp(left.Tangents, right.Tangents, 0.5f);
+			vertex.BiNormals = Math::Lerp(left.BiNormals, right.BiNormals, 0.5f);
+		}
+
+#pragma omp for
+		for (int i = 1; i < m_MeshBuffer.Size - 1; i += 2)
+		{
+			auto& left = GetVertex(m_MeshBuffer.Size - 1, i - 1);
+			auto& right = GetVertex(m_MeshBuffer.Size - 1, i + 1);
+
+			auto& vertex = GetVertex(m_MeshBuffer.Size - 1, i);
+
+			vertex.VertexPosition = Math::Lerp(left.VertexPosition, right.VertexPosition, 0.5f);
+			vertex.VertexNormals = Math::Lerp(left.VertexNormals, right.VertexNormals, 0.5f);
+			vertex.TextureCoordinates = Math::Lerp(left.TextureCoordinates, right.TextureCoordinates, 0.5f);
+			vertex.Tangents = Math::Lerp(left.Tangents, right.Tangents, 0.5f);
+			vertex.BiNormals = Math::Lerp(left.BiNormals, right.BiNormals, 0.5f);
+		}
+
+#pragma omp for
+		for (int i = 1; i < m_MeshBuffer.Size - 1; i += 2)
+		{
+			auto& left = GetVertex(i - 1, m_MeshBuffer.Size - 1);
+			auto& right = GetVertex(i + 1, m_MeshBuffer.Size - 1);
+
+			auto& vertex = GetVertex(i, m_MeshBuffer.Size - 1);
+
+			vertex.VertexPosition = Math::Lerp(left.VertexPosition, right.VertexPosition, 0.5f);
+			vertex.VertexNormals = Math::Lerp(left.VertexNormals, right.VertexNormals, 0.5f);
+			vertex.TextureCoordinates = Math::Lerp(left.TextureCoordinates, right.TextureCoordinates, 0.5f);
+			vertex.Tangents = Math::Lerp(left.Tangents, right.Tangents, 0.5f);
+			vertex.BiNormals = Math::Lerp(left.BiNormals, right.BiNormals, 0.5f);
 		}
 	}
 
@@ -345,23 +417,25 @@ namespace rczEngine
 		{
 		case rczEngine::Ypos:
 			GenerateMeshYPos(startPos);
-			return;
+			break;
 		case rczEngine::Yneg:
 			GenerateMeshYNeg(startPos);
-			return;
+			break;
 		case rczEngine::Xpos:
 			GenerateMeshXPos(startPos);
-			return;
+			break;
 		case rczEngine::Xneg:
 			GenerateMeshXNeg(startPos);
-			return;
+			break;
 		case rczEngine::Zpos:
 			GenerateMeshZPos(startPos);
-			return;
+			break;
 		case rczEngine::Zneg:
 			GenerateMeshZNeg(startPos);
-			return;
+			break;
 		}
+
+		//FixBorders();
 	}
 
 	Gfx::Vertex & MeshPlane::GetVertex(int32 x, int32 y)
@@ -396,8 +470,8 @@ namespace rczEngine
 			Gfx::Vertex* Vert2 = &m_VertexBuffer.GetVertex(index2);
 			Gfx::Vertex* Vert3 = &m_VertexBuffer.GetVertex(index3);
 
-			Vector3 V1 = (Vert1->VertexPosition - Vert2->VertexPosition);
-			Vector3 V2 = (Vert1->VertexPosition - Vert3->VertexPosition);
+			Vector3 V1 = (Vert1->VertexPosition - Vert2->VertexPosition).GetNormalized();
+			Vector3 V2 = (Vert1->VertexPosition - Vert3->VertexPosition).GetNormalized();
 
 			Vert1->VertexNormals = Vert2->VertexNormals = Vert3->VertexNormals = (V1^V2).GetNormalized();
 			Vert1->Tangents = Vert2->Tangents = Vert3->Tangents = (V1);
@@ -412,8 +486,8 @@ namespace rczEngine
 		Gfx::Vertex* Vert2 = &m_VertexBuffer.GetVertex(index2);
 		Gfx::Vertex* Vert3 = &m_VertexBuffer.GetVertex(index3);
 
-		Vector3 V1 = (Vert1->VertexPosition - Vert2->VertexPosition);
-		Vector3 V2 = (Vert1->VertexPosition - Vert3->VertexPosition);
+		Vector3 V1 = (Vert1->VertexPosition - Vert2->VertexPosition).GetNormalized();
+		Vector3 V2 = (Vert1->VertexPosition - Vert3->VertexPosition).GetNormalized();
 
 		Vert1->VertexNormals = Vert2->VertexNormals = Vert3->VertexNormals = (V1^V2).GetNormalized();
 		Vert1->Tangents = Vert2->Tangents = Vert3->Tangents = (V1);
@@ -510,7 +584,7 @@ namespace rczEngine
 			normalAvg /= float(VerticesUsed + 1);
 			binormalAvg /= float(VerticesUsed + 1);
 			TangentAvg /= float(VerticesUsed + 1);
-
+			//
 			ThisVertex->VertexNormals = normalAvg.GetNormalized();
 			ThisVertex->BiNormals = binormalAvg.GetNormalized();
 			ThisVertex->Tangents = TangentAvg.GetNormalized();

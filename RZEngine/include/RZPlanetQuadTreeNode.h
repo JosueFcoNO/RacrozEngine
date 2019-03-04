@@ -45,6 +45,10 @@ namespace rczEngine
 
 		eSide GetSideFromCorners(uint32 cornerOne, uint32 cornerTwo);
 
+		bool FindClosest(const Vector3 pos, eCorner & corner);
+
+		bool FindClosest(const Vector3 pos);
+
 		static void Connect(PlanetQuadTreeNode* one, PlanetQuadTreeNode* two);
 
 		virtual void Render();
@@ -60,7 +64,7 @@ namespace rczEngine
 		bool Override = false;
 		bool ActiveTouch = false;
 
-		static const int MESH_RES = 128;
+		static const int MESH_RES = 64;
 		static const int MESH_ROW_SIZE = MESH_RES - 1;
 		static const int MESH_ROW_HALF = (MESH_RES / 2) - 1;
 
@@ -73,7 +77,6 @@ namespace rczEngine
 		bool CheckChildrenReady();
 		void SetChildrenReady(int indexOfChild, bool value);
 
-
 		uint32 m_CornersID[4];
 
 		std::thread Child[4];
@@ -81,7 +84,7 @@ namespace rczEngine
 		eMeshPlaneOrientation m_Side;
 		ParentSidesData sideHashData;
 
-		PlanetQuadTreeNode* Parent;
+		PlanetQuadTreeNode* Parent = nullptr;
 		PlanetQuadTreeNode* Children[4];
 		bool ChildrenReady[4];
 

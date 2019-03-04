@@ -72,6 +72,8 @@ namespace rczEngine
 		void GenerateMeshZPos(const Vector3 & startPos);
 		void GenerateMeshZNeg(const Vector3 & startPos);
 
+		void FixBorders();
+
 		Gfx::IndexBuffer* m_IndexBuffer;
 
 		ResourceHandle m_Material;

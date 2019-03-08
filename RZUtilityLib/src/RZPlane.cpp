@@ -31,6 +31,11 @@ namespace rczEngine
 		ConstructFromPoints(p1, p2, p3);
 	}
 
+	Plane::Plane(const Vector3 & p1, const Vector3 & normal) noexcept
+	{
+		ConstructFromPointNormal(p1, normal);
+	}
+
 
 	void Plane::ConstructFromPointNormal(const Vector3 &Pt, const Vector3 &normal) noexcept
 	{
@@ -51,5 +56,12 @@ namespace rczEngine
 	{
 		const Vector3 normal = ((V1 - V0) ^ (V2 - V0)).GetNormalized();
 		return ConstructFromPointNormal(V0, normal);
+	}
+
+	void Plane::Construct(float a, float b, float c, float d) noexcept
+	{
+		Normal.Set(a, b, c);
+		Normal.Normalize();
+		D = d;
 	}
 }

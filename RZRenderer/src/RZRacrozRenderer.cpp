@@ -517,11 +517,11 @@ namespace rczEngine
 		auto cameraCmp = scene->FindActorsWithComponent(CMP_CAMERA_WALK)[0].lock()->GetComponent(CMP_CAMERA_WALK).lock();
 		ptr->SetActiveCamera(2, m_gfx);
 		auto camera = &CastStaticPtr<CameraCmp>(cameraCmp)->m_CameraCore;
-		camera->m_Fov = 90.0f;
-		camera->m_AspectRatio = 1.0f;
+		camera->SetFov(90.0f);
+		camera->SetAspectRatio(1.0f);
 		camera->m_Position.Set(0, 0, 0);
-		camera->m_FarClip = 100.0f;
-		camera->m_NearClip = 0.01f;
+		camera->SetFarClip(100.0f);
+		camera->SetNearClip(0.01f);
 
 		for (int k = 0; k < 6; ++k)
 		{
@@ -581,7 +581,7 @@ namespace rczEngine
 		auto ObjectList = sceneGraph->FindActorsWithComponent(componentID);
 		auto CurrentCamera = CameraManager::Pointer()->GetActiveCamera().lock();
 		auto pos = CurrentCamera->GetPosition();
-		auto dir = CurrentCamera->GetOrientation();
+		auto dir = CurrentCamera->GetViewDir();
 
 		auto size = ObjectList.size();
 

@@ -23,7 +23,7 @@ namespace rczEngine
 
 		Matrix4 GetViewMatrix();
 		Matrix4 GetProjMatrix();
-		Vector3 GetOrientation();
+		Vector3 GetViewDir();
 		Vector3 GetTarget();
 		Vector3 GetPosition();
 		void CalculateUp();

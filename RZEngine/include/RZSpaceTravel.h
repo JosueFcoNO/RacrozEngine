@@ -50,9 +50,9 @@ namespace rczEngine
 				m_Camera->Rotate(Vector3(-m.dy*0.25f, 0.0f, 0.0f));
 			}
 
-			m_Owner.lock()->Translate(m_Camera->GetOrientation() * speed * m_zAxis * deltaTime);
+			m_Owner.lock()->Translate(m_Camera->GetViewDir() * speed * m_zAxis * deltaTime);
 
-			auto Offset = m_Camera->GetOrientation();
+			auto Offset = m_Camera->GetViewDir();
 			m_Camera->m_Position = m_Owner.lock()->GetAccumulatedPosition();
 			m_Camera->m_Target = m_Camera->m_Position + Offset;
 		};

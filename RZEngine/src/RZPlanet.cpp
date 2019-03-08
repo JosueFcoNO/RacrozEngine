@@ -23,7 +23,7 @@ namespace rczEngine
 
 		for (int i = 0; i < 6; ++i)
 		{
-			Quadtree[i].InitQuadTree(this, &noise, Vector3(0, 0, 0), 0, 0, (eMeshPlaneOrientation)i, ParentSidesData());
+			Quadtree[i].InitQuadTree(this, &noise, Vector3(0, 0, 0), 0, 0, (eMeshPlaneOrientation)i);
 		}
 
 		m_HeightCameracb.CreateConstantBuffer(sizeof(Vector4), Gfx::USAGE_DEFAULT, m_GfxCore);

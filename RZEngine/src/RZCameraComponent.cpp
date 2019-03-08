@@ -36,11 +36,16 @@ namespace rczEngine
 		ser->WriteData(&m_CameraCore.m_Up.m_y, sizeof(float));
 		ser->WriteData(&m_CameraCore.m_Up.m_z, sizeof(float));
 
+		auto nearClip = m_CameraCore.GetNearClip();
+		auto farClip = m_CameraCore.GetFarClip();
+		auto aspectRatio = m_CameraCore.GetAspectRatio();
+		auto fov = m_CameraCore.GetFov();
+
 		//NearClip, FarClip, AspectRatio, Fov
-		ser->WriteData(&m_CameraCore.m_NearClip, sizeof(float));
-		ser->WriteData(&m_CameraCore.m_FarClip, sizeof(float));
-		ser->WriteData(&m_CameraCore.m_AspectRatio, sizeof(float));
-		ser->WriteData(&m_CameraCore.m_Fov, sizeof(float));
+		ser->WriteData(&nearClip, sizeof(float));
+		ser->WriteData(&farClip, sizeof(float));
+		ser->WriteData(&aspectRatio, sizeof(float));
+		ser->WriteData(&fov, sizeof(float));
 
 	}
 
@@ -65,11 +70,21 @@ namespace rczEngine
 		ser->ReadData(&m_CameraCore.m_Up.m_y, sizeof(float));
 		ser->ReadData(&m_CameraCore.m_Up.m_z, sizeof(float));
 
+		auto nearClip = m_CameraCore.GetNearClip();
+		auto farClip = m_CameraCore.GetFarClip();
+		auto aspectRatio = m_CameraCore.GetAspectRatio();
+		auto fov = m_CameraCore.GetFov();
+
 		//NearClip, FarClip, AspectRatio, Fov
-		ser->ReadData(&m_CameraCore.m_NearClip, sizeof(float));
-		ser->ReadData(&m_CameraCore.m_FarClip, sizeof(float));
-		ser->ReadData(&m_CameraCore.m_AspectRatio, sizeof(float));
-		ser->ReadData(&m_CameraCore.m_Fov, sizeof(float));
+		ser->ReadData(&nearClip, sizeof(float));
+		ser->ReadData(&farClip, sizeof(float));
+		ser->ReadData(&aspectRatio, sizeof(float));
+		ser->ReadData(&fov, sizeof(float));
+
+		m_CameraCore.SetNearClip(nearClip);
+		m_CameraCore.SetFarClip(farClip);
+		m_CameraCore.SetAspectRatio(aspectRatio);
+		m_CameraCore.SetFov(fov);
 	}
 
 	Matrix4 CameraCmp::GetViewMatrix()
@@ -82,7 +97,7 @@ namespace rczEngine
 		return m_CameraCore.GetProjMatrix();
 	}
 
-	Vector3 CameraCmp::GetOrientation()
+	Vector3 CameraCmp::GetViewDir()
 	{
 		return (m_CameraCore.m_Target - m_CameraCore.m_Position).GetNormalized();
 	}
@@ -94,11 +109,11 @@ namespace rczEngine
 
 	float CameraCmp::GetNearPlane()
 	{
-		return m_CameraCore.m_NearClip;
+		return m_CameraCore.GetNearClip();
 	}
 
 	float CameraCmp::GetFarPlane()
 	{
-		return m_CameraCore.m_FarClip;
+		return m_CameraCore.GetFarClip();
 	}
 };

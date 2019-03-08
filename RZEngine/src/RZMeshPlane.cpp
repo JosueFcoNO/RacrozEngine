@@ -7,10 +7,6 @@ namespace rczEngine
 	{
 		ProfilerObj obj("InitMeshPlane", PROFILE_EVENTS::PROF_GAME);
 
-		m_gfx = Gfx::GfxCore::Pointer();
-		m_res = ResVault::Pointer();
-		m_capi = ComputeAPI::Pointer();
-
 		m_MeshBuffer.Size = vertices;
 		m_MeshBuffer.distVertex = size / double(vertices - 1);
 		m_MeshBuffer.HalfSize = HalfSize;
@@ -37,7 +33,7 @@ namespace rczEngine
 		//GenerateSmoothNormals();
 
 		if (CreateVertexBuffer)
-			m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DYNAMIC, false, m_gfx);
+			m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DYNAMIC, false, Gfx::GfxCore::Pointer());
 
 		m_StartPos = startPos;
 
@@ -51,16 +47,19 @@ namespace rczEngine
 
 	void MeshPlane::Render()
 	{
-		///Set the material and vertex buffer on the pipeline.
-		m_res->GetResource<Material>(m_Material).lock()->SetThisMaterial(m_gfx, m_res);
+		auto resPtr = ResVault::Pointer();
+		auto gfxPtr = Gfx::GfxCore::Pointer();
 
-		m_VertexBuffer.SetThisVertexBuffer(m_gfx, 0);
+		///Set the material and vertex buffer on the pipeline.
+		resPtr->GetResource<Material>(m_Material).lock()->SetThisMaterial(gfxPtr, resPtr);
+
+		m_VertexBuffer.SetThisVertexBuffer(gfxPtr, 0);
 
 		int32 vertexSize;
 
 		if (m_IndexBuffer)
 		{
-			m_IndexBuffer->SetThisIndexBuffer(m_gfx);
+			m_IndexBuffer->SetThisIndexBuffer(gfxPtr);
 			vertexSize = m_IndexBuffer->m_IndexSize;
 		}
 		else
@@ -68,7 +67,7 @@ namespace rczEngine
 			vertexSize = m_MeshBuffer.Size;
 		}
 
-		m_gfx->DrawIndexed(vertexSize, 0, 0);
+		gfxPtr->DrawIndexed(vertexSize, 0, 0);
 	}
 
 	void MeshPlane::GenerateIndices(int32 vertices, Gfx::IndexBuffer & indexBuffer)
@@ -149,7 +148,7 @@ namespace rczEngine
 	{
 		ProfilerObj meshY("GenerateMeshYPos", PROFILE_EVENTS::PROF_GAME);
 
-		Gfx::Vertex* TempVertex;
+		TerrainVertex* TempVertex;
 		auto size = m_MeshBuffer.Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
 
@@ -175,8 +174,8 @@ namespace rczEngine
 
 				//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-				TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
-				TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
+				TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 10;
+				TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 10;
 			}
 
 			LastZ += m_MeshBuffer.distVertex;
@@ -188,7 +187,7 @@ namespace rczEngine
 	{
 		ProfilerObj meshY("GenerateMeshYNeg", PROFILE_EVENTS::PROF_GAME);
 
-		Gfx::Vertex* TempVertex;
+		TerrainVertex* TempVertex;
 		auto size = m_MeshBuffer.Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
 
@@ -213,14 +212,14 @@ namespace rczEngine
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
-			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
+			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 10;
+			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 10;
 		}
 	}
 
 	void MeshPlane::GenerateMeshXPos(const Vector3& startPos)
 	{
-		Gfx::Vertex* TempVertex;
+		TerrainVertex* TempVertex;
 		auto size = m_MeshBuffer.Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
 
@@ -245,14 +244,14 @@ namespace rczEngine
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
-			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
+			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 10;
+			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 10;
 		}
 	}
 
 	void MeshPlane::GenerateMeshXNeg(const Vector3& startPos)
 	{
-		Gfx::Vertex* TempVertex;
+		TerrainVertex* TempVertex;
 		auto size = m_MeshBuffer.Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
 
@@ -277,14 +276,14 @@ namespace rczEngine
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
-			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
+			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 10;
+			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 10;
 		}
 	}
 
 	void MeshPlane::GenerateMeshZPos(const Vector3& startPos)
 	{
-		Gfx::Vertex* TempVertex;
+		TerrainVertex* TempVertex;
 		auto size = m_MeshBuffer.Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
 
@@ -309,14 +308,14 @@ namespace rczEngine
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
-			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
+			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 10;
+			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 10;
 		}
 	}
 
 	void MeshPlane::GenerateMeshZNeg(const Vector3& startPos)
 	{
-		Gfx::Vertex* TempVertex;
+		TerrainVertex* TempVertex;
 		auto size = m_MeshBuffer.Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
 
@@ -341,71 +340,8 @@ namespace rczEngine
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 1000;
-			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 1000;
-		}
-	}
-
-	void MeshPlane::FixBorders()
-	{
-#pragma omp for
-		for (int i = 1; i < m_MeshBuffer.Size-1; i+=2)
-		{
-			auto& left = GetVertex(i - 1, 0);
-			auto& right = GetVertex(i + 1, 0);
-
-			auto& vertex = GetVertex(i, 0);
-
-			vertex.VertexPosition = Math::Lerp(left.VertexPosition, right.VertexPosition, 0.5f);
-			vertex.VertexNormals = Math::Lerp(left.VertexNormals, right.VertexNormals, 0.5f);
-			vertex.TextureCoordinates = Math::Lerp(left.TextureCoordinates, right.TextureCoordinates, 0.5f);
-			vertex.Tangents = Math::Lerp(left.Tangents, right.Tangents, 0.5f);
-			vertex.BiNormals = Math::Lerp(left.BiNormals, right.BiNormals, 0.5f);
-		}
-
-#pragma omp for
-		for (int i = 1; i < m_MeshBuffer.Size - 1; i += 2)
-		{
-			auto& left = GetVertex(0, i - 1);
-			auto& right = GetVertex(0, i + 1);
-
-			auto& vertex = GetVertex(0, i);
-
-			vertex.VertexPosition = Math::Lerp(left.VertexPosition, right.VertexPosition, 0.5f);
-			vertex.VertexNormals = Math::Lerp(left.VertexNormals, right.VertexNormals, 0.5f);
-			vertex.TextureCoordinates = Math::Lerp(left.TextureCoordinates, right.TextureCoordinates, 0.5f);
-			vertex.Tangents = Math::Lerp(left.Tangents, right.Tangents, 0.5f);
-			vertex.BiNormals = Math::Lerp(left.BiNormals, right.BiNormals, 0.5f);
-		}
-
-#pragma omp for
-		for (int i = 1; i < m_MeshBuffer.Size - 1; i += 2)
-		{
-			auto& left = GetVertex(m_MeshBuffer.Size - 1, i - 1);
-			auto& right = GetVertex(m_MeshBuffer.Size - 1, i + 1);
-
-			auto& vertex = GetVertex(m_MeshBuffer.Size - 1, i);
-
-			vertex.VertexPosition = Math::Lerp(left.VertexPosition, right.VertexPosition, 0.5f);
-			vertex.VertexNormals = Math::Lerp(left.VertexNormals, right.VertexNormals, 0.5f);
-			vertex.TextureCoordinates = Math::Lerp(left.TextureCoordinates, right.TextureCoordinates, 0.5f);
-			vertex.Tangents = Math::Lerp(left.Tangents, right.Tangents, 0.5f);
-			vertex.BiNormals = Math::Lerp(left.BiNormals, right.BiNormals, 0.5f);
-		}
-
-#pragma omp for
-		for (int i = 1; i < m_MeshBuffer.Size - 1; i += 2)
-		{
-			auto& left = GetVertex(i - 1, m_MeshBuffer.Size - 1);
-			auto& right = GetVertex(i + 1, m_MeshBuffer.Size - 1);
-
-			auto& vertex = GetVertex(i, m_MeshBuffer.Size - 1);
-
-			vertex.VertexPosition = Math::Lerp(left.VertexPosition, right.VertexPosition, 0.5f);
-			vertex.VertexNormals = Math::Lerp(left.VertexNormals, right.VertexNormals, 0.5f);
-			vertex.TextureCoordinates = Math::Lerp(left.TextureCoordinates, right.TextureCoordinates, 0.5f);
-			vertex.Tangents = Math::Lerp(left.Tangents, right.Tangents, 0.5f);
-			vertex.BiNormals = Math::Lerp(left.BiNormals, right.BiNormals, 0.5f);
+			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 10;
+			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 10;
 		}
 	}
 
@@ -438,11 +374,8 @@ namespace rczEngine
 		//FixBorders();
 	}
 
-	Gfx::Vertex & MeshPlane::GetVertex(int32 x, int32 y)
+	TerrainVertex& MeshPlane::GetVertex(int32 x, int32 y)
 	{
-		//int32 _x = Math::Clamp(x, 0, m_MeshBuffer.Size-1);
-		//int32 _y = Math::Clamp(y, 0, m_MeshBuffer.Size-1);
-
 		return m_VertexBuffer.GetVertex(m_MeshBuffer.Size * y + x);
 	}
 
@@ -466,9 +399,9 @@ namespace rczEngine
 			auto index2 = m_IndexBuffer->GetIndex(i + 1);
 			auto index3 = m_IndexBuffer->GetIndex(i + 2);
 
-			Gfx::Vertex* Vert1 = &m_VertexBuffer.GetVertex(index1);
-			Gfx::Vertex* Vert2 = &m_VertexBuffer.GetVertex(index2);
-			Gfx::Vertex* Vert3 = &m_VertexBuffer.GetVertex(index3);
+			TerrainVertex* Vert1 = &m_VertexBuffer.GetVertex(index1);
+			TerrainVertex* Vert2 = &m_VertexBuffer.GetVertex(index2);
+			TerrainVertex* Vert3 = &m_VertexBuffer.GetVertex(index3);
 
 			Vector3 V1 = (Vert1->VertexPosition - Vert2->VertexPosition).GetNormalized();
 			Vector3 V2 = (Vert1->VertexPosition - Vert3->VertexPosition).GetNormalized();
@@ -482,9 +415,9 @@ namespace rczEngine
 		auto index2 = m_IndexBuffer->GetIndex(indexSize - 2);
 		auto index3 = m_IndexBuffer->GetIndex(indexSize - 3);
 
-		Gfx::Vertex* Vert1 = &m_VertexBuffer.GetVertex(index1);
-		Gfx::Vertex* Vert2 = &m_VertexBuffer.GetVertex(index2);
-		Gfx::Vertex* Vert3 = &m_VertexBuffer.GetVertex(index3);
+		TerrainVertex* Vert1 = &m_VertexBuffer.GetVertex(index1);
+		TerrainVertex* Vert2 = &m_VertexBuffer.GetVertex(index2);
+		TerrainVertex* Vert3 = &m_VertexBuffer.GetVertex(index3);
 
 		Vector3 V1 = (Vert1->VertexPosition - Vert2->VertexPosition).GetNormalized();
 		Vector3 V2 = (Vert1->VertexPosition - Vert3->VertexPosition).GetNormalized();
@@ -504,17 +437,12 @@ namespace rczEngine
 		//Le saco normales suaves ya a todo.
 		for (uint32 i = 0; i < bufferSize; ++i)
 		{
-			Gfx::Vertex* ThisVertex = &m_VertexBuffer.GetVertex(i);
+			TerrainVertex* ThisVertex = &m_VertexBuffer.GetVertex(i);
 
 			int32 x = i % size;
 			int32 y = i / size;
 
-			//if (x == 0) continue;
-			//if (y == 0) continue;
-			//if (x == size - 1) continue;
-			//if (y == size - 1) continue;
-
-			Gfx::Vertex* NearbyVertices[8];
+			TerrainVertex* NearbyVertices[8];
 			int32 VerticesUsed = 0;
 
 			if (i + size > bufferSize)

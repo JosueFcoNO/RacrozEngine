@@ -75,9 +75,9 @@ namespace rczEngine
 		RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_MetRough_Trans, false);
 
 		m_gfx->SetRSStateDefault();
-
-		GraphicDebugger::Pointer()->Render(m_gfx);
+		
 		m_gfx->SetBlendStateDefault();
+		GraphicDebugger::Pointer()->Render(m_gfx);
 
 	}
 

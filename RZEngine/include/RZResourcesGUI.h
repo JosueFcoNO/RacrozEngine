@@ -18,7 +18,7 @@ namespace rczEngine
 				ImGui::Combo("Filter", &comboint, "None \0Model \0Skinned Model \0Material \0Texture2D");
 
 				UoMap<ResourceHandle, StrPtr<Resource>>* map = &ResVault::Pointer()->m_ResourceMap; 
-				Map<String, StrPtr<Resource>> map2;
+				MMap<String, StrPtr<Resource>> map2;
 
 				if (ImGui::TreeNode("Resource List"))
 				{
@@ -27,7 +27,8 @@ namespace rczEngine
 					{
 						if (it->second->m_Type == (ResourceType)componentIds[comboint] || componentIds[comboint] == -1)
 						{
-							map2[String(it->second->GetName())] = it->second;
+							auto pair = std::make_pair(String(it->second->GetName()), it->second);
+							map2.insert(pair);
 						}
 					}
 

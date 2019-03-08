@@ -99,11 +99,16 @@ namespace rczEngine
 			ser->WriteData(&m_CameraCore.m_Up.m_y, sizeof(float));
 			ser->WriteData(&m_CameraCore.m_Up.m_z, sizeof(float));
 
+			auto Fov = m_CameraCore.GetFov();
+			auto AspectRatio = m_CameraCore.GetAspectRatio();
+			auto FarClip = m_CameraCore.GetFarClip();
+			auto NearClip = m_CameraCore.GetNearClip();
+
 			//NearClip, FarClip, AspectRatio, Fov
-			ser->WriteData(&m_CameraCore.m_NearClip, sizeof(float));
-			ser->WriteData(&m_CameraCore.m_FarClip, sizeof(float));
-			ser->WriteData(&m_CameraCore.m_AspectRatio, sizeof(float));
-			ser->WriteData(&m_CameraCore.m_Fov, sizeof(float));
+			ser->WriteData(&NearClip, sizeof(float));
+			ser->WriteData(&FarClip, sizeof(float));
+			ser->WriteData(&AspectRatio, sizeof(float));
+			ser->WriteData(&Fov, sizeof(float));
 
 		};
 
@@ -168,13 +173,7 @@ namespace rczEngine
 #ifndef RZ_EDITOR
 		virtual void RenderComponent()
 		{
-			ImGui::Separator();
-			ImGui::Text("Camera Component");
-
-			ImGui::DragFloat("FOV", &m_CameraCore.m_Fov, 1.0f, 10.0f, 180.0f);
-			ImGui::DragFloat("Aspect Ratio", &m_CameraCore.m_AspectRatio, 0.05f);
-			ImGui::DragFloat("Far Clip", &m_CameraCore.m_FarClip, 10.0f, 1.0f, 1000.0f);
-			ImGui::DragFloat("Near Clip", &m_CameraCore.m_NearClip, 0.01f, 0.001f, 1000.0f);
+			CameraCmp::RenderComponent();
 
 			ImGui::DragFloat("Speed", &Speed, 0.1f, 0.01f, 100.0f);
 

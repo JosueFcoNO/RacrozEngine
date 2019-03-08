@@ -89,7 +89,7 @@ namespace rczEngine
 			m_ActiveCameraData.ViewMatrix = m_ActiveCamera->GetViewMatrix().GetTransposed();
 
 			m_ActiveCameraData.ViewPosition = m_ActiveCamera->GetPosition();
-			m_ActiveCameraData.ViewDirection = m_ActiveCamera->GetOrientation();
+			m_ActiveCameraData.ViewDirection = m_ActiveCamera->GetViewDir();
 
 
 			m_CameraBuffer.UpdateConstantBuffer(&m_ActiveCameraData, gfx);

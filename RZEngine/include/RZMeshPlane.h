@@ -35,6 +35,19 @@ namespace rczEngine
 		Sides_Max
 	};
 
+	///The Vertex structure
+	class RZ_EXP TerrainVertex
+	{
+	public:
+		Vector3 VertexPosition;
+		Vector2 TextureCoordinates;
+		Vector3 VertexNormals;
+		Vector3 Tangents;
+		Vector3 BiNormals;
+		float Displacement;
+		Vector3 NormalAvg;
+	};
+
 	class RZ_EXP MeshPlane
 	{
 	public:
@@ -47,15 +60,15 @@ namespace rczEngine
 		virtual Vector3 CalculateVertexPos(Vector3 pos);
 
 		FORCEINLINE void SetMaterial(ResourceHandle mat) { m_Material = mat; };
-		FORCEINLINE WeakPtr<Material> GetMaterial() { return m_res->GetResource<Material>(m_Material); };
+		FORCEINLINE WeakPtr<Material> GetMaterial() { return ResVault::Pointer()->GetResource<Material>(m_Material); };
 
 		MeshPlaneBuffer m_MeshBuffer;
 
 		static void GenerateIndices(int32 vertices, Gfx::IndexBuffer& indexBuffer);
 
-		Gfx::Vertex& GetVertex(int32 x, int32 y);
+		TerrainVertex& GetVertex(int32 x, int32 y);
 
-		Gfx::VertexBuffer<Gfx::Vertex> m_VertexBuffer;
+		Gfx::VertexBuffer<TerrainVertex> m_VertexBuffer;
 
 		bool m_Dirty = false;
 
@@ -72,21 +85,12 @@ namespace rczEngine
 		void GenerateMeshZPos(const Vector3 & startPos);
 		void GenerateMeshZNeg(const Vector3 & startPos);
 
-		void FixBorders();
-
 		Gfx::IndexBuffer* m_IndexBuffer;
-
 		ResourceHandle m_Material;
 
 		AABB m_MeshAABB;
 
-		Gfx::GfxCore* m_gfx = NULL;
-		ResVault* m_res = NULL;
-		ComputeAPI* m_capi = NULL;
-
 		Vector3 m_StartPos;
-
-		friend TerrainPatch;
 	};
 }
 

@@ -1,6 +1,4 @@
-#pragma once
-#include <RZDirectXPCH.h>
-#include "..\include\RZCamera.h"
+#include <RZUtilityPCH.h>
 
 namespace rczEngine
 {
@@ -19,6 +17,8 @@ namespace rczEngine
 	{
 		m_Position += panning;
 		m_Target += panning;
+
+		m_CachedViewMatrix = false;
 	}
 
 	void Camera::MoveForward(float delta)
@@ -27,6 +27,8 @@ namespace rczEngine
 		fwrd.Normalize();
 		m_Position += fwrd*delta;
 		m_Target += fwrd*delta;
+
+		m_CachedViewMatrix = false;
 	}
 
 	void Camera::MoveRight(float delta)
@@ -37,12 +39,16 @@ namespace rczEngine
 		
 		m_Position += right*delta;
 		m_Target   += right*delta;
+
+		m_CachedViewMatrix = false;
 	}
 
 	void Camera::MoveUp(float delta)
 	{
 		m_Position += m_Up*delta;
 		m_Target += m_Up*delta;
+
+		m_CachedViewMatrix = false;
 	}
 
 	void Camera::Move(float x, float y, float z)
@@ -50,6 +56,8 @@ namespace rczEngine
 		Vector3 temp(x,y,z);
 		m_Position += temp;
 		m_Target += temp;
+
+		m_CachedViewMatrix = false;
 	}
 
 	void Camera::Rotate(Vector3 vector)
@@ -71,6 +79,8 @@ namespace rczEngine
 		m_Target = temp*m_Target;
 
 		m_Target += m_Position;
+
+		m_CachedViewMatrix = false;
 	}
 
 	void Camera::RotateComplete(Vector3 vector)
@@ -97,6 +107,7 @@ namespace rczEngine
 
 		m_Up = m*Vector3(0,1,0);
 
+		m_CachedViewMatrix = false;
 	}
 
 	void Camera::Orbit(Vector3 vector)
@@ -119,31 +130,34 @@ namespace rczEngine
 		m_Position = temp*m_Position;
 		
 		m_Position += m_Target;
+
+		m_CachedViewMatrix = false;
 	}
 
-	Matrix4 Camera::GetViewMatrix()
+	const Matrix4 Camera::GetViewMatrix()
 	{
-		return Matrix4::LookAtMatrix(m_Position, m_Up, m_Target);
+		if (!m_CachedViewMatrix)
+		{
+			m_MatrixView = Matrix4::LookAtMatrix(m_Position, m_Up, m_Target);
+			m_CachedViewMatrix = true;
+
+
+			m_Frustum.CalculateFrustum(m_MatrixView.GetTransposed(), m_MatrixProjection.GetTransposed(), Matrix4::Translate3D(m_Position.m_x, m_Position.m_y, m_Position.m_z));
+		}
+
+		return m_MatrixView;
 	}
 
-	Matrix4 Camera::GetProjMatrix()
+	const Matrix4 Camera::GetProjMatrix()
 	{
-		return Matrix4::PerpsProjectedSpace(Math::DegreesToRad(m_Fov), m_AspectRatio, m_NearClip, m_FarClip);
-	}
-
-	Vector3 Camera::GetOrientation()
-	{
-		return (m_Target - m_Position).GetNormalized();
-	}
-
-	Vector3 Camera::GetTarget()
-	{
-		return m_Target;
-	}
-
-	Vector3 Camera::GetPosition()
-	{
-		return m_Position;
+		if (!m_CachedProjectionMatrix)
+		{
+			m_MatrixProjection = Matrix4::PerpsProjectedSpace(Math::DegreesToRad(m_Fov), m_AspectRatio, m_NearClip, m_FarClip);
+			m_CachedProjectionMatrix = true;
+			m_Frustum.CalculateFrustum(m_MatrixView.GetTransposed(), m_MatrixProjection.GetTransposed(), Matrix4::Translate3D(m_Position.m_x, m_Position.m_y, m_Position.m_z));
+		}
+	
+		return m_MatrixProjection;
 	}
 
 	void Camera::CalculateUp()
@@ -160,5 +174,6 @@ namespace rczEngine
 		m_Up = temp*Forward;
 		m_Up.Normalize();
 
+		m_CachedViewMatrix = false;
 	}
 };

@@ -102,6 +102,12 @@
     <Filter Include="Archivos de encabezado\Math\Primitives">
       <UniqueIdentifier>{82677cea-63fb-43b5-9d01-1d36d1f73d9a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\Math\Rendering">
+      <UniqueIdentifier>{e66a9974-0add-41bb-b2b7-9410cf335957}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Math\Rendering">
+      <UniqueIdentifier>{4e530201-4460-4182-a685-140ec767e5c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZUtilityPCH.h">
@@ -233,6 +239,12 @@
     <ClInclude Include="include\RZColor.h">
       <Filter>Archivos de encabezado\Math\Color</Filter>
     </ClInclude>
+    <ClInclude Include="include\RZFrustum.h">
+      <Filter>Archivos de encabezado\Math\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZCamera.h">
+      <Filter>Archivos de encabezado\Math\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZUtilityPCH.cpp">
@@ -318,6 +330,12 @@
     </ClCompile>
     <ClCompile Include="src\RZColor.cpp">
       <Filter>Archivos de código fuente\Math\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZCamera.cpp">
+      <Filter>Archivos de código fuente\Math\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="include\RZFrustum.cpp">
+      <Filter>Archivos de código fuente\Math\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

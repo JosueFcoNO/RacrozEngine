@@ -266,9 +266,6 @@
     <ClInclude Include="include\RZSpaceComponent.h">
       <Filter>Archivos de encabezado\Components</Filter>
     </ClInclude>
-    <ClInclude Include="include\RZTerrainPatch.h">
-      <Filter>Archivos de encabezado\Terrain</Filter>
-    </ClInclude>
     <ClInclude Include="include\RZTexture3D.h">
       <Filter>Archivos de encabezado\Texture</Filter>
     </ClInclude>
@@ -453,9 +450,6 @@
     </ClCompile>
     <ClCompile Include="src\RZSpaceManager.cpp">
       <Filter>Archivos de código fuente\Planet Generation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RZTerrainPatch.cpp">
-      <Filter>Archivos de código fuente\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="src\RZTexture3D.cpp">
       <Filter>Archivos de código fuente\Texture</Filter>

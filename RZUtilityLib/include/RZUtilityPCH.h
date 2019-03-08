@@ -43,6 +43,9 @@
 #include "RZShapes3D.h"
 #include "RZTriangle.h"
 
+#include "RZFrustum.h"
+#include "RZCamera.h"
+
 #include "RZMath.h"
 
 #include "RZTimer.h"

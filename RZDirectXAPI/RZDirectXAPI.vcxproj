@@ -186,7 +186,6 @@
     <ClInclude Include="include\DDSTextureLoader.h" />
     <ClInclude Include="include\RZAPIConstants.h" />
     <ClInclude Include="include\RZBlendState.h" />
-    <ClInclude Include="include\RZCamera.h" />
     <ClInclude Include="include\RZConstantBuffer.h" />
     <ClInclude Include="include\RZDepthStencyl.h" />
     <ClInclude Include="include\RZDepthStencylView.h" />
@@ -215,7 +214,6 @@
   <ItemGroup>
     <ClCompile Include="src\DDSTextureLoader.cpp" />
     <ClCompile Include="src\RZBlendState.cpp" />
-    <ClCompile Include="src\RZCamera.cpp" />
     <ClCompile Include="src\RZConstantBuffer.cpp" />
     <ClCompile Include="src\RZDepthStencyl.cpp" />
     <ClCompile Include="src\RZDepthStencylView.cpp" />

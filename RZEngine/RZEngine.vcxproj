@@ -264,7 +264,6 @@
     <ClInclude Include="include\RZSpaceTravel.h" />
     <ClInclude Include="include\RZTerrain.h" />
     <ClInclude Include="include\RZTerrainComponent.h" />
-    <ClInclude Include="include\RZTerrainPatch.h" />
     <ClInclude Include="include\RZTexture2D.h" />
     <ClInclude Include="include\RZTexture3D.h" />
     <ClInclude Include="include\RZTextureLoader.h" />
@@ -325,7 +324,6 @@
     <ClCompile Include="src\RZSound.cpp" />
     <ClCompile Include="src\RZSpaceManager.cpp" />
     <ClCompile Include="src\RZTerrain.cpp" />
-    <ClCompile Include="src\RZTerrainPatch.cpp" />
     <ClCompile Include="src\RZTexture2D.cpp" />
     <ClCompile Include="src\RZTexture3D.cpp" />
     <ClCompile Include="src\RZTextureLoader.cpp" />

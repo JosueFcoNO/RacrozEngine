@@ -45,12 +45,6 @@
     <Filter Include="Archivos de código fuente\Sampler State">
       <UniqueIdentifier>{3860d797-8972-4edb-b093-1e26f303abfe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de encabezado\Camera">
-      <UniqueIdentifier>{deca312f-8a16-4cbf-873e-3d2f08411ecd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Archivos de código fuente\Camera">
-      <UniqueIdentifier>{0dc41a2d-fb49-4913-9eaf-8c19e8803407}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de encabezado\MeshAPI">
       <UniqueIdentifier>{783a627a-912d-4500-9076-4e6a61370ddf}</UniqueIdentifier>
     </Filter>
@@ -124,9 +118,6 @@
     </ClInclude>
     <ClInclude Include="include\RZRasterizerState.h">
       <Filter>Archivos de encabezado\Rasterizer State</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RZCamera.h">
-      <Filter>Archivos de encabezado\Camera</Filter>
     </ClInclude>
     <ClInclude Include="include\RZMeshAPI.h">
       <Filter>Archivos de encabezado\MeshAPI</Filter>
@@ -207,9 +198,6 @@
     </ClCompile>
     <ClCompile Include="src\RZRasterizerState.cpp">
       <Filter>Archivos de código fuente\Rasterizer State</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RZCamera.cpp">
-      <Filter>Archivos de código fuente\Camera</Filter>
     </ClCompile>
     <ClCompile Include="src\RZMeshAPI.cpp">
       <Filter>Archivos de código fuente\MeshAPI</Filter>

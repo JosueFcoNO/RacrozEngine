@@ -130,7 +130,7 @@ namespace rczEngine
 		return Matrix4::PerpsProjectedSpace(Math::DegreesToRad(45.0f), m_AspectRatio, m_NearClip, m_FarClip);
 	}
 
-	Vector3 Camera::GetOrientation()
+	Vector3 Camera::GetViewDir()
 	{
 		Vector3 Temp = m_Target - m_Position;
 		return Temp.GetNormalized();

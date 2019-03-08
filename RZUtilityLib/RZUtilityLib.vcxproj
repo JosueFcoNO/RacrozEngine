@@ -193,8 +193,10 @@
   <ItemGroup>
     <ClInclude Include="include\RZAABB.h" />
     <ClInclude Include="include\RZBoxMuller.h" />
+    <ClInclude Include="include\RZCamera.h" />
     <ClInclude Include="include\RZContainers.h" />
     <ClInclude Include="include\RZFileCoder.h" />
+    <ClInclude Include="include\RZFrustum.h" />
     <ClInclude Include="include\RZLogger.h" />
     <ClInclude Include="include\RZColor.h" />
     <ClInclude Include="include\RZDegree.h" />
@@ -237,7 +239,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\RZDegree.cpp" />
+    <ClCompile Include="include\RZFrustum.cpp" />
     <ClCompile Include="src\RZAABB.cpp" />
+    <ClCompile Include="src\RZCamera.cpp" />
     <ClCompile Include="src\RZColor.cpp" />
     <ClCompile Include="src\RZFileCoder.cpp" />
     <ClCompile Include="src\RZLogger.cpp" />

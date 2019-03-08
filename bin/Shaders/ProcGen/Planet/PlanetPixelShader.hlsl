@@ -91,9 +91,9 @@ PS_OUTPUT PS_Main(PS_Input frag) : SV_TARGET
 	output.Color.xyz = PBR_rm(frag.wpos.xyz, albedo, frag.normal, rough, metallic, lerp(0.04f, albedo, metallic));// *
 		//AOTexture.Sample(LinearWrapSampler, float3(frag.wpos.yz*tileX, level)).x * AOStrength + (1.0f - AOStrength);
 
-	//output.Color.xyz = frag.normal.xyz;
+	output.Color.xyz = frag.normal.xyz * albedo;
 
-    //output.Color.xyz = g_Albedo;
+   // output.Color.xyz = ;
 	output.Color.a = 1.0f;
 
 	return output;

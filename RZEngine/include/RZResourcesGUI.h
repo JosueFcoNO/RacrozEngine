@@ -23,7 +23,7 @@ namespace rczEngine
 				if (ImGui::TreeNode("Resource List"))
 				{
 					int i = 0;
-					for (auto it = map->begin(); it != map->end(); ++it, ++i)
+					for (auto it = map->begin(); it != map->end(); ++it)
 					{
 						if (it->second->m_Type == (ResourceType)componentIds[comboint] || componentIds[comboint] == -1)
 						{
@@ -32,8 +32,10 @@ namespace rczEngine
 						}
 					}
 
+
 					for (auto& m : map2)
 					{
+						++i;
 						ImGui::PushID(i);
 						if (ImGui::Selectable(m.first.c_str()))
 						{

@@ -148,6 +148,8 @@ namespace rczEngine
 
 			/// ALBEDO ///
 
+			ImGui::PushID(TEX_ALBEDO);
+
 			ResourceHandle Albedo;
 			(m_TextureAlbedo != INVALID_RESOURCE) ? Albedo = m_TextureAlbedo : Albedo = ptrRes->m_WhiteTex;
 			if (ImGui::ImageButton(ptrRes->GetResource<Texture2D>(Albedo).lock().get()->m_TextureCore.m_ShaderResource,
@@ -155,9 +157,12 @@ namespace rczEngine
 			{
 				m_TextureAlbedo = LoadFile("Albedo Texture", (m_Name + String("_Albedo")).c_str(), ptrRes);
 			}
+			ImGui::PopID();
 
 			/// NORMALS ///
 			ImGui::SameLine();
+
+			ImGui::PushID(TEX_NORMAL);
 
 			ResourceHandle Normals;
 			(m_TextureNormal != INVALID_RESOURCE) ? Normals = m_TextureNormal : Normals = ptrRes->m_NormalTex;
@@ -166,6 +171,10 @@ namespace rczEngine
 			{
 				m_TextureNormal = LoadFile("Normals Texture", (m_Name + String("_Normals")).c_str(), ptrRes);
 			}
+
+			ImGui::PopID();
+
+			ImGui::PushID(TEX_ROUGHNESS);
 			
 			if (m_MatType != MAT_PBR_SpecSmooth_Alpha)
 			{
@@ -181,6 +190,10 @@ namespace rczEngine
 				}
 			}
 
+			ImGui::PopID();
+
+			ImGui::PushID(TEX_MET_SPEC);
+
 			/// METALNESS ///
 			ResourceHandle MetSpec;
 			(m_TextureMetSpec != INVALID_RESOURCE) ? MetSpec = m_TextureMetSpec : MetSpec = ptrRes->m_BlackTex;
@@ -189,6 +202,10 @@ namespace rczEngine
 			{
 				m_TextureMetSpec = LoadFile("MetSpec Texture", (m_Name + String("_Metallic")).c_str(), ptrRes);
 			}
+
+			ImGui::PopID();
+
+			ImGui::PushID(TEX_AMBIENT_OCCLUSION);
 
 			/// AO ///
 
@@ -203,6 +220,10 @@ namespace rczEngine
 				m_TextureAO = LoadFile("Ao Texture", (m_Name + String("_AO")).c_str(), ptrRes);
 			}
 
+			ImGui::PopID();
+
+			ImGui::PushID(TEX_EMISSIVE);
+
 			/// EM ///
 
 			ImGui::SameLine();
@@ -214,6 +235,10 @@ namespace rczEngine
 			{
 				m_TextureEm = LoadFile("Em Texture", (m_Name + String("_EM")).c_str(), ptrRes);
 			}
+
+			ImGui::PopID();
+
+			ImGui::PushID(TEX_HEIGHT);
 
 			if (m_MatType == MAT_PBR_MetRough_Tess || m_MatType == MAT_PBR_SpecSmooth_Tess)
 			{
@@ -227,6 +252,10 @@ namespace rczEngine
 				}
 			}
 
+			ImGui::PopID();
+
+			ImGui::PushID(TEX_OPACITY);
+
 			if (m_MatType == MAT_PBR_MetRough_Trans || m_MatType == MAT_PBR_SpecSmooth_Trans)
 			{
 				/// OPACITY ///
@@ -238,6 +267,8 @@ namespace rczEngine
 					m_TextureO = LoadFile("Opacity Texture", (m_Name + String("_Opa")).c_str(), ptrRes);
 				}
 			}
+
+			ImGui::PopID();
 
 			ImGui::ColorEdit3("Albedo", (float*)&m_core.g_Albedo);
 			ImGui::DragFloat("Override Albedo", &m_core.OverrideAlbedo, 0.05f, 0.0f, 1.0f);

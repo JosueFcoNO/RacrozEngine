@@ -2,27 +2,38 @@
 
 namespace rczEngine
 {
-	void Frustum::CalculateFrustum(const Matrix4 & viewMat, const Matrix4 & projMatrix, const Matrix4 & camTransform)
+	void Frustum::CalculateFrustum(const Camera& camera)
 	{
-		Matrix4 mat = projMatrix * viewMat;
+		const auto fovRad = Math::DegreesToRad(camera.GetFov());
 
-		m_Planes[eFrustum::fTop].Construct(mat.m_matrix[0][3] - mat.m_matrix[0][1], mat.m_matrix[1][3] - mat.m_matrix[1][1], mat.m_matrix[2][3] - mat.m_matrix[2][1], -mat.m_matrix[3][3] + mat.m_matrix[3][1]);
-		m_Planes[eFrustum::fBottom].Construct(mat.m_matrix[0][3] + mat.m_matrix[0][1], mat.m_matrix[1][3] + mat.m_matrix[1][1], mat.m_matrix[2][3] + mat.m_matrix[2][1], -mat.m_matrix[3][3] - mat.m_matrix[3][1]);
-		m_Planes[eFrustum::fLeft].Construct(mat.m_matrix[0][3] + mat.m_matrix[0][0], mat.m_matrix[1][3] + mat.m_matrix[1][0], mat.m_matrix[2][3] + mat.m_matrix[2][0], -mat.m_matrix[3][3] - mat.m_matrix[3][0]);
-		m_Planes[eFrustum::fRight].Construct(mat.m_matrix[0][3] - mat.m_matrix[0][0], mat.m_matrix[1][3] - mat.m_matrix[1][0], mat.m_matrix[2][3] - mat.m_matrix[2][0], -mat.m_matrix[3][3] + mat.m_matrix[3][0]);
-		m_Planes[eFrustum::fNear].Construct(mat.m_matrix[0][3] + mat.m_matrix[0][2], mat.m_matrix[1][3] + mat.m_matrix[1][2], mat.m_matrix[2][3] + mat.m_matrix[2][2], -mat.m_matrix[3][3] - mat.m_matrix[3][2]);
-		m_Planes[eFrustum::fFar].Construct(mat.m_matrix[0][3] - mat.m_matrix[0][2], mat.m_matrix[1][3] - mat.m_matrix[1][2], mat.m_matrix[2][3] - mat.m_matrix[2][2], -mat.m_matrix[3][3] + mat.m_matrix[3][2]);
-			
-		NearPoints[0] = Plane::ThreePlaneIntersect(m_Planes[fTop], m_Planes[fNear], m_Planes[fLeft]);
-		NearPoints[1] = Plane::ThreePlaneIntersect(m_Planes[fTop], m_Planes[fNear], m_Planes[fRight]);
-		NearPoints[2] = Plane::ThreePlaneIntersect(m_Planes[fBottom], m_Planes[fNear], m_Planes[fLeft]);
-		NearPoints[3] = Plane::ThreePlaneIntersect(m_Planes[fBottom], m_Planes[fNear], m_Planes[fRight]);
+		const auto HNear = 2 * Math::Tan(fovRad / 2.0f) * camera.GetNearClip();
+		const auto WNear = HNear * camera.GetAspectRatio();
 
-		FarPoints[0] = Plane::ThreePlaneIntersect(m_Planes[fTop], m_Planes[fFar], m_Planes[fLeft]);
-		FarPoints[1] = Plane::ThreePlaneIntersect(m_Planes[fTop], m_Planes[fFar], m_Planes[fRight]);
-		FarPoints[2] = Plane::ThreePlaneIntersect(m_Planes[fBottom], m_Planes[fFar], m_Planes[fLeft]);
-		//FarPoints[3] = Plane::ThreePlaneIntersect(m_Planes[fBottom], m_Planes[fFar], m_Planes[fRight]);
+		const auto HFar = 2 * Math::Tan(fovRad / 2.0f) * camera.GetFarClip();
+		const auto WFar = HFar * camera.GetAspectRatio();
 
-		FarPoints[3] = Plane::ThreePlaneIntersect(Plane({ 0,-1,0 }, { 0, 1, 0 }), Plane({ -1,0,0 }, { 1, 0, 0 }), Plane({ 0,0,-1 }, { 0, 0, 1 }));
+		const auto nearCenter = camera.GetPosition() + camera.GetViewDir() * camera.GetNearClip();
+
+		NearPoints[0] = nearCenter + (camera.GetUp() * HNear / 2.0f) - (camera.GetRight() * WNear / 2.0f);
+		NearPoints[1] = nearCenter + (camera.GetUp() * HNear / 2.0f) + (camera.GetRight() * WNear / 2.0f);
+		NearPoints[2] = nearCenter - (camera.GetUp() * HNear / 2.0f) + (camera.GetRight() * WNear / 2.0f);
+		NearPoints[3] = nearCenter - (camera.GetUp() * HNear / 2.0f) - (camera.GetRight() * WNear / 2.0f);
+
+		const auto farCenter = camera.GetPosition() + camera.GetViewDir() * camera.GetFarClip();
+
+		FarPoints[0] = farCenter + (camera.GetUp() * HFar / 2.0f) - (camera.GetRight() * WFar / 2.0f);
+		FarPoints[1] = farCenter + (camera.GetUp() * HFar / 2.0f) + (camera.GetRight() * WFar / 2.0f);
+		FarPoints[2] = farCenter - (camera.GetUp() * HFar / 2.0f) + (camera.GetRight() * WFar / 2.0f);
+		FarPoints[3] = farCenter - (camera.GetUp() * HFar / 2.0f) - (camera.GetRight() * WFar / 2.0f);
+
+		m_Planes[eFrustum::fTop].ConstructFromPoints(FarPoints[0], FarPoints[1], NearPoints[1]);
+		m_Planes[eFrustum::fBottom].ConstructFromPoints(FarPoints[2], NearPoints[2], NearPoints[3]);
+
+		m_Planes[eFrustum::fLeft].ConstructFromPoints(FarPoints[0], NearPoints[0], NearPoints[3]);
+		m_Planes[eFrustum::fRight].ConstructFromPoints(FarPoints[2], NearPoints[1], NearPoints[1]);
+
+		m_Planes[eFrustum::fNear].ConstructFromPoints(NearPoints[0], NearPoints[1], NearPoints[2]);
+		m_Planes[eFrustum::fFar].ConstructFromPoints(FarPoints[2], FarPoints[1], FarPoints[1]);
+
 	}
 }

@@ -173,7 +173,7 @@ namespace rczEngine
 		}
 
 		Matrix4 Temp = GetAdjoint();
-		Temp *= 1 / Det;
+		Temp *= 1.0f / Det;
 
 		return Temp;
 	}
@@ -460,9 +460,9 @@ namespace rczEngine
 		const Matrix4 Temp = *this;
 		Vector3 NewVector(eInit::None);
 
-		NewVector.m_x = Temp.m_rows[0].m_x * V.m_x + Temp.m_rows[1].m_x * V.m_y + Temp.m_rows[2].m_x * V.m_z + Temp.m_rows[3].m_x;
-		NewVector.m_y = Temp.m_rows[0].m_y * V.m_x + Temp.m_rows[1].m_y * V.m_y + Temp.m_rows[2].m_y * V.m_z + Temp.m_rows[3].m_y;
-		NewVector.m_z = Temp.m_rows[0].m_z * V.m_x + Temp.m_rows[1].m_z * V.m_y + Temp.m_rows[2].m_z * V.m_z + Temp.m_rows[3].m_z;
+		NewVector.m_x = Temp.m_rows[0].m_x * V.m_x + Temp.m_rows[1].m_x * V.m_y + Temp.m_rows[2].m_x * V.m_z;
+		NewVector.m_y = Temp.m_rows[0].m_y * V.m_x + Temp.m_rows[1].m_y * V.m_y + Temp.m_rows[2].m_y * V.m_z;
+		NewVector.m_z = Temp.m_rows[0].m_z * V.m_x + Temp.m_rows[1].m_z * V.m_y + Temp.m_rows[2].m_z * V.m_z;
 
 		return NewVector;
 	}

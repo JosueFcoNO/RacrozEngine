@@ -28,6 +28,7 @@ namespace rczEngine
 		FORCEINLINE const Vector3 GetTarget() const { return m_Target; }
 		FORCEINLINE const Vector3 GetPosition() const { return m_Position; }
 		FORCEINLINE const Vector3 GetUp() const { return m_Up; }
+		FORCEINLINE const Vector3 GetRight() const { return (GetViewDir() ^ m_Up).GetNormalized(); }
 
 		FORCEINLINE void SetNearClip(float nearClip) noexcept { m_NearClip = nearClip; m_CachedProjectionMatrix = false; }
 		FORCEINLINE void SetFarClip(float farClip) noexcept { m_FarClip = farClip; m_CachedProjectionMatrix = false; }

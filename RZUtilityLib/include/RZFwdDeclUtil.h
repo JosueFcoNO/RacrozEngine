@@ -35,5 +35,8 @@ namespace rczEngine
 	class Rect3D;
 
 	class Color;
+
+	class Camera;
+	class Frustum;
 	
 };

@@ -81,6 +81,8 @@ namespace rczEngine
 		m_Target += m_Position;
 
 		m_CachedViewMatrix = false;
+
+		CalculateUp();
 	}
 
 	void Camera::RotateComplete(Vector3 vector)
@@ -108,6 +110,7 @@ namespace rczEngine
 		m_Up = m*Vector3(0,1,0);
 
 		m_CachedViewMatrix = false;
+		CalculateUp();
 	}
 
 	void Camera::Orbit(Vector3 vector)
@@ -132,6 +135,7 @@ namespace rczEngine
 		m_Position += m_Target;
 
 		m_CachedViewMatrix = false;
+		CalculateUp();
 	}
 
 	const Matrix4 Camera::GetViewMatrix()
@@ -142,7 +146,7 @@ namespace rczEngine
 			m_CachedViewMatrix = true;
 
 
-			m_Frustum.CalculateFrustum(m_MatrixView.GetTransposed(), m_MatrixProjection.GetTransposed(), Matrix4::Translate3D(m_Position.m_x, m_Position.m_y, m_Position.m_z));
+			m_Frustum.CalculateFrustum(*this);
 		}
 
 		return m_MatrixView;
@@ -154,7 +158,7 @@ namespace rczEngine
 		{
 			m_MatrixProjection = Matrix4::PerpsProjectedSpace(Math::DegreesToRad(m_Fov), m_AspectRatio, m_NearClip, m_FarClip);
 			m_CachedProjectionMatrix = true;
-			m_Frustum.CalculateFrustum(m_MatrixView.GetTransposed(), m_MatrixProjection.GetTransposed(), Matrix4::Translate3D(m_Position.m_x, m_Position.m_y, m_Position.m_z));
+			m_Frustum.CalculateFrustum(*this);
 		}
 	
 		return m_MatrixProjection;
@@ -162,16 +166,11 @@ namespace rczEngine
 
 	void Camera::CalculateUp()
 	{
-		Vector3 Forward = (m_Target - m_Position).GetNormalized();
+		Vector3 Forward = GetViewDir();
 		Vector3 Up = m_Up.GetNormalized();
 		Vector3 Right = (Forward^Up).GetNormalized();
 
-		Quaternion RightRotation(Right, Math::DegreesToRad(-1));
-
-		RightRotation.Normalize();
-
-		Matrix3 temp = RightRotation.GetAsMatrix3();
-		m_Up = temp*Forward;
+		m_Up = Forward ^ Right;
 		m_Up.Normalize();
 
 		m_CachedViewMatrix = false;

@@ -45,9 +45,6 @@
     <Filter Include="Archivos de código fuente\Passes\SkyBox">
       <UniqueIdentifier>{2cc17cf6-2fb6-42a4-af84-d3e1ab936e8d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de encabezado\Passes\PosProcess">
-      <UniqueIdentifier>{d8204663-c1b7-4e1e-970d-7317bec7ebfa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de código fuente\Passes\GBuffer">
       <UniqueIdentifier>{9389da1e-6b6d-4bf2-a31d-b071ad04f75b}</UniqueIdentifier>
     </Filter>
@@ -95,6 +92,15 @@
     </Filter>
     <Filter Include="Archivos de código fuente\Passes\SSAO">
       <UniqueIdentifier>{3197bdee-4cc7-4d0e-b0b2-a77e4927fbd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes\PostProcess">
+      <UniqueIdentifier>{d8204663-c1b7-4e1e-970d-7317bec7ebfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes\GraphicDebugger">
+      <UniqueIdentifier>{9e3c53b4-bfa9-437b-9f78-25f3cca19cf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Passes\GraphicDebugger">
+      <UniqueIdentifier>{04882ade-74fe-4498-812b-87a391ee1a31}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +177,9 @@
     <ClInclude Include="include\RZSSAO.h">
       <Filter>Archivos de encabezado\Passes\SSAO</Filter>
     </ClInclude>
+    <ClInclude Include="include\RZGraphicDebuggerPass.h">
+      <Filter>Archivos de encabezado\Passes\GraphicDebugger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZRendererPCH.cpp">
@@ -238,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="src\RZSSAO.cpp">
       <Filter>Archivos de código fuente\Passes\SSAO</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZGraphicDebuggerPass.cpp">
+      <Filter>Archivos de código fuente\Passes\GraphicDebugger</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

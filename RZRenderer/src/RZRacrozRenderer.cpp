@@ -288,6 +288,17 @@ namespace rczEngine
 
 		m_PassesOrder.push_back("Transparent");
 
+		//////////////////////
+		///Transparent PASS///
+		//////////////////////
+		
+		///Create the geometry pass
+		auto passDebugger = CreatePass("Debugger", PASSES::GDEBUGGER, m_CurrentRenderingMode);
+
+		passDebugger->AddRenderTarget(m_RTs["PBR"], 0);
+
+		m_PassesOrder.push_back("Debugger");
+
 		///////////////////
 		///PLANET PASS/////
 		///////////////////
@@ -730,6 +741,9 @@ namespace rczEngine
 			break;
 		case PASSES::SSAO:
 			returnPass = m_Passes[name] = std::make_shared<SSAOPass>();
+			break;
+		case PASSES::GDEBUGGER:
+			returnPass = m_Passes[name] = std::make_shared<GraphicDebuggerPass>();
 			break;
 		}
 

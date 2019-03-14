@@ -55,10 +55,37 @@ namespace rczEngine
 			m_CameraCore.SetFarClip(m_FarClip);
 			m_CameraCore.SetNearClip(m_NearClip);
 
-			GraphicDebugger::Pointer()->AddFrameDebuggerPoint(m_CameraCore.m_Frustum.NearPoints[0], 1.0f, 0.01f, 0.0f, 0.0f);
-			GraphicDebugger::Pointer()->AddFrameDebuggerPoint(m_CameraCore.m_Frustum.NearPoints[1], 1.0f, 0.01f, 0.0f, 0.0f);
-			GraphicDebugger::Pointer()->AddFrameDebuggerPoint(m_CameraCore.m_Frustum.NearPoints[2], 1.0f, 0.01f, 0.0f, 0.0f);
-			GraphicDebugger::Pointer()->AddFrameDebuggerPoint(m_CameraCore.m_Frustum.NearPoints[3], 1.0f, 0.01f, 0.0f, 0.0f);
+			m_CameraCore.m_Frustum.CalculateFrustum(m_CameraCore);
+
+			static bool once = false;
+
+			Vector<Vector3> vertices =
+			{
+				m_CameraCore.m_Frustum.NearPoints[0],
+				m_CameraCore.m_Frustum.NearPoints[1],
+				m_CameraCore.m_Frustum.NearPoints[2],
+				m_CameraCore.m_Frustum.NearPoints[3],
+				m_CameraCore.m_Frustum.NearPoints[0],
+				m_CameraCore.m_Frustum.FarPoints[0],
+				m_CameraCore.m_Frustum.FarPoints[1],
+				m_CameraCore.m_Frustum.FarPoints[2],
+				m_CameraCore.m_Frustum.FarPoints[3],
+				m_CameraCore.m_Frustum.FarPoints[0],
+				m_CameraCore.m_Frustum.FarPoints[1],
+				m_CameraCore.m_Frustum.FarPoints[2],
+				m_CameraCore.m_Frustum.NearPoints[2]
+			};
+
+			if (!once)
+			{
+				lines = GraphicDebugger::Pointer()->AddLineList("Frustum", vertices, Color(1, 1, 1, 1));
+				once = true;
+			}
+			else
+			{
+				if (!lines.expired())
+					lines.lock()->SetLineList(vertices);
+			}
 
 		}
 
@@ -73,5 +100,6 @@ namespace rczEngine
 	protected:
 		void CreateCamera();
 
+		WeakPtr<DebuggerLineList> lines;
 	};
 }

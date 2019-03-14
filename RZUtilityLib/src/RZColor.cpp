@@ -5,27 +5,27 @@
 namespace rczEngine
 {
 
-	void Color::Set(uint8 r, uint8 g, uint8 b, uint8 a) noexcept
+	void Color::Set(float r, float g, float b, float a) noexcept
 	{
-		R = r;
-		G = g;
-		B = b;
-		A = a;
+		m_x = r;
+		m_y = g;
+		m_z = b;
+		m_w = a;
 	}
 
-	void Color::Add(Color c) noexcept
+	void Color::AddColor(const Color& c) noexcept
 	{
-		R = gsl::narrow_cast<uint8>(Math::Min(c.R + R, 255) );
-		G = gsl::narrow_cast<uint8>(Math::Min(c.G + G, 255) );
-		B = gsl::narrow_cast<uint8>(Math::Min(c.B + B, 255) );
-		A = gsl::narrow_cast<uint8>(Math::Min(c.A + A, 255) );
+		m_x = (Math::Min(c.r + m_x, 1.0f));
+		m_y = (Math::Min(c.g + m_y, 1.0f));
+		m_z = (Math::Min(c.b + m_z, 1.0f));
+		m_w = (Math::Min(c.a + m_w, 1.0f) );
 	}
 
-	void Color::Remove(Color c) noexcept
+	void Color::RemoveColor(const Color& c) noexcept
 	{
-		R = gsl::narrow_cast<uint8>(Math::Max(R - c.R, 255) );
-		G = gsl::narrow_cast<uint8>(Math::Max(G - c.G, 255) );
-		B = gsl::narrow_cast<uint8>(Math::Max(B - c.B, 255) );
-		A = gsl::narrow_cast<uint8>(Math::Max(A - c.A, 255) );
+		m_x = (Math::Max(m_x - c.m_x, 1.0f));
+		m_y = (Math::Max(m_y - c.m_y, 1.0f));
+		m_z = (Math::Max(m_z - c.m_z, 1.0f));
+		m_w = (Math::Max(m_w - c.m_w, 1.0f));
 	}
 }

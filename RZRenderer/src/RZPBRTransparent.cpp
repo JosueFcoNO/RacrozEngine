@@ -77,8 +77,6 @@ namespace rczEngine
 		m_gfx->SetRSStateDefault();
 		
 		m_gfx->SetBlendStateDefault();
-		GraphicDebugger::Pointer()->Render(m_gfx);
-
 	}
 
 	void PBR_Transparent_Pass::PostRenderPass()

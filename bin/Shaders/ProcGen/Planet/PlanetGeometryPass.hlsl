@@ -133,7 +133,7 @@ PS_OUTPUT PS_Main(PS_Input frag) : SV_TARGET
     output.Color.a = AOTexture.Sample(Sampler_, tex).x;
 
    // output.Normal = float4(Encode(NormalFinal), MetallicTexture.Sample(Sampler_, frag.tex0).x, RoughnessTexture.Sample(Sampler_, frag.tex0).x);
-	output.Normal = float4(frag.normal);// float4(Encode(normalize(frag.normal)), 0.0f, 0.1f);
+    output.Normal = float4(Encode(normalize(frag.normal)), 0.0f, 0.1f);
     output.Position = float4(frag.wpos, frag.depth);
 
     output.Emmisive = float4(EMTexture.Sample(Sampler_, tex));

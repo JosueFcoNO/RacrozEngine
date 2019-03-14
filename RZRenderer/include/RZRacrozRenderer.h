@@ -20,7 +20,8 @@ namespace rczEngine
 		PLANET_PASS,
 		ATMOS_SCATTER_PASS,
 		PERLIN3D,
-		SSAO
+		SSAO,
+		GDEBUGGER
 	};
 
 	enum TEXTURES_PASS

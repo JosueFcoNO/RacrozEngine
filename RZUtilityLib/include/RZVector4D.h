@@ -17,23 +17,23 @@ namespace rczEngine
 
 		Vector4(eInit init) noexcept;
 
-		Vector4(Vector3 v3) noexcept : 
-			m_x(v3.m_x), 
-			m_y(v3.m_y), 
-			m_z(v3.m_z), 
-			m_w(0.0f) {};
+		Vector4(Vector3 v3, float w = 0.0f) noexcept :
+			m_x(v3.m_x),
+			m_y(v3.m_y),
+			m_z(v3.m_z),
+			m_w(w) {};
 
-		Vector4(Vector2 v2) noexcept : 
+		Vector4(Vector2 v2, float z = 0.0f, float w = 0.0f) noexcept : 
 			m_x(v2.m_x), 
 			m_y(v2.m_y), 
-			m_z(0.0f), 
-			m_w(0.0f) {};
+			m_z(z), 
+			m_w(w) {};
 
-		Vector4(Vector2I v2i) noexcept : 
+		Vector4(Vector2I v2i, float z = 0.0f, float w = 0.0f) noexcept : 
 			m_x(gsl::narrow_cast<float>(v2i.m.x)), 
 			m_y(gsl::narrow_cast<float>(v2i.m.y)), 
-			m_z(0.0f), 
-			m_w(0.0f) {};
+			m_z(z), 
+			m_w(w) {};
 
 		Vector4(const float& x, const float& y, const float& z, const float& w) noexcept : 
 			m_x(x), 
@@ -78,6 +78,10 @@ namespace rczEngine
 			struct
 			{
 				float m_x, m_y, m_z, m_w;
+			};
+			struct
+			{
+				float r, g, b, a;
 			};
 			float m_elements[4];
 		};

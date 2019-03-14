@@ -5,14 +5,11 @@ namespace rczEngine
 	class RZ_EXP DebuggerPoint : public GraphicDebuggerElement
 	{
 	public:
-		DebuggerPoint() : m_Position(eInit::Zero)
-		{
-		};
 
-		void Render(Gfx::GfxCore* gfx);
+		void SetPoint(const Vector3& pos, float radius) noexcept;
 		virtual uint8 GetElementType() { return DEBUG_POINT; };
-		float m_Radius;
+
+	private:
 		Vector3 m_Position;
-		ResourceHandle handle;
 	};
 }

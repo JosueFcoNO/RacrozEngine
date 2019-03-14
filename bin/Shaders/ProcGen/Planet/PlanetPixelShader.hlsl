@@ -76,24 +76,25 @@ PS_OUTPUT PS_Main(PS_Input frag) : SV_TARGET
 	//float3 color = lerp(float3(0,0.25f,0.5f), float3(0, 1,0), height);
 
 	//Set the normals to the second output color
-	//float3 NormalFinal;
-	//NormalFinal = NormalTexture.Sample(LinearWrapSampler, frag.tex0);
-	//NormalFinal = normalize(2.0f * NormalFinal - 1.0f);
-	//NormalFinal = normalize(mul(NormalFinal, frag.TBN));
+	float3 NormalFinal;
+	NormalFinal = NormalTexture.Sample(LinearWrapSampler, frag.tex0);
+	
+	NormalFinal = normalize(2.0f * NormalFinal - 1.0f);
+	NormalFinal = normalize(mul(NormalFinal, frag.TBN));
 
 	float rough = RoughnessTexture.Sample(LinearWrapSampler, frag.tex0).x;
 	float metallic = MetallicTexture.Sample(LinearWrapSampler, frag.tex0).x;
 
-	output.Normal = float4(Encode(frag.normal), 0, 0);
+	output.Normal = float4(Encode((NormalFinal)), 0, 0);
 
 	output.Position = float4(frag.wpos, frag.depth);
 	
-	output.Color.xyz = PBR_rm(frag.wpos.xyz, albedo, frag.normal, rough, metallic, lerp(0.04f, albedo, metallic));// *
+	output.Color.xyz = PBR_rm(frag.wpos.xyz, albedo, NormalFinal, rough, metallic, lerp(0.04f, albedo, metallic));// *
 		//AOTexture.Sample(LinearWrapSampler, float3(frag.wpos.yz*tileX, level)).x * AOStrength + (1.0f - AOStrength);
 
-	output.Color.xyz = frag.normal.xyz * albedo;
+	//output.Color.xyz = frag.normal.xyz;
 
-   // output.Color.xyz = ;
+    //output.Color.xyz = g_Albedo;
 	output.Color.a = 1.0f;
 
 	return output;

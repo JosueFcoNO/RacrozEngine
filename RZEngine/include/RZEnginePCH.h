@@ -36,7 +36,7 @@
 #include "RZComponent.h"
 
 #include "RZGraphicDebuggerElement.h"
-#include "RZGraphicDebuggerLine.h"
+#include "RZGraphicDebuggerLineList.h"
 #include "RZGraphicDebuggerCube.h"
 
 #include "RZKeyFrame.h"

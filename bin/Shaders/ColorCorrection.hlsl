@@ -131,6 +131,9 @@ PS_Output PS_Main(PS_Input Input)
 {
     PS_Output psout = (PS_Output) 0;
 
+    float2 tCoord = Input.Texcoord;
+    tCoord.x *= -1.0f;
+
     float4 FinalColor = FinalTexture.Sample(Sampler_, Input.Texcoord);
 
 	if (Correction == 0)

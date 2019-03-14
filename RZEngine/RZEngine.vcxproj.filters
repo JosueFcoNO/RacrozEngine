@@ -155,9 +155,6 @@
     <ClInclude Include="include\RZGraphicDebuggerElement.h">
       <Filter>Archivos de encabezado\GraphicDebugger</Filter>
     </ClInclude>
-    <ClInclude Include="include\RZGraphicDebuggerLine.h">
-      <Filter>Archivos de encabezado\GraphicDebugger</Filter>
-    </ClInclude>
     <ClInclude Include="include\RZGraphicDebuggerPoint.h">
       <Filter>Archivos de encabezado\GraphicDebugger</Filter>
     </ClInclude>
@@ -335,6 +332,9 @@
     <ClInclude Include="include\RZConsoleGUI.h">
       <Filter>Archivos de encabezado\Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="include\RZGraphicDebuggerLineList.h">
+      <Filter>Archivos de encabezado\GraphicDebugger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZEnginePCH.cpp">
@@ -368,9 +368,6 @@
       <Filter>Archivos de código fuente\GraphicDebugger</Filter>
     </ClCompile>
     <ClCompile Include="src\RZGraphicDebuggerElement.cpp">
-      <Filter>Archivos de código fuente\GraphicDebugger</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RZGraphicDebuggerLine.cpp">
       <Filter>Archivos de código fuente\GraphicDebugger</Filter>
     </ClCompile>
     <ClCompile Include="src\RZGraphicDebuggerPoint.cpp">
@@ -495,6 +492,9 @@
     </ClCompile>
     <ClCompile Include="src\RZConsoleGUI.cpp">
       <Filter>Archivos de código fuente\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZGraphicDebuggerLineList.cpp">
+      <Filter>Archivos de código fuente\GraphicDebugger</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

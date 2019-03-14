@@ -12,16 +12,43 @@ namespace rczEngine
 	class RZ_EXP GraphicDebuggerElement
 	{
 	public:
-		GraphicDebuggerElement() : m_Color(eInit::Zero)
+		void Render(Gfx::GfxCore* gfx)
 		{
+			m_VertexBuffer.SetThisVertexBuffer(gfx, 0);
+
+			gfx->Draw(m_VertexBuffer.GetSize(), 0);
 		};
-		~GraphicDebuggerElement()
+
+		void Update(float deltaTime)
 		{
-		};
-		virtual void Render(Gfx::GfxCore* graphicsapi_instance) = 0;
+			m_TimeToExist -= deltaTime;
+			if (m_TimeToExist < 0.0f && m_TimeToExist > -0.5f)
+			{
+				Destroy();
+			}
+		}
+
+		void Destroy()
+		{
+			m_VertexBuffer.Destroy();
+
+			m_Remove = true;
+		}
+
 		virtual uint8 GetElementType() = 0;
 
-		uint32 m_IndexOffset;
-		Vector4 m_Color;
+		FORCEINLINE bool CanRemove() const noexcept { return m_Remove; }
+
+		FORCEINLINE void SetTimeToExist(float time) noexcept { m_TimeToExist = time; };
+
+		FORCEINLINE void SetColor(const Color& color) noexcept { m_Color = color; };
+		FORCEINLINE const Color& GetColor() const noexcept { return m_Color; };
+
+	protected:
+		Color m_Color;
+		float m_TimeToExist = 0.0f;
+		bool m_Remove = false;
+
+		Gfx::VertexBuffer<Vector3> m_VertexBuffer;
 	};
 }

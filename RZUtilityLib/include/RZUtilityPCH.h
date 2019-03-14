@@ -31,8 +31,6 @@
 #include "RZMatrix3D.h"
 #include "RZMatrix4D.h"
 
-#include "RZColor.h"
-
 #include "RZAABB.h"
 #include "RZRect2D.h"
 #include "RZRect2Di.h"
@@ -47,6 +45,8 @@
 #include "RZCamera.h"
 
 #include "RZMath.h"
+
+#include "RZColor.h"
 
 #include "RZTimer.h"
 

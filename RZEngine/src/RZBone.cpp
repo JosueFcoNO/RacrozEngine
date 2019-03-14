@@ -55,7 +55,7 @@ namespace rczEngine
 		Vector3 newScale = Math::Lerp(k0.m_Scale, k1.m_Scale, currentTime);
 		Quaternion newRot = Quaternion::Slerp(k0.m_Rotation, k1.m_Rotation, currentTime);
 
-		GraphicDebugger::Pointer()->AddFrameDebuggerPoint(m_OffsetInverse*newPos, 0.1f, 1, 0, 0);
+		//GraphicDebugger::Pointer()->AddPoint(m_OffsetInverse*newPos, 0.1f, 1, 0, 0);
 
 		///Create the new local joint matrix for the bone.
 		m_JointMatrix = newRot.GetAsMatrix4()*Matrix4::Scale3D(newScale.m_x, newScale.m_y, newScale.m_z)*Matrix4::Translate3D(newPos.m_x, newPos.m_y, newPos.m_z);

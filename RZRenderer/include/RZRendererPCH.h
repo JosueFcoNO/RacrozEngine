@@ -32,6 +32,8 @@
 
 #include "RZPerlinPlanetPass.h"
 
+#include "RZGraphicDebuggerPass.h"
+
 #include "RZSpaceMngWindow.h"
 
 #include "RZRacrozRenderer.h"

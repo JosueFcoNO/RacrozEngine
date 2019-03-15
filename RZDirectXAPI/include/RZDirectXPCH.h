@@ -48,12 +48,11 @@
 
 #include "RZFontRender.h"
 
-#include <assimp\Importer.hpp>
-
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/mesh.h>
 #include <assimp/postprocess.h>
 
+ 
 
 

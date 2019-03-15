@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_UTILITY_EXPORT GeometryNode : public Model
+	class RZ_EXP GeometryNode
 	{
 	public:
 

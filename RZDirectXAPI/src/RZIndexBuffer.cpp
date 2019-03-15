@@ -6,11 +6,14 @@ namespace rczEngine
 {
 	namespace Gfx
 	{
-		bool IndexBuffer::CreateIndexBuffer(eBUFFER_USAGE usage, GfxCore* gfx)
+		bool IndexBuffer::CreateIndexBuffer(eBUFFER_USAGE usage, bool clearIndexList, GfxCore* gfx)
 		{
 			bool res = Create(sizeof(uint32), uint32(m_IndexList.size()), &m_IndexList[0], 0, 0, usage, eBIND_FLAGS::BIND_INDEX_BUFFER, gfx);
 			m_IndexSize = m_IndexList.size();
-			m_IndexList.clear();
+			
+			if (clearIndexList)
+				m_IndexList.clear();
+			
 			return res;
 		}
 

@@ -2,15 +2,24 @@
 
 namespace rczEngine
 {
-	typedef List<GeometryNode> GeometryTree;
-
-	class RZ_UTILITY_EXPORT OCTREE
+	class RZ_EXP OctreeTriangle : public Triangle
 	{
 	public:
-		void InsertModel(Model* model);
-		void CalculateOctree(Model* model);
+		Gfx::Vertex V1;
+		Gfx::Vertex V2;
+		Gfx::Vertex V3;
+
+		ResourceHandle Material;
+	};
+
+	class RZ_EXP Octree
+	{
+	public:
+		void InsertModel(GameObject* gameObj);
+		//void CalculateOctree(Model* model);
 
 	private:
-		GeometryTree m_Tree;
+		Vector<GeometryNode> m_NodePool;
+		Map<ResourceHandle, Vector<OctreeTriangle>> PreProcessedData;
 	};
 };

@@ -72,8 +72,8 @@ namespace rczEngine
 		}
 
 		Gfx::GfxCore* gfx = Gfx::GfxCore::Pointer();
-		model->m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, gfx);
-		model->m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, true, gfx);
+		model->m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, false, gfx);
+		model->m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, false, gfx);
 
 		return model;
 	}
@@ -179,8 +179,8 @@ namespace rczEngine
 		model->m_SetAnimation = m_Res->InsertResource(TempAnim);
 
 		///Create the vertex and index buffers
-		model->m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, m_Gfx);
-		model->m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, true, m_Gfx);
+		model->m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, false, m_Gfx);
+		model->m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, false, m_Gfx);
 
 		///Create the Skeleton's buffers
 		model->m_MeshSkeleton.InitSkeletonBuffer(m_Gfx);
@@ -571,8 +571,8 @@ namespace rczEngine
 			}
 		}
 
-		model->m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, gfx);
-		model->m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, true, gfx);
+		model->m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, false, gfx);
+		model->m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, false, gfx);
 
 		return model->GetHandle();
 	}

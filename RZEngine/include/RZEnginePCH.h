@@ -80,6 +80,9 @@
 #include "RZCameraWalk.h"
 #include "RZSimpleMove.h"
 
+#include "RZGeometryNode.h"
+#include "RZOctree.h"
+
 #include "RZHeightMap.h"
 #include "RZPerlinNoise.h"
 #include "RZPerlinNoise3D.h"

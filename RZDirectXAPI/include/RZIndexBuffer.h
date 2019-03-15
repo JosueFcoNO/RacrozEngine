@@ -13,7 +13,7 @@ namespace rczEngine
 		public:
 			virtual ~IndexBuffer() { };
 
-			bool CreateIndexBuffer(eBUFFER_USAGE usage, GfxCore* gfx);
+			bool CreateIndexBuffer(eBUFFER_USAGE usage, bool clearIndexList, GfxCore* gfx);
 
 			bool SetThisIndexBuffer(GfxCore* gfx);
 			void AddIndex(uint32 newIndex);

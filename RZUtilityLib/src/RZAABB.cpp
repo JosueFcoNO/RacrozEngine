@@ -43,8 +43,37 @@ namespace rczEngine
 
 	void AABB::Clear() noexcept
 	{
-		m_PointMin.Set(0, 0, 0);
-		m_PointMax.Set(0.000001f, 0.000001f, 0.000001f);
+		float Lowest = std::numeric_limits<float>::lowest();
+		float Highest = std::numeric_limits<float>::infinity();
+
+		m_PointMin.Set(Highest, Highest, Highest);
+		m_PointMax.Set(Lowest, Lowest, Lowest);
+	}
+
+	Vector<Vector3> AABB::GetCorners() const noexcept
+	{
+		Vector<Vector3> points;
+
+		//
+		//		4---5
+		//	   /|  /|
+		//	  / 6-/-7
+		//	 / / / /
+		//  0---1 /
+		//  |/  |/
+		//  2---3
+
+		points.push_back(Vector3(m_PointMin.m_x, m_PointMin.m_y, m_PointMin.m_z));
+		points.push_back(Vector3(m_PointMax.m_x, m_PointMin.m_y, m_PointMin.m_z));
+		points.push_back(Vector3(m_PointMin.m_x, m_PointMax.m_y, m_PointMin.m_z));
+		points.push_back(Vector3(m_PointMax.m_x, m_PointMax.m_y, m_PointMin.m_z));
+
+		points.push_back(Vector3(m_PointMin.m_x, m_PointMin.m_y, m_PointMax.m_z));
+		points.push_back(Vector3(m_PointMax.m_x, m_PointMin.m_y, m_PointMax.m_z));
+		points.push_back(Vector3(m_PointMin.m_x, m_PointMax.m_y, m_PointMax.m_z));
+		points.push_back(Vector3(m_PointMax.m_x, m_PointMax.m_y, m_PointMax.m_z));
+
+		return points;
 	}
 
 	void AABB::TransformAndRecalculateAABB(Matrix3 newMatrix)

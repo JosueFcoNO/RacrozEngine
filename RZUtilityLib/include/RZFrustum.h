@@ -17,6 +17,10 @@ namespace rczEngine
 	{
 		public:
 			void CalculateFrustum(const Camera& camera);
+			
+			bool TestPoint(Vector3 point) const noexcept;
+			bool TestAABB(const AABB& aabb) const noexcept;
+			
 			Vector4 NearPoints[4];
 			Vector4 FarPoints[4];
 

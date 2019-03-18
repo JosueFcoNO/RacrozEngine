@@ -23,7 +23,7 @@ namespace rczEngine
 
 		for (int i = 0; i < 6; ++i)
 		{
-			Quadtree[i].InitQuadTree(this, &noise, Vector3(0, 0, 0), 0, 0, (eMeshPlaneOrientation)i);
+			Quadtree[i].InitQuadTree(this, nullptr, &noise, Vector3(0, 0, 0), 0, 0, (eMeshPlaneOrientation)i);
 		}
 
 		m_HeightCameracb.CreateConstantBuffer(sizeof(Vector4), Gfx::USAGE_DEFAULT, m_GfxCore);
@@ -67,7 +67,6 @@ namespace rczEngine
 
 	void Planet::RenderPlanet(float scale)
 	{
-
 		m_CurrentScene->m_WorldMatrix.UpdateConstantBuffer(&m_PlanetMatrix, m_GfxCore);
 		m_CurrentScene->m_WorldMatrix.SetBufferInVS(2, m_GfxCore);
 		m_CurrentScene->m_WorldMatrix.SetBufferInHS(1, m_GfxCore);
@@ -95,9 +94,50 @@ namespace rczEngine
 			Quadtree[i].Update(PlayerPos);
 		}
 
+		Vector<PlanetQuadTreeNode*> nodesToDraw;
 		for (int i = 0; i < 6; ++i)
 		{
-			Quadtree[i].Render();
+			Quadtree[i].TestVisibility(PlayerCamera->m_CameraCore.m_Frustum, nodesToDraw);
+		}
+
+		Map<PlanetQuadTreeNode*, int> depthMap;
+
+		for (auto nodes : nodesToDraw)
+		{
+			for (auto& c : nodes->Connections)
+			{
+				ProcessConnectionNode(c);
+
+				if (depthMap.find(c.node) != depthMap.end())
+				{
+					auto depth = c.node->GetQuadTreeDepth();
+
+					if (depthMap[c.node]*2 > depth)
+					{
+						depthMap[c.node] = depth;
+						c.node->m_Dirty = true;
+						continue;
+					}
+				}
+				else
+				{
+					depthMap[c.node] = c.node->GetQuadTreeDepth();
+				}
+			}
+		}
+
+		for (auto nodes : nodesToDraw)
+		{
+			if (nodes->m_MeshDirty)
+			{
+				nodes->m_MeshDirty = false;
+				nodes->m_VertexBuffer.UpdateVertexBuffer(m_GfxCore);
+			}
+		}
+
+		for (auto nodes : nodesToDraw)
+		{
+			nodes->Render();
 		}
 
 		m_GfxCore->SetRSStateDefault();
@@ -117,7 +157,7 @@ namespace rczEngine
 		ScaleMatrix.Transpose();
 
 		Vector3 cPos = CameraManager::Pointer()->GetActiveCamera().lock()->GetPosition();
-		
+
 		m_HeightCamera.m_x = (m_SpacePosition - cPos).Magnitude();
 		m_HeightCamera.m_y = pow(m_HeightCamera.m_x, 2.0f);
 
@@ -134,34 +174,34 @@ namespace rczEngine
 	{
 		StrPtr<Texture3D> tex3D = std::make_shared<Texture3D>();
 		tex3D->LoadTexture3D("Models/PBR/Sand/a.png", "Models/PBR/grass/a.png", "Models/PBR/Slate/a.png", "Models/PBR/Snow/a.jpg", "TexA", true);
-		
+
 		StrPtr<Texture3D> tex3Dao = std::make_shared<Texture3D>();
 		tex3Dao->LoadTexture3D("Models/PBR/Sand/ao.png", "Models/PBR/grass/ao.png", "Models/PBR/Slate/ao.png", "Models/PBR/Snow/ao.jpg", "TexAO", true);
-		
+
 		StrPtr<Texture3D> tex3Dr = std::make_shared<Texture3D>();
 		tex3Dr->LoadTexture3D("Models/PBR/Sand/r.png", "Models/PBR/grass/r.png", "Models/PBR/Slate/r.png", "Models/PBR/Snow/r.jpg", "TexR", true);
-		
+
 		StrPtr<Texture3D> tex3Dm = std::make_shared<Texture3D>();
 		tex3Dm->LoadTexture3D("Models/PBR/Sand/m.png", "Models/PBR/grass/m.png", "Models/PBR/Slate/m.png", "Models/PBR/Snow/m.png", "TexM", true);
-		
+
 		StrPtr<Texture3D> tex3Dn = std::make_shared<Texture3D>();
 		tex3Dn->LoadTexture3D("Models/PBR/Sand/n.png", "Models/PBR/grass/n.png", "Models/PBR/Slate/n.png", "Models/PBR/Snow/n.jpg", "TexN", true);
-		
+
 		//StrPtr<Texture3D> tex3Dh = std::make_shared<Texture3D>();
 		//tex3Dh->LoadTexture3D("Models/PBR/grass/h.png", "Models/PBR/Cliff/h.png", "Models/PBR/crater/h.png", "Models/PBR/Slate/h.png", "TexH", true);
-		
+
 		StrPtr<Material> mat = std::make_shared<Material>();
 		mat->InitMaterial(MAT_PLANET, Gfx::GfxCore::Pointer());
 		mat->SetFilePath("PlanetMaterialOne");
 		ResVault* res = ResVault::Pointer();
-		
+
 		mat->m_TextureAlbedo = res->InsertResource(tex3D);
 		mat->m_TextureAO = res->InsertResource(tex3Dao);
 		mat->m_TextureRoughSmooth = res->InsertResource(tex3Dr);
 		mat->m_TextureNormal = res->InsertResource(tex3Dn);
 		mat->m_TextureMetSpec = res->InsertResource(tex3Dm);
 		//mat->m_TextureH = res->InsertResource(tex3Dh);
-		
+
 		m_Materials = ResVault::Pointer()->InsertResource(mat);
 
 		m_Planet->m_MaterialMap["DefaultMaterial"] = m_Materials;
@@ -176,5 +216,86 @@ namespace rczEngine
 	{
 		m_Planet = std::make_shared<Model>();
 		m_Planet->Load("RacrozEngineAssets/EsferaLowPoly.fbx", "PlanetModel");
+	}
+
+	void Planet::ProcessConnectionNode(NodeConnection & node)
+	{
+		if (m_PatchInfo.find(node.Hash) != m_PatchInfo.end())
+		{
+			auto& patch = m_PatchInfo[node.Hash];
+
+			///TODO: Check if i'm not doing this twice everytime.
+			if (patch.Connected)
+			{
+				if (node.parentProxy == patch.ConnectorOne)
+				{
+					if (node.Depth == patch.OneConnectedDepth)
+					{
+						return;
+					}
+					else
+					{
+						patch.ConnectorOne = &node;
+						patch.OneConnectedDepth = node.Depth;
+						PlanetQuadTreeNode::ConnectNodesSameDepth(*patch.ConnectorOne, *patch.ConnectorTwo);
+					}
+				}
+
+				if (node.parentProxy == patch.ConnectorTwo)
+				{
+					if (node.Depth == patch.TwoConnectedDepth)
+					{
+						return;
+					}
+					else
+					{
+						patch.ConnectorTwo = &node;
+						patch.TwoConnectedDepth = node.Depth;
+						PlanetQuadTreeNode::ConnectNodesSameDepth(*patch.ConnectorOne, *patch.ConnectorTwo);
+					}
+				}
+			}
+
+			if (patch.ConnectorOne == nullptr || patch.ConnectorOne == &node)
+			{
+				patch.ConnectorOne = &node;
+			}
+			else
+			{
+
+				if (!patch.Connected)
+				{
+					patch.ConnectorTwo = &node;
+
+					if (patch.ConnectorOne->Depth > patch.ConnectorTwo->Depth * 2)
+					{
+						patch.ConnectorOne->node->m_Dirty = true;
+						patch.ConnectorOne = nullptr;
+						return;
+					}
+
+					if (patch.ConnectorTwo->Depth > patch.ConnectorOne->Depth * 2)
+					{
+						patch.ConnectorTwo->node->m_Dirty = true;
+						patch.ConnectorTwo = nullptr;
+						return;
+					}
+
+					patch.Connected = true;
+					patch.OneConnectedDepth = patch.ConnectorOne->Depth;
+					patch.TwoConnectedDepth = node.Depth;
+
+					PlanetQuadTreeNode::ConnectNodesSameDepth(*patch.ConnectorOne, *patch.ConnectorTwo);
+				}
+			}
+		}
+		else
+		{
+			PatchData newData;
+			newData.ConnectorOne = &node;
+			newData.Connected = false;
+
+			m_PatchInfo[node.Hash] = newData;
+		}
 	}
 }

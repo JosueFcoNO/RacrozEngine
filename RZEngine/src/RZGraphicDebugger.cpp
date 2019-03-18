@@ -50,7 +50,6 @@ namespace rczEngine
 		m_LinesRS.SetThisRasterizerState(graphicsapi_instance);
 
 		///Change the Topology to linelist
-		graphicsapi_instance->SetPrimitiveTopology(Gfx::eTOPOLOGY::TOPO_LINESTRIP);
 
 		///Iterate through the Static Objs and Draw Them
 		for (auto obj : m_Objects)
@@ -85,6 +84,18 @@ namespace rczEngine
 		auto newLineList = std::make_shared<DebuggerLineList>();
 
 		newLineList->SetLineList(pointList);
+		newLineList->SetColor(color);
+
+		m_Objects[ID] = (newLineList);
+
+		return newLineList;
+	}
+
+	WeakPtr<DebuggerLineList> GraphicDebugger::AddLineListIndex(const String & ID, const Vector<Vector3>& pointList, const Vector<uint32>& indices, const Color & color, float time)
+	{
+		auto newLineList = std::make_shared<DebuggerLineList>();
+
+		newLineList->SetLineListIndex(pointList, indices);
 		newLineList->SetColor(color);
 
 		m_Objects[ID] = (newLineList);

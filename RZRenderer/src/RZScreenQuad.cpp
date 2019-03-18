@@ -43,7 +43,7 @@ namespace rczEngine
 		m_vBuffer.AddVertex(v);
 
 		m_vBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, false, gfx);
-		m_iBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, gfx);
+		m_iBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, false, gfx);
 	}
 
 	void ScreenQuad::SetScreenQuadBuffers(Gfx::GfxCore * gfx)

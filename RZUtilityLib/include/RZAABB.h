@@ -6,7 +6,7 @@ namespace rczEngine
 	class RZ_EXP AABB
 	{
 	public:
-		AABB() noexcept : m_PointMax(1, 1, 1), m_PointMin(0, 0, 0) {};
+		AABB() noexcept { Clear(); };
 
 		void SetAABB(Vector3 minV, Vector3 maxV) noexcept;
 		void SetAABB(float xMin, float yMin, float zMin, float xMax, float yMax, float zMax) noexcept;
@@ -17,6 +17,8 @@ namespace rczEngine
 		void AddPoint(Vector3 point) noexcept;
 		void Clear() noexcept;
 
+		Vector<Vector3> GetCorners() const noexcept;
+
 		void TransformAndRecalculateAABB(Matrix3 newMatrix);
 
 		FORCEINLINE bool CheckPointCollision(const Vector3& point) const noexcept
@@ -26,12 +28,12 @@ namespace rczEngine
 
 		FORCEINLINE Vector3 GetCenter() const noexcept
 		{
-			return (m_PointMax + m_PointMin) / 2;
+			return m_PointMin + GetRadius();
 		}
 
 		FORCEINLINE Vector3 GetSize() const noexcept
 		{
-			return m_PointMax - m_PointMin;
+			return (m_PointMax - m_PointMin);
 		}
 
 		FORCEINLINE Vector3 GetRadius() const noexcept
@@ -45,7 +47,6 @@ namespace rczEngine
 			m_PointMin += center;
 		}
 
-	private:
 		Vector3 m_PointMin, m_PointMax;
 	};
 }

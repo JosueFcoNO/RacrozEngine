@@ -39,7 +39,7 @@ namespace rczEngine
 		StrGameObjectMap m_SceneActorMap;
 		StrGameObjectPtr m_RootNode;
 
-		Octree sceneOctree;
+		//Octree sceneOctree;
 
 	private:
 		String m_Name;

@@ -118,7 +118,7 @@ namespace rczEngine
 		//Read and overwrite the index buffers size;
 		ser->ReadData(m_IndexBuffer.GetVectorStart(), tempInt * sizeof(uint32));
 
-		m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, gfx);
+		m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, false, gfx);
 
 		//Read the number of meshes
 		ser->ReadData(&tempInt, sizeof(int32));
@@ -275,7 +275,7 @@ namespace rczEngine
 			}
 		}
 
-		m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, gfx);
+		m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, false, gfx);
 		m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, true, gfx);
 		return;
 	}

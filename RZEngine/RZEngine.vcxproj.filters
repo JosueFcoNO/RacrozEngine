@@ -129,6 +129,9 @@
     <Filter Include="Archivos de encabezado\Planet Generation">
       <UniqueIdentifier>{28fbdb35-ab7b-4043-a7dc-e15e3304cae7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\Octree">
+      <UniqueIdentifier>{ceeb7aa7-7b94-47fa-bc80-1ef0359db193}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZScene.h">
@@ -202,9 +205,6 @@
     </ClInclude>
     <ClInclude Include="include\RZOctree.h">
       <Filter>Archivos de encabezado\Octree</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RZGeometryNode.h">
-      <Filter>Archivos de encabezado\Model</Filter>
     </ClInclude>
     <ClInclude Include="include\RZComponent.h">
       <Filter>Archivos de encabezado\Components</Filter>
@@ -334,6 +334,9 @@
     </ClInclude>
     <ClInclude Include="include\RZGraphicDebuggerLineList.h">
       <Filter>Archivos de encabezado\GraphicDebugger</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZGeometryNode.h">
+      <Filter>Archivos de encabezado\Octree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -495,6 +498,9 @@
     </ClCompile>
     <ClCompile Include="src\RZGraphicDebuggerLineList.cpp">
       <Filter>Archivos de código fuente\GraphicDebugger</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZOctree.cpp">
+      <Filter>Archivos de código fuente\Octree</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

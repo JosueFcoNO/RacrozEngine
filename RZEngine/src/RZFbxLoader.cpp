@@ -218,7 +218,7 @@ namespace rczEngine
 				}
 
 				model->m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, false, gfx);
-				model->m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, gfx);
+				model->m_IndexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, false, gfx);
 
 				Mesh meshReal;
 				meshReal.m_Material = "mat";

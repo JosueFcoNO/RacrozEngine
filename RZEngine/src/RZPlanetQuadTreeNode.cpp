@@ -123,7 +123,7 @@ namespace rczEngine
 		node.Side = eSide::Up;
 		node.Pos = GetVertex(MESH_ROW_HALF, 0).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
-		GraphicDebugger::Pointer()->AddPoint("Rand1 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
+		//GraphicDebugger::Pointer()->AddPoint("Rand1 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
@@ -131,7 +131,7 @@ namespace rczEngine
 		node.Side = eSide::Left;
 		node.Pos = GetVertex(0, MESH_ROW_HALF).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
-		GraphicDebugger::Pointer()->AddPoint("Rand2 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
+		//GraphicDebugger::Pointer()->AddPoint("Rand2 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
@@ -139,7 +139,7 @@ namespace rczEngine
 		node.Side = eSide::Right;
 		node.Pos = GetVertex(MESH_ROW_SIZE, MESH_ROW_HALF).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
-		GraphicDebugger::Pointer()->AddPoint("Rand3 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
+		//GraphicDebugger::Pointer()->AddPoint("Rand3 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
@@ -147,7 +147,7 @@ namespace rczEngine
 		node.Side = eSide::Down;
 		node.Pos = GetVertex(MESH_ROW_HALF, MESH_ROW_SIZE).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
-		GraphicDebugger::Pointer()->AddPoint("Rand4 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
+		//GraphicDebugger::Pointer()->AddPoint("Rand4 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
 
 		Connections.push_back(node);
 

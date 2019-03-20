@@ -69,8 +69,6 @@ namespace rczEngine
 		
 		m_SkinnedVshader.SetThisVertexShaderAndInputLayout(m_gfx);
 		RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_SKINNED_MODEL_RENDERER, MAT_PBR_MetRough, true);
-
-
 	}
 
 	void GeometryPass::PostRenderPass()

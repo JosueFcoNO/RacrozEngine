@@ -330,13 +330,13 @@ namespace rczEngine
 		{
 			ImGui::Text("PBR Config");
 
-			ImGui::SliderFloat("Light", &user->LightIntensity, 0.0f, 1.0f);
-			ImGui::SliderFloat("Ambient", &user->AmbientLightIntensity, 0.0f, 1.0f);
-			ImGui::SliderFloat("Reflection", &user->ReflectionIntensity, 0.0f, 1.0f);
-
-			ImGui::SliderInt("R", &user->R, 0, 1);
-			ImGui::SliderInt("G", &user->G, 0, 1);
-			ImGui::SliderInt("B", &user->B, 0, 1);
+			//ImGui::SliderFloat("Light", &user->LightIntensity, 0.0f, 1.0f);
+			//ImGui::SliderFloat("Ambient", &user->AmbientLightIntensity, 0.0f, 1.0f);
+			//ImGui::SliderFloat("Reflection", &user->ReflectionIntensity, 0.0f, 1.0f);
+			//
+			//ImGui::SliderInt("R", &user->R, 0, 1);
+			//ImGui::SliderInt("G", &user->G, 0, 1);
+			//ImGui::SliderInt("B", &user->B, 0, 1);
 
 			ImGui::Checkbox("Wireframe", &Wireframe);
 

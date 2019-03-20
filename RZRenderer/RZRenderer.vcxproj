@@ -200,10 +200,12 @@
     <ClInclude Include="include\RZPBRForward.h" />
     <ClInclude Include="include\RZPBRTransparent.h" />
     <ClInclude Include="include\RZPerlinPlanetPass.h" />
+    <ClInclude Include="include\RZPipelineDeferred.h" />
     <ClInclude Include="include\RZPlanetPass.h" />
     <ClInclude Include="include\RZRacrozRenderer.h" />
     <ClInclude Include="include\RZRendererPCH.h" />
     <ClInclude Include="include\RZRendererWindow.h" />
+    <ClInclude Include="include\RZRenderPipeline.h" />
     <ClInclude Include="include\RZScreenQuad.h" />
     <ClInclude Include="include\RZSkyBoxPass.h" />
     <ClInclude Include="include\RZSpaceMngWindow.h" />
@@ -227,6 +229,7 @@
     <ClCompile Include="src\RZPBRForward.cpp" />
     <ClCompile Include="src\RZPBRTransparent.cpp" />
     <ClCompile Include="src\RZPerlinPlanetPass.cpp" />
+    <ClCompile Include="src\RZPipelineDeferred.cpp" />
     <ClCompile Include="src\RZPlanetPass.cpp" />
     <ClCompile Include="src\RZRacrozRenderer.cpp" />
     <ClCompile Include="src\RZRendererPCH.cpp">
@@ -235,6 +238,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">RZRendererPCH.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\RZRenderPipeline.cpp" />
     <ClCompile Include="src\RZScreenQuad.cpp" />
     <ClCompile Include="src\RZSkyBoxPass.cpp" />
     <ClCompile Include="src\RZSSAO.cpp" />

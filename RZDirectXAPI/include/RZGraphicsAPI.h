@@ -73,7 +73,7 @@ namespace rczEngine
 #pragma region =	| Pipeline Functions |
 
 			///Creates a DepthStencyl and Depth Stencyl View
-			bool CreateDepthStencyl(DepthStencyl & out_depthStencyl, int32 width = -1, int32 height = -1, eBUFFER_USAGE usage = USAGE_DEFAULT, eCPU_ACCESS_FLAGS cpu_access = CPU_DEFAULT, int32 sample_count = 4, int32 sample_quality = 0);
+			bool CreateDepthStencyl(DepthStencyl & out_depthStencyl, int32 width = -1, int32 height = -1, eBUFFER_USAGE usage = USAGE_DEFAULT, eCPU_ACCESS_FLAGS cpu_access = CPU_DEFAULT, int32 sample_count = 1, int32 sample_quality = 0);
 
 			///Sets the primitive topology to the device context.
 			void SetPrimitiveTopology(eTOPOLOGY usedTopology);
@@ -88,7 +88,7 @@ namespace rczEngine
 			bool AddRenderTarget(RenderTarget& renderTarget, int32 renderTargetSlot);
 
 			///Sets the Render Targets added before to the pipeline.
-			bool SetRenderTargets(bool UseDepthStencyl = true);
+			bool SetRenderTargets(bool UseDepthStencyl = true, DepthStencyl * depth = nullptr);
 
 			///Removes the Render Targets from the pipeline
 			void UnbindRenderTargets();

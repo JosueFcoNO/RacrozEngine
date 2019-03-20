@@ -13,6 +13,11 @@ namespace rczEngine
 			m_gfx->SetBlendState(*m_BlendState);
 	}
 
+	void Pass::AddDepthStencyl(Gfx::DepthStencyl * depthStencyl)
+	{
+		m_DepthStencyl = depthStencyl;
+	}
+
 	void Pass::AddTexture2D(StrPtr<Texture2D>& texture, int32 slot)
 	{
 		m_Texture2D[slot] = texture;
@@ -56,7 +61,7 @@ namespace rczEngine
 		if (m_RenderTargets[0] != NULL)
 		{
 			m_gfx->SetNumberOfRenderTargets(i);
-			m_gfx->SetRenderTargets(UseDepth);
+			m_gfx->SetRenderTargets(UseDepth, m_DepthStencyl);
 		}
 	}
 

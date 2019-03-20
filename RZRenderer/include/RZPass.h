@@ -40,14 +40,14 @@ namespace rczEngine
 		///Adds a BlendState for this pass to use. If there's not one set, it will use the default blend state.
 		void AddBlendState(Gfx::BlendState* blendState, int32 slot);
 
+		void AddDepthStencyl(Gfx::DepthStencyl* depthStencyl);
+
 		bool UseDefaultRenderTarget = true;
 
 #ifndef EDITOR
 		virtual void RenderPassGUI()
 		{
 			ImGui::Text("%s", m_Name.c_str());
-
-			
 
 			if (ImGui::Button("Recompile Pixel Shader"))
 			{
@@ -76,10 +76,10 @@ namespace rczEngine
 
 		///Sets the textures on the pipeline.
 		void SetTexturesInPipeline();
-
-		///Binds the render targets on the pipeline.
-		void SetRenderTargetsInPipeline();
 		
+		///Binds the render targets on the pipeline
+		void SetRenderTargetsInPipeline();
+
 		static const char MAX_TEXTURES_PASS = 10;
 		static const char MAX_RENDER_TARGETS = 8;
 
@@ -90,6 +90,8 @@ namespace rczEngine
 
 		Gfx::PixelShader m_PShader;
 		StringW m_PShaderPath;
+
+		Gfx::DepthStencyl* m_DepthStencyl = nullptr;
 
 		StrPtr<Texture2D> m_Texture2D[MAX_TEXTURES_PASS] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 		

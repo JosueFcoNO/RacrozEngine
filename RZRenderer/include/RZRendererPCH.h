@@ -3,6 +3,10 @@
 #include <RZEnginePCH.h>
 
 #include "RZScreenQuad.h"
+
+#include "RZRenderPipeline.h"
+#include "RZPipelineDeferred.h"
+
 #include "RZPass.h"
 
 #include "RZSkyBoxPass.h"

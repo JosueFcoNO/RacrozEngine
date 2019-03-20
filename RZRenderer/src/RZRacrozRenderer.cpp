@@ -62,13 +62,6 @@ namespace rczEngine
 
 	void RacrozRenderer::SetRenderingMode(RENDERING_MODE renderingMode)
 	{
-		if (m_CurrentRenderingMode == renderingMode)
-		{
-			return;
-		}
-
-		m_CurrentRenderingMode = renderingMode;
-
 		switch (renderingMode)
 		{
 		case rczEngine::FORWARD:
@@ -89,22 +82,7 @@ namespace rczEngine
 	{
 		static bool StartingSpaceManager = false;
 
-		int32 i = 0;
-
-		for (i = 0; i < m_PassesOrder.size(); ++i)
-		{
-			if (m_PassesOrder[i] == "PostProcess")
-			{
-				StartPostProcessing();
-				continue;
-			}
-
-			auto pass = m_Passes[m_PassesOrder[i]];
-
-			pass->PreRenderPass();
-			pass->RenderPass();
-			pass->PostRenderPass();
-		}
+		deferred.DoRender();
 
 		if (StartingSpaceManager)
 		{
@@ -113,12 +91,10 @@ namespace rczEngine
 			SpaceManager::Pointer()->InitSpaceManager();
 		}
 
-		static auto pbr = std::dynamic_pointer_cast<PBR_Pass, Pass>(m_Passes["PBR"]);
-
 		//If there exists an editor, render it.
 		if (editor)
 		{
-			editor->RenderEditor(&pbr->config);
+			editor->RenderEditor(nullptr);
 
 			ImGui::Begin("Renderer");
 			{
@@ -135,19 +111,11 @@ namespace rczEngine
 				if (SpaceManager::Pointer())
 				{
 					ImGui::Text("Space Manager Active");
-
-					//ImGui::Value("Active Nodes: ", Planet::instance->QuadTreesNodes);
-					//ImGui::Value("Connections Made: ", Planet::instance->Connections);
 				}
 				else
 				{
 					if (ImGui::Button("Start Space"))
 					{
-						//StrPtr<SkyBox> Sky = std::make_shared<SkyBox>();
-						String str = "Cubemaps/OldSpace.dds";
-						//Sky->InitSkyBox(ResVault::Pointer()->LoadResource(str), Gfx::GfxCore::Pointer(), ResVault::Pointer());
-						//ChangeSkyBox(Sky);
-
 						StartingSpaceManager = true;
 
 						auto Light = LightManager::Pointer()->AddLight();
@@ -157,7 +125,7 @@ namespace rczEngine
 
 				if (ImGui::Button("Create Cubemap"))
 				{
-					static auto cubemap = CreateCubeMap("Cubemap", sceneGraph, m_PassesOrder, 1024, 1024);
+					static auto cubemap = CreateCubeMap("Cubemap", sceneGraph, deferred.m_PassesOrder, 1024, 1024);
 				}
 			};
 
@@ -176,317 +144,52 @@ namespace rczEngine
 
 	void RacrozRenderer::SetDeferred()
 	{
-		///Create Render targets and textures for Position,  Normals, Color, Metallic and Roughness, Tangents and Binormals.
-		///This also inserts the render targets and the textures into the RenderTarget and Texture2D Maps.
-		m_RTs["ColorAO"] = CreateRenderTargetAndTexture_XYScales("ColorAO", m_Textures["ColorAO"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
-		m_RTs["Position"] = CreateRenderTargetAndTexture_XYScales("Position", m_Textures["Position"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32B32A32_FLOAT);
-		m_RTs["NormalsMR"] = CreateRenderTargetAndTexture_XYScales("Normals", m_Textures["NormalsMR"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32B32A32_FLOAT);
-		m_RTs["Emmisive"] = CreateRenderTargetAndTexture_XYScales("EmmisiveTex", m_Textures["Emmisive"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
-		m_RTs["Velocity"] = CreateRenderTargetAndTexture_XYScales("Velocity", m_Textures["Velocity"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32_FLOAT);
-		m_RTs["Specular"] = CreateRenderTargetAndTexture_XYScales("Specular", m_Textures["Specular"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
-
-		m_RTs["ColorCorrection"] = CreateRenderTargetAndTexture_XYScales("ColorCorrection", m_Textures["ColorCorrection"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
-
-		m_RTs["PBR"] = CreateRenderTargetAndTexture_XYScales("PBR", m_Textures["PBR"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32B32A32_FLOAT);
-
-		m_RTs["MotionBlur"] = CreateRenderTargetAndTexture_XYScales("MotionBlur", m_Textures["MotionBlur"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32B32A32_FLOAT);
-
-		m_RTs["Luminance"] = CreateRenderTargetAndTexture_XYScales("Luminance", m_Textures["Luminance"], 9, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
-		m_RTs["Bright"] = CreateRenderTargetAndTexture_XYScales("Bright", m_Textures["Bright"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
-		m_RTs["Bloom"] = CreateRenderTargetAndTexture_XYScales("Bloom", m_Textures["Bloom"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
-		m_RTs["AvgLuminance"] = CreateRenderTargetAndTexture_XYScales("AvgLuminance", m_Textures["AvgLuminance"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
-
-		m_RTs["HDRBloom"] = CreateRenderTargetAndTexture_XYScales("HDRBloom", m_Textures["HDRBloom"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
-
-		const String SSAO = "SSAO";
-		m_RTs[SSAO] = CreateRenderTargetAndTexture_XYScales(SSAO.c_str(), m_Textures[SSAO], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32_FLOAT);
-
-		/////////////////
-		///SKYBOX PASS///
-		/////////////////
-
-		auto passSkyBox = CreatePass("SkyBox", PASSES::SKYBOX, m_CurrentRenderingMode);
-
-		passSkyBox->AddRenderTarget(m_RTs["ColorAO"], 0);
-		passSkyBox->AddRasterizerState(&m_RSSolidCullNone);
-
-		m_PassesOrder.push_back("SkyBox");
-
-		///////////////////
-		///GEOMETRY PASS///
-		///////////////////
-
-		///Create the geometry pass
-		auto passGeometry = CreatePass("Geometry", PASSES::GEOMETRY_PASS, m_CurrentRenderingMode);
-
-		passGeometry->AddRenderTarget(m_RTs["ColorAO"], 0);
-		passGeometry->AddRenderTarget(m_RTs["Position"], 1);
-		passGeometry->AddRenderTarget(m_RTs["NormalsMR"], 2);
-		passGeometry->AddRenderTarget(m_RTs["Emmisive"], 3);
-		passGeometry->AddRenderTarget(m_RTs["Velocity"], 4);
-		passGeometry->AddRenderTarget(m_RTs["Specular"], 5);
-
-		m_PassesOrder.push_back("Geometry");
-
-		///////////////////
-		///TERRAIN GEOMETRY PASS///
-		///////////////////
-
-		///Create the geometry pass
-		//auto passTerrainGeometry = CreatePass("Terrain", PASSES::TERRAIN_GEOMETRY_PASS, m_CurrentRenderingMode);
-		//
-		//passTerrainGeometry->AddRenderTarget(m_RTs["ColorAO"], 0);
-		//passTerrainGeometry->AddRenderTarget(m_RTs["Position"], 1);
-		//passTerrainGeometry->AddRenderTarget(m_RTs["NormalsMR"], 2);
-		//passTerrainGeometry->AddRenderTarget(m_RTs["Emmisive"], 3);
-		//passTerrainGeometry->AddRenderTarget(m_RTs["Velocity"], 4);
-		//
-		//m_PassesOrder.push_back("Terrain");
-
-		/////Start the post processing.
-
-		///Create the geometry pass
-		m_PassesOrder.push_back("PostProcess");
-
-
-		//////////////////////
-		///SS Ambient Occlusion PASS
-		//////////////////////
-
-		///Create the geometry pass
-		auto passSSAO = CreatePass(SSAO.c_str(), PASSES::SSAO, m_CurrentRenderingMode);
-
-		passSSAO->AddRenderTarget(m_RTs[SSAO], 0);
-
-		passSSAO->AddTexture2D(m_Textures["Position"], 0);
-		passSSAO->AddTexture2D(m_Textures["NormalsMR"], 1);
-		m_PassesOrder.push_back(SSAO);
-
-		/////////
-		///PBR///
-		/////////
-
-		///Create the PBR pass
-		auto passPBR = CreatePass("PBR", PASSES::PBR, m_CurrentRenderingMode);
-
-		passPBR->AddRenderTarget(m_RTs["PBR"], 0);
-
-		passPBR->AddTexture2D(m_Textures["ColorAO"], 0);
-		passPBR->AddTexture2D(m_Textures["NormalsMR"], 1);
-		passPBR->AddTexture2D(m_Textures["Position"], 2);
-		passPBR->AddTexture2D(m_Textures["Specular"], 3);
-		passPBR->AddTexture2D(m_Textures["SSAO"], 5); //Final SSAO Blur
-		//passPBRLight.AddTexture2D(ShadowFinalTex, 6);
-
-		m_PassesOrder.push_back("PBR");
-
-		//////////////////////
-		///Transparent PASS///
-		//////////////////////
-
-		///Create the geometry pass
-		auto passTransparent = CreatePass("Transparent", PASSES::PBR_TRANSPARENT, m_CurrentRenderingMode);
-
-		passTransparent->AddRenderTarget(m_RTs["PBR"], 0);
-		passTransparent->AddRenderTarget(m_RTs["Position"], 1);
-		passTransparent->AddRenderTarget(m_RTs["NormalsMR"], 2);
-
-		m_PassesOrder.push_back("Transparent");
-
-		//////////////////////
-		///Transparent PASS///
-		//////////////////////
-		
-		///Create the geometry pass
-		auto passDebugger = CreatePass("Debugger", PASSES::GDEBUGGER, m_CurrentRenderingMode);
-
-		passDebugger->AddRenderTarget(m_RTs["PBR"], 0);
-
-		m_PassesOrder.push_back("Debugger");
-
-		///////////////////
-		///PLANET PASS/////
-		///////////////////
-
-		auto passPlanet = CreatePass("Planet", PASSES::PLANET_PASS, m_CurrentRenderingMode);
-		
-		passPlanet->AddRenderTarget(m_RTs["PBR"], 0);
-		passPlanet->AddRenderTarget(m_RTs["Position"], 1);
-		passPlanet->AddRenderTarget(m_RTs["NormalsMR"], 2);
-		
-		m_PassesOrder.push_back("Planet");
-
-		///////////////////
-		///SCATTER PASS/////
-		///////////////////
-
-		auto passAtmos = CreatePass("Atmos", PASSES::ATMOS_SCATTER_PASS, m_CurrentRenderingMode);
-		
-		passAtmos->AddRenderTarget(m_RTs["PBR"], 0);
-		
-		m_PassesOrder.push_back("Atmos");
-
-		m_PassesOrder.push_back("PostProcess");
-
-		/////////////////
-		///MOTION BLUR///
-		/////////////////
-
-		///Create the PBR pass
-		auto passMotionBlur = CreatePass("MotionBlur", PASSES::MOTION_BLUR, m_CurrentRenderingMode);
-
-		passMotionBlur->AddRenderTarget(m_RTs["MotionBlur"], 0);
-
-		passMotionBlur->AddTexture2D(m_Textures["PBR"], 0);
-		passMotionBlur->AddTexture2D(m_Textures["Velocity"], 1);
-
-		m_PassesOrder.push_back("MotionBlur");
-
-		///////////////
-		///LUMINANCE///
-		///////////////
-
-		//Receives the PBR pass and outputs a R16F luminance map.
-
-		///Create the Luminance pass
-		auto passLuminance = CreatePass("Luminance", PASSES::LUMINANCE, m_CurrentRenderingMode);
-
-		passLuminance->AddRenderTarget(m_RTs["Luminance"], 0);
-		passLuminance->AddTexture2D(m_Textures["MotionBlur"], 0);
-
-		m_PassesOrder.push_back("Luminance");
-
-		////////////
-		///BRIGHT///
-		////////////
-
-		//Receives the Luminance pass and the Emmisive Map and outputs a RGB16F bright map to blur to get bloom and glow.
-
-		///Create the Bright pass
-		auto passBright = CreatePass("Bright", PASSES::BRIGHT, m_CurrentRenderingMode);
-
-		passBright->AddRenderTarget(m_RTs["Bright"], 0);
-
-		passBright->AddTexture2D(m_Textures["Luminance"], 0);
-		passBright->AddTexture2D(m_Textures["Emmisive"], 1);
-
-		m_PassesOrder.push_back("Bright");
-
-		///////////
-		///BLOOM///
-		///////////
-
-		//Receives the Bright pass and blurs it 4 times to generate bloom and glow.
-
-		StrPtr<BloomPass> passBloom = std::static_pointer_cast<BloomPass, Pass>(CreatePass("Bloom", PASSES::BLOOM, m_CurrentRenderingMode));
-
-		passBloom->AddRenderTarget(m_RTs["Bloom"], 0);
-
-		passBloom->AddTexture2D(m_Textures["Bright"], 0);
-
-		passBloom->SetOriginalBloom(m_Textures["Bright"]);
-		passBloom->SetLastBloomResult(m_Textures["Bloom"]);
-
-		m_PassesOrder.push_back("Bloom");
-		m_PassesOrder.push_back("Bloom");
-		m_PassesOrder.push_back("Bloom");
-		m_PassesOrder.push_back("Bloom");
-
-		////////////
-		///AVGLUM///
-		////////////
-
-		//Receives the Luminance pass and calculates the average luminance.
-
-		auto passAvgLuminance = CreatePass("AvgLuminance", PASSES::AVG_LUMINANCE, m_CurrentRenderingMode);
-
-		passAvgLuminance->AddRenderTarget(m_RTs["AvgLuminance"], 0);
-
-		passAvgLuminance->AddTexture2D(m_Textures["Luminance"], 0);
-
-		m_PassesOrder.push_back("AvgLuminance");
-
-		//////////////
-		///HDRBLOOM///
-		//////////////
-
-		//Receives the AvgLuminance, PBR and Bloom, does HDR and Bloom.
-
-		///Create the Bright pass
-		auto passHDRBloom = CreatePass("HDRBloom", PASSES::HDR_BLOOM, m_CurrentRenderingMode);
-
-		passHDRBloom->AddRenderTarget(m_RTs["HDRBloom"], 0);
-
-		passHDRBloom->AddTexture2D(m_Textures["MotionBlur"], 0);
-		passHDRBloom->AddTexture2D(m_Textures["Bloom"], 1);
-		passHDRBloom->AddTexture2D(m_Textures["AvgLuminance"], 2);
-
-		m_PassesOrder.push_back("HDRBloom");
-
-		//////////////////////
-		///COLOR CORRECTION///
-		//////////////////////
-
-		///Create the PBR pass
-		auto passColorCorrection = CreatePass("ColorCorrection", PASSES::COLOR_CORRECTION, m_CurrentRenderingMode);
-
-		passColorCorrection->AddRenderTarget(m_RTs["ColorCorrection"], 0);
-		passColorCorrection->AddTexture2D(m_Textures["HDRBloom"], 0);
-
-		m_PassesOrder.push_back("ColorCorrection");
-
-		//////////////////////
-		///PERLIN ////////////
-		//////////////////////
-
-		///Create the PBR pass
-		auto passPerlin = CreatePass("Perlin3D", PASSES::PERLIN3D, m_CurrentRenderingMode);
-
+		deferred.InitRenderPipeline("Deferred", m_Width, m_Height, this);
 	}
 
 	void RacrozRenderer::SetForward()
 	{
-		///Create Render targets and textures for Position,  Normals, Color, Metallic and Roughness, Tangents and Binormals.
-		///This also inserts the render targets and the textures into the RenderTarget and Texture2D Maps.
-		m_RTs["ColorCorrection"] = CreateRenderTargetAndTexture_XYScales("ColorCorrection", m_Textures["ColorCorrection"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
-		m_RTs["ColorPBR"] = CreateRenderTargetAndTexture_XYScales("ColorPBR", m_Textures["ColorPBR"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32B32A32_FLOAT);
-
-		/////////////////
-		///SKYBOX PASS///
-		/////////////////
-
-		auto passSkyBox = CreatePass("SkyBox", PASSES::SKYBOX, m_CurrentRenderingMode);
-
-		passSkyBox->AddRenderTarget(m_RTs["ColorPBR"], 0);
-		passSkyBox->AddRasterizerState(&m_RSSolidCullNone);
-
-		m_PassesOrder.push_back("SkyBox");
-
-		/////////
-		///PBR///
-		/////////
-
-		///Create the PBR pass
-		auto passPBR = CreatePass("PBR", PASSES::PBR_FORWARD, m_CurrentRenderingMode);
-
-		passPBR->AddRenderTarget(m_RTs["ColorPBR"], 0);
-
-		m_PassesOrder.push_back("PBR");
-
-		///Start the post processing.
-		m_PassesOrder.push_back("PostProcess");
-
-		//////////////////////
-		///COLOR CORRECTION///
-		//////////////////////
-
-		///Create the PBR pass
-		auto passColorCorrection = CreatePass("ColorCorrection", PASSES::COLOR_CORRECTION, m_CurrentRenderingMode);
-
-		passColorCorrection->AddRenderTarget(m_RTs["ColorCorrection"], 0);
-		passColorCorrection->AddTexture2D(m_Textures["ColorPBR"], 0);
-
-		m_PassesOrder.push_back("ColorCorrection");
+		/////Create Render targets and textures for Position,  Normals, Color, Metallic and Roughness, Tangents and Binormals.
+		/////This also inserts the render targets and the textures into the RenderTarget and Texture2D Maps.
+		//m_RTs["ColorCorrection"] = CreateRenderTargetAndTexture_XYScales("ColorCorrection", m_Textures["ColorCorrection"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
+		//m_RTs["ColorPBR"] = CreateRenderTargetAndTexture_XYScales("ColorPBR", m_Textures["ColorPBR"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32B32A32_FLOAT);
+		//
+		///////////////////
+		/////SKYBOX PASS///
+		///////////////////
+		//
+		//auto passSkyBox = CreatePass("SkyBox", PASSES::SKYBOX, m_CurrentRenderingMode);
+		//
+		//passSkyBox->AddRenderTarget(m_RTs["ColorPBR"], 0);
+		//passSkyBox->AddRasterizerState(&m_RSSolidCullNone);
+		//
+		//m_PassesOrder.push_back("SkyBox");
+		//
+		///////////
+		/////PBR///
+		///////////
+		//
+		/////Create the PBR pass
+		//auto passPBR = CreatePass("PBR", PASSES::PBR_FORWARD, m_CurrentRenderingMode);
+		//
+		//passPBR->AddRenderTarget(m_RTs["ColorPBR"], 0);
+		//
+		//m_PassesOrder.push_back("PBR");
+		//
+		/////Start the post processing.
+		//m_PassesOrder.push_back("PostProcess");
+		//
+		////////////////////////
+		/////COLOR CORRECTION///
+		////////////////////////
+		//
+		/////Create the PBR pass
+		//auto passColorCorrection = CreatePass("ColorCorrection", PASSES::COLOR_CORRECTION, m_CurrentRenderingMode);
+		//
+		//passColorCorrection->AddRenderTarget(m_RTs["ColorCorrection"], 0);
+		//passColorCorrection->AddTexture2D(m_Textures["ColorPBR"], 0);
+		//
+		//m_PassesOrder.push_back("ColorCorrection");
 	}
 
 	void RacrozRenderer::SetForwardPlus()
@@ -496,16 +199,20 @@ namespace rczEngine
 
 	ResourceHandle RacrozRenderer::CreateCubeMap(const String& name, Scene * sceneGraph, Vector<String>& RenderPasses, int width, int height)
 	{
+		PipelineDeferred defCubeMap;
+		defCubeMap.InitRenderPipeline("cubeMap", width, height, this);
+
 		m_gfx->SetViewPort(width, height);
 
-		Vector3 Targets[6];
-
-		Targets[2].Set(0, 0, -1);
-		Targets[3].Set(0, 0, 1);
-		Targets[0].Set(1, 0, 0);
-		Targets[1].Set(-1, 0, 0);
-		Targets[4].Set(0, 1, 0);
-		Targets[5].Set(0, -1, 0);
+		const Vector3 Targets[6] =
+		{
+			{ 0, 0, -1},
+			{ 0, 0, 1 },
+			{ 1, 0, 0 },
+			{ -1, 0, 0 },
+			{ 0, 1, 0 },
+			{ 0, -1, 0 }
+		};
 
 		Vector3 Ups[6];
 
@@ -541,25 +248,25 @@ namespace rczEngine
 
 		for (int k = 0; k < 6; ++k)
 		{
-			camera->Reset({0,0,0}, Targets[k], Ups[k]);
+			camera->Reset({ 0,0,0 }, Targets[k], Ups[k]);
 
-			for (int32 i = 0; i < RenderPasses.size(); ++i)
+			for (int32 i = 0; i < defCubeMap.m_PassesOrder.size(); ++i)
 			{
-				if (RenderPasses[i] == "PostProcess")
+				if (defCubeMap.m_PassesOrder[i] == "PostProcess")
 				{
 					StartPostProcessing();
 					continue;
 				}
 
-				auto pass = m_Passes[RenderPasses[i]];
+				auto pass = m_Passes[defCubeMap.m_PassesOrder[i]];
 
 				pass->PreRenderPass();
 
-				if (RenderPasses[i] == "ColorCorrection")
+				if (defCubeMap.m_PassesOrder[i] == "cubeMapColorCorrection")
 				{
 					m_gfx->AddRenderTarget(*renderTargets[k], 0);
 					m_gfx->SetNumberOfRenderTargets(1);
-					m_gfx->SetRenderTargets(false);
+					m_gfx->SetRenderTargets(false, &defCubeMap.depth);
 				}
 
 				pass->RenderPass();
@@ -592,7 +299,7 @@ namespace rczEngine
 		camera->SetAspectRatio(1.0f);
 		camera->SetFarClip(100.0f);
 		camera->SetNearClip(0.01f);
-		camera->Reset({ 0,0,5 }, {0,0,0}, { 0,1,0 });
+		camera->Reset({ 0,0,5 }, { 0,0,0 }, { 0,1,0 });
 
 		ChangeSkyBox(skyBox);
 
@@ -675,7 +382,7 @@ namespace rczEngine
 		auto renderTarget = std::make_shared<Gfx::RenderTarget>();
 
 		///Save the Pointer on the RenderTarget Vector.
-		m_RTs[name] = (renderTarget);
+		//m_RTs[name] = (renderTarget);
 
 		bool SetToFinal = false;
 

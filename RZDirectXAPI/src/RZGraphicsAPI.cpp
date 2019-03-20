@@ -281,7 +281,7 @@ namespace rczEngine
 			TexDesc.MiscFlags = 0;
 			TexDesc.SampleDesc.Count = sample_count;
 			TexDesc.SampleDesc.Quality = sample_quality;
-			TexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+			TexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 			TexDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 			///Create the resource and save it in m_DepthStencil
@@ -397,15 +397,17 @@ namespace rczEngine
 			return true;
 		}
 
-		bool GfxCore::SetRenderTargets(bool UseDepthStencyl)
+		bool GfxCore::SetRenderTargets(bool UseDepthStencyl, DepthStencyl* depth)
 		{
 
 
 			///Set the render target and the depth stecil
-			if (UseDepthStencyl)
-				m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, m_DepthStencilView);
+			if (UseDepthStencyl && depth == nullptr)
+				m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, depth->GetDepthStencylView()->m_DepthStencylView);
+			//else if (depth != nullptr && UseDepthStencyl)
+			//	m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, depth->GetDepthStencylView()->m_DepthStencylView);
 			else
-				m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, nullptr);
+				m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, NULL);
 
 			return true;
 		}

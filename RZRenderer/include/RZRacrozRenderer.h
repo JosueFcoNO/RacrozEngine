@@ -78,10 +78,10 @@ namespace rczEngine
 				ImGui::SameLine();
 				if (ImGui::Button("Next Pass"))
 				{
-					CurrentPass = Math::Min(CurrentPass + 1, (int)m_PassesOrder.size() - 1);
+					CurrentPass = Math::Min(CurrentPass + 1, (int)deferred.m_PassesOrder.size() - 1);
 				}
 
-				if (m_Passes[m_PassesOrder[CurrentPass]]) m_Passes[m_PassesOrder[CurrentPass]]->RenderPassGUI();
+				if (m_Passes[deferred.m_PassesOrder[CurrentPass]]) m_Passes[deferred.m_PassesOrder[CurrentPass]]->RenderPassGUI();
 			}
 		};
 
@@ -126,13 +126,31 @@ namespace rczEngine
 		///Does a blur render pass, with the texture passes
 		void DoBlurPass(StrPtr<Gfx::RenderTarget> outRenderTarget, StrPtr<Texture2D> inTexture, int width, int height);
 
+		StrPtr<Pass> CreatePass(const String& name, PASSES pass, RENDERING_MODE renderMode = DEFERRED);
+
+		void StartPostProcessing();
+
+		///Samplers
+		Gfx::SamplerState m_LinealWrapSampler;
+		Gfx::SamplerState m_AnisotropicWrapSampler;
+		Gfx::SamplerState m_LinealClampSampler;
+		Gfx::SamplerState m_AnisotropicClampSampler;
+		Gfx::SamplerState m_PointWrapSampler;
+
+		///Rasterizers
+		Gfx::RasterizerState m_RSWireframe;
+		Gfx::RasterizerState m_RSSolid;
+		Gfx::RasterizerState m_RSSolidCullNone;
+
+		Map<String, StrPtr<Pass>> m_Passes;
+
+		PipelineDeferred deferred;
+
 	private:
 		///Private un-implemented Copy Constructor to prevent copying by accident.
 		RacrozRenderer(const RacrozRenderer&);
 		///Private un-implemented Copy Operator.
 		RacrozRenderer& operator= (const RacrozRenderer& other) { return RacrozRenderer(); };
-
-		RENDERING_MODE m_CurrentRenderingMode;
 
 		///The SkyBox currently set.
 		StrPtr<SkyBox> m_ActiveSkyBox;
@@ -141,15 +159,11 @@ namespace rczEngine
 		void SetForward();
 		void SetForwardPlus();
 
-		void StartPostProcessing();
 		Gfx::VertexShader m_ScreenQuadVS;
-
-		StrPtr<Pass> CreatePass(const String& name, PASSES pass, RENDERING_MODE renderMode = DEFERRED);
 
 		void InitRasterizers();
 		void InitSamplerStates();
 		
-		Map<String, StrPtr<Pass>> m_Passes;
 
 		GaussPass m_BlurPass;
 
@@ -164,27 +178,7 @@ namespace rczEngine
 		///Pointer to the resource manager instance
 		ResVault* m_res = NULL;
 
-		Vector<String> m_PassesOrder;
-
-		///A map of textures from the Render passes
-		Map<String, StrPtr<Texture2D>> m_Textures;
-
-		///A Map from the render targets.
-		Map<String, StrPtr<Gfx::RenderTarget>> m_RTs;
-
 		///A screen quad used for deferred rendering and post-processing.
 		ScreenQuad m_ScreenQuad;
-
-		///Samplers
-		Gfx::SamplerState m_LinealWrapSampler;
-		Gfx::SamplerState m_AnisotropicWrapSampler;
-		Gfx::SamplerState m_LinealClampSampler;
-		Gfx::SamplerState m_AnisotropicClampSampler;
-		Gfx::SamplerState m_PointWrapSampler;
-
-		///Rasterizers
-		Gfx::RasterizerState m_RSWireframe;
-		Gfx::RasterizerState m_RSSolid;
-		Gfx::RasterizerState m_RSSolidCullNone;
 	};
 }

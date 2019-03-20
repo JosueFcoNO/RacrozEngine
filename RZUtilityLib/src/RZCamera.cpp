@@ -145,6 +145,7 @@ namespace rczEngine
 		m_Up = Up;
 
 		m_CachedViewMatrix = false;
+		m_CachedProjectionMatrix = false;
 	}
 
 	const Matrix4 Camera::GetViewMatrix()

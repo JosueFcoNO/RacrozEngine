@@ -24,6 +24,8 @@ namespace rczEngine {
 		void Update(float deltaTime);
 
 		WeakPtr<DebuggerLineList> AddLineList(const String& ID, const Vector<Vector3>& pointList, const Color& color, float time = -1.0f);
+		WeakPtr<DebuggerLineList> AddLineListIndex(const String & ID, const Vector<Vector3>& pointList, const Vector<uint32>& indices, const Color & color, float time);
+		
 		WeakPtr<DebuggerPoint> AddPoint(const String& ID, const Vector3& point, float radius, const Color& color, float time = -1.0f);
 		WeakPtr<DebuggerCube> AddCube(const String& ID, const Vector3& center, const Vector3& scale, const Color& color, float time = -1.0f);
 

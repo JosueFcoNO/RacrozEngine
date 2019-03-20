@@ -191,6 +191,7 @@
     <ClInclude Include="include\RZDisneyPBR.h" />
     <ClInclude Include="include\RZGaussBlur.h" />
     <ClInclude Include="include\RZGeometryPass.h" />
+    <ClInclude Include="include\RZGraphicDebuggerPass.h" />
     <ClInclude Include="include\RZHDRBloom.h" />
     <ClInclude Include="include\RZLuminance.h" />
     <ClInclude Include="include\RZMotionBlur.h" />
@@ -217,6 +218,7 @@
     <ClCompile Include="src\RZColorCorrection.cpp" />
     <ClCompile Include="src\RZGaussBlur.cpp" />
     <ClCompile Include="src\RZGeometryPass.cpp" />
+    <ClCompile Include="src\RZGraphicDebuggerPass.cpp" />
     <ClCompile Include="src\RZHDRBloom.cpp" />
     <ClCompile Include="src\RZLuminance.cpp" />
     <ClCompile Include="src\RZMotionBlur.cpp" />

@@ -15,11 +15,18 @@ namespace rczEngine
 		int Gradient[4];
 	};
 
-	struct RZ_EXP PatchData
+	class RZ_EXP PatchData
 	{
-		int DepthOfData;
-		PlanetQuadTreeNode* node;
+	public:
+		NodeConnection* ConnectorOne = nullptr;
+		NodeConnection* ConnectorTwo = nullptr;
+
+		bool Connected;
+		int OneConnectedDepth;
+		int TwoConnectedDepth;
 	};
+
+
 
 	///Primero. Todos los bordes los registro como BorderData con los vertices, el lado y el depth del node.
 	//Segundo. Cuando subdivido le mando el hash del padre a los hijos, para que busquen colisiones con ese.
@@ -53,13 +60,6 @@ namespace rczEngine
 
 		FORCEINLINE Vector3 GetSpacePosition() { return m_SpacePosition; };
 
-		Vector2 m_PolarPos;
-
-		float m_PlanetNorm = 1.0f;
-		float m_PlanetScale = 400.0f;
-		float m_SpaceDist = 0.0f;
-		float m_RealDist = 0.0f;
-
 		ResourceHandle m_Materials;
 		ResourceHandle m_HeightMap;
 		Vector4 m_HeightScale;
@@ -69,12 +69,13 @@ namespace rczEngine
 		int32 Seed = 0;
 		PerlinNoise3D noise;
 
-		MMap<uint32, PlanetQuadTreeNode*> m_NodeAdyacency;
-		Map<String, PatchData> m_PatchInfo;
+		Map<uint32, PatchData> m_PatchInfo;
 
 	private:
 		void LoadAndProcessModel();
 		
+		void ProcessConnectionNode(NodeConnection& node);
+
 		bool m_OnLand = false;
 
 		StrPtr<Model> m_Planet;

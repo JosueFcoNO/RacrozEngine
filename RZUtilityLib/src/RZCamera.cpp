@@ -154,7 +154,6 @@ namespace rczEngine
 			m_MatrixView = Matrix4::LookAtMatrix(m_Position, m_Up, m_Target);
 			m_CachedViewMatrix = true;
 
-
 			m_Frustum.CalculateFrustum(*this);
 		}
 
@@ -167,6 +166,7 @@ namespace rczEngine
 		{
 			m_MatrixProjection = Matrix4::PerpsProjectedSpace(Math::DegreesToRad(m_Fov), m_AspectRatio, m_NearClip, m_FarClip);
 			m_CachedProjectionMatrix = true;
+
 			m_Frustum.CalculateFrustum(*this);
 		}
 	

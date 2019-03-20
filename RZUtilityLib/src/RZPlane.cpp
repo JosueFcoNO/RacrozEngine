@@ -39,17 +39,14 @@ namespace rczEngine
 
 	void Plane::ConstructFromPointNormal(const Vector3 &Pt, const Vector3 &normal) noexcept
 	{
-		Vector3 NormalizedNormal = normal;
-		NormalizedNormal.Normalize();
-
-		Normal = NormalizedNormal;
-		D = -(Pt | NormalizedNormal);
+		Normal = normal;
+		D = -(Pt | normal);
 	}
 
 	void Plane::ConstructFromPointVectors(const Vector3 &Pt, const Vector3 &V1, const Vector3 &V2) noexcept
 	{
 		const Vector3 normal = V1^V2;
-		ConstructFromPointNormal(Pt, normal);
+		ConstructFromPointNormal(Pt, normal.GetNormalized());
 	}
 
 	void Plane::ConstructFromPoints(const Vector3 &V0, const Vector3 &V1, const Vector3 &V2) noexcept

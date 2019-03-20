@@ -80,7 +80,7 @@ namespace rczEngine
 
 			RZ_EXP FORCEINLINE void UpdateVertexBuffer(GfxCore * gfx)
 			{
-				gfx->UpdateSubResource(this, &m_VertexList[0], 0, 0);
+				gfx->UpdateSubResource(this, &m_VertexList[0], 0, 0, sizeof(t) * m_VertexList.size());
 			};
 
 		private:

@@ -154,6 +154,11 @@ namespace rczEngine
 						Light->InitDirectionalLight(Vector3(1.0f, -1.0f, 0).GetNormalized(), Vector4(1, 1, 1, 1), false);
 					}
 				}
+
+				if (ImGui::Button("Create Cubemap"))
+				{
+					static auto cubemap = CreateCubeMap("Cubemap", sceneGraph, m_PassesOrder, 1024, 1024);
+				}
 			};
 
 			ImGui::Render();
@@ -186,7 +191,7 @@ namespace rczEngine
 
 		m_RTs["MotionBlur"] = CreateRenderTargetAndTexture_XYScales("MotionBlur", m_Textures["MotionBlur"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32B32A32_FLOAT);
 
-		m_RTs["Luminance"] = CreateRenderTargetAndTexture_XYScales("Luminance", m_Textures["Luminance"], 11, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
+		m_RTs["Luminance"] = CreateRenderTargetAndTexture_XYScales("Luminance", m_Textures["Luminance"], 9, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
 		m_RTs["Bright"] = CreateRenderTargetAndTexture_XYScales("Bright", m_Textures["Bright"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
 		m_RTs["Bloom"] = CreateRenderTargetAndTexture_XYScales("Bloom", m_Textures["Bloom"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
 		m_RTs["AvgLuminance"] = CreateRenderTargetAndTexture_XYScales("AvgLuminance", m_Textures["AvgLuminance"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
@@ -523,10 +528,10 @@ namespace rczEngine
 		renderTargets[4] = CreateRenderTargetAndTexture_WidthHeight("4", Textures[4], 1, width, height, format);
 		renderTargets[5] = CreateRenderTargetAndTexture_WidthHeight("5", Textures[5], 1, width, height, format);
 
-		auto scene = SceneManager::Pointer()->CreateEmptyScene("CubeMapRender");
+		auto scene = sceneGraph;
 		auto ptr = CameraManager::Pointer();
 		auto cameraCmp = scene->FindActorsWithComponent(CMP_CAMERA_WALK)[0].lock()->GetComponent(CMP_CAMERA_WALK).lock();
-		ptr->SetActiveCamera(2, m_gfx);
+		//ptr->SetActiveCamera(1, m_gfx);
 		auto camera = &CastStaticPtr<CameraCmp>(cameraCmp)->m_CameraCore;
 		camera->SetFov(90.0f);
 		camera->SetAspectRatio(1.0f);
@@ -536,8 +541,7 @@ namespace rczEngine
 
 		for (int k = 0; k < 6; ++k)
 		{
-			camera->m_Target = Targets[k];
-			camera->m_Up = Ups[k];
+			camera->Reset({0,0,0}, Targets[k], Ups[k]);
 
 			for (int32 i = 0; i < RenderPasses.size(); ++i)
 			{
@@ -548,11 +552,15 @@ namespace rczEngine
 				}
 
 				auto pass = m_Passes[RenderPasses[i]];
+
 				pass->PreRenderPass();
 
-				m_gfx->AddRenderTarget(*renderTargets[k], 0);
-				m_gfx->SetNumberOfRenderTargets(1);
-				m_gfx->SetRenderTargets(false);
+				if (RenderPasses[i] == "ColorCorrection")
+				{
+					m_gfx->AddRenderTarget(*renderTargets[k], 0);
+					m_gfx->SetNumberOfRenderTargets(1);
+					m_gfx->SetRenderTargets(false);
+				}
 
 				pass->RenderPass();
 				pass->PostRenderPass();
@@ -579,6 +587,12 @@ namespace rczEngine
 		skyBox->InitSkyBox(handle, m_gfx, m_res);
 
 		CameraManager::Pointer()->SetActiveCamera(1, m_gfx);
+
+		camera->SetFov(45.0f);
+		camera->SetAspectRatio(1.0f);
+		camera->SetFarClip(100.0f);
+		camera->SetNearClip(0.01f);
+		camera->Reset({ 0,0,5 }, {0,0,0}, { 0,1,0 });
 
 		ChangeSkyBox(skyBox);
 

@@ -21,6 +21,8 @@ namespace rczEngine
 		void RotateComplete(Vector3 vector);
 		void Orbit(Vector3 vector);
 
+		void Reset(const Vector3& position, const Vector3& target, const Vector3& Up);
+
 		const Matrix4 GetViewMatrix();
 		const Matrix4 GetProjMatrix();
 

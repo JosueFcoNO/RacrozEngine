@@ -14,7 +14,7 @@ namespace rczEngine
 		Profiler::Start();
 
 		Gfx::GfxCore::Start();
-		Gfx::GfxCore::Pointer()->InitAndStart(platformData, rc.right, rc.bottom, true);
+		Gfx::GfxCore::Pointer()->InitAndStart(platformData, 1024, 1024, true);
 
 		ResVault::Start();
 		ResVault::Pointer()->InitResourceManager();

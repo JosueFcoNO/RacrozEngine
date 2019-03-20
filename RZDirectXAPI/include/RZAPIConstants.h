@@ -4,6 +4,12 @@ namespace rczEngine
 {
 	namespace Gfx
 	{
+		class RZ_EXP PosVertex
+		{
+		public:
+			Vector3 VertexPosition;
+		};
+
 		///The Vertex structure
 		class RZ_EXP Vertex
 		{

@@ -141,7 +141,7 @@ namespace rczEngine
 		}
 
 		indexBuffer.m_IndexSize = indexNumber;
-		indexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, Gfx::GfxCore::Pointer());
+		indexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, false, Gfx::GfxCore::Pointer());
 	}
 
 	void MeshPlane::GenerateMeshYPos(const Vector3& startPos)

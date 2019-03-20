@@ -138,6 +138,15 @@ namespace rczEngine
 		CalculateUp();
 	}
 
+	void Camera::Reset(const Vector3 & position, const Vector3 & target, const Vector3 & Up)
+	{
+		m_Position = position;
+		m_Target = target;
+		m_Up = Up;
+
+		m_CachedViewMatrix = false;
+	}
+
 	const Matrix4 Camera::GetViewMatrix()
 	{
 		if (!m_CachedViewMatrix)

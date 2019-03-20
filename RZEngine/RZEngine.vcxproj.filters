@@ -203,9 +203,6 @@
     <ClInclude Include="include\RZOctree.h">
       <Filter>Archivos de encabezado\Octree</Filter>
     </ClInclude>
-    <ClInclude Include="include\RZGeometryNode.h">
-      <Filter>Archivos de encabezado\Model</Filter>
-    </ClInclude>
     <ClInclude Include="include\RZComponent.h">
       <Filter>Archivos de encabezado\Components</Filter>
     </ClInclude>
@@ -334,6 +331,9 @@
     </ClInclude>
     <ClInclude Include="include\RZGraphicDebuggerLineList.h">
       <Filter>Archivos de encabezado\GraphicDebugger</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZGeometryNode.h">
+      <Filter>Archivos de encabezado\Octree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

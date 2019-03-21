@@ -26,8 +26,6 @@ namespace rczEngine
 			m_IndexBuffer = nullptr;
 		}
 
-		m_MeshAABB.SetAABB(Vector3(10, 10, 10), Vector3(-10, -10, -10));
-
 		GenerateMesh(startPos, orientation);
 		GenerateNormals();
 		//GenerateSmoothNormals();
@@ -375,7 +373,7 @@ namespace rczEngine
 		return m_VertexBuffer.GetVertex(m_MeshBuffer.Size * y + x);
 	}
 
-	Vector3 MeshPlane::CalculateVertexPos(Vector3 pos)
+	Vector3 MeshPlane::CalculateVertexPos(const Vector3& pos)
 	{
 		return pos;
 	}

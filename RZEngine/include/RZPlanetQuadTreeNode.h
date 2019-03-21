@@ -42,7 +42,7 @@ namespace rczEngine
 		static void ConnectNodesSameDepth(const NodeConnection& one, const NodeConnection& two);
 
 		virtual void Render();
-		virtual Vector3 CalculateVertexPos(const Vector3& pos);
+		Vector3 CalculateVertexPos(const Vector3& pos) override;
 
 		void GenerateChildren();
 		void DestroyChildren();

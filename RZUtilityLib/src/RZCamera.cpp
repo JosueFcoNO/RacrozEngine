@@ -70,8 +70,8 @@ namespace rczEngine
 		auto v = vector;
 		v /= 100;
 
-		Quaternion AVerQue2(NewVec2, vector.m_y);
-		Quaternion AVerQue3(NewVec3, vector.m_x);
+		Quaternion AVerQue2(NewVec2, v.m_y);
+		Quaternion AVerQue3(NewVec3, v.m_x);
 
 		m_Target -= m_Position;
 		AVerQue3.Normalize();
@@ -96,8 +96,8 @@ namespace rczEngine
 		auto v = vector;
 		v /= 100;
 
-		Quaternion AVerQue2(NewVec2, vector.m_y);
-		Quaternion AVerQue3(NewVec3, vector.m_x);
+		Quaternion AVerQue2(NewVec2, v.m_y);
+		Quaternion AVerQue3(NewVec3, v.m_x);
 
 		m_Target -= m_Position;
 		AVerQue3.Normalize();
@@ -125,8 +125,8 @@ namespace rczEngine
 		auto v = vector;
 		v /= 100;
 
-		Quaternion AVerQue2(NewVec2, vector.m_y);
-		Quaternion AVerQue3(NewVec3, vector.m_x);
+		Quaternion AVerQue2(NewVec2, v.m_y);
+		Quaternion AVerQue3(NewVec3, v.m_x);
 
 		m_Position -= m_Target;
 

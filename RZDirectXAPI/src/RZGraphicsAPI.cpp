@@ -402,10 +402,10 @@ namespace rczEngine
 
 
 			///Set the render target and the depth stecil
-			if (UseDepthStencyl && depth == nullptr)
-				m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, depth->GetDepthStencylView()->m_DepthStencylView);
+			if (UseDepthStencyl)
+				m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, m_DepthStencilView);
 			//else if (depth != nullptr && UseDepthStencyl)
-			//	m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, depth->GetDepthStencylView()->m_DepthStencylView);
+				//m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, depth->GetDepthStencylView()->m_DepthStencylView);
 			else
 				m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, NULL);
 

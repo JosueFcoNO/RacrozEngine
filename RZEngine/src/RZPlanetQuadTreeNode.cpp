@@ -161,24 +161,34 @@ namespace rczEngine
 			}
 		}
 
+		TerrainVertex* vertex;
+
 		for (int i = 0; i < m_MeshBuffer.Size; ++i)
 		{
-			SideVertices[(int)eSide::Up].push_back(&GetVertex(i, 0));
+			vertex = &GetVertex(i, 0);
+			//vertex->VertexNormals = { 1,0,0 };
+			SideVertices[(int)eSide::Up].push_back(vertex);
 		}
 
 		for (int i = 0; i < m_MeshBuffer.Size; ++i)
 		{
-			SideVertices[(int)eSide::Right].push_back(&GetVertex(MESH_ROW_SIZE, i));
+			vertex = &GetVertex(MESH_ROW_SIZE, i);
+			//vertex->VertexNormals = { 0,1,0 };
+			SideVertices[(int)eSide::Right].push_back(vertex);
 		}
 
 		for (int i = 0; i < m_MeshBuffer.Size; ++i)
 		{
-			SideVertices[(int)eSide::Down].push_back(&GetVertex(i, MESH_ROW_SIZE));
+			vertex = &GetVertex(i, MESH_ROW_SIZE);
+			//vertex->VertexNormals = { 0,0,1 };
+			SideVertices[(int)eSide::Down].push_back(vertex);
 		}
 
 		for (int i = 0; i < m_MeshBuffer.Size; ++i)
 		{
-			SideVertices[(int)eSide::Left].push_back(&GetVertex(0, i));
+			vertex = &GetVertex(0, i);
+			//vertex->VertexNormals = { 1,0,1 };
+			SideVertices[(int)eSide::Left].push_back(vertex);
 		}
 	}
 
@@ -286,7 +296,7 @@ namespace rczEngine
 
 		if (oneVertices.size() == twoVertices.size())
 		{
-			if (Vector3::Distance(oneVertices[0]->VertexPosition, twoVertices[0]->VertexPosition) < 0.05f)
+			if (Vector3::Distance(oneVertices[0]->VertexPosition, twoVertices[0]->VertexPosition) < 0.005f)
 			{
 				for (int i = 0; i < MESH_RES; ++i)
 				{
@@ -363,10 +373,13 @@ namespace rczEngine
 			if (&two != dobleNode)
 				two.node->m_MeshDirty = true;
 
-			dobleNode->node->Children[0]->m_MeshDirty = true;
-			dobleNode->node->Children[1]->m_MeshDirty = true;
-			dobleNode->node->Children[2]->m_MeshDirty = true;
-			dobleNode->node->Children[3]->m_MeshDirty = true;
+			if (dobleNode->node->CheckChildrenReady())
+			{
+				dobleNode->node->Children[0]->m_MeshDirty = true;
+				dobleNode->node->Children[1]->m_MeshDirty = true;
+				dobleNode->node->Children[2]->m_MeshDirty = true;
+				dobleNode->node->Children[3]->m_MeshDirty = true;
+			}
 		}
 	}
 
@@ -532,6 +545,7 @@ namespace rczEngine
 
 	void PlanetQuadTreeNode::UpdateSideVertices()
 	{
+		return;
 		SideVertices[0].clear();
 		SideVertices[1].clear();
 		SideVertices[2].clear();

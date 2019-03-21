@@ -104,7 +104,7 @@
     <IncludePath>$(GSL)/include;$(SolutionDir)RZUtilityLib\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZComputeAPI/include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZfmodSound\include;$(Assimp)\include;$(SolutionDir)RZDirectInput\include\;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(FBXSDK)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(Assimp)\lib\$(Platform);$(SolutionDir)Plug-Ins/fmod/;$(FBXSDK)lib\$(Platform)\$(Configuration)</LibraryPath>
     <CodeAnalysisRuleSet>CppCoreCheckRules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -185,7 +185,7 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>RZEnginePCH.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>./include/</AdditionalIncludeDirectories>
-      <EnablePREfast>true</EnablePREfast>
+      <EnablePREfast>false</EnablePREfast>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>

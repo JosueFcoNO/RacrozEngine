@@ -149,7 +149,7 @@ namespace rczEngine
 		passPlanet->AddRenderTarget(m_RTs["PBR"], 0);
 		passPlanet->AddRenderTarget(m_RTs["Position"], 1);
 		passPlanet->AddRenderTarget(m_RTs["NormalsMR"], 2);
-		passPlanet->AddDepthStencyl(&depth);
+		//passPlanet->AddDepthStencyl(&depth);
 
 		m_PassesOrder.push_back(name + "Planet");
 

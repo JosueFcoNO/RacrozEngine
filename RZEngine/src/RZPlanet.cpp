@@ -100,28 +100,27 @@ namespace rczEngine
 			Quadtree[i].TestVisibility(PlayerCamera->m_CameraCore.GetFrustum(), nodesToDraw);
 		}
 
-		Map<PlanetQuadTreeNode*, int> depthMap;
-
 		for (auto nodes : nodesToDraw)
 		{
 			for (auto& c : nodes->Connections)
 			{
 				ProcessConnectionNode(c);
+			}
+		}
 
-				if (depthMap.find(c.node) != depthMap.end())
+		for (auto nodeDepth : m_PatchInfo)
+		{
+			auto& connection = nodeDepth.second;
+
+			if (!connection.Connected && connection.ConnectorOne && connection.ConnectorTwo)
+			{
+				if (connection.OneConnectedDepth > connection.TwoConnectedDepth/2)
 				{
-					auto depth = c.node->GetQuadTreeDepth();
-
-					if (depthMap[c.node]*2 > depth)
-					{
-						depthMap[c.node] = depth;
-						c.node->m_Dirty = true;
-						continue;
-					}
+					connection.ConnectorTwo->node->m_Dirty = true;
 				}
-				else
+				else if (connection.TwoConnectedDepth > connection.OneConnectedDepth / 2)
 				{
-					depthMap[c.node] = c.node->GetQuadTreeDepth();
+					connection.ConnectorOne->node->m_Dirty = true;
 				}
 			}
 		}

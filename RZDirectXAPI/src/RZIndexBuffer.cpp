@@ -9,7 +9,7 @@ namespace rczEngine
 		bool IndexBuffer::CreateIndexBuffer(eBUFFER_USAGE usage, bool clearIndexList, GfxCore* gfx)
 		{
 			bool res = Create(sizeof(uint32), uint32(m_IndexList.size()), &m_IndexList[0], 0, 0, usage, eBIND_FLAGS::BIND_INDEX_BUFFER, gfx);
-			m_IndexSize = gsl::narrow<uint32>(m_IndexList.size());
+			//m_IndexSize = gsl::narrow<uint32>(m_IndexList.size());
 			
 			if (clearIndexList)
 				m_IndexList.clear();

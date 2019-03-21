@@ -53,15 +53,13 @@ namespace rczEngine
 
 		m_Logs[pszFileName]->open(file, std::ios_base::out | std::ios_base::trunc);
 
-		if (!m_Logs[pszFileName]) throw new std::exception(file.c_str());
-
 		///Write the header and html labels of the Log
 		*m_Logs[pszFileName] << "<html><header><h3>Racroz Engine Logger</h3>  <link rel=\"stylesheet\" type=\"text/css\" href=\"Log.css\"></header><body><p>Body Start</p>";
 	}
 
 	void Logger::LogMessageToFileLog(const String& pszFileName, const String& strMessage, eLogMsgType messageType)
 	{
-		auto it = m_Logs.find(pszFileName);
+		const auto it = m_Logs.find(pszFileName);
 
 		if (it == m_Logs.end()) return;
 

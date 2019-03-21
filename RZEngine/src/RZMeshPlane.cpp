@@ -150,17 +150,15 @@ namespace rczEngine
 
 		TerrainVertex* TempVertex;
 		auto size = m_MeshBuffer.Size;
-		auto vertexSize = m_VertexBuffer.GetSize();
 
-		double Size = size * m_MeshBuffer.distVertex;
 		double halfSize = m_MeshBuffer.HalfSize;
 
 		double LastX = -halfSize - m_MeshBuffer.distVertex;
 		double LastZ = -halfSize;
 		
-		for (uint32 x = 0; x < size; ++x)
+		for (int32 x = 0; x < size; ++x)
 		{
-			for (uint32 y = 0; y < size; ++y)
+			for (int32 y = 0; y < size; ++y)
 			{
 				TempVertex = &GetVertex(x, y);
 
@@ -191,7 +189,6 @@ namespace rczEngine
 		auto size = m_MeshBuffer.Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
 
-		double Size = size * m_MeshBuffer.distVertex;
 		double halfSize = m_MeshBuffer.HalfSize;
 
 #pragma omp parallel for
@@ -223,7 +220,6 @@ namespace rczEngine
 		auto size = m_MeshBuffer.Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
 
-		double Size = size * m_MeshBuffer.distVertex;
 		double halfSize = m_MeshBuffer.HalfSize;
 
 #pragma omp parallel for

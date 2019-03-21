@@ -21,20 +21,26 @@ namespace rczEngine
 		
 		ser->WriteData(&m_ID, sizeof(int));
 
+		auto pos = m_CameraCore.GetPosition();
+		auto target = m_CameraCore.GetTarget();
+		auto up = m_CameraCore.GetUp();
+
 		//Position 
-		ser->WriteData(&m_CameraCore.m_Position.m_x, sizeof(float));
-		ser->WriteData(&m_CameraCore.m_Position.m_y, sizeof(float));
-		ser->WriteData(&m_CameraCore.m_Position.m_z, sizeof(float));
+		ser->WriteData(&pos.m_x, sizeof(float));
+		ser->WriteData(&pos.m_y, sizeof(float));
+		ser->WriteData(&pos.m_z, sizeof(float));
+
 
 		//Target 
-		ser->WriteData(&m_CameraCore.m_Target.m_x, sizeof(float));
-		ser->WriteData(&m_CameraCore.m_Target.m_y, sizeof(float));
-		ser->WriteData(&m_CameraCore.m_Target.m_z, sizeof(float));
+		ser->WriteData(&target.m_x, sizeof(float));
+		ser->WriteData(&target.m_y, sizeof(float));
+		ser->WriteData(&target.m_z, sizeof(float));
+
 
 		//Up 
-		ser->WriteData(&m_CameraCore.m_Up.m_x, sizeof(float));
-		ser->WriteData(&m_CameraCore.m_Up.m_y, sizeof(float));
-		ser->WriteData(&m_CameraCore.m_Up.m_z, sizeof(float));
+		ser->WriteData(&up.m_x, sizeof(float));
+		ser->WriteData(&up.m_y, sizeof(float));
+		ser->WriteData(&up.m_z, sizeof(float));
 
 		auto nearClip = m_CameraCore.GetNearClip();
 		auto farClip = m_CameraCore.GetFarClip();
@@ -55,20 +61,26 @@ namespace rczEngine
 
 		ser->ReadData(&m_ID, sizeof(int));
 
+		auto pos = m_CameraCore.GetPosition();
+		auto target = m_CameraCore.GetTarget();
+		auto up = m_CameraCore.GetUp();
+
 		//Position 
-		ser->ReadData(&m_CameraCore.m_Position.m_x, sizeof(float));
-		ser->ReadData(&m_CameraCore.m_Position.m_y, sizeof(float));
-		ser->ReadData(&m_CameraCore.m_Position.m_z, sizeof(float));
+		ser->ReadData(&pos.m_x, sizeof(float));
+		ser->ReadData(&pos.m_y, sizeof(float));
+		ser->ReadData(&pos.m_z, sizeof(float));
 
 		//Target 
-		ser->ReadData(&m_CameraCore.m_Target.m_x, sizeof(float));
-		ser->ReadData(&m_CameraCore.m_Target.m_y, sizeof(float));
-		ser->ReadData(&m_CameraCore.m_Target.m_z, sizeof(float));
+		ser->ReadData(&target.m_x, sizeof(float));
+		ser->ReadData(&target.m_y, sizeof(float));
+		ser->ReadData(&target.m_z, sizeof(float));
 
 		//Up 
-		ser->ReadData(&m_CameraCore.m_Up.m_x, sizeof(float));
-		ser->ReadData(&m_CameraCore.m_Up.m_y, sizeof(float));
-		ser->ReadData(&m_CameraCore.m_Up.m_z, sizeof(float));
+		ser->ReadData(&up.m_x, sizeof(float));
+		ser->ReadData(&up.m_y, sizeof(float));
+		ser->ReadData(&up.m_z, sizeof(float));
+
+		m_CameraCore.Reset(pos, target, up);
 
 		auto nearClip = m_CameraCore.GetNearClip();
 		auto farClip = m_CameraCore.GetFarClip();
@@ -99,12 +111,12 @@ namespace rczEngine
 
 	Vector3 CameraCmp::GetViewDir()
 	{
-		return (m_CameraCore.m_Target - m_CameraCore.m_Position).GetNormalized();
+		return m_CameraCore.GetViewDir().GetNormalized();
 	}
 
 	Vector3 CameraCmp::GetPosition()
 	{
-		return m_CameraCore.m_Position;
+		return m_CameraCore.GetPosition();
 	}
 
 	float CameraCmp::GetNearPlane()

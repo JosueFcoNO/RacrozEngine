@@ -15,3 +15,5 @@
 #ifndef RZ_UNREFERENCED_PARAMETER
 #define RZ_UNREFERENCED_PARAMETER(P) (void)P
 #endif
+
+#pragma warning (disable: 4201) //Anonymous struct warning.

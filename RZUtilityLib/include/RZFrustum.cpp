@@ -34,7 +34,6 @@ namespace rczEngine
 
 		m_Planes[eFrustum::fNear].ConstructFromPoints(NearPoints[0], NearPoints[1], NearPoints[2]);
 		m_Planes[eFrustum::fFar].ConstructFromPoints(FarPoints[2], FarPoints[1], FarPoints[0]);
-
 	}
 
 	bool Frustum::TestPoint(Vector3 point) const noexcept

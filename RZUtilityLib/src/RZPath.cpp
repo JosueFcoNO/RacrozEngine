@@ -110,24 +110,26 @@ namespace rczEngine
 
 	void Path::Serialize()
 	{
-		auto ser = Serializer::Pointer();
+		const gsl::not_null<Serializer*> ser = Serializer::Pointer();
+
 		//Write the path serial.
 		ser->SetNextObjectSerial(SERIAL_PATH);
 		//Serialize the filePath String.
 		ser->SerializeString(m_FilePath);
 		//Serialize the hash.
-		ser->WriteData((char*)&m_Hash, sizeof(m_Hash));
+		ser->WriteData(&m_Hash, sizeof(m_Hash));
 	}
 
 	void Path::DeSerialize()
 	{
-		auto ser = Serializer::Pointer();
+		const gsl::not_null<Serializer*> ser = Serializer::Pointer();
+
 		//Read the path serial.
 		ser->GetNextObjectSerial();
 		//Serialize the filePath String.
 		ser->DeSerializeString(m_FilePath);
 		//DeSerialize the hash.
-		ser->ReadData((char*)&m_Hash, sizeof(m_Hash));
+		ser->ReadData(&m_Hash, sizeof(m_Hash));
 		ResetPath();
 	}
 

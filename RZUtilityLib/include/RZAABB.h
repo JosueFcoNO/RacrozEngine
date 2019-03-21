@@ -19,7 +19,7 @@ namespace rczEngine
 
 		Vector<Vector3> GetCorners() const noexcept;
 
-		void TransformAndRecalculateAABB(Matrix3 newMatrix);
+		void TransformAndRecalculateAABB(Matrix3 newMatrix) noexcept;
 
 		FORCEINLINE bool CheckPointCollision(const Vector3& point) const noexcept
 		{

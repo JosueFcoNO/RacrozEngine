@@ -17,22 +17,26 @@ namespace rczEngine
 
 		class VertexShader;
 
-		class RZ_EXP InputLayout
+		class InputLayout
 		{
 		public:
-			~InputLayout() { Destroy(); };
+			RZ_EXP ~InputLayout() { Destroy(); };
 
-			void Destroy();
+			RZ_EXP void Destroy();
 
-			void AddElement(const String& SemanticName, uint32 SemanticIndex, eFORMAT Format, uint32 InputSlot,
+			RZ_EXP void AddElement(const String& SemanticName, uint32 SemanticIndex, eFORMAT Format, uint32 InputSlot,
 				uint32 AlignedByteOffset, eINPUT_CLASSIFICATION InputSlotClass, uint32 InstanceDataStepRate);
-			void ClearElementList();
-			bool CreateInputLayout(VertexShader& VShader, GfxCore* gfx);
-			uint32 GetElementSize();
-			void SetThisInputLayout(GfxCore* gfx);
+
+			RZ_EXP void ClearElementList();
+			RZ_EXP bool CreateInputLayout(VertexShader& VShader, GfxCore* gfx);
+			RZ_EXP uint32 GetElementSize();
+
+			RZ_EXP void SetThisInputLayout(GfxCore* gfx);
 
 			ID3D11InputLayout* m_InputLayout;
 			Vector<InputLayoutElement> m_VectorElements;
+
+		private:
 		};
 
 	}

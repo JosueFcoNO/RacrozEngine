@@ -51,10 +51,6 @@ namespace rczEngine
 			}
 
 			m_Owner.lock()->Translate(m_Camera->GetViewDir() * speed * m_zAxis * deltaTime);
-
-			auto Offset = m_Camera->GetViewDir();
-			m_Camera->m_Position = m_Owner.lock()->GetAccumulatedPosition();
-			m_Camera->m_Target = m_Camera->m_Position + Offset;
 		};
 
 		virtual ComponentType GetComponentType() { return CMP_SPACE_TRAVEL; };

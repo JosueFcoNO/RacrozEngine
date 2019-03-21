@@ -25,7 +25,8 @@ namespace rczEngine
 		FORCEINLINE void SetRandomSeed(uint32 seed) noexcept { m_Seed = seed; std::srand(m_Seed); };
 
 	protected:
+
 		///The current Random Seed
-		uint32 m_Seed;
+		uint32 m_Seed = 0;
 	};
 }

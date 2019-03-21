@@ -310,7 +310,7 @@ namespace rczEngine
 			z.m_matrix[1][0] = -Math::Sin(ztheta)*LeftHand;
 		}
 
-		return z*y*x;
+		return z * y*x;
 	}
 
 	Matrix4 Matrix4::OrthoProjectedSpace(float width, float height, float ZNear, float ZFar)

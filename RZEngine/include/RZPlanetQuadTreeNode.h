@@ -34,15 +34,15 @@ namespace rczEngine
 
 		void InitPlaneAndCorners();
 
-		bool TestIfInside(Vector3 pos);
-		void CalculateLOD(Vector3 pos);
+		bool TestIfInside(const Vector3& pos);
+		void CalculateLOD(const Vector3& pos);
 
-		void TestVisibility(Frustum& camFrustum, Vector<PlanetQuadTreeNode*>& nodesToDraw);
+		void TestVisibility(const Frustum& camFrustum, Vector<PlanetQuadTreeNode*>& nodesToDraw);
 
 		static void ConnectNodesSameDepth(const NodeConnection& one, const NodeConnection& two);
 
 		virtual void Render();
-		virtual Vector3 CalculateVertexPos(Vector3 pos);
+		virtual Vector3 CalculateVertexPos(const Vector3& pos);
 
 		void GenerateChildren();
 		void DestroyChildren();
@@ -57,7 +57,7 @@ namespace rczEngine
 
 		static const int MESH_RES = 65;
 		static const int MESH_ROW_SIZE = MESH_RES - 1;
-		static const int MESH_ROW_HALF = (MESH_RES / 2.0f);
+		static const int MESH_ROW_HALF = (MESH_RES / 2);
 
 		Vector<NodeConnection> Connections;
 

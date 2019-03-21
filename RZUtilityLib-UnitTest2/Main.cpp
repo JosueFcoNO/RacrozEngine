@@ -335,6 +335,7 @@ void MatrixUnitText()
 
 	rczEngine::Matrix4 Temp42 = Temp4;
 	rczEngine::Matrix4 Temp43 = Temp4;
+	rczEngine::Matrix4 Adj = Temp4;
 
 	assert(Temp4.Determinant() == -18);
 
@@ -364,6 +365,7 @@ void MatrixUnitText()
 	assert(Equals(Temp43.m_matrix[2][2], float(-22) / float(18)  ));
 	assert(Equals(Temp43.m_matrix[3][3], float(9) / float(18)  ));
 
+	Adj = Adj.GetAdjoint();
 
 	///Makes it an Identity Matrix
 	Temp4.Identity();

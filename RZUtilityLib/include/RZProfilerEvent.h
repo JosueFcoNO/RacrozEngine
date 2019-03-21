@@ -12,7 +12,7 @@ namespace rczEngine
 
 	private:
 		uint16 m_CurrentEntry = 0;
-		long double m_EventTimeLine[PROFILER_CAPTURED_FRAMES];
+		long double m_EventTimeLine[PROFILER_CAPTURED_FRAMES] = {};
 
 		long double m_LargestTime = 0.0f;
 		long double m_ShortestTime = std::numeric_limits<double>::max();

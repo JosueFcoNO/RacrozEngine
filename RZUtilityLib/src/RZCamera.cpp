@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void Camera::Init(Vector3 position, Vector3 target, float nearClip, float farClip, float aspectRatio)
+	void Camera::Init(const Vector3& position, const Vector3& target, float nearClip, float farClip, float aspectRatio) noexcept
 	{
 		m_Position = position;
 		m_Target = target;
@@ -13,7 +13,7 @@ namespace rczEngine
 		m_Fov = 45.0f;
 	}
 
-	void Camera::Move(Vector3 panning)
+	void Camera::Move(const Vector3& panning) noexcept
 	{
 		m_Position += panning;
 		m_Target += panning;
@@ -21,7 +21,7 @@ namespace rczEngine
 		m_CachedViewMatrix = false;
 	}
 
-	void Camera::MoveForward(float delta)
+	void Camera::MoveForward(float delta) noexcept
 	{
 		Vector3 fwrd = m_Target - m_Position;
 		fwrd.Normalize();
@@ -31,9 +31,9 @@ namespace rczEngine
 		m_CachedViewMatrix = false;
 	}
 
-	void Camera::MoveRight(float delta)
+	void Camera::MoveRight(float delta) noexcept
 	{
-		Vector3 fwrd = m_Target - m_Position;
+		const Vector3 fwrd = m_Target - m_Position;
 		Vector3 right = m_Up^fwrd;
 		right.Normalize();
 		
@@ -43,7 +43,7 @@ namespace rczEngine
 		m_CachedViewMatrix = false;
 	}
 
-	void Camera::MoveUp(float delta)
+	void Camera::MoveUp(float delta) noexcept
 	{
 		m_Position += m_Up*delta;
 		m_Target += m_Up*delta;
@@ -51,22 +51,24 @@ namespace rczEngine
 		m_CachedViewMatrix = false;
 	}
 
-	void Camera::Move(float x, float y, float z)
+	void Camera::Move(float x, float y, float z) noexcept
 	{
-		Vector3 temp(x,y,z);
+		const Vector3 temp(x,y,z);
+
 		m_Position += temp;
 		m_Target += temp;
 
 		m_CachedViewMatrix = false;
 	}
 
-	void Camera::Rotate(Vector3 vector)
+	void Camera::Rotate(const Vector3& vector) noexcept
 	{
-		Vector3 NewVec = (m_Target - m_Position).GetNormalized();
-		Vector3 NewVec2 = m_Up.GetNormalized();
-		Vector3 NewVec3 = (NewVec^NewVec2).GetNormalized();
+		const Vector3 NewVec = (m_Target - m_Position).GetNormalized();
+		const Vector3 NewVec2 = m_Up.GetNormalized();
+		const Vector3 NewVec3 = (NewVec^NewVec2).GetNormalized();
 
-		vector /= 100;
+		auto v = vector;
+		v /= 100;
 
 		Quaternion AVerQue2(NewVec2, vector.m_y);
 		Quaternion AVerQue3(NewVec3, vector.m_x);
@@ -75,7 +77,7 @@ namespace rczEngine
 		AVerQue3.Normalize();
 		AVerQue2.Normalize();
 
-		Matrix3 temp = AVerQue3.GetAsMatrix3()*AVerQue2.GetAsMatrix3();
+		const Matrix3 temp = AVerQue3.GetAsMatrix3()*AVerQue2.GetAsMatrix3();
 		m_Target = temp*m_Target;
 
 		m_Target += m_Position;
@@ -85,13 +87,14 @@ namespace rczEngine
 		CalculateUp();
 	}
 
-	void Camera::RotateComplete(Vector3 vector)
+	void Camera::RotateComplete(const Vector3& vector)  noexcept
 	{
-		Vector3 NewVec = (m_Target - m_Position).GetNormalized();
-		Vector3 NewVec2 = m_Up.GetNormalized();
-		Vector3 NewVec3 = (NewVec^NewVec2).GetNormalized();
+		const Vector3 NewVec = (m_Target - m_Position).GetNormalized();
+		const Vector3 NewVec2 = m_Up.GetNormalized();
+		const Vector3 NewVec3 = (NewVec^NewVec2).GetNormalized();
 
-		vector /= 100;
+		auto v = vector;
+		v /= 100;
 
 		Quaternion AVerQue2(NewVec2, vector.m_y);
 		Quaternion AVerQue3(NewVec3, vector.m_x);
@@ -100,7 +103,7 @@ namespace rczEngine
 		AVerQue3.Normalize();
 		AVerQue2.Normalize();
 
-		Matrix3 temp = AVerQue3.GetAsMatrix3()*AVerQue2.GetAsMatrix3();
+		const Matrix3 temp = AVerQue3.GetAsMatrix3()*AVerQue2.GetAsMatrix3();
 		m_Target = temp*m_Target;
 		m_Target += m_Position;
 
@@ -113,13 +116,14 @@ namespace rczEngine
 		CalculateUp();
 	}
 
-	void Camera::Orbit(Vector3 vector)
+	void Camera::Orbit(const Vector3& vector) noexcept
 	{
-		Vector3 NewVec  = (m_Target - m_Position).GetNormalized();
-		Vector3 NewVec2 = m_Up.GetNormalized();
-		Vector3 NewVec3 = (NewVec^NewVec2).GetNormalized();
+		const Vector3 NewVec  = (m_Target - m_Position).GetNormalized();
+		const Vector3 NewVec2 = m_Up.GetNormalized();
+		const Vector3 NewVec3 = (NewVec^NewVec2).GetNormalized();
 
-		vector /= 100;
+		auto v = vector;
+		v /= 100;
 
 		Quaternion AVerQue2(NewVec2, vector.m_y);
 		Quaternion AVerQue3(NewVec3, vector.m_x);
@@ -129,7 +133,7 @@ namespace rczEngine
 		AVerQue3.Normalize();
 		AVerQue2.Normalize();
 
-		Matrix3 temp = AVerQue3.GetAsMatrix3()*AVerQue2.GetAsMatrix3();
+		const Matrix3 temp = AVerQue3.GetAsMatrix3()*AVerQue2.GetAsMatrix3();
 		m_Position = temp*m_Position;
 		
 		m_Position += m_Target;
@@ -138,7 +142,7 @@ namespace rczEngine
 		CalculateUp();
 	}
 
-	void Camera::Reset(const Vector3 & position, const Vector3 & target, const Vector3 & Up)
+	void Camera::Reset(const Vector3 & position, const Vector3 & target, const Vector3 & Up) noexcept
 	{
 		m_Position = position;
 		m_Target = target;
@@ -148,7 +152,7 @@ namespace rczEngine
 		m_CachedProjectionMatrix = false;
 	}
 
-	const Matrix4 Camera::GetViewMatrix()
+	const Matrix4 Camera::GetViewMatrix() noexcept
 	{
 		if (!m_CachedViewMatrix)
 		{
@@ -161,7 +165,7 @@ namespace rczEngine
 		return m_MatrixView;
 	}
 
-	const Matrix4 Camera::GetProjMatrix()
+	const Matrix4 Camera::GetProjMatrix() noexcept
 	{
 		if (!m_CachedProjectionMatrix)
 		{
@@ -174,11 +178,11 @@ namespace rczEngine
 		return m_MatrixProjection;
 	}
 
-	void Camera::CalculateUp()
+	void Camera::CalculateUp() noexcept
 	{
-		Vector3 Forward = GetViewDir();
-		Vector3 Up = m_Up.GetNormalized();
-		Vector3 Right = (Forward^Up).GetNormalized();
+		const Vector3 Forward = GetViewDir();
+		const Vector3 Up = m_Up.GetNormalized();
+		const Vector3 Right = (Forward^Up).GetNormalized();
 
 		m_Up = Forward ^ Right;
 		m_Up.Normalize();

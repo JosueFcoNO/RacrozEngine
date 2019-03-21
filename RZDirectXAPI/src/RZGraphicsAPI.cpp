@@ -318,7 +318,7 @@ namespace rczEngine
 			TexDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 			TexDesc.ArraySize = 1;
 
-			out_renderTarget.m_Name = name;
+			out_renderTarget.SetName(name);
 			auto core = out_renderTarget.GetTextureCore();
 			core->m_Height = height;
 			core->m_Width = width;
@@ -488,13 +488,13 @@ namespace rczEngine
 			m_SwapChain->Present(0, 0);
 		}
 
-		bool GfxCore::Draw(uint32 vertexCount, uint32 vertex_start)
+		bool GfxCore::Draw(size_t vertexCount, size_t vertex_start)
 		{
 			m_DeviceContext->Draw(vertexCount, vertex_start);
 			return false;
 		}
 
-		bool GfxCore::DrawIndexed(uint32 indexCount, uint32 startIndex, uint32 startVertex)
+		bool GfxCore::DrawIndexed(size_t indexCount, size_t startIndex, size_t startVertex)
 		{
 			m_DeviceContext->DrawIndexed(indexCount, startIndex, startVertex);
 			return false;
@@ -1244,7 +1244,7 @@ namespace rczEngine
 			SRV.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 			SRV.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 			SRV.Texture2D.MostDetailedMip = 0;
-			SRV.Texture2D.MipLevels = -1;
+			SRV.Texture2D.MipLevels = 1;
 
 			result = m_Device->CreateShaderResourceView(out_Texture.m_Texture, &SRV, &out_Texture.m_ShaderResource);
 
@@ -1560,10 +1560,11 @@ namespace rczEngine
 
 		bool GfxCore::CreateCubeMapFrom6MemoryPtr(void * front, void * back, void * left, void * right, void * top, void * bottom, TextureCore2D & out_Cubemap, eFORMAT format, eBUFFER_USAGE usage, eBIND_FLAGS bind_flags, eCPU_ACCESS_FLAGS cpu_access_flags)
 		{
+			//TODO
 			return false;
 		}
 
-		bool GfxCore::CreateCubeMapFromDDS(const String& pszFilePath, TextureCore2D& out_Cubemap, eFORMAT format, eBUFFER_USAGE usage, eBIND_FLAGS bind_flags, eCPU_ACCESS_FLAGS cpu_access_flags)
+		bool GfxCore::CreateCubeMapFromDDS(const String& pszFilePath, TextureCore2D& out_Cubemap)
 		{
 			StringW str = TextTool::AnsiToUni(pszFilePath.c_str());
 

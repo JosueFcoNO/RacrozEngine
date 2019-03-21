@@ -9,7 +9,7 @@ namespace rczEngine {
 		////// Vector2 Constructors
 		///////////////////////
 
-		Vector2() noexcept {};
+		Vector2() noexcept : m_x(0.0f), m_y(0.0f) {};
 
 		Vector2(eInit init) noexcept;
 		Vector2(const Vector2I& v2i) noexcept;

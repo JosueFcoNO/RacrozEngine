@@ -43,8 +43,8 @@ namespace rczEngine
 
 	void AABB::Clear() noexcept
 	{
-		float Lowest = std::numeric_limits<float>::lowest();
-		float Highest = std::numeric_limits<float>::infinity();
+		constexpr float Lowest = std::numeric_limits<float>::lowest();
+		constexpr float Highest = std::numeric_limits<float>::infinity();
 
 		m_PointMin.Set(Highest, Highest, Highest);
 		m_PointMax.Set(Lowest, Lowest, Lowest);
@@ -76,7 +76,7 @@ namespace rczEngine
 		return points;
 	}
 
-	void AABB::TransformAndRecalculateAABB(Matrix3 newMatrix)
+	void AABB::TransformAndRecalculateAABB(Matrix3 newMatrix) noexcept
 	{
 		const Vector3 size = GetSize();
 		Vector3 points[8] =

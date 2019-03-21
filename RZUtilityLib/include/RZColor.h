@@ -5,18 +5,10 @@ namespace rczEngine
 	class RZ_EXP Color : public Vector4
 	{
 	public:
-		Color() noexcept : Vector4()
-		{}
+		Color() noexcept : Vector4() {}
+		Color(float x, float y, float z, float w = 1.0f) noexcept : Vector4(x, y, z, w) {}
 
-		Color(float x, float y, float z, float w = 1.0f) noexcept
-		{
-			r = x;
-			g = y;
-			b = z;
-			a = w;
-		}
-
-		void Set(float r, float g, float b, float a = 1.0f) noexcept;
+		void Set(float R, float G, float B, float a = 1.0f) noexcept;
 		FORCEINLINE void Set(const Color& color) noexcept { *this = color; };
 		FORCEINLINE void Set(const Vector3& color) noexcept { *this = Vector4(color.m_x, color.m_y, color.m_z, 1.0f); };
 		FORCEINLINE void Set(const Vector4& color) noexcept { *this = color; };

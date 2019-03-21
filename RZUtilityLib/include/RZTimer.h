@@ -18,6 +18,6 @@ namespace rczEngine
 		uint64 m_CounterStart = 0;
 
 		uint64 m_FrameTimeOld = 0;
-		double m_FrameTime;
+		double m_FrameTime = 0.0;
 	};
 }

@@ -190,7 +190,6 @@
     <ClInclude Include="include\RZDepthStencyl.h" />
     <ClInclude Include="include\RZDepthStencylView.h" />
     <ClInclude Include="include\RZDomainShader.h" />
-    <ClInclude Include="include\RZFontRender.h" />
     <ClInclude Include="include\RZGeometryShader.h" />
     <ClInclude Include="include\RZHullShader.h" />
     <ClInclude Include="include\RZIndexBuffer.h" />
@@ -218,7 +217,6 @@
     <ClCompile Include="src\RZDepthStencyl.cpp" />
     <ClCompile Include="src\RZDepthStencylView.cpp" />
     <ClCompile Include="src\RZDomainShader.cpp" />
-    <ClCompile Include="src\RZFontRender.cpp" />
     <ClCompile Include="src\RZGeometryShader.cpp" />
     <ClCompile Include="src\RZHullShader.cpp" />
     <ClCompile Include="src\RZIndexBuffer.cpp" />

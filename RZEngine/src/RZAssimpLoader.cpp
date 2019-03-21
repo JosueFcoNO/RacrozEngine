@@ -434,7 +434,7 @@ namespace rczEngine
 				Temp->m_core.g_Opacity = 0.5f;
 			}
 
-			for (int i = 0; i < aimatTemp->GetTextureCount(aiTextureType_UNKNOWN); ++i)
+			for (uint32 i = 0; i < aimatTemp->GetTextureCount(aiTextureType_UNKNOWN); ++i)
 			{
 				Path = "";
 				aimatTemp->GetTexture(aiTextureType::aiTextureType_UNKNOWN, i, &Path);
@@ -447,7 +447,7 @@ namespace rczEngine
 				}
 			}
 
-			for (int i = 0; i < aimatTemp->GetTextureCount(aiTextureType_NONE); ++i)
+			for (uint32 i = 0; i < aimatTemp->GetTextureCount(aiTextureType_NONE); ++i)
 			{
 				Path = "";
 				aimatTemp->GetTexture(aiTextureType::aiTextureType_NONE, i, &Path);
@@ -472,8 +472,7 @@ namespace rczEngine
 		StrPtr<Model> model = std::make_shared<Model>();
 
 		model->SetFilePath(pNode->mName.C_Str());
-
-		ResourceHandle handle = m_Res->InsertResource(model);
+		m_Res->InsertResource(model);
 
 		///Clear the index and vertex buffer's lists
 		model->m_IndexBuffer.ClearIndexList();

@@ -43,12 +43,12 @@ namespace rczEngine
 		m_GfxEvents.clear();
 	}
 
-	void Profiler::SaveResults(const String& filePath)
+	void Profiler::SaveResults(const String& filePath) noexcept
 	{
 		const String LoggerFile(filePath);
 		const auto logger = Logger::PointerOrCreate();
 		
-		const String eventStr("Event: ");
+		String eventStr("Event: ");
 
 		///Start the profiler Log
 		logger->StartLog(LoggerFile);
@@ -56,9 +56,11 @@ namespace rczEngine
 
 		///Log every Game Event
 		logger->LogMessageToFileLog(LoggerFile, "+Game Events+", eLogMsgType::Error);
+
 		for (auto event : m_GameEvents)
 		{
-			logger->LogMessageToFileLog(LoggerFile, eventStr + event.first, eLogMsgType::Warning);
+			eventStr = "Event: " + event.first;
+			logger->LogMessageToFileLog(LoggerFile, eventStr, eLogMsgType::Warning);
 			event.second.SaveResults(LoggerFile, *logger);
 		}
 
@@ -66,7 +68,8 @@ namespace rczEngine
 		logger->LogMessageToFileLog(LoggerFile, "+Gfx Events+", eLogMsgType::Error);
 		for (auto event : m_GfxEvents)
 		{
-			logger->LogMessageToFileLog(LoggerFile, eventStr + event.first, eLogMsgType::Warning);
+			eventStr = "Event: " + event.first;
+			logger->LogMessageToFileLog(LoggerFile, eventStr, eLogMsgType::Warning);
 			event.second.SaveResults(LoggerFile, *logger);
 		}
 

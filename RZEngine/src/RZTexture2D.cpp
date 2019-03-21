@@ -38,7 +38,7 @@ namespace rczEngine
 
 	void Texture2D::CreateFromRenderTarget(Gfx::RenderTarget & renderTarget)
 	{
-		m_Name = renderTarget.m_Name;
+		m_Name = renderTarget.GetName();
 		m_FilePath = "RenderTarget_"+m_Name;
 		m_TextureCore = *renderTarget.GetTextureCore();
 	}

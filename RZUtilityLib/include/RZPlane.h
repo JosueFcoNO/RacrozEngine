@@ -28,7 +28,7 @@ namespace rczEngine
 
 		static Vector3 ThreePlaneIntersect(const Plane one, const Plane two, const Plane three)
 		{
-			auto twoThreeNCross = (two.Normal^three.Normal);
+			const auto twoThreeNCross = (two.Normal^three.Normal);
 
 			const Vector3 a = twoThreeNCross *-one.D;
 			const Vector3 b = (three.Normal^one.Normal)*-two.D;

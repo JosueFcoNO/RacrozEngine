@@ -97,7 +97,7 @@ namespace rczEngine
 		Vector<PlanetQuadTreeNode*> nodesToDraw;
 		for (int i = 0; i < 6; ++i)
 		{
-			Quadtree[i].TestVisibility(PlayerCamera->m_CameraCore.m_Frustum, nodesToDraw);
+			Quadtree[i].TestVisibility(PlayerCamera->m_CameraCore.GetFrustum(), nodesToDraw);
 		}
 
 		Map<PlanetQuadTreeNode*, int> depthMap;

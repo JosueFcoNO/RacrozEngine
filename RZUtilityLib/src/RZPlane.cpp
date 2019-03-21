@@ -31,7 +31,7 @@ namespace rczEngine
 		ConstructFromPoints(p1, p2, p3);
 	}
 
-	Plane::Plane(const Vector3 & p1, const Vector3 & normal) noexcept
+	Plane::Plane(const Vector3 & p1, const Vector3 & normal) noexcept : D(0.0f)
 	{
 		ConstructFromPointNormal(p1, normal);
 	}

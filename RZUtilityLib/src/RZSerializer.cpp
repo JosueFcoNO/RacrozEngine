@@ -42,7 +42,7 @@ namespace rczEngine
 	void Serializer::SetNextObjectSerial(int serial)
 	{
 		const int serialToWrite = serial;
-		WriteData((char*)&serialToWrite, sizeof(int));
+		WriteData(&serialToWrite, sizeof(int));
 	}
 
 	void Serializer::SerializeString(const String & str)
@@ -55,7 +55,7 @@ namespace rczEngine
 		//Set the string serial.
 		SetNextObjectSerial(SERIAL_STRING);
 		//Write the number of bytes.
-		WriteData((char*)&stringSize, sizeof(stringSize));
+		WriteData(&stringSize, sizeof(stringSize));
 
 		//Save every char.
 		WriteData(&saved[0], stringSize);
@@ -73,7 +73,7 @@ namespace rczEngine
 		//Read the string serial.
 		GetNextObjectSerial();
 		//Read the number of bytes.
-		ReadData((char*)&stringSize, sizeof(stringSize));
+		ReadData(&stringSize, sizeof(stringSize));
 		
 		//Read every char.
 		auto tempChar = ' ';
@@ -89,7 +89,7 @@ namespace rczEngine
 	{
 		int serialRead;
 
-		ReadData((char*)&serialRead, sizeof(int));
+		ReadData(&serialRead, sizeof(int));
 
 		return serialRead;
 	}

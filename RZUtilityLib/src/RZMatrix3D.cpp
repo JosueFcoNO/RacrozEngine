@@ -45,7 +45,7 @@ namespace rczEngine
 		///Like So:
 		/// [ A11 A12 ]
 		/// [ A21 A22 ]
-		float TrimedMatrix[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+		float TrimedMatrix[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		uint8 TrimedMatrixCounter = 0;
 
 		///Go through the matrix like Neo. 2 Nested Fors
@@ -409,7 +409,7 @@ namespace rczEngine
 	{
 		const Matrix3 Temp = *this;
 
-		*this = Temp*M;
+		*this = Temp * M;
 	}
 
 	Matrix3& Matrix3::operator+=(const Matrix3 & M) noexcept

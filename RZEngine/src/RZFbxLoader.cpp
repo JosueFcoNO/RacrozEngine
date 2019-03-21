@@ -67,7 +67,7 @@ namespace rczEngine
 		model->SetFilePath(filePath);
 		model->GetPath().GetFileName();
 
-		ResourceHandle handle = m_Res->InsertResource(model);
+		m_Res->InsertResource(model);
 
 		// Change the following filename to a suitable filename value.
 		const String lFilename = filePath;
@@ -127,8 +127,7 @@ namespace rczEngine
 		StrPtr<Model> model = std::make_shared<Model>();
 
 		model->SetFilePath(String(pNode->GetNameOnly()));
-
-		ResourceHandle handle = m_Res->InsertResource(model);
+		m_Res->InsertResource(model);
 
 		///Clear the index and vertex buffer's lists
 		model->m_IndexBuffer.ClearIndexList();
@@ -136,9 +135,9 @@ namespace rczEngine
 		model->m_VectorMeshes.clear();
 
 		///Set the VertexOffset, IndexOffset and IndexCount local variables to 0. These help creating the meshes and managing a single index and a single vertex buffer.
-		uint32 VertexOffset = 0;
-		uint32 IndexOffset = 0;
-		uint32 IndexCount = 0;
+		//uint32 VertexOffset = 0;
+		//uint32 IndexOffset = 0;
+		//uint32 IndexCount = 0;
 
 		for (int i = 0; i < pNode->GetNodeAttributeCount(); i++)
 		{
@@ -169,14 +168,14 @@ namespace rczEngine
 				mesh->GetTextureUV(&texCoords);
 
 				Gfx::Vertex CurrentVertex;
-				for (int i = 0; i < mesh->GetControlPointsCount(); ++i)
+				for (int k = 0; k < mesh->GetControlPointsCount(); ++k)
 				{
-					CurrentVertex.VertexPosition.m_x = float(vertices[i].mData[0]);
-					CurrentVertex.VertexPosition.m_y = float(vertices[i].mData[1]);
-					CurrentVertex.VertexPosition.m_z = float(vertices[i].mData[2]);
+					CurrentVertex.VertexPosition.m_x = float(vertices[k].mData[0]);
+					CurrentVertex.VertexPosition.m_y = float(vertices[k].mData[1]);
+					CurrentVertex.VertexPosition.m_z = float(vertices[k].mData[2]);
 
-					CurrentVertex.TextureCoordinates.m_x = float(texCoords[0][i].mData[0]);
-					CurrentVertex.TextureCoordinates.m_y = 1.0f - float(texCoords[0][i].mData[1]);
+					CurrentVertex.TextureCoordinates.m_x = float(texCoords[0][k].mData[0]);
+					CurrentVertex.TextureCoordinates.m_y = 1.0f - float(texCoords[0][k].mData[1]);
 
 					if (!binormals || !tangents)
 					{
@@ -192,19 +191,19 @@ namespace rczEngine
 						mesh->GetBinormals(&binormals);
 					}
 
-					CurrentVertex.VertexNormals.m_x = float(normals[0][i].mData[0]);
-					CurrentVertex.VertexNormals.m_y = float(normals[0][i].mData[1]);
-					CurrentVertex.VertexNormals.m_z = float(normals[0][i].mData[2]);
+					CurrentVertex.VertexNormals.m_x = float(normals[0][k].mData[0]);
+					CurrentVertex.VertexNormals.m_y = float(normals[0][k].mData[1]);
+					CurrentVertex.VertexNormals.m_z = float(normals[0][k].mData[2]);
 					CurrentVertex.VertexNormals.Normalize();
 
-					CurrentVertex.BiNormals.m_x = float(binormals[0][i].mData[0]);
-					CurrentVertex.BiNormals.m_y = float(binormals[0][i].mData[1]);
-					CurrentVertex.BiNormals.m_z = float(binormals[0][i].mData[2]);
+					CurrentVertex.BiNormals.m_x = float(binormals[0][k].mData[0]);
+					CurrentVertex.BiNormals.m_y = float(binormals[0][k].mData[1]);
+					CurrentVertex.BiNormals.m_z = float(binormals[0][k].mData[2]);
 					CurrentVertex.BiNormals.Normalize();
 
-					CurrentVertex.Tangents.m_x = float(tangents[0][i].mData[0]);
-					CurrentVertex.Tangents.m_y = float(tangents[0][i].mData[1]);
-					CurrentVertex.Tangents.m_z = float(tangents[0][i].mData[2]);
+					CurrentVertex.Tangents.m_x = float(tangents[0][k].mData[0]);
+					CurrentVertex.Tangents.m_y = float(tangents[0][k].mData[1]);
+					CurrentVertex.Tangents.m_z = float(tangents[0][k].mData[2]);
 					CurrentVertex.Tangents.Normalize();
 
 

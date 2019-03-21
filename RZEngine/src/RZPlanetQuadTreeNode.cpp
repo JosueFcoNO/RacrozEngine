@@ -113,7 +113,6 @@ namespace rczEngine
 
 		Planes[4].ConstructFromPoints(topleft, topright, bottomright);
 
-		std::hash<String> hash;
 		NodeConnection node;
 
 		node.Depth = m_QuadTreeDepth;
@@ -183,7 +182,7 @@ namespace rczEngine
 		}
 	}
 
-	bool PlanetQuadTreeNode::TestIfInside(Vector3 pos)
+	bool PlanetQuadTreeNode::TestIfInside(const Vector3& pos)
 	{
 		return (Planes[0].SignedDistance(pos) < 0 &&
 			Planes[1].SignedDistance(pos) < 0 &&
@@ -192,7 +191,7 @@ namespace rczEngine
 			Planes[4].SignedDistance(pos) > 0);
 	}
 
-	void PlanetQuadTreeNode::CalculateLOD(Vector3 pos)
+	void PlanetQuadTreeNode::CalculateLOD(const Vector3& pos)
 	{
 		ProfilerObj obj("CalculateLOD", PROFILE_EVENTS::PROF_GAME);
 
@@ -247,7 +246,7 @@ namespace rczEngine
 		}
 	}
 
-	void PlanetQuadTreeNode::TestVisibility(Frustum & camFrustum, Vector<PlanetQuadTreeNode*>& nodesToDraw)
+	void PlanetQuadTreeNode::TestVisibility(const Frustum & camFrustum, Vector<PlanetQuadTreeNode*>& nodesToDraw)
 	{
 		if (camFrustum.TestAABB(aabb))
 		{
@@ -423,7 +422,7 @@ namespace rczEngine
 
 	}
 
-	Vector3 PlanetQuadTreeNode::CalculateVertexPos(Vector3 pos)
+	Vector3 PlanetQuadTreeNode::CalculateVertexPos(const Vector3& pos)
 	{
 		ProfilerObj obj("CalculateVertexPos", PROFILE_EVENTS::PROF_GAME);
 

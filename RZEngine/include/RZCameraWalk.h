@@ -84,20 +84,26 @@ namespace rczEngine
 
 			ser->WriteData(&m_ID, sizeof(int));
 
+			auto pos = m_CameraCore.GetPosition();
+
 			//Position 
-			ser->WriteData(&m_CameraCore.m_Position.m_x, sizeof(float));
-			ser->WriteData(&m_CameraCore.m_Position.m_y, sizeof(float));
-			ser->WriteData(&m_CameraCore.m_Position.m_z, sizeof(float));
+			ser->WriteData(&pos.m_x, sizeof(float));
+			ser->WriteData(&pos.m_y, sizeof(float));
+			ser->WriteData(&pos.m_z, sizeof(float));
+
+			auto target = m_CameraCore.GetTarget();
 
 			//Target 
-			ser->WriteData(&m_CameraCore.m_Target.m_x, sizeof(float));
-			ser->WriteData(&m_CameraCore.m_Target.m_y, sizeof(float));
-			ser->WriteData(&m_CameraCore.m_Target.m_z, sizeof(float));
+			ser->WriteData(&target.m_x, sizeof(float));
+			ser->WriteData(&target.m_y, sizeof(float));
+			ser->WriteData(&target.m_z, sizeof(float));
+
+			auto up = m_CameraCore.GetUp();
 
 			//Up 
-			ser->WriteData(&m_CameraCore.m_Up.m_x, sizeof(float));
-			ser->WriteData(&m_CameraCore.m_Up.m_y, sizeof(float));
-			ser->WriteData(&m_CameraCore.m_Up.m_z, sizeof(float));
+			ser->WriteData(&up.m_x, sizeof(float));
+			ser->WriteData(&up.m_y, sizeof(float));
+			ser->WriteData(&up.m_z, sizeof(float));
 
 			auto Fov = m_CameraCore.GetFov();
 			auto AspectRatio = m_CameraCore.GetAspectRatio();

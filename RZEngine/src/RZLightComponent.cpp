@@ -21,7 +21,9 @@ namespace rczEngine
 		}
 
 		m_LightViewBuffer.CreateConstantBuffer(sizeof(Matrix4::m_elements), Gfx::USAGE_DEFAULT, gfx);
-		m_LightViewBuffer.UpdateConstantBuffer(&m_Light->GetLightViewProjMatrix(), gfx);
+
+		auto view = m_Light->GetLightViewProjMatrix();
+		m_LightViewBuffer.UpdateConstantBuffer(&view, gfx);
 	}
 
 	void LightComponent::UpdateLight(Vector3 pos, Vector3 dir)

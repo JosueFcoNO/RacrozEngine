@@ -242,7 +242,7 @@ namespace rczEngine
 		auto camera = &CastStaticPtr<CameraCmp>(cameraCmp)->m_CameraCore;
 		camera->SetFov(90.0f);
 		camera->SetAspectRatio(1.0f);
-		camera->m_Position.Set(0, 0, 0);
+		camera->SetPosition({ 0, 0, 0 });
 		camera->SetFarClip(100.0f);
 		camera->SetNearClip(0.01f);
 

@@ -4,8 +4,6 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 
-#include <FW1FontWrapper.h>
-
 #include <RZCorePCH.h>
 #include <RZResource.h>
 
@@ -45,8 +43,6 @@
 #include "RZBlendState.h"
 
 #include "RZGraphicsAPI.h"
-
-#include "RZFontRender.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

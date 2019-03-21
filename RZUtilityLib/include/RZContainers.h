@@ -70,8 +70,8 @@ namespace rczEngine
 
 	//////////Casts///////////
 
-	template <class c>
-	c CastStatic(c other)
+	template <class c, class o>
+	c CastStatic(o other)
 	{
 		return static_cast<c>(other);
 	}

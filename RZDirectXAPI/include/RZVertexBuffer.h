@@ -67,8 +67,8 @@ namespace rczEngine
 			}
 
 			///Returns the number of vertices
-			RZ_EXP FORCEINLINE uint32 GetSize() { return m_VertexList.size(); };
-			RZ_EXP FORCEINLINE uint32 GetMemSize() { return m_VertexNumber * sizeof(t); };
+			RZ_EXP FORCEINLINE size_t GetSize() { return m_VertexList.size(); };
+			RZ_EXP FORCEINLINE size_t GetMemSize() { return m_VertexNumber * sizeof(t); };
 
 			///Returns a specified vertex
 			RZ_EXP FORCEINLINE t& GetVertex(uint32 index)

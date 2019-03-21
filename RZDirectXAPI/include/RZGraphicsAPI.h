@@ -132,10 +132,10 @@ namespace rczEngine
 			void Present();
 
 			///Draws
-			bool Draw(uint32 vertexCount, uint32 vertex_start);
+			bool Draw(size_t vertexCount, size_t vertex_start);
 
 			///Draw Indexed
-			bool DrawIndexed(uint32 indexCount, uint32 startIndex, uint32 startVertex);
+			bool DrawIndexed(size_t indexCount, size_t startIndex, size_t startVertex);
 
 #pragma endregion
 
@@ -337,7 +337,7 @@ namespace rczEngine
 			bool CreateCubeMapFrom6MemoryPtr(void * front, void * back, void * left, void * right, void * top, void * bottom, TextureCore2D & out_Cubemap, eFORMAT format, eBUFFER_USAGE usage = USAGE_DEFAULT, eBIND_FLAGS bind_flags = eBIND_FLAGS::BIND_SHADER_RESOURCE, eCPU_ACCESS_FLAGS cpu_access_flags = eCPU_ACCESS_FLAGS::CPU_DEFAULT);
 
 			///Create a Cubemap from a DDS file path
-			bool CreateCubeMapFromDDS(const String& pszFilePath, TextureCore2D& out_Cubemap, eFORMAT format = FORMAT_R8G8B8A8_UNORM, eBUFFER_USAGE usage = USAGE_DEFAULT, eBIND_FLAGS bind_flags = eBIND_FLAGS::BIND_SHADER_RESOURCE, eCPU_ACCESS_FLAGS cpu_access_flags = eCPU_ACCESS_FLAGS::CPU_DEFAULT);
+			bool CreateCubeMapFromDDS(const String& pszFilePath, TextureCore2D& out_Cubemap);
 
 			///Generates MipMaps
 			void GenerateMipMaps(ShaderResource* texCore);

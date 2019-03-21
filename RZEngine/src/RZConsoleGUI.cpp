@@ -13,7 +13,7 @@ namespace rczEngine
 		{
 			Vector<LogObject> ptr = Logger::Pointer()->GetLoggedStrings();
 
-			for (int32 i = ptr.size()-1; i > -1; --i)
+			for (size_t i = ptr.size() - 1; i > -1; --i)
 			{
 				ImGui::Text("%s", ptr[i].GetString().c_str());
 			}

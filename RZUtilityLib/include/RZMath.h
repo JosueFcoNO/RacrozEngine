@@ -163,7 +163,8 @@ namespace rczEngine
 		}
 
 		///Elevate a float to ipow
-		static FORCEINLINE float Pow(float V, float ipow) noexcept { return std::pow(V, ipow); };
+		template<class c>
+		static FORCEINLINE float Pow(c V, float ipow) noexcept { return std::pow(V, ipow); };
 		///Float module
 		static FORCEINLINE float fMod(float X, float Y) noexcept { return std::fmodf(X, Y); };
 		///Float absolute value

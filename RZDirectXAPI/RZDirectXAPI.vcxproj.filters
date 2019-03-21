@@ -66,12 +66,6 @@
     <Filter Include="Archivos de código fuente\DDS Loader">
       <UniqueIdentifier>{939a2010-acd1-4e76-8695-5d107dd63dd5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de encabezado\Font System">
-      <UniqueIdentifier>{191dc954-2dd9-44cc-9668-e009fcb1d88a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Archivos de código fuente\Font System">
-      <UniqueIdentifier>{86ce33b3-cb1d-4525-841e-fad815cbd656}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de encabezado\Blend State">
       <UniqueIdentifier>{365b4259-401d-492f-bdff-acb3b8e6b87d}</UniqueIdentifier>
     </Filter>
@@ -142,9 +136,6 @@
     </ClInclude>
     <ClInclude Include="include\DDSTextureLoader.h">
       <Filter>Archivos de encabezado\DDS Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RZFontRender.h">
-      <Filter>Archivos de encabezado\Font System</Filter>
     </ClInclude>
     <ClInclude Include="include\RZBlendState.h">
       <Filter>Archivos de encabezado\Blend State</Filter>
@@ -219,9 +210,6 @@
     </ClCompile>
     <ClCompile Include="src\DDSTextureLoader.cpp">
       <Filter>Archivos de código fuente\DDS Loader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RZFontRender.cpp">
-      <Filter>Archivos de código fuente\Font System</Filter>
     </ClCompile>
     <ClCompile Include="src\RZBlendState.cpp">
       <Filter>Archivos de código fuente\Blend State</Filter>

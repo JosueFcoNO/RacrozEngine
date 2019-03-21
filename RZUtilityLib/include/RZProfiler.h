@@ -30,7 +30,7 @@ namespace rczEngine
 
 		RZ_EXP void StartProfiler() noexcept;
 		RZ_EXP void Reset() noexcept;
-		RZ_EXP void SaveResults(const String& filePath = "autoProfileLog ");
+		RZ_EXP void SaveResults(const String& filePath = "autoProfileLog ") noexcept;
 
 		RZ_EXP void NewFrameStart() noexcept;
 

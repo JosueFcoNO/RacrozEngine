@@ -5,12 +5,12 @@
 namespace rczEngine
 {
 
-	void Color::Set(float r, float g, float b, float a) noexcept
+	void Color::Set(float R, float G, float B, float A) noexcept
 	{
-		m_x = r;
-		m_y = g;
-		m_z = b;
-		m_w = a;
+		m_x = R;
+		m_y = G;
+		m_z = B;
+		m_w = A;
 	}
 
 	void Color::AddColor(const Color& c) noexcept

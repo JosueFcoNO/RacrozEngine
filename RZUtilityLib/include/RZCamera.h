@@ -5,32 +5,49 @@ namespace rczEngine
 	class RZ_EXP Camera
 	{
 	public:
-		Camera() : m_Position(eInit::Zero), m_Target(eInit::Unit), m_Up(eInit::Zero)
-		{
+		Camera() noexcept :
+			m_Position(eInit::Zero),
+			m_Target(0, 0, 5),
+			m_Up(0, 1, 0),
 
-		};
+			m_NearClip(1.0f),
+			m_FarClip(100.0f),
+			m_AspectRatio(1.0f),
+			m_Fov(45.0f),
 
-		void Init(Vector3 position, Vector3 target, float nearClip, float farClip, float aspectRatio);
+			m_MatrixView(eInit::Zero),
+			m_MatrixProjection(eInit::Zero),
 
-		void Move(Vector3 panning);
-		void MoveForward(float delta);
-		void MoveRight(float delta);
-		void MoveUp(float delta);
-		void Move(float x, float y, float z);
-		void Rotate(Vector3 vector);
-		void RotateComplete(Vector3 vector);
-		void Orbit(Vector3 vector);
+			m_CachedProjectionMatrix(false),
+			m_CachedViewMatrix(false),
+			m_IsPerspective(false)
+		{};
 
-		void Reset(const Vector3& position, const Vector3& target, const Vector3& Up);
+		void Init(const Vector3& position, const Vector3& target, float nearClip, float farClip, float aspectRatio) noexcept;
 
-		const Matrix4 GetViewMatrix();
-		const Matrix4 GetProjMatrix();
+		void Move(const Vector3& panning) noexcept;
+		void MoveForward(float delta) noexcept;
+		void MoveRight(float delta) noexcept;
+		void MoveUp(float delta) noexcept;
+		void Move(float x, float y, float z) noexcept;
+		void Rotate(const Vector3& vector) noexcept;
+		void RotateComplete(const Vector3& vector) noexcept;
+		void Orbit(const Vector3& vector) noexcept;
 
-		FORCEINLINE const Vector3 GetViewDir() const { return (m_Target - m_Position).GetNormalized(); }
-		FORCEINLINE const Vector3 GetTarget() const { return m_Target; }
-		FORCEINLINE const Vector3 GetPosition() const { return m_Position; }
-		FORCEINLINE const Vector3 GetUp() const { return m_Up; }
-		FORCEINLINE const Vector3 GetRight() const { return (GetViewDir() ^ m_Up).GetNormalized(); }
+		void Reset(const Vector3& position, const Vector3& target, const Vector3& Up) noexcept;
+
+		const Matrix4 GetViewMatrix() noexcept;
+		const Matrix4 GetProjMatrix() noexcept;
+
+		FORCEINLINE const void SetPosition(const Vector3& position) { m_Position = position; m_CachedViewMatrix = false; };
+		FORCEINLINE const void SetTarget(const Vector3& target) { m_Target = target; m_CachedViewMatrix = false; };
+		FORCEINLINE const void SetUp(const Vector3& up) { m_Up = up; m_CachedViewMatrix = false; };
+
+		FORCEINLINE const Vector3 GetViewDir() const noexcept { return (m_Target - m_Position).GetNormalized(); }
+		FORCEINLINE const Vector3 GetTarget() const noexcept { return m_Target; }
+		FORCEINLINE const Vector3 GetPosition() const noexcept { return m_Position; }
+		FORCEINLINE const Vector3 GetUp() const noexcept { return m_Up; }
+		FORCEINLINE const Vector3 GetRight() const noexcept { return (GetViewDir() ^ m_Up).GetNormalized(); }
 
 		FORCEINLINE void SetNearClip(float nearClip) noexcept { m_NearClip = nearClip; m_CachedProjectionMatrix = false; }
 		FORCEINLINE void SetFarClip(float farClip) noexcept { m_FarClip = farClip; m_CachedProjectionMatrix = false; }
@@ -42,18 +59,18 @@ namespace rczEngine
 		FORCEINLINE float GetAspectRatio() const noexcept { return m_AspectRatio; };
 		FORCEINLINE float GetFov() const noexcept { return m_Fov; };
 
-		void CalculateUp();
+		FORCEINLINE const Frustum& GetFrustum() const noexcept { return m_Frustum; };
+
+	private:
+		void CalculateUp() noexcept;
+
+		bool m_CachedViewMatrix;
+		bool m_CachedProjectionMatrix;
+		bool m_IsPerspective;
 
 		Vector3 m_Position;
 		Vector3 m_Target;
 		Vector3 m_Up;
-
-		Frustum m_Frustum;
-
-	private:
-		bool m_CachedViewMatrix;
-		bool m_CachedProjectionMatrix;
-		bool m_IsPerspective;
 
 		float m_NearClip;
 		float m_FarClip;
@@ -63,5 +80,6 @@ namespace rczEngine
 		Matrix4 m_MatrixView;
 		Matrix4 m_MatrixProjection;
 
+		Frustum m_Frustum;
 	};
 }

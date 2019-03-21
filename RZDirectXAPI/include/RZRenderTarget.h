@@ -4,12 +4,13 @@ namespace rczEngine
 {
 	namespace Gfx
 	{
-		class RZ_EXP RenderTarget
+		class RenderTarget
 		{
 		public:
-			TextureCore2D* GetTextureCore() { return &m_RenderTargetTexture; };
-			RenderTargetView* GetRenderTargetView() { return &m_RenderTargetView; };
-
+			RZ_EXP TextureCore2D* GetTextureCore() { return &m_RenderTargetTexture; };
+			RZ_EXP RenderTargetView* GetRenderTargetView() { return &m_RenderTargetView; };
+			RZ_EXP const String& GetName() const noexcept { return m_Name; };
+			RZ_EXP void SetName(const String& name) noexcept { m_Name = name; };
 			String m_Name;
 
 		private:

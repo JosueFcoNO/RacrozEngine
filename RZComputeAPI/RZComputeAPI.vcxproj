@@ -95,8 +95,8 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(SolutionDir)Plug-Ins/assimp-master/include/;$(SolutionDir)RZUtilityLib\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)RZDirectXAPI/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(SolutionDir)Plug-Ins\assimp-master\$(Platform)\$(Configuration)\;$(SolutionDir)Plug-Ins\FW1FontWrapper\$(Platform)\;$(SolutionDir)Plug-Ins\OpenCL\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(GSL)\include;$(Assimp)/include/;$(SolutionDir)RZUtilityLib\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)RZDirectXAPI/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(Assimp)lib\$(Platform)\;$(SolutionDir)Plug-Ins\FW1FontWrapper\$(Platform)\;$(SolutionDir)Plug-Ins\OpenCL\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

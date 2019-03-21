@@ -11,7 +11,6 @@ namespace rczEngine
 
 	Vector4::Vector4(eInit init) noexcept
 	{
-		
 #pragma omp simd
 		for (int32 i = 0; i < 4; ++i)
 		{
@@ -37,7 +36,7 @@ namespace rczEngine
 #pragma omp simd
 		for (int32 i = 0; i < 4; ++i)
 		{
-			gsl::at(m_elements, i) *= scale;
+			m_elements[i] *= scale;
 		}
 	}
 
@@ -46,7 +45,7 @@ namespace rczEngine
 #pragma omp simd
 		for (int32 i = 0; i < 4; ++i)
 		{
-			gsl::at(m_elements, i) += gsl::at(v.m_elements, i);
+			m_elements[i] += v.m_elements[i];
 		}
 
 		return *this;
@@ -57,7 +56,7 @@ namespace rczEngine
 #pragma omp simd
 		for (int32 i = 0; i < 4; ++i)
 		{
-			gsl::at(m_elements, i) -= gsl::at(v.m_elements, i);
+			m_elements[i] -= v.m_elements[i];
 		}
 
 		return *this;
@@ -68,7 +67,7 @@ namespace rczEngine
 #pragma omp simd
 		for (int32 i = 0; i < 4; ++i)
 		{
-			gsl::at(m_elements, i) *= gsl::at(v.m_elements, i);
+			m_elements[i] *= v.m_elements[i];
 		}
 
 		return *this;
@@ -79,7 +78,7 @@ namespace rczEngine
 #pragma omp simd
 		for (int32 i = 0; i < 4; ++i)
 		{
-			gsl::at(m_elements, i) *= f;
+			m_elements[i] *= f;
 		}
 
 		return *this;
@@ -90,7 +89,7 @@ namespace rczEngine
 #pragma omp simd
 		for (int32 i = 0; i < 4; ++i)
 		{
-			gsl::at(m_elements, i) /= gsl::at(v.m_elements, i);
+			m_elements[i] /= v.m_elements[i];
 		}
 
 		return *this;
@@ -101,7 +100,7 @@ namespace rczEngine
 #pragma omp simd
 		for (int32 i = 0; i < 4; ++i)
 		{
-			gsl::at(m_elements, i) /= f;
+			m_elements[i] /= f;
 		}
 
 		return *this;
@@ -114,7 +113,7 @@ namespace rczEngine
 #pragma omp simd
 		for (int32 i = 0; i < 4; ++i)
 		{
-			gsl::at(m_elements, i) /= Mag;
+			m_elements[i] /= Mag;
 		}
 	}
 

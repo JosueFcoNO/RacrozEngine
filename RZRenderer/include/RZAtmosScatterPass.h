@@ -7,24 +7,24 @@ namespace rczEngine
 		int nSamples = 3;
 		float fSamples = 3.0f;
 
-		float SkyScale = 0.05f;
-		float OuterRadius = 1.05f;
+		float SkyScale = 1;
+		float OuterRadius = 3;
 
 		Vector3 InvWaveLength;
-		float OuterRadiusSquared = 1.05f*1.05f;
+		float OuterRadiusSquared = OuterRadius * OuterRadius;
 
-		float InnerRadius = 1.0f;
-		float InnerRadiusSquared = 1.0f;
+		float InnerRadius = 2;
+		float InnerRadiusSquared = InnerRadius*InnerRadius;
 		float KrESun = .0375;
 		float KmESun = .0225;
 
 		float Kr4PI = .0314;
 		float Km4PI = .0188;
-		float Scale = .2;
-		float ScaleOverScaleDepth = .8;
-
-		float InvScaleDepth = 4;
+		float Scale = 1.0f / (OuterRadius - InnerRadius);
 		float ScaleDepth = .25;
+
+		float InvScaleDepth = 1.0f / ScaleDepth;
+		float ScaleOverScaleDepth = Scale / ScaleDepth;
 		float G = -.95;
 		float GSquared = .9025;
 	};

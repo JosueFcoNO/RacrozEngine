@@ -4,17 +4,17 @@ namespace rczEngine
 {
 	struct AtmosData
 	{
-		int nSamples = 3;
-		float fSamples = 3.0f;
+		int nSamples = 4;
+		float fSamples = 4.0f;
 
-		float SkyScale = 1;
-		float OuterRadius = 3;
+		float SkyScale = 0.05f;
+		float OuterRadius = 1.05f;
 
 		Vector3 InvWaveLength;
-		float OuterRadiusSquared = OuterRadius * OuterRadius;
+		float OuterRadiusSquared = pow(OuterRadius, 2.0f);
 
-		float InnerRadius = 2;
-		float InnerRadiusSquared = InnerRadius*InnerRadius;
+		float InnerRadius = 1.0f;
+		float InnerRadiusSquared = pow(InnerRadius, 2.0f);
 		float KrESun = .0375;
 		float KmESun = .0225;
 

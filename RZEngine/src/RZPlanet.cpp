@@ -152,7 +152,7 @@ namespace rczEngine
 	{
 		///Render the planet sphere.
 		Matrix4 ScaleMatrix;
-		ScaleMatrix = Matrix4::Scale3D(scale + 0.5f, scale + 0.5f, scale + 0.5f)*Matrix4::Translate3D(m_SpacePosition.m_x, m_SpacePosition.m_y, m_SpacePosition.m_z);
+		ScaleMatrix = Matrix4::Scale3D(scale, scale, scale)*Matrix4::Translate3D(m_SpacePosition.m_x, m_SpacePosition.m_y, m_SpacePosition.m_z);
 		ScaleMatrix.Transpose();
 
 		Vector3 cPos = CameraManager::Pointer()->GetActiveCamera().lock()->GetPosition();
@@ -214,7 +214,7 @@ namespace rczEngine
 	void Planet::LoadAndProcessModel()
 	{
 		m_Planet = std::make_shared<Model>();
-		m_Planet->Load("RacrozEngineAssets/EsferaLowPoly.fbx", "PlanetModel");
+		m_Planet->Load("RacrozEngineAssets/SphereHigh.fbx", "PlanetModel");
 	}
 
 	void Planet::ProcessConnectionNode(NodeConnection & node)

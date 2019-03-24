@@ -40,17 +40,17 @@ namespace rczEngine
 
 	void AtmosScatterPass::RenderPass()
 	{
-		if (Input::Pointer()->CheckKeyboardState(KEY_NUMPAD4))
-		{
-			m_GroundFromSpacePS.Destroy();
-			m_gfx->CompileAndCreatePixelShader(m_GroundFromSpacePS, L"Shaders/ProcGen/Planet/GroundFromSpaceAtmos.hlsl");
-		}
-		
-		if (Input::Pointer()->CheckKeyboardState(KEY_NUMPAD5))
-		{
-			m_GroundFromSpaceVS.Destroy();
-			m_gfx->CompileAndCreateVertexShader(m_GroundFromSpaceVS, L"Shaders/ProcGen/Planet/GroundFromSpaceAtmos.hlsl");
-		}
+		//if (Input::Pointer()->CheckKeyboardState(KEY_NUMPAD4))
+		//{
+		//	m_GroundFromSpacePS.Destroy();
+		//	m_gfx->CompileAndCreatePixelShader(m_GroundFromSpacePS, L"Shaders/ProcGen/Planet/GroundFromSpaceAtmos.hlsl");
+		//}
+		//
+		//if (Input::Pointer()->CheckKeyboardState(KEY_NUMPAD5))
+		//{
+		//	m_GroundFromSpaceVS.Destroy();
+		//	m_gfx->CompileAndCreateVertexShader(m_GroundFromSpaceVS, L"Shaders/ProcGen/Planet/GroundFromSpaceAtmos.hlsl");
+		//}
 		//
 		//if (Input::Pointer()->CheckKeyboardState(KEY_NUMPAD6))
 		//{
@@ -84,7 +84,7 @@ namespace rczEngine
 			m_SkyFromSpacePS.SetThisPixelShader(m_gfx);
 			m_CullBack.SetThisRasterizerState(m_gfx);
 		
-			space->RenderAtmos(1.1f);
+			space->RenderAtmos(atmosData.OuterRadius);
 		
 			m_gfx->UnbindRenderTargets();
 		

@@ -6,16 +6,11 @@ namespace rczEngine
 	{
 		m_ActiveScene = SceneManager::Pointer()->GetActiveScene();
 		
-		//m_gfx->CompileAndCreateHullShader(m_PlanetHshader, L"Shaders/ProcGen/Planet/PlanetHullShader.hlsl");
-		m_gfx->CompileAndCreateVertexShader(m_PlanetVshader, L"Shaders/GPassMetRough.hlsl");
-
+		m_gfx->CompileAndCreateVertexShader(m_PlanetVshader, L"Shaders/ProcGen/Planet/PlanetGeometryPass.hlsl");
+		m_PlanetVshader.ReflectLayout(0, m_gfx);
 
 		m_PShaderPath = L"Shaders/ProcGen/Planet/PlanetPixelShader.hlsl";
 		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
-
-		//m_gfx->CompileAndCreateDomainShader(m_PlanetDshader, L"Shaders/ProcGen/Planet/PlanetDomainShader.hlsl");
-		m_PlanetVshader.ReflectLayout(0, m_gfx);
-
 	}
 
 	void PlanetPass::PreRenderPass()

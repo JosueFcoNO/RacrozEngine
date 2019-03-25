@@ -37,6 +37,8 @@ namespace rczEngine
 		CreatePlanet(123123, 0, 0, 00.0f);
 		m_CurrentPlanet = m_Planets[0];
 
+		m_AtmosValues.CreateConstantBuffer(sizeof(AtmosData), Gfx::USAGE_DEFAULT, m_gfx);
+
 		m_OnLand = false;
 
 	}
@@ -53,11 +55,11 @@ namespace rczEngine
 		m_OnLand ? RenderSurface() : RenderSpace();
 	}
 
-	void SpaceManager::RenderAtmos(float offset)
+	void SpaceManager::RenderAtmos()
 	{
 		for (int32 i = 0; i < m_Planets.size(); ++i)
 		{
-			m_Planets[i]->RenderAtmosphere(offset);
+			m_Planets[i]->RenderAtmosphere();
 		}
 	}
 

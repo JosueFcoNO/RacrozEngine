@@ -414,7 +414,7 @@ namespace rczEngine
 			done = true;
 		}
 
-		auto ptr = resPtr->GetResource<Material>(m_Material).lock();
+		auto ptr = resPtr->GetResource<Material>(PlanetOwner->m_Materials).lock();
 
 		if (ActiveTouch)
 			ptr->m_core.g_Albedo.Set(1.0f, 0.0f, 0.0f);
@@ -435,7 +435,7 @@ namespace rczEngine
 
 	}
 
-	Vector3 PlanetQuadTreeNode::CalculateVertexPos(const Vector3& pos)
+	Vector3 PlanetQuadTreeNode::CalculateVertexPos(const Vector3& pos, float& out_displacement)
 	{
 		ProfilerObj obj("CalculateVertexPos", PROFILE_EVENTS::PROF_GAME);
 
@@ -453,13 +453,15 @@ namespace rczEngine
 
 		float noise;
 
-		noise = //pow(Noise->RidgedOctaveNoise(Pos128, 6, 0.4f), 2);//  *
-			//Noise->OctaveNoise(Pos24, 6, 0.5f) *
-			//Noise->OctaveNoise(NoisePos, 3, 0.5f);
+		noise = pow(Noise->RidgedOctaveNoise(Pos128, 6, 0.4f), 2) *
+			Noise->OctaveNoise(Pos24, 6, 0.5f) *
+			//Noise->OctaveNoise(NoisePos, 3, 0.5f) * 
 			pow(Noise->RidgedOctaveNoise(Pos12, 3, 0.2f), 2);
 
+		out_displacement = noise;
+
 		auto finalPos = PosNormal + (PosNormal.GetNormalized())*noise*.02f;
-		//finalPos *= 30.0f;
+		finalPos *= 100.0f;
 
 		aabb.AddPoint(finalPos);
 

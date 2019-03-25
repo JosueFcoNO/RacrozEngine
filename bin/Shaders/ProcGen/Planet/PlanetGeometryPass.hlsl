@@ -10,6 +10,7 @@ sampler Sampler_ : register(s0);
 cbuffer cbChangeEveryFrame : register(b2)
 {
     matrix worldMatrix;
+	matrix previousWorldMatrix;
 };
 
 struct Light
@@ -29,20 +30,40 @@ cbuffer cbLights : register(b3)
 
 cbuffer cbMaterial : register(b4)
 {
-	float4 DiffuseColor : packoffset(c0);
-    float4 AmbientColor : packoffset(c1);
-    float3 SpecularColor : packoffset(c2);
-    float SpecularStrength : packoffset(c2.w);
+	float3 g_Albedo;
+	float OverrideAlbedo;
+
+	float3 g_Specular;
+	float OverrideMetallicSpecular;
+
+	float3 g_Emmisive;
+	float OverriveEmmisive;
+
+	float g_RoughGloss;
+	float g_Metallic;
+	float g_Opacity;
+	float g_TesselationFactor;
+
+	float OverrideOpacity;
+	float AOStrength;
+	float tileX;
+	float tileY;
+
+	float OverrideNormal;
+	float OverrideRoughGloss;
+	float paddings[2];
 };
 
 cbuffer cbCamera : register(b5)
 {
-    float4 ViewPosition;
-    float4 ViewDirection;
-    float4 NearPlane;
-    float4 FarPlane;
-    matrix ViewMatrix;
-    matrix ProjectionMatrix;
+	float4 ViewPosition;
+	float4 ViewDirection;
+	float4 NearPlane;
+	float4 FarPlane;
+	matrix ViewMatrix;
+	matrix ProjectionMatrix;
+	matrix PreviousViewMatrix;
+	matrix PreviousProjectionMatrix;
 };
 
 struct VS_Input
@@ -52,6 +73,7 @@ struct VS_Input
 	float3 normal : NORMAL;
 	float3 tangent : TANGENT;
 	float3 binormal : BINORMAL;
+	float Displacement : TEXCOORD1;
 };
 
 struct PS_Input
@@ -62,6 +84,7 @@ struct PS_Input
 	float3x3 TBN : TEXCOORD1;
 	float3 wpos : POSITION1;
     float depth : TEXCOORD5;
+	float Displacement : TEXCOORD6;
 };
 
 struct PS_OUTPUT
@@ -94,49 +117,7 @@ PS_Input VS_Main(VS_Input vertex)
 
     vsOut.depth = vsOut.pos.z / 10.0f;
 
+	vsOut.Displacement = vertex.Displacement;
+
 	return vsOut;
-}
-
-float2 OctWrap(float2 v)
-{
-    return (1.0 - abs(v.yx)) * (v.xy >= 0.0 ? 1.0 : -1.0);
-}
- 
-float2 Encode(float3 n)
-{
-    n /= (abs(n.x) + abs(n.y) + abs(n.z));
-    n.xy = n.z >= 0.0 ? n.xy : OctWrap(n.xy);
-    n.xy = n.xy * 0.5 + 0.5;
-    return n.xy;
-}
- 
-float3 Decode(float2 encN)
-{
-    encN = encN * 2.0 - 1.0;
- 
-    float3 n;
-    n.z = 1.0 - abs(encN.x) - abs(encN.y);
-    n.xy = n.z >= 0.0 ? encN.xy : OctWrap(encN.xy);
-    n = normalize(n);
-    return n;
-}
-
-///Geometry Pass
-PS_OUTPUT PS_Main(PS_Input frag) : SV_TARGET
-{
-    PS_OUTPUT output = (PS_OUTPUT) 0;
-
-    float2 tex = frag.tex0*100.0f;
-
-    ///Set the color to the first output color
-	output.Color = frag.normal;//AlbedoTexture.Sample(Sampler_, tex);
-    output.Color.a = AOTexture.Sample(Sampler_, tex).x;
-
-   // output.Normal = float4(Encode(NormalFinal), MetallicTexture.Sample(Sampler_, frag.tex0).x, RoughnessTexture.Sample(Sampler_, frag.tex0).x);
-    output.Normal = float4(Encode(normalize(frag.normal)), 0.0f, 0.1f);
-    output.Position = float4(frag.wpos, frag.depth);
-
-    output.Emmisive = float4(EMTexture.Sample(Sampler_, tex));
-
-	return output;
 }

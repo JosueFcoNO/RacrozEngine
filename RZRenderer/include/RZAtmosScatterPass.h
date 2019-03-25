@@ -2,33 +2,6 @@
 
 namespace rczEngine
 {
-	struct AtmosData
-	{
-		int nSamples = 4;
-		float fSamples = 4.0f;
-
-		float SkyScale = 0.05f;
-		float OuterRadius = 1.05f;
-
-		Vector3 InvWaveLength;
-		float OuterRadiusSquared = pow(OuterRadius, 2.0f);
-
-		float InnerRadius = 1.0f;
-		float InnerRadiusSquared = pow(InnerRadius, 2.0f);
-		float KrESun = .0375;
-		float KmESun = .0225;
-
-		float Kr4PI = .0314;
-		float Km4PI = .0188;
-		float Scale = 1.0f / (OuterRadius - InnerRadius);
-		float ScaleDepth = .25;
-
-		float InvScaleDepth = 1.0f / ScaleDepth;
-		float ScaleOverScaleDepth = Scale / ScaleDepth;
-		float G = -.95;
-		float GSquared = .9025;
-	};
-
 	class RZ_EXP AtmosScatterPass : public Pass
 	{
 	public:
@@ -40,7 +13,7 @@ namespace rczEngine
 
 		///Renders the geometry from the pass.
 		virtual void RenderPass();
-
+		                                 
 		///Unbinds the render targets.
 		virtual void PostRenderPass();
 
@@ -56,9 +29,6 @@ namespace rczEngine
 
 		Gfx::VertexShader m_SkyFromAtmosphereVS;
 		Gfx::PixelShader  m_SkyFromAtmospherePS;
-
-		Gfx::ConstantBuffer m_AtmosValues;
-		AtmosData atmosData;
 
 		StrPtr<Scene> m_ActiveScene;
 		Gfx::BlendState Transparent;

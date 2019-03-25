@@ -1,8 +1,8 @@
-Texture2D AlbedoTexture : register(t0);
-Texture2D NormalTexture : register(t1);
-Texture2D MetallicTexture : register(t2);
-Texture2D RoughnessTexture : register(t3);
-Texture2D AOTexture : register(t4);
+Texture3D AlbedoTexture : register(t0);
+Texture3D NormalTexture : register(t1);
+Texture3D MetallicTexture : register(t2);
+Texture3D RoughnessTexture : register(t3);
+Texture3D AOTexture : register(t4);
 //Texture3D EMTexture : register(t10);
 
 TextureCube EnviromentCube : register(t5);
@@ -15,6 +15,7 @@ struct VS_Input
 	float3 normal : NORMAL;
 	float3 tangent : TANGENT;
 	float3 binormal : BINORMAL;
+	float Displacement : TEXCOORD1;
 };
 
 struct PS_Input
@@ -25,6 +26,7 @@ struct PS_Input
 	float3x3 TBN : TEXCOORD1;
 	float3 wpos : POSITION1;
 	float depth : TEXCOORD5;
+	float Displacement : TEXCOORD6;
 };
 
 struct PS_OUTPUT
@@ -62,39 +64,41 @@ PS_OUTPUT PS_Main(PS_Input frag) : SV_TARGET
 {
 	PS_OUTPUT output = (PS_OUTPUT)0;
 
-	//float height = frag.height;
-	//HeightCube.Sample(LinearWrapSampler, normalize(frag.normal.xyz));
-	//float dist = frag.depth;
-	//float level = clamp(height + .25f, 0.1f, 0.9f);
+	float height = frag.Displacement;
 
-	//float2 tex0 = PolarToPos2D(normalize(frag.wpos.xyz)) * 1800.0f;
+	float dist = frag.depth * 3;
+	float level = clamp(height + .15f, 0.1f, 0.9f);
+
+	float2 tex0 = PolarToPos2D(normalize(frag.wpos.xyz)) * 2048.0f;
+
+	float3 samplePos = float3(tex0, level);
 
 	///Set the color to the first output color
-	float3 albedo = AlbedoTexture.Sample(LinearWrapSampler, frag.tex0);
+	float3 albedo = AlbedoTexture.SampleLevel(LinearWrapSampler, samplePos, dist);
 
 	albedo.xyz = pow(albedo.xyz, 2.2f);
-	//float3 color = lerp(float3(0,0.25f,0.5f), float3(0, 1,0), height);
 
 	//Set the normals to the second output color
 	float3 NormalFinal;
-	NormalFinal = NormalTexture.Sample(LinearWrapSampler, frag.tex0);
+	NormalFinal = NormalTexture.SampleLevel(LinearWrapSampler, samplePos, dist);
 	
 	NormalFinal = normalize(2.0f * NormalFinal - 1.0f);
 	NormalFinal = normalize(mul(NormalFinal, frag.TBN));
 
-	float rough = RoughnessTexture.Sample(LinearWrapSampler, frag.tex0).x;
-	float metallic = MetallicTexture.Sample(LinearWrapSampler, frag.tex0).x;
+	float rough = RoughnessTexture.SampleLevel(LinearWrapSampler, samplePos, dist).x;
+	float metallic = MetallicTexture.SampleLevel(LinearWrapSampler, samplePos, dist).x;
 
 	output.Normal = float4(Encode((NormalFinal)), 0, 0);
 
 	output.Position = float4(frag.wpos, frag.depth);
 	
-	output.Color.xyz = PBR_rm(frag.wpos.xyz, albedo, NormalFinal, rough, metallic, lerp(0.04f, albedo, metallic));// *
-		//AOTexture.Sample(LinearWrapSampler, float3(frag.wpos.yz*tileX, level)).x * AOStrength + (1.0f - AOStrength);
+	float3 atmos = groundAtmos(frag.wpos.xyz);
+
+	output.Color.xyz = lerp(PBR_rm(frag.wpos.xyz, albedo, NormalFinal, rough, metallic, lerp(0.04f, albedo, metallic)), atmos, 0.5f);
 
 	//output.Color.xyz = frag.normal.xyz;
 
-    //output.Color.xyz = g_Albedo;
+    //output.Color.xyz = atmos;
 	output.Color.a = 1.0f;
 
 	return output;

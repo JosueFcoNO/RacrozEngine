@@ -26,21 +26,32 @@ namespace rczEngine
 		int TwoConnectedDepth;
 	};
 
+	struct AtmosData
+	{
+		int nSamples = 4;
+		float fSamples = 4.0f;
 
+		float SkyScale = 2.5f;
+		float OuterRadius = 102.5f;
 
-	///Primero. Todos los bordes los registro como BorderData con los vertices, el lado y el depth del node.
-	//Segundo. Cuando subdivido le mando el hash del padre a los hijos, para que busquen colisiones con ese.
-	//Tercero. Si encuentro una colisión, checo mi Side y lo comparo con el registrado para saber en que orden tomar los elementos del vector.
-	//Cuarto. Si es del mismo depth nomás copio los vectores, si es un depth mayor, empiezo desde la mitad de los elementos y solamente agarro 1 de cada 2.
-	//Quinto. Ya que tengo todos los vertices setteados y listos, creo el vertex buffer y termino la generación.
+		Vector3 InvWaveLength = { 5.602, 9.478, 19.646 };
+		float OuterRadiusSquared = pow(OuterRadius, 2.0f);
 
-	//Problemas:
-	///Handle los nodos hermanos al mismo nivel. Yo digo que tambien se registren de una vez y el que llegue segundo se setee.
-	///Las normales averaged tal vez no funcionen. Yo digo que para las normales puedo hacer un average entre las dos normales, a ver como se ve. 
-	///O mucho más complicado, buscar la forma de rehacer el average tomando en cuenta ambos parches. 
-	///Idea: guardar en el parche la normal sumada para el avg sin la division  y solamente sumar las dos normales sumadas de los dos vertices, pero eso no cambiaría el node que ya está generado, tal vez mandar el updateresource es inevitable. 
-	///Solamente cambiaría los edges entonces puede estar bien.
+		float InnerRadius = 100.0f;
+		float InnerRadiusSquared = pow(InnerRadius, 2.0f);
+		float KrESun = .0375;
+		float KmESun = .0225;
 
+		float Kr4PI = .0314;
+		float Km4PI = .0188;
+		float Scale = 1.0f / (OuterRadius - InnerRadius);
+		float ScaleDepth = .25;
+
+		float InvScaleDepth = 1.0f / ScaleDepth;
+		float ScaleOverScaleDepth = Scale / ScaleDepth;
+		float G = -.95;
+		float GSquared = .9025;
+	};
 
 	class RZ_EXP Planet
 	{
@@ -54,7 +65,7 @@ namespace rczEngine
 		void InitPlanet(int32 seed, float x, float y, float z, SpaceManager* spaceMng);
 		void RenderPlanet(float scale);
 		void RenderPlanetWater(float scale);
-		void RenderAtmosphere(float scale);
+		void RenderAtmosphere();
 
 		void CreateMaterial();
 
@@ -68,6 +79,8 @@ namespace rczEngine
 
 		int32 Seed = 0;
 		PerlinNoise3D noise;
+
+		AtmosData m_Atmosphere;
 
 		Map<uint32, PatchData> m_PatchInfo;
 

@@ -57,7 +57,7 @@ namespace rczEngine
 		void DestroyMeshPlane() noexcept;
 
 		virtual void Render();
-		virtual Vector3 CalculateVertexPos(const Vector3& pos);
+		virtual Vector3 CalculateVertexPos(const Vector3& pos, float& out_displacement);
 
 		FORCEINLINE void SetMaterial(ResourceHandle mat) { m_Material = mat; };
 		FORCEINLINE WeakPtr<Material> GetMaterial() { return ResVault::Pointer()->GetResource<Material>(m_Material); };

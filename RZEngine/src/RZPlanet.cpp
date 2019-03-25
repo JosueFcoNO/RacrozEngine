@@ -28,8 +28,7 @@ namespace rczEngine
 
 		m_HeightCameracb.CreateConstantBuffer(sizeof(Vector4), Gfx::USAGE_DEFAULT, m_GfxCore);
 
-		//LoadAndProcessModel();
-		//CreateMaterial();
+		CreateMaterial();
 
 		m_SpacePosition.Set(x, y, z);
 
@@ -134,6 +133,19 @@ namespace rczEngine
 			}
 		}
 
+		m_SpaceMng->m_AtmosValues.UpdateConstantBuffer(&m_Atmosphere, m_GfxCore);
+		m_SpaceMng->m_AtmosValues.SetBufferInPS(10, m_GfxCore);
+		m_SpaceMng->m_AtmosValues.SetBufferInVS(10, m_GfxCore);
+
+		Vector3 cPos = CameraManager::Pointer()->GetActiveCamera().lock()->GetPosition();
+
+		m_HeightCamera.m_x = (m_SpacePosition - cPos).Magnitude();
+		m_HeightCamera.m_y = pow(m_HeightCamera.m_x, 2.0f);
+
+		m_HeightCameracb.UpdateConstantBuffer(&m_HeightCamera, m_GfxCore);
+		m_HeightCameracb.SetBufferInVS(11, m_GfxCore);
+		m_HeightCameracb.SetBufferInPS(11, m_GfxCore);
+
 		for (auto nodes : nodesToDraw)
 		{
 			nodes->Render();
@@ -148,8 +160,14 @@ namespace rczEngine
 		m_Planet->DrawModel(NULL);
 	}
 
-	void Planet::RenderAtmosphere(float scale)
+	void Planet::RenderAtmosphere()
 	{
+		m_SpaceMng->m_AtmosValues.UpdateConstantBuffer(&m_Atmosphere, m_GfxCore);
+		m_SpaceMng->m_AtmosValues.SetBufferInPS(10, m_GfxCore);
+		m_SpaceMng->m_AtmosValues.SetBufferInVS(10, m_GfxCore);
+
+		const auto scale = m_Atmosphere.OuterRadius;
+
 		///Render the planet sphere.
 		Matrix4 ScaleMatrix;
 		ScaleMatrix = Matrix4::Scale3D(scale, scale, scale)*Matrix4::Translate3D(m_SpacePosition.m_x, m_SpacePosition.m_y, m_SpacePosition.m_z);
@@ -204,11 +222,6 @@ namespace rczEngine
 		m_Materials = ResVault::Pointer()->InsertResource(mat);
 
 		m_Planet->m_MaterialMap["DefaultMaterial"] = m_Materials;
-
-		//mat = std::make_shared<Material>();
-		//mat->InitMaterial(MAT_PBR_MetRough, Gfx::GfxCore::Pointer());
-		//mat->SetFilePath("PlanetMaterialWater");
-		//Water = res->InsertResource(mat);
 	}
 
 	void Planet::LoadAndProcessModel()

@@ -49,7 +49,7 @@ namespace rczEngine
 		auto gfxPtr = Gfx::GfxCore::Pointer();
 
 		///Set the material and vertex buffer on the pipeline.
-		resPtr->GetResource<Material>(m_Material).lock()->SetThisMaterial(gfxPtr, resPtr);
+		//resPtr->GetResource<Material>(m_Material).lock()->SetThisMaterial(gfxPtr, resPtr);
 
 		m_VertexBuffer.SetThisVertexBuffer(gfxPtr, 0);
 
@@ -166,9 +166,7 @@ namespace rczEngine
 
 				TempVertex->VertexPosition += startPos;
 
-				TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition);
-
-				//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
+				TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
 
 				TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 10;
 				TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 10;
@@ -203,7 +201,7 @@ namespace rczEngine
 
 			TempVertex->VertexPosition += startPos;
 
-			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition);
+			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
@@ -234,7 +232,7 @@ namespace rczEngine
 		
 			TempVertex->VertexPosition += startPos;
 
-			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition);
+			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
@@ -266,7 +264,7 @@ namespace rczEngine
 			
 			TempVertex->VertexPosition += startPos;
 
-			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition);
+			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
@@ -298,7 +296,7 @@ namespace rczEngine
 	
 			TempVertex->VertexPosition += startPos;
 
-			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition);
+			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
@@ -330,7 +328,7 @@ namespace rczEngine
 
 			TempVertex->VertexPosition += startPos;
 
-			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition);
+			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
@@ -373,8 +371,9 @@ namespace rczEngine
 		return m_VertexBuffer.GetVertex(m_MeshBuffer.Size * y + x);
 	}
 
-	Vector3 MeshPlane::CalculateVertexPos(const Vector3& pos)
+	Vector3 MeshPlane::CalculateVertexPos(const Vector3& pos, float& out_displacement)
 	{
+		out_displacement = 1.0f;
 		return pos;
 	}
 

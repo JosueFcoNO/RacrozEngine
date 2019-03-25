@@ -19,7 +19,7 @@ namespace rczEngine
 		void InitSpaceManager();
 		void Update(float deltaTime);
 		void Render();
-		void RenderAtmos(float offset);
+		void RenderAtmos();
 
 		void CreatePlanet(int32 seed, float x, float y, float z);
 		void ChangeCurrentPlanet(Planet* planet);
@@ -43,6 +43,8 @@ namespace rczEngine
 		Planet* closestPlanet;
 
 		bool Visible = true;
+
+		Gfx::ConstantBuffer m_AtmosValues;
 
 	private:
 		void RenderSurface();

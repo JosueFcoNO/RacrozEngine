@@ -13,10 +13,6 @@ namespace rczEngine
 		m_gfx->CompileAndCreateVertexShader(m_SkyFromSpaceVS, L"Shaders/ProcGen/Planet/SkyFromSpaceAtmos.hlsl");
 		m_gfx->CompileAndCreatePixelShader(m_SkyFromSpacePS, L"Shaders/ProcGen/Planet/SkyFromSpaceAtmos.hlsl");
 		m_SkyFromSpaceVS.ReflectLayout(0, m_gfx);
-
-		m_AtmosValues.CreateConstantBuffer(sizeof(AtmosData), Gfx::USAGE_DEFAULT, m_gfx);
-		atmosData.InvWaveLength.Set(5.602, 9.478, 19.646);
-		m_AtmosValues.UpdateConstantBuffer(&atmosData, m_gfx);
 		
 		Transparent.InitBlendState();
 		Transparent.CreateBlendState(m_gfx);
@@ -69,22 +65,14 @@ namespace rczEngine
 		
 		if (space)
 		{
-			m_AtmosValues.SetBufferInVS(10, m_gfx);
-			m_AtmosValues.SetBufferInPS(10, m_gfx);
-			
 			UseDepth = true;
 			SetRenderTargetsInPipeline();
-		
-			//m_GroundFromSpaceVS.SetThisVertexShaderAndInputLayout(m_gfx);
-			//m_GroundFromSpacePS.SetThisPixelShader(m_gfx);
-			//
-			//space->RenderAtmos(0);
-		
+
 			m_SkyFromSpaceVS.SetThisVertexShaderAndInputLayout(m_gfx);
 			m_SkyFromSpacePS.SetThisPixelShader(m_gfx);
 			m_CullBack.SetThisRasterizerState(m_gfx);
 		
-			space->RenderAtmos(atmosData.OuterRadius);
+			space->RenderAtmos();
 		
 			m_gfx->UnbindRenderTargets();
 		
@@ -95,7 +83,7 @@ namespace rczEngine
 	void AtmosScatterPass::PostRenderPass()
 	{
 		for (int32 i = 0; i < 10; ++i)
-			m_gfx->UnbindPSShaderResource(i);
+			m_gfx->UnbindPSShaderResource(i);     
 
 			m_gfx->SetRSStateDefault();
 

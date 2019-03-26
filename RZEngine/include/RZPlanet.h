@@ -31,8 +31,8 @@ namespace rczEngine
 		int nSamples = 4;
 		float fSamples = 4.0f;
 
-		float SkyScale = 2.5f;
-		float OuterRadius = 102.5f;
+		float SkyScale = 5.0f;
+		float OuterRadius = 105.0f;
 
 		Vector3 InvWaveLength = { 5.602, 9.478, 19.646 };
 		float OuterRadiusSquared = pow(OuterRadius, 2.0f);

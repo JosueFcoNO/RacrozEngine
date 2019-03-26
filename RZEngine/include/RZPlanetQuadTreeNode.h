@@ -55,7 +55,7 @@ namespace rczEngine
 		bool ActiveTouch = false;
 		bool m_MeshDirty = false;
 
-		static const int MESH_RES = 1025;
+		static const int MESH_RES = 130;
 		static const int MESH_ROW_SIZE = MESH_RES - 1;
 		static const int MESH_ROW_HALF = (MESH_RES / 2);
 

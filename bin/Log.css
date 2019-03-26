@@ -1,0 +1,28 @@
+.Message {
+    text-align: left;
+    color: black;
+    background-color: white;
+    border-style: solid;
+    border-width: thin;
+    padding-left: 10px;
+}
+
+.Error {
+    text-align: left;
+    color: red;
+    background-color: white;
+    border-style: solid;
+    border-width: thin;
+    padding-left: 10px;
+}
+
+.Warning
+{
+    text-align: left;
+    color: red;
+    text-decoration-style: wavy;
+    background-color: white;
+    border-style: solid;
+    border-width: thin;
+    padding-left: 10px;
+}

@@ -209,9 +209,10 @@ namespace rczEngine
 
 		if (ActiveTouch)
 		{
-			auto mag = pos.Magnitude() - 1.0f;
+			auto mag = pos.Magnitude() - 100.0f;
 
-			if (1.0f / (m_QuadTreeDepth + 1) > mag)
+			if ((1.0f / (m_QuadTreeDepth + 1)) 
+				* 100.0f > mag)
 			{
 				m_Dirty = true;
 			}
@@ -455,12 +456,12 @@ namespace rczEngine
 
 		noise = pow(Noise->RidgedOctaveNoise(Pos128, 6, 0.4f), 2) *
 			Noise->OctaveNoise(Pos24, 6, 0.5f) *
-			//Noise->OctaveNoise(NoisePos, 3, 0.5f) * 
+			Noise->OctaveNoise(NoisePos, 3, 0.5f) * 
 			pow(Noise->RidgedOctaveNoise(Pos12, 3, 0.2f), 2);
 
 		out_displacement = noise;
 
-		auto finalPos = PosNormal + (PosNormal.GetNormalized())*noise*.02f;
+		auto finalPos = PosNormal + (PosNormal.GetNormalized())*noise*.03f;
 		finalPos *= 100.0f;
 
 		aabb.AddPoint(finalPos);

@@ -106,10 +106,10 @@ namespace rczEngine
 		auto bottomright = GetVertex(MESH_ROW_SIZE, MESH_ROW_SIZE).VertexPosition;
 		auto bottomleft = GetVertex(0, MESH_ROW_SIZE).VertexPosition;
 
-		Planes[0].ConstructFromPoints(topleft, topright, topleft.GetNormalized() * 2);
-		Planes[1].ConstructFromPoints(topright, bottomright, topright.GetNormalized() * 2);
-		Planes[2].ConstructFromPoints(bottomright, bottomleft, bottomright.GetNormalized() * 2);
-		Planes[3].ConstructFromPoints(bottomleft, topleft, bottomleft.GetNormalized() * 2);
+		Planes[0].ConstructFromPoints(topleft, topright, topleft * 2);
+		Planes[1].ConstructFromPoints(topright, bottomright, topright * 2);
+		Planes[2].ConstructFromPoints(bottomright, bottomleft, bottomright * 2);
+		Planes[3].ConstructFromPoints(bottomleft, topleft, bottomleft * 2);
 
 		Planes[4].ConstructFromPoints(topleft, topright, bottomright);
 
@@ -118,7 +118,6 @@ namespace rczEngine
 		node.Depth = m_QuadTreeDepth;
 		node.node = this;
 
-		node.parentProxy = nullptr;
 		node.Side = eSide::Up;
 		node.Pos = GetVertex(MESH_ROW_HALF, 0).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
@@ -126,7 +125,6 @@ namespace rczEngine
 
 		Connections.push_back(node);
 
-		node.parentProxy = nullptr;
 		node.Side = eSide::Left;
 		node.Pos = GetVertex(0, MESH_ROW_HALF).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
@@ -134,7 +132,6 @@ namespace rczEngine
 
 		Connections.push_back(node);
 
-		node.parentProxy = nullptr;
 		node.Side = eSide::Right;
 		node.Pos = GetVertex(MESH_ROW_SIZE, MESH_ROW_HALF).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
@@ -142,24 +139,12 @@ namespace rczEngine
 
 		Connections.push_back(node);
 
-		node.parentProxy = nullptr;
 		node.Side = eSide::Down;
 		node.Pos = GetVertex(MESH_ROW_HALF, MESH_ROW_SIZE).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
 		//GraphicDebugger::Pointer()->AddPoint("Rand4 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
 
 		Connections.push_back(node);
-
-		if (Parent)
-		{
-			Connections.insert(Connections.end(), Parent->Connections.begin(), Parent->Connections.end());
-
-			for (int i = 4; i < 8; ++i)
-			{
-				Connections[i].Depth = m_QuadTreeDepth;
-				Connections[i].parentProxy = &Parent->Connections[i - 4];
-			}
-		}
 
 		TerrainVertex* vertex;
 
@@ -391,26 +376,26 @@ namespace rczEngine
 
 		if (!done)
 		{
-			//Vector<Vector3> Points = aabb.GetCorners();
-			//auto gDebug = GraphicDebugger::Pointer();
-			//
-			//Vector<uint32> Indices;
-			//Indices.push_back(0); Indices.push_back(1);
-			//Indices.push_back(0); Indices.push_back(2);
-			//Indices.push_back(1); Indices.push_back(3);
-			//Indices.push_back(2); Indices.push_back(3);
-			//
-			//Indices.push_back(0); Indices.push_back(4);
-			//Indices.push_back(1); Indices.push_back(5);
-			//Indices.push_back(2); Indices.push_back(6);
-			//Indices.push_back(3); Indices.push_back(7);
-			//
-			//Indices.push_back(4); Indices.push_back(5);
-			//Indices.push_back(4); Indices.push_back(6);
-			//Indices.push_back(5); Indices.push_back(7);
-			//Indices.push_back(6); Indices.push_back(7);
-			//
-			//AABB_Debug = gDebug->AddLineListIndex("AABB" + std::to_string(rand()), Points, Indices, Color(1, 0, 1), -1.0f);
+			Vector<Vector3> Points = aabb.GetCorners();
+			auto gDebug = GraphicDebugger::Pointer();
+			
+			Vector<uint32> Indices;
+			Indices.push_back(0); Indices.push_back(1);
+			Indices.push_back(0); Indices.push_back(2);
+			Indices.push_back(1); Indices.push_back(3);
+			Indices.push_back(2); Indices.push_back(3);
+			
+			Indices.push_back(0); Indices.push_back(4);
+			Indices.push_back(1); Indices.push_back(5);
+			Indices.push_back(2); Indices.push_back(6);
+			Indices.push_back(3); Indices.push_back(7);
+			
+			Indices.push_back(4); Indices.push_back(5);
+			Indices.push_back(4); Indices.push_back(6);
+			Indices.push_back(5); Indices.push_back(7);
+			Indices.push_back(6); Indices.push_back(7);
+			
+			AABB_Debug = gDebug->AddLineListIndex("AABB" + std::to_string(rand()), Points, Indices, Color(1, 0, 1), -1.0f);
 
 			done = true;
 		}
@@ -586,7 +571,7 @@ namespace rczEngine
 
 	uint32 PlanetQuadTreeNode::HashCorner(Vector3 v)
 	{
-		auto temp = (v + Vector3(1.0f, 1.0f, 1.0f)) * 10.0f;
+		auto temp = (v + Vector3(1.0f, 1.0f, 1.0f)) * 100.0f;
 		return Vector3::Hash(temp);
 	}
 }

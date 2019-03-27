@@ -18,6 +18,8 @@ namespace rczEngine
 
 		float SignedDistance(const Vector3 &Pt) const noexcept
 		{
+			Logger::Pointer()->Log("Quepasaqui");
+
 			return ((Pt|Normal) + D);
 		}
 

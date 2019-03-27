@@ -45,7 +45,6 @@ namespace rczEngine
 		Vector3 Tangents;
 		Vector3 BiNormals;
 		float Displacement;
-		Vector3 NormalAvg;
 	};
 
 	class RZ_EXP MeshPlane

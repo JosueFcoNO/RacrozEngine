@@ -19,8 +19,6 @@ namespace rczEngine
 		PlanetQuadTreeNode* node;
 		Vector3 Pos;
 		eSide Side;
-
-		NodeConnection* parentProxy;
 	};
 
 	class RZ_EXP PlanetQuadTreeNode : public MeshPlane
@@ -55,7 +53,7 @@ namespace rczEngine
 		bool ActiveTouch = false;
 		bool m_MeshDirty = false;
 
-		static const int MESH_RES = 130;
+		static const int MESH_RES = 65;
 		static const int MESH_ROW_SIZE = MESH_RES - 1;
 		static const int MESH_ROW_HALF = (MESH_RES / 2);
 

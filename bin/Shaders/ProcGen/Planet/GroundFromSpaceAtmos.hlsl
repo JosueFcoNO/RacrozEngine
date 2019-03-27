@@ -152,5 +152,5 @@ float3 groundAtmos(float3 pos)
 	float3 C0 = frontColor * ((InvWaveLength * KrESun) + KmESun);
 	float3 C1 = attenuate.xyz; //Fudge the attenuation
 
-	return min(max(C0 + 0.25f*C1, 0.0f.xxx), 10.0f.xxx);
+	return min(max(C0 * 0.25f*C1, 0.0f.xxx), 10.0f.xxx);
 }

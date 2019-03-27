@@ -236,38 +236,6 @@ namespace rczEngine
 		{
 			auto& patch = m_PatchInfo[node.Hash];
 
-			///TODO: Check if i'm not doing this twice everytime.
-			if (patch.Connected)
-			{
-				if (node.parentProxy == patch.ConnectorOne)
-				{
-					if (node.Depth == patch.OneConnectedDepth)
-					{
-						return;
-					}
-					else
-					{
-						patch.ConnectorOne = &node;
-						patch.OneConnectedDepth = node.Depth;
-						PlanetQuadTreeNode::ConnectNodesSameDepth(*patch.ConnectorOne, *patch.ConnectorTwo);
-					}
-				}
-
-				if (node.parentProxy == patch.ConnectorTwo)
-				{
-					if (node.Depth == patch.TwoConnectedDepth)
-					{
-						return;
-					}
-					else
-					{
-						patch.ConnectorTwo = &node;
-						patch.TwoConnectedDepth = node.Depth;
-						PlanetQuadTreeNode::ConnectNodesSameDepth(*patch.ConnectorOne, *patch.ConnectorTwo);
-					}
-				}
-			}
-
 			if (patch.ConnectorOne == nullptr || patch.ConnectorOne == &node)
 			{
 				patch.ConnectorOne = &node;

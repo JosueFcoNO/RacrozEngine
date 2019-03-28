@@ -18,12 +18,7 @@ namespace rczEngine
 	class RZ_EXP PatchData
 	{
 	public:
-		NodeConnection* ConnectorOne = nullptr;
-		NodeConnection* ConnectorTwo = nullptr;
-
-		bool Connected;
-		int OneConnectedDepth;
-		int TwoConnectedDepth;
+		Vector<NodeConnection*> Connectors;
 	};
 
 	struct AtmosData

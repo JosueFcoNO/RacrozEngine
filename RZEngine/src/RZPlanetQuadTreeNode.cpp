@@ -117,32 +117,69 @@ namespace rczEngine
 
 		node.Depth = m_QuadTreeDepth;
 		node.node = this;
+		node.Connector = true;
 
 		node.Side = eSide::Up;
 		node.Pos = GetVertex(MESH_ROW_HALF, 0).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
-		//GraphicDebugger::Pointer()->AddPoint("Rand1 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
+		node.QPoint = ePointQNode::UpCenter;
+		GraphicDebugger::Pointer()->AddPoint("Rand1 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Left;
 		node.Pos = GetVertex(0, MESH_ROW_HALF).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
-		//GraphicDebugger::Pointer()->AddPoint("Rand2 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
+		node.QPoint = ePointQNode::LeftCenter;
+		GraphicDebugger::Pointer()->AddPoint("Rand2 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Right;
 		node.Pos = GetVertex(MESH_ROW_SIZE, MESH_ROW_HALF).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
-		//GraphicDebugger::Pointer()->AddPoint("Rand3 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
+		node.QPoint = ePointQNode::RightCenter;
+		GraphicDebugger::Pointer()->AddPoint("Rand3 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Down;
 		node.Pos = GetVertex(MESH_ROW_HALF, MESH_ROW_SIZE).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
-		//GraphicDebugger::Pointer()->AddPoint("Rand4 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
+		node.QPoint = ePointQNode::DownCenter;
+		GraphicDebugger::Pointer()->AddPoint("Rand4 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
+
+		node.Connector = false;
+
+		node.Side = eSide::Up;
+		node.Pos = topleft;
+		node.Hash = HashCorner(node.Pos);
+		node.QPoint = ePointQNode::UpCenter;
+		GraphicDebugger::Pointer()->AddPoint("Rand5 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 1));
+
+		Connections.push_back(node);
+
+		node.Side = eSide::Left;
+		node.Pos = topright;
+		node.Hash = HashCorner(node.Pos);
+		node.QPoint = ePointQNode::UpRight;
+		GraphicDebugger::Pointer()->AddPoint("Rand6 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 1));
+
+		Connections.push_back(node);
+
+		node.Side = eSide::Right;
+		node.Pos = bottomright;
+		node.Hash = HashCorner(node.Pos);
+		node.QPoint = ePointQNode::DownRight;
+		GraphicDebugger::Pointer()->AddPoint("Rand7 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 1));
+
+		Connections.push_back(node);
+
+		node.Side = eSide::Down;
+		node.Pos = bottomleft;
+		node.Hash = HashCorner(node.Pos);
+		node.QPoint = ePointQNode::DownLeft;
+		GraphicDebugger::Pointer()->AddPoint("Rand8 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 1));
 
 		Connections.push_back(node);
 
@@ -262,14 +299,6 @@ namespace rczEngine
 		}
 		else
 		{
-			if (CheckChildrenReady())
-			{
-				for (int i = 0; i < 4; ++i)
-				{
-					Children[i]->TestVisibility(camFrustum, nodesToDraw);
-				}
-			}
-
 			return;
 		}
 

@@ -10,6 +10,18 @@ namespace rczEngine
 		Left
 	};
 
+	enum class ePointQNode
+	{
+		UpLeft,
+		UpCenter,
+		UpRight,
+		RightCenter,
+		DownRight,
+		DownCenter,
+		DownLeft,
+		LeftCenter
+	};
+
 	class PlanetQuadTreeNode;
 
 	struct RZ_EXP NodeConnection
@@ -19,6 +31,8 @@ namespace rczEngine
 		PlanetQuadTreeNode* node;
 		Vector3 Pos;
 		eSide Side;
+		ePointQNode QPoint;
+		bool Connector; 
 	};
 
 	class RZ_EXP PlanetQuadTreeNode : public MeshPlane

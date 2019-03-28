@@ -73,6 +73,16 @@ namespace rczEngine
 		return (vhead - vtail).Magnitude();
 	}
 
+	///Returns the distance of the vector3: vhead-vtail.
+	float Vector3::SqrDistance(const Vector3 & vhead, const Vector3 & vtail)
+	{
+#ifdef RZ_PROFILING
+		ProfilerObj autoProfiler(RZ__FUNCTION__, PROFILE_EVENTS::PROF_GAME);
+#endif
+
+		return (vhead - vtail).SqrMagnitude();
+	}
+
 	///returns the angle of the x and y components of the vector
 	float Vector3::Anglexz(const Vector3 & v, bool getAsDegree)
 	{
@@ -204,6 +214,22 @@ namespace rczEngine
 		}
 
 		return Math::Sqrt(add);
+	}
+
+	float Vector3::SqrMagnitude() const noexcept
+	{
+#ifdef RZ_PROFILING
+		ProfilerObj autoProfiler(RZ__FUNCTION__, PROFILE_EVENTS::PROF_GAME);
+#endif
+		float add = 0.0f;
+
+#pragma omp simd
+		for (int i = 0; i < 3; ++i)
+		{
+			add += Math::Square(m_elements[i]);
+		}
+
+		return add;
 	}
 
 }

@@ -93,36 +93,40 @@ namespace rczEngine
 			Quadtree[i].Update(PlayerPos);
 		}
 
+		auto& frustum = PlayerCamera->m_CameraCore.GetFrustum();
+
+		///Get all the nodes visibles by their AABB.
 		Vector<PlanetQuadTreeNode*> nodesToDraw;
 		for (int i = 0; i < 6; ++i)
 		{
-			Quadtree[i].TestVisibility(PlayerCamera->m_CameraCore.GetFrustum(), nodesToDraw);
+			Quadtree[i].TestVisibility(frustum, nodesToDraw);
 		}
 
+		MMap<float, NodeConnection*> nodeDistance;
+
+		///Of all the nodes visible, get their connection points that are visible using the frustum and put them in the adyacent node info list.
 		for (auto nodes : nodesToDraw)
 		{
 			for (auto& c : nodes->Connections)
 			{
-				ProcessConnectionNode(c);
+				if (frustum.TestPoint(c.Pos))
+				{
+					auto pair = std::make_pair(Vector3::SqrDistance(PlayerPos, c.Pos), &c);
+					nodeDistance.insert(pair);
+
+					ProcessConnectionNode(c);
+				}
 			}
 		}
 
-		for (auto nodeDepth : m_PatchInfo)
+		auto startingDepth = Math::Min(nodeDistance.begin()->second->Depth, 1);
+
+		for (auto cNode : nodeDistance)
 		{
-			auto& connection = nodeDepth.second;
-
-			if (!connection.Connected && connection.ConnectorOne && connection.ConnectorTwo)
-			{
-				if (connection.OneConnectedDepth > connection.TwoConnectedDepth/2)
-				{
-					connection.ConnectorTwo->node->m_Dirty = true;
-				}
-				else if (connection.TwoConnectedDepth > connection.OneConnectedDepth / 2)
-				{
-					connection.ConnectorOne->node->m_Dirty = true;
-				}
-			}
+			auto depthNeed = cNode.first / Math::Pow(PlayerCamera->GetFarPlane(), 2.0f);
 		}
+
+		m_PatchInfo.clear();
 
 		for (auto nodes : nodesToDraw)
 		{
@@ -232,50 +236,6 @@ namespace rczEngine
 
 	void Planet::ProcessConnectionNode(NodeConnection & node)
 	{
-		if (m_PatchInfo.find(node.Hash) != m_PatchInfo.end())
-		{
-			auto& patch = m_PatchInfo[node.Hash];
-
-			if (patch.ConnectorOne == nullptr || patch.ConnectorOne == &node)
-			{
-				patch.ConnectorOne = &node;
-			}
-			else
-			{
-
-				if (!patch.Connected)
-				{
-					patch.ConnectorTwo = &node;
-
-					if (patch.ConnectorOne->Depth > patch.ConnectorTwo->Depth * 2)
-					{
-						patch.ConnectorOne->node->m_Dirty = true;
-						patch.ConnectorOne = nullptr;
-						return;
-					}
-
-					if (patch.ConnectorTwo->Depth > patch.ConnectorOne->Depth * 2)
-					{
-						patch.ConnectorTwo->node->m_Dirty = true;
-						patch.ConnectorTwo = nullptr;
-						return;
-					}
-
-					patch.Connected = true;
-					patch.OneConnectedDepth = patch.ConnectorOne->Depth;
-					patch.TwoConnectedDepth = node.Depth;
-
-					PlanetQuadTreeNode::ConnectNodesSameDepth(*patch.ConnectorOne, *patch.ConnectorTwo);
-				}
-			}
-		}
-		else
-		{
-			PatchData newData;
-			newData.ConnectorOne = &node;
-			newData.Connected = false;
-
-			m_PatchInfo[node.Hash] = newData;
-		}
+		m_PatchInfo[node.Hash].Connectors.push_back(&node);
 	}
 }

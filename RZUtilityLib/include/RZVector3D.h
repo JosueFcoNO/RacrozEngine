@@ -34,6 +34,7 @@ namespace rczEngine {
 			m_z(z) {};
 
 		static float Distance(const Vector3& vhead, const Vector3& vtail);
+		static float SqrDistance(const Vector3 & vhead, const Vector3 & vtail);
 		static float Anglexz(const Vector3& v, bool getAsDegree);
 		static uint32 Hash(const Vector3& v) noexcept;
 
@@ -43,6 +44,7 @@ namespace rczEngine {
 		void Normalize() noexcept;
 		Vector3 GetNormalized() const noexcept;
 		FORCEINLINE float Magnitude() const noexcept;
+		FORCEINLINE float SqrMagnitude() const noexcept;
 
 		FORCEINLINE Vector3 operator+(const Vector3& v) const noexcept { return Vector3(*this) += v; }
 		FORCEINLINE Vector3 operator-(const Vector3& v) const noexcept { return Vector3(*this) -= v; }

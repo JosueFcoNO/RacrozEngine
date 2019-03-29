@@ -121,9 +121,24 @@ namespace rczEngine
 
 		auto startingDepth = Math::Min(nodeDistance.begin()->second->Depth, 1);
 
-		for (auto cNode : nodeDistance)
+		for (auto cNode : m_PatchInfo)
 		{
-			auto depthNeed = cNode.first / Math::Pow(PlayerCamera->GetFarPlane(), 2.0f);
+			int maxDepth = 0;
+			for (auto connect : cNode.second.Connectors)
+			{
+				if (connect->Depth > maxDepth)
+				{
+					maxDepth = connect->Depth;
+				}
+			}
+
+			for (auto connect : cNode.second.Connectors)
+			{
+				if (connect->Depth < maxDepth/2)
+				{
+					connect->node->m_Dirty = true;
+				}
+			}
 		}
 
 		m_PatchInfo.clear();

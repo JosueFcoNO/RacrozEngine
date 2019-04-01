@@ -185,28 +185,28 @@ namespace rczEngine
 
 		TerrainVertex* vertex;
 
-		for (int i = 0; i < m_MeshBuffer.Size; ++i)
+		for (int i = 0; i < Size; ++i)
 		{
 			vertex = &GetVertex(i, 0);
 			//vertex->VertexNormals = { 1,0,0 };
 			SideVertices[(int)eSide::Up].push_back(vertex);
 		}
 
-		for (int i = 0; i < m_MeshBuffer.Size; ++i)
+		for (int i = 0; i < Size; ++i)
 		{
 			vertex = &GetVertex(MESH_ROW_SIZE, i);
 			//vertex->VertexNormals = { 0,1,0 };
 			SideVertices[(int)eSide::Right].push_back(vertex);
 		}
 
-		for (int i = 0; i < m_MeshBuffer.Size; ++i)
+		for (int i = 0; i < Size; ++i)
 		{
 			vertex = &GetVertex(i, MESH_ROW_SIZE);
 			//vertex->VertexNormals = { 0,0,1 };
 			SideVertices[(int)eSide::Down].push_back(vertex);
 		}
 
-		for (int i = 0; i < m_MeshBuffer.Size; ++i)
+		for (int i = 0; i < Size; ++i)
 		{
 			vertex = &GetVertex(0, i);
 			//vertex->VertexNormals = { 1,0,1 };
@@ -255,7 +255,7 @@ namespace rczEngine
 			}
 		}
 
-		if (m_Dirty)
+		if (m_Dirty && false)
 		{
 			DeathTimer.StartTimer();
 
@@ -281,7 +281,7 @@ namespace rczEngine
 
 	void PlanetQuadTreeNode::TestVisibility(const Frustum & camFrustum, Vector<PlanetQuadTreeNode*>& nodesToDraw)
 	{
-		if (camFrustum.TestAABB(aabb))
+		if (camFrustum.TestAABB(m_MeshAABB))
 		{
 			if (CheckChildrenReady())
 			{
@@ -405,7 +405,7 @@ namespace rczEngine
 
 		if (!done)
 		{
-			Vector<Vector3> Points = aabb.GetCorners();
+			Vector<Vector3> Points = m_MeshAABB.GetCorners();
 			auto gDebug = GraphicDebugger::Pointer();
 			
 			Vector<uint32> Indices;
@@ -478,7 +478,7 @@ namespace rczEngine
 		auto finalPos = PosNormal + (PosNormal.GetNormalized())*noise*.03f;
 		finalPos *= 100.0f;
 
-		aabb.AddPoint(finalPos);
+		m_MeshAABB.AddPoint(finalPos);
 
 		return finalPos;
 	}

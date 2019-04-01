@@ -105,8 +105,6 @@ float3 groundAtmos(float3 pos)
 	float Scale2 = 1.0f / (OuterRadius - InnerRadius);
 	float ScaleOverScaleDepth2 = Scale2 / scaleDepth;
 
-	float3 tempoffset = float3(0, wposl - InnerRadius, 0);
-
 	if (CamHeight.x > OuterRadius)
 	{
 		float near = getNearIntersection(ViewPosition, ray, CamHeight.y, OuterRadiusSquared);
@@ -152,5 +150,5 @@ float3 groundAtmos(float3 pos)
 	float3 C0 = frontColor * ((InvWaveLength * KrESun) + KmESun);
 	float3 C1 = attenuate.xyz; //Fudge the attenuation
 
-	return min(max(C0 * 0.25f*C1, 0.0f.xxx), 10.0f.xxx);
+	return min(max(C0 + 0.25f*C1, 0.0f.xxx), 100.0f.xxx);
 }

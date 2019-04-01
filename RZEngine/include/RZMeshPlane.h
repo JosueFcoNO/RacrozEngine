@@ -6,24 +6,6 @@ namespace rczEngine
 	class RZ_EXP SpaceManager;
 	class RZ_EXP TerrainPatch;
 
-#define HEIGHTMAP_RES 1024
-
-	struct MeshPlaneBuffer
-	{
-		int32 Size;
-		double distVertex;
-		double HalfSize;
-		float xCell;
-		float yCell;
-
-		float Range;
-		int32 Octaves;
-		float Persistance;
-		int32 CubeSide;
-
-		float padding[3];
-	};
-
 	enum eMeshPlaneOrientation
 	{
 		Ypos,
@@ -52,7 +34,7 @@ namespace rczEngine
 	public:
 		virtual ~MeshPlane() { DestroyMeshPlane(); };
 
-		void InitMeshPlane(int32 vertices, double size, double HalfSize, Vector3 startPos, eMeshPlaneOrientation orientation, bool CreateIndexBuffer = true, bool CreateVertexBuffer = true);
+		void InitMeshPlane(int32 vertices, double size, double halfSize, Vector3 startPos, eMeshPlaneOrientation orientation, bool CreateIndexBuffer = true, bool CreateVertexBuffer = true);
 		void DestroyMeshPlane() noexcept;
 
 		virtual void Render();
@@ -60,8 +42,6 @@ namespace rczEngine
 
 		FORCEINLINE void SetMaterial(ResourceHandle mat) { m_Material = mat; };
 		FORCEINLINE WeakPtr<Material> GetMaterial() { return ResVault::Pointer()->GetResource<Material>(m_Material); };
-
-		MeshPlaneBuffer m_MeshBuffer;
 
 		static void GenerateIndices(int32 vertices, Gfx::IndexBuffer& indexBuffer);
 
@@ -86,6 +66,10 @@ namespace rczEngine
 
 		Gfx::IndexBuffer* m_IndexBuffer;
 		ResourceHandle m_Material;
+		
+		int32 Size;
+		double distVertex;
+		double HalfSize;
 
 		AABB m_MeshAABB;
 

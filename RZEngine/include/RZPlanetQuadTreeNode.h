@@ -67,7 +67,7 @@ namespace rczEngine
 		bool ActiveTouch = false;
 		bool m_MeshDirty = false;
 
-		static const int MESH_RES = 65;
+		static const int MESH_RES = 64;
 		static const int MESH_ROW_SIZE = MESH_RES - 1;
 		static const int MESH_ROW_HALF = (MESH_RES / 2);
 
@@ -94,7 +94,6 @@ namespace rczEngine
 
 		PerlinNoise3D* Noise;
 
-		AABB aabb;
 		WeakPtr<DebuggerLineList> AABB_Debug;
 
 		float m_TimeTillDeath = 0.1f;

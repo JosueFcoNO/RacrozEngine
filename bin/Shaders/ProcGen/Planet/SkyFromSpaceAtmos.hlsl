@@ -159,15 +159,6 @@ PS_INPUT VS_Main(VS_Input vertex)
 	float fStartAngle;
 	float fStartDepth;
 
-	//float near = getNearIntersection(ViewPosition, ray, CamHeight.y, OuterRadiusSquared);
-	//
-	//rayStart = ViewPosition + (ray * near);
-	//far -= near;
-	//
-	//fStartAngle = dot(ray, rayStart) / OuterRadius;
-	//
-	//fStartDepth = exp(-1.0 / ScaleDepth);
-
 	if (CamHeight.x > OuterRadius)
 	{
 		float near = getNearIntersection(ViewPosition, ray, CamHeight.y, OuterRadiusSquared);

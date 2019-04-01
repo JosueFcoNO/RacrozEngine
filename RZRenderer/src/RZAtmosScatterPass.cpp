@@ -10,8 +10,10 @@ namespace rczEngine
 		//m_gfx->CompileAndCreatePixelShader(m_GroundFromSpacePS, L"Shaders/ProcGen/Planet/GroundFromSpaceAtmos.hlsl");
 		//m_GroundFromSpaceVS.ReflectLayout(0, m_gfx);
 
+		m_PShaderPath = L"Shaders/ProcGen/Planet/SkyFromSpaceAtmos.hlsl";
+
 		m_gfx->CompileAndCreateVertexShader(m_SkyFromSpaceVS, L"Shaders/ProcGen/Planet/SkyFromSpaceAtmos.hlsl");
-		m_gfx->CompileAndCreatePixelShader(m_SkyFromSpacePS, L"Shaders/ProcGen/Planet/SkyFromSpaceAtmos.hlsl");
+		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
 		m_SkyFromSpaceVS.ReflectLayout(0, m_gfx);
 		
 		Transparent.InitBlendState();
@@ -69,7 +71,7 @@ namespace rczEngine
 			SetRenderTargetsInPipeline();
 
 			m_SkyFromSpaceVS.SetThisVertexShaderAndInputLayout(m_gfx);
-			m_SkyFromSpacePS.SetThisPixelShader(m_gfx);
+			m_PShader.SetThisPixelShader(m_gfx);
 			m_CullBack.SetThisRasterizerState(m_gfx);
 		
 			space->RenderAtmos();

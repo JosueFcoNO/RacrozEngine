@@ -3,18 +3,15 @@
 namespace rczEngine
 {
 
-	void MeshPlane::InitMeshPlane(int32 vertices, double size, double HalfSize, Vector3 startPos, eMeshPlaneOrientation orientation, bool CreateIndexBuffer, bool CreateVertexBuffer)
+	void MeshPlane::InitMeshPlane(int32 vertices, double size, double halfSize, Vector3 startPos, eMeshPlaneOrientation orientation, bool CreateIndexBuffer, bool CreateVertexBuffer)
 	{
 		ProfilerObj obj("InitMeshPlane", PROFILE_EVENTS::PROF_GAME);
 
-		m_MeshBuffer.Size = vertices;
-		m_MeshBuffer.distVertex = size / double(vertices - 1);
-		m_MeshBuffer.HalfSize = HalfSize;
-		m_MeshBuffer.Range = 1.0f;
-		m_MeshBuffer.Octaves = 1;
-		m_MeshBuffer.Persistance = 1.0f;
+		Size = vertices;
+		distVertex = size / double(vertices - 1);
+		HalfSize = halfSize;
 
-		m_VertexBuffer.ResizeVertexVector(Math::Pow(m_MeshBuffer.Size, 2));
+		m_VertexBuffer.ResizeVertexVector(Math::Pow(Size, 2));
 
 		if (CreateIndexBuffer)
 		{
@@ -62,7 +59,7 @@ namespace rczEngine
 		}
 		else
 		{
-			vertexSize = m_MeshBuffer.Size;
+			vertexSize = Size;
 		}
 
 		gfxPtr->DrawIndexed(vertexSize, 0, 0);
@@ -147,11 +144,11 @@ namespace rczEngine
 		ProfilerObj meshY("GenerateMeshYPos", PROFILE_EVENTS::PROF_GAME);
 
 		TerrainVertex* TempVertex;
-		auto size = m_MeshBuffer.Size;
+		auto size = Size;
 
-		double halfSize = m_MeshBuffer.HalfSize;
+		double halfSize = HalfSize;
 
-		double LastX = -halfSize - m_MeshBuffer.distVertex;
+		double LastX = -halfSize - distVertex;
 		double LastZ = -halfSize;
 		
 		for (int32 x = 0; x < size; ++x)
@@ -160,7 +157,7 @@ namespace rczEngine
 			{
 				TempVertex = &GetVertex(x, y);
 
-				TempVertex->VertexPosition.m_x = LastX += m_MeshBuffer.distVertex;
+				TempVertex->VertexPosition.m_x = LastX += distVertex;
 				TempVertex->VertexPosition.m_y = 0.0f;
 				TempVertex->VertexPosition.m_z = LastZ;
 
@@ -168,12 +165,12 @@ namespace rczEngine
 
 				TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
 
-				TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 10;
-				TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 10;
+				TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
+				TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
 			}
 
-			LastZ += m_MeshBuffer.distVertex;
-			LastX = -halfSize - m_MeshBuffer.distVertex;
+			LastZ += distVertex;
+			LastX = -halfSize - distVertex;
 		}
 	}
 
@@ -182,10 +179,10 @@ namespace rczEngine
 		ProfilerObj meshY("GenerateMeshYNeg", PROFILE_EVENTS::PROF_GAME);
 
 		TerrainVertex* TempVertex;
-		auto size = m_MeshBuffer.Size;
+		auto size = Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
 
-		double halfSize = m_MeshBuffer.HalfSize;
+		double halfSize = HalfSize;
 
 #pragma omp parallel for
 		for (uint32 i = 0; i < vertexSize; ++i)
@@ -195,9 +192,9 @@ namespace rczEngine
 			int32 x = i / size;
 			int32 y = i % size;
 
-			TempVertex->VertexPosition.m_x = CastStatic<float>(((m_MeshBuffer.distVertex*(size - y)) - halfSize) - m_MeshBuffer.distVertex);
+			TempVertex->VertexPosition.m_x = CastStatic<float>(((distVertex*(size - y)) - halfSize) - distVertex);
 			TempVertex->VertexPosition.m_y = 0.0f;
-			TempVertex->VertexPosition.m_z = CastStatic<float>(((m_MeshBuffer.distVertex*(size - x)) - halfSize) - m_MeshBuffer.distVertex);
+			TempVertex->VertexPosition.m_z = CastStatic<float>(((distVertex*(size - x)) - halfSize) - distVertex);
 
 			TempVertex->VertexPosition += startPos;
 
@@ -205,18 +202,18 @@ namespace rczEngine
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 10;
-			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 10;
+			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
+			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
 		}
 	}
 
 	void MeshPlane::GenerateMeshXPos(const Vector3& startPos)
 	{
 		TerrainVertex* TempVertex;
-		auto size = m_MeshBuffer.Size;
+		auto size = Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
 
-		double halfSize = m_MeshBuffer.HalfSize;
+		double halfSize = HalfSize;
 
 #pragma omp parallel for
 		for (uint32 i = 0; i < vertexSize; ++i)
@@ -227,8 +224,8 @@ namespace rczEngine
 			int32 y = i % size;
 
 			TempVertex->VertexPosition.m_x = 0.0f;
-			TempVertex->VertexPosition.m_y = CastStatic<float>((m_MeshBuffer.distVertex*y) - halfSize);
-			TempVertex->VertexPosition.m_z = CastStatic<float>((m_MeshBuffer.distVertex*x) - halfSize);
+			TempVertex->VertexPosition.m_y = CastStatic<float>((distVertex*y) - halfSize);
+			TempVertex->VertexPosition.m_z = CastStatic<float>((distVertex*x) - halfSize);
 		
 			TempVertex->VertexPosition += startPos;
 
@@ -236,19 +233,19 @@ namespace rczEngine
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 10;
-			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 10;
+			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
+			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
 		}
 	}
 
 	void MeshPlane::GenerateMeshXNeg(const Vector3& startPos)
 	{
 		TerrainVertex* TempVertex;
-		auto size = m_MeshBuffer.Size;
+		auto size = Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
 
-		double Size = size * m_MeshBuffer.distVertex;
-		double halfSize = m_MeshBuffer.HalfSize;
+		double Size = size * distVertex;
+		double halfSize = HalfSize;
 
 #pragma omp parallel for
 		for (uint32 i = 0; i < vertexSize; ++i)
@@ -259,8 +256,8 @@ namespace rczEngine
 			int32 y = i % size;
 
 			TempVertex->VertexPosition.m_x = 0.0f;
-			TempVertex->VertexPosition.m_y = CastStatic<float>(((m_MeshBuffer.distVertex*(size - x)) - halfSize) - m_MeshBuffer.distVertex);
-			TempVertex->VertexPosition.m_z = CastStatic<float>(((m_MeshBuffer.distVertex*(size - y)) - halfSize) - m_MeshBuffer.distVertex);
+			TempVertex->VertexPosition.m_y = CastStatic<float>(((distVertex*(size - x)) - halfSize) - distVertex);
+			TempVertex->VertexPosition.m_z = CastStatic<float>(((distVertex*(size - y)) - halfSize) - distVertex);
 			
 			TempVertex->VertexPosition += startPos;
 
@@ -268,19 +265,19 @@ namespace rczEngine
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 10;
-			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 10;
+			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
+			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
 		}
 	}
 
 	void MeshPlane::GenerateMeshZPos(const Vector3& startPos)
 	{
 		TerrainVertex* TempVertex;
-		auto size = m_MeshBuffer.Size;
+		auto size = Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
 
-		double Size = size * m_MeshBuffer.distVertex;
-		double halfSize = m_MeshBuffer.HalfSize;
+		double Size = size * distVertex;
+		double halfSize = HalfSize;
 
 #pragma omp parallel for
 		for (uint32 i = 0; i < vertexSize; ++i)
@@ -290,8 +287,8 @@ namespace rczEngine
 			int32 x = i / size;
 			int32 y = i % size;
 
-			TempVertex->VertexPosition.m_x = CastStatic<float>((m_MeshBuffer.distVertex*y) - halfSize);
-			TempVertex->VertexPosition.m_y = CastStatic<float>((m_MeshBuffer.distVertex*x) - halfSize);
+			TempVertex->VertexPosition.m_x = CastStatic<float>((distVertex*y) - halfSize);
+			TempVertex->VertexPosition.m_y = CastStatic<float>((distVertex*x) - halfSize);
 			TempVertex->VertexPosition.m_z = 0.0f;
 	
 			TempVertex->VertexPosition += startPos;
@@ -300,19 +297,19 @@ namespace rczEngine
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 10;
-			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 10;
+			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
+			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
 		}
 	}
 
 	void MeshPlane::GenerateMeshZNeg(const Vector3& startPos)
 	{
 		TerrainVertex* TempVertex;
-		auto size = m_MeshBuffer.Size;
+		auto size = Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
 
-		double Size = size * m_MeshBuffer.distVertex;
-		double halfSize = m_MeshBuffer.HalfSize;
+		double Size = size * distVertex;
+		double halfSize = HalfSize;
 
 #pragma omp parallel for
 		for (uint32 i = 0; i < vertexSize; ++i)
@@ -322,8 +319,8 @@ namespace rczEngine
 			int32 x = i / size;
 			int32 y = i % size;
 
-			TempVertex->VertexPosition.m_x = CastStatic<float>(((m_MeshBuffer.distVertex*(size - x)) - halfSize) - m_MeshBuffer.distVertex);
-			TempVertex->VertexPosition.m_y = CastStatic<float>(((m_MeshBuffer.distVertex*(size - y)) - halfSize) - m_MeshBuffer.distVertex);
+			TempVertex->VertexPosition.m_x = CastStatic<float>(((distVertex*(size - x)) - halfSize) - distVertex);
+			TempVertex->VertexPosition.m_y = CastStatic<float>(((distVertex*(size - y)) - halfSize) - distVertex);
 			TempVertex->VertexPosition.m_z = 0.0f;
 
 			TempVertex->VertexPosition += startPos;
@@ -332,8 +329,8 @@ namespace rczEngine
 
 			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
 
-			TempVertex->TextureCoordinates.m_x = float(y)  * m_MeshBuffer.distVertex * 10;
-			TempVertex->TextureCoordinates.m_y = float(x)  * m_MeshBuffer.distVertex * 10;
+			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
+			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
 		}
 	}
 
@@ -368,7 +365,7 @@ namespace rczEngine
 
 	TerrainVertex& MeshPlane::GetVertex(int32 x, int32 y)
 	{
-		return m_VertexBuffer.GetVertex(m_MeshBuffer.Size * y + x);
+		return m_VertexBuffer.GetVertex(Size * y + x);
 	}
 
 	Vector3 MeshPlane::CalculateVertexPos(const Vector3& pos, float& out_displacement)
@@ -381,7 +378,7 @@ namespace rczEngine
 	{
 		ProfilerObj obj("GenerateNormals", PROFILE_EVENTS::PROF_GAME);
 
-		auto size = m_MeshBuffer.Size;
+		auto size = Size;
 		auto indexSize = m_IndexBuffer->GetSize();
 
 		//Le saco normales a todo.
@@ -424,7 +421,7 @@ namespace rczEngine
 	{
 		ProfilerObj obj("GenerateSmoothNormals", PROFILE_EVENTS::PROF_GAME);
 
-		auto size = m_MeshBuffer.Size;
+		auto size = Size;
 		auto bufferSize = m_VertexBuffer.GetSize();
 
 		//Le saco normales suaves ya a todo.

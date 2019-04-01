@@ -49,6 +49,7 @@ namespace rczEngine
 			RZ_EXP FORCEINLINE void ResizeVertexVector(int32 count)
 			{
 				m_VertexList.resize(count);
+				m_VertexList.shrink_to_fit();
 			}
 
 			///Slooow.

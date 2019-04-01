@@ -94,7 +94,7 @@ PS_OUTPUT PS_Main(PS_Input frag) : SV_TARGET
 	
 	float3 atmos = groundAtmos(frag.wpos.xyz);
 
-	output.Color.xyz = lerp(PBR_rm(frag.wpos.xyz, albedo, NormalFinal, rough, metallic, lerp(0.04f, albedo, metallic)), atmos, 0.5f);
+	output.Color.xyz = lerp(PBR_rm(frag.wpos.xyz, albedo, NormalFinal, rough, metallic, lerp(0.04f, albedo, metallic)), pow(atmos, 2.2f), 0.5f);
 
 	//output.Color.xyz = frag.normal.xyz;
 

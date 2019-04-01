@@ -18,17 +18,7 @@ namespace rczEngine
 		virtual void PostRenderPass();
 
 	private:
-		Gfx::VertexShader m_GroundFromSpaceVS;
-		Gfx::PixelShader  m_GroundFromSpacePS;
-
-		Gfx::VertexShader m_GroundFromAtmosphereVS;
-		Gfx::PixelShader  m_GroundFromAtmospherePS;
-
 		Gfx::VertexShader m_SkyFromSpaceVS;
-		Gfx::PixelShader  m_SkyFromSpacePS;
-
-		Gfx::VertexShader m_SkyFromAtmosphereVS;
-		Gfx::PixelShader  m_SkyFromAtmospherePS;
 
 		StrPtr<Scene> m_ActiveScene;
 		Gfx::BlendState Transparent;

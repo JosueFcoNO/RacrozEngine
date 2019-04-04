@@ -49,8 +49,6 @@ namespace rczEngine
 
 		Gfx::VertexBuffer<TerrainVertex> m_VertexBuffer;
 
-		bool m_Dirty = false;
-
 		void GenerateMesh(const Vector3& startPos, eMeshPlaneOrientation orientation);
 
 	protected:

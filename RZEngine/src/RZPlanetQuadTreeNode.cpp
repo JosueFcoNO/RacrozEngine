@@ -9,8 +9,6 @@ namespace rczEngine
 		for (int i = 0; i < 4; ++i)
 			SetChildrenReady(i, false);
 
-		planetRef->QuadTreesNodes++;
-
 		PlanetOwner = planetRef;
 
 		m_QuadTreeDepth = depth;
@@ -69,7 +67,7 @@ namespace rczEngine
 		}
 
 		Noise = noise;
-		InitMeshPlane(MESH_RES, planeSize, planeSize / 2.0, startPos, side, true, false);
+		InitMeshPlane(Mesh_Res, planeSize, planeSize / 2.0, startPos, side, true, false);
 		InitPlaneAndCorners();
 
 		std::mutex buenMutex;
@@ -80,13 +78,19 @@ namespace rczEngine
 		m_Material = ResVault::Pointer()->FindResourceByName<Material>("lambert1").lock()->GetHandle();
 	}
 
+	void PlanetQuadTreeNode::Subdivide()
+	{
+		m_Subdivided = true;
+
+	}
+
 	void PlanetQuadTreeNode::Update(Vector3 playerPos)
 	{
 		ProfilerObj obj("PlanetQuadTreeNode::Update", PROFILE_EVENTS::PROF_GAME);
 
 		CalculateLOD(playerPos);
 
-		if (m_Dirty)
+		if (m_Subdivided)
 			for (int i = 0; i < 4; ++i)
 			{
 				if (CheckChildrenReady())
@@ -102,145 +106,103 @@ namespace rczEngine
 	void PlanetQuadTreeNode::InitPlaneAndCorners()
 	{
 		auto topleft = GetVertex(0, 0).VertexPosition;
-		auto topright = GetVertex(MESH_ROW_SIZE, 0).VertexPosition;
-		auto bottomright = GetVertex(MESH_ROW_SIZE, MESH_ROW_SIZE).VertexPosition;
-		auto bottomleft = GetVertex(0, MESH_ROW_SIZE).VertexPosition;
+		auto topright = GetVertex(Mesh_Row_Size, 0).VertexPosition;
+		auto bottomright = GetVertex(Mesh_Row_Size, Mesh_Row_Size).VertexPosition;
+		auto bottomleft = GetVertex(0, Mesh_Row_Size).VertexPosition;
 
-		Planes[0].ConstructFromPoints(topleft, topright, topleft * 2);
-		Planes[1].ConstructFromPoints(topright, bottomright, topright * 2);
-		Planes[2].ConstructFromPoints(bottomright, bottomleft, bottomright * 2);
-		Planes[3].ConstructFromPoints(bottomleft, topleft, bottomleft * 2);
+		m_NodePlanes[0].ConstructFromPoints(topleft, topright, topleft * 2);
+		m_NodePlanes[1].ConstructFromPoints(topright, bottomright, topright * 2);
+		m_NodePlanes[2].ConstructFromPoints(bottomright, bottomleft, bottomright * 2);
+		m_NodePlanes[3].ConstructFromPoints(bottomleft, topleft, bottomleft * 2);
 
-		Planes[4].ConstructFromPoints(topleft, topright, bottomright);
+		m_NodePlanes[4].ConstructFromPoints(topleft, topright, bottomright);
 
 		NodeConnection node;
 
 		node.Depth = m_QuadTreeDepth;
 		node.node = this;
-		node.Connector = true;
 
 		node.Side = eSide::Up;
-		node.Pos = GetVertex(MESH_ROW_HALF, 0).VertexPosition;
+		node.Pos = GetVertex(Mesh_Row_Half, 0).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
-		node.QPoint = ePointQNode::UpCenter;
 		GraphicDebugger::Pointer()->AddPoint("Rand1 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Left;
-		node.Pos = GetVertex(0, MESH_ROW_HALF).VertexPosition;
+		node.Pos = GetVertex(0, Mesh_Row_Half).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
-		node.QPoint = ePointQNode::LeftCenter;
 		GraphicDebugger::Pointer()->AddPoint("Rand2 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Right;
-		node.Pos = GetVertex(MESH_ROW_SIZE, MESH_ROW_HALF).VertexPosition;
+		node.Pos = GetVertex(Mesh_Row_Size, Mesh_Row_Half).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
-		node.QPoint = ePointQNode::RightCenter;
 		GraphicDebugger::Pointer()->AddPoint("Rand3 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Down;
-		node.Pos = GetVertex(MESH_ROW_HALF, MESH_ROW_SIZE).VertexPosition;
+		node.Pos = GetVertex(Mesh_Row_Half, Mesh_Row_Size).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
-		node.QPoint = ePointQNode::DownCenter;
 		GraphicDebugger::Pointer()->AddPoint("Rand4 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
-
-		node.Connector = false;
-
-		node.Side = eSide::Up;
-		node.Pos = topleft;
-		node.Hash = HashCorner(node.Pos);
-		node.QPoint = ePointQNode::UpCenter;
-		GraphicDebugger::Pointer()->AddPoint("Rand5 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 1));
-
-		Connections.push_back(node);
-
-		node.Side = eSide::Left;
-		node.Pos = topright;
-		node.Hash = HashCorner(node.Pos);
-		node.QPoint = ePointQNode::UpRight;
-		GraphicDebugger::Pointer()->AddPoint("Rand6 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 1));
-
-		Connections.push_back(node);
-
-		node.Side = eSide::Right;
-		node.Pos = bottomright;
-		node.Hash = HashCorner(node.Pos);
-		node.QPoint = ePointQNode::DownRight;
-		GraphicDebugger::Pointer()->AddPoint("Rand7 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 1));
-
-		Connections.push_back(node);
-
-		node.Side = eSide::Down;
-		node.Pos = bottomleft;
-		node.Hash = HashCorner(node.Pos);
-		node.QPoint = ePointQNode::DownLeft;
-		GraphicDebugger::Pointer()->AddPoint("Rand8 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 1));
 
 		Connections.push_back(node);
 
 		TerrainVertex* vertex;
-
 		for (int i = 0; i < Size; ++i)
 		{
 			vertex = &GetVertex(i, 0);
-			//vertex->VertexNormals = { 1,0,0 };
 			SideVertices[(int)eSide::Up].push_back(vertex);
 		}
 
 		for (int i = 0; i < Size; ++i)
 		{
-			vertex = &GetVertex(MESH_ROW_SIZE, i);
-			//vertex->VertexNormals = { 0,1,0 };
+			vertex = &GetVertex(Mesh_Row_Size, i);
 			SideVertices[(int)eSide::Right].push_back(vertex);
 		}
 
 		for (int i = 0; i < Size; ++i)
 		{
-			vertex = &GetVertex(i, MESH_ROW_SIZE);
-			//vertex->VertexNormals = { 0,0,1 };
+			vertex = &GetVertex(i, Mesh_Row_Size);
 			SideVertices[(int)eSide::Down].push_back(vertex);
 		}
 
 		for (int i = 0; i < Size; ++i)
 		{
 			vertex = &GetVertex(0, i);
-			//vertex->VertexNormals = { 1,0,1 };
 			SideVertices[(int)eSide::Left].push_back(vertex);
 		}
 	}
 
 	bool PlanetQuadTreeNode::TestIfInside(const Vector3& pos)
 	{
-		return (Planes[0].SignedDistance(pos) < 0 &&
-			Planes[1].SignedDistance(pos) < 0 &&
-			Planes[2].SignedDistance(pos) < 0 &&
-			Planes[3].SignedDistance(pos) < 0 &&
-			Planes[4].SignedDistance(pos) > 0);
+		return (m_NodePlanes[0].SignedDistance(pos) < 0 &&
+			m_NodePlanes[1].SignedDistance(pos) < 0 &&
+			m_NodePlanes[2].SignedDistance(pos) < 0 &&
+			m_NodePlanes[3].SignedDistance(pos) < 0 &&
+			m_NodePlanes[4].SignedDistance(pos) > 0);
 	}
 
 	void PlanetQuadTreeNode::CalculateLOD(const Vector3& pos)
 	{
 		ProfilerObj obj("CalculateLOD", PROFILE_EVENTS::PROF_GAME);
 
-		ActiveTouch = TestIfInside(pos);
+		m_PlayerInside = TestIfInside(pos);
 
-		if (ActiveTouch)
+		if (m_PlayerInside)
 		{
 			auto mag = pos.Magnitude() - 100.0f;
 
 			if ((1.0f / (m_QuadTreeDepth + 1)) 
 				* 100.0f > mag)
 			{
-				m_Dirty = true;
+				m_Subdivided = true;
 			}
 			else
 			{
-				m_Dirty = false;
+				m_Subdivided = false;
 				PlanetOwner->ActiveQuadTree = this;
 			}
 		}
@@ -250,12 +212,12 @@ namespace rczEngine
 			{
 				if (PlanetOwner->ActiveQuadTree->GetQuadTreeDepth() <= m_QuadTreeDepth)
 				{
-					m_Dirty = false;
+					m_Subdivided = false;
 				}
 			}
 		}
 
-		if (m_Dirty && false)
+		if (m_Subdivided)
 		{
 			DeathTimer.StartTimer();
 
@@ -313,16 +275,16 @@ namespace rczEngine
 		{
 			if (Vector3::Distance(oneVertices[0]->VertexPosition, twoVertices[0]->VertexPosition) < 0.005f)
 			{
-				for (int i = 0; i < MESH_RES; ++i)
+				for (int i = 0; i < Mesh_Res; ++i)
 				{
 					*oneVertices[i] = *twoVertices[i];
 				}
 			}
 			else
 			{
-				for (int i = 0; i < MESH_RES; ++i)
+				for (int i = 0; i < Mesh_Res; ++i)
 				{
-					*oneVertices[i] = *twoVertices[MESH_ROW_SIZE - i];
+					*oneVertices[i] = *twoVertices[Mesh_Row_Size - i];
 				}
 			}
 
@@ -359,20 +321,20 @@ namespace rczEngine
 
 			if (Vector3::Distance(oneVertices[0]->VertexPosition, twoVertices[0]->VertexPosition) < 0.05f)
 			{
-				for (int i = 0, k = 0; i < MESH_RES; ++i, k+= 2)
+				for (int i = 0, k = 0; i < Mesh_Res; ++i, k+= 2)
 				{
 					*(*DeepSide)[k]  = *(*ShallowSide)[i];
 				}
 			}
 			else
 			{
-				for (int i = 0, k = 0; i < MESH_RES; ++i, k += 2)
+				for (int i = 0, k = 0; i < Mesh_Res; ++i, k += 2)
 				{
-					*(*DeepSide)[MESH_RES * 2 - 2 - k]  = *(*ShallowSide)[i];
+					*(*DeepSide)[Mesh_Res * 2 - 2 - k]  = *(*ShallowSide)[i];
 				}
 			}
 
-			for (int i = 1; i < MESH_RES*2-1; i+=2)
+			for (int i = 1; i < Mesh_Res*2-1; i+=2)
 			{
 				auto correctedIndex = i;
 
@@ -403,35 +365,35 @@ namespace rczEngine
 		const auto resPtr = ResVault::Pointer();
 		const auto gfxPtr = Gfx::GfxCore::Pointer();
 
-		if (!done)
-		{
-			Vector<Vector3> Points = m_MeshAABB.GetCorners();
-			auto gDebug = GraphicDebugger::Pointer();
-			
-			Vector<uint32> Indices;
-			Indices.push_back(0); Indices.push_back(1);
-			Indices.push_back(0); Indices.push_back(2);
-			Indices.push_back(1); Indices.push_back(3);
-			Indices.push_back(2); Indices.push_back(3);
-			
-			Indices.push_back(0); Indices.push_back(4);
-			Indices.push_back(1); Indices.push_back(5);
-			Indices.push_back(2); Indices.push_back(6);
-			Indices.push_back(3); Indices.push_back(7);
-			
-			Indices.push_back(4); Indices.push_back(5);
-			Indices.push_back(4); Indices.push_back(6);
-			Indices.push_back(5); Indices.push_back(7);
-			Indices.push_back(6); Indices.push_back(7);
-			
-			AABB_Debug = gDebug->AddLineListIndex("AABB" + std::to_string(rand()), Points, Indices, Color(1, 0, 1), -1.0f);
-
-			done = true;
-		}
+		//if (!done)
+		//{
+		//	Vector<Vector3> Points = m_MeshAABB.GetCorners();
+		//	auto gDebug = GraphicDebugger::Pointer();
+		//	
+		//	Vector<uint32> Indices;
+		//	Indices.push_back(0); Indices.push_back(1);
+		//	Indices.push_back(0); Indices.push_back(2);
+		//	Indices.push_back(1); Indices.push_back(3);
+		//	Indices.push_back(2); Indices.push_back(3);
+		//	
+		//	Indices.push_back(0); Indices.push_back(4);
+		//	Indices.push_back(1); Indices.push_back(5);
+		//	Indices.push_back(2); Indices.push_back(6);
+		//	Indices.push_back(3); Indices.push_back(7);
+		//	
+		//	Indices.push_back(4); Indices.push_back(5);
+		//	Indices.push_back(4); Indices.push_back(6);
+		//	Indices.push_back(5); Indices.push_back(7);
+		//	Indices.push_back(6); Indices.push_back(7);
+		//	
+		//	AABB_Debug = gDebug->AddLineListIndex("AABB" + std::to_string(rand()), Points, Indices, Color(1, 0, 1), -1.0f);
+		//
+		//	done = true;
+		//}
 
 		auto ptr = resPtr->GetResource<Material>(PlanetOwner->m_Materials).lock();
 
-		if (ActiveTouch)
+		if (m_PlayerInside)
 			ptr->m_core.g_Albedo.Set(1.0f, 0.0f, 0.0f);
 		else
 			ptr->m_core.g_Albedo.Set(1.0f, 1.0f, 1.0f);
@@ -440,7 +402,7 @@ namespace rczEngine
 
 		//AABB_Debug.lock()->Active(!m_Dirty);
 
-		if (m_Dirty)
+		if (m_Subdivided)
 		{
 			if (CheckChildrenReady())
 				return RenderChildren();
@@ -550,7 +512,7 @@ namespace rczEngine
 			ChildrenReady[2] &&
 			ChildrenReady[3];
 
-		if (retValue && SideVertices[0].size() == MESH_RES)
+		if (retValue && SideVertices[0].size() == Mesh_Res)
 		{
 			UpdateSideVertices();
 		}

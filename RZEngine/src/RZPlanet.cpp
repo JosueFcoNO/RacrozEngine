@@ -6,11 +6,6 @@ namespace rczEngine
 
 	void Planet::InitPlanet(int32 seed, float x, float y, float z, SpaceManager* spaceMng)
 	{
-		instance = this;
-
-		QuadTreesNodes = 0;
-		Connections = 0;
-
 		m_SpaceMng = spaceMng;
 		m_CurrentScene = SceneManager::Pointer()->GetActiveScene();
 		m_GfxCore = Gfx::GfxCore::Pointer();
@@ -23,7 +18,7 @@ namespace rczEngine
 
 		for (int i = 0; i < 6; ++i)
 		{
-			Quadtree[i].InitQuadTree(this, nullptr, &noise, Vector3(0, 0, 0), 0, 0, (eMeshPlaneOrientation)i);
+			m_QTreeRoots[i].InitQuadTree(this, nullptr, &noise, Vector3(0, 0, 0), 0, 0, (eMeshPlaneOrientation)i);
 		}
 
 		m_HeightCameracb.CreateConstantBuffer(sizeof(Vector4), Gfx::USAGE_DEFAULT, m_GfxCore);
@@ -90,7 +85,7 @@ namespace rczEngine
 
 		for (int i = 0; i < 6; ++i)
 		{
-			Quadtree[i].Update(PlayerPos);
+			m_QTreeRoots[i].Update(PlayerPos);
 		}
 
 		auto& frustum = PlayerCamera->m_CameraCore.GetFrustum();
@@ -99,10 +94,8 @@ namespace rczEngine
 		Vector<PlanetQuadTreeNode*> nodesToDraw;
 		for (int i = 0; i < 6; ++i)
 		{
-			Quadtree[i].TestVisibility(frustum, nodesToDraw);
+			m_QTreeRoots[i].TestVisibility(frustum, nodesToDraw);
 		}
-
-		MMap<float, NodeConnection*> nodeDistance;
 
 		///Of all the nodes visible, get their connection points that are visible using the frustum and put them in the adyacent node info list.
 		for (auto nodes : nodesToDraw)
@@ -111,15 +104,12 @@ namespace rczEngine
 			{
 				if (frustum.TestPoint(c.Pos))
 				{
-					auto pair = std::make_pair(Vector3::SqrDistance(PlayerPos, c.Pos), &c);
-					nodeDistance.insert(pair);
-
 					ProcessConnectionNode(c);
 				}
 			}
 		}
 
-		auto startingDepth = Math::Min(nodeDistance.begin()->second->Depth, 1);
+		Set<PlanetQuadTreeNode*> dividers;
 
 		for (auto cNode : m_PatchInfo)
 		{
@@ -136,8 +126,16 @@ namespace rczEngine
 			{
 				if (connect->Depth < maxDepth/2)
 				{
-					connect->node->m_Dirty = true;
+					dividers.insert(connect->node);
 				}
+			}
+		}
+
+		for (auto divs : dividers)
+		{
+			if (frustum.TestAABB(divs->GetAABB()))
+			{
+				divs->Subdivide();
 			}
 		}
 
@@ -145,11 +143,11 @@ namespace rczEngine
 
 		for (auto nodes : nodesToDraw)
 		{
-			if (nodes->m_MeshDirty)
-			{
-				nodes->m_MeshDirty = false;
-				nodes->m_VertexBuffer.UpdateVertexBuffer(m_GfxCore);
-			}
+			//if (nodes->m_MeshDirty)
+			//{
+				//nodes->m_MeshDirty = false;
+				//nodes->m_VertexBuffer.UpdateVertexBuffer(m_GfxCore);
+			//}
 		}
 
 		m_SpaceMng->m_AtmosValues.UpdateConstantBuffer(&m_Atmosphere, m_GfxCore);

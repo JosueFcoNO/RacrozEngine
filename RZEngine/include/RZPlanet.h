@@ -51,10 +51,6 @@ namespace rczEngine
 	class RZ_EXP Planet
 	{
 	public:
-		int QuadTreesNodes;
-		int Connections;
-
-		Planet* instance;
 		PlanetQuadTreeNode* ActiveQuadTree = nullptr;
 
 		void InitPlanet(int32 seed, float x, float y, float z, SpaceManager* spaceMng);
@@ -64,13 +60,13 @@ namespace rczEngine
 
 		void CreateMaterial();
 
+		void CreateNewNode();
+
 		FORCEINLINE Vector3 GetSpacePosition() { return m_SpacePosition; };
 
 		ResourceHandle m_Materials;
 		ResourceHandle m_HeightMap;
 		Vector4 m_HeightScale;
-
-		PlanetQuadTreeNode Quadtree[6];
 
 		int32 Seed = 0;
 		PerlinNoise3D noise;
@@ -81,7 +77,6 @@ namespace rczEngine
 
 	private:
 		void LoadAndProcessModel();
-		
 		void ProcessConnectionNode(NodeConnection& node);
 
 		bool m_OnLand = false;
@@ -103,10 +98,11 @@ namespace rczEngine
 		Vector4 m_HeightCamera;
 		
 		Vector4 PermutationTable[PERMUTATION_TABLE_SIZE];
-
 		Vector3 m_SpacePosition;
-
 		Matrix4 m_PlanetMatrix;
+
+		Vector<StrPtr<PlanetQuadTreeNode>> m_Nodes;
+		PlanetQuadTreeNode m_QTreeRoots[6];
 
 		ResourceHandle Water;
 		StrPtr<CameraCmp> PlayerCamera;

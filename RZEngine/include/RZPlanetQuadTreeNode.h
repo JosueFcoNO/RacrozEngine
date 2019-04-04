@@ -10,18 +10,6 @@ namespace rczEngine
 		Left
 	};
 
-	enum class ePointQNode
-	{
-		UpLeft,
-		UpCenter,
-		UpRight,
-		RightCenter,
-		DownRight,
-		DownCenter,
-		DownLeft,
-		LeftCenter
-	};
-
 	class PlanetQuadTreeNode;
 
 	struct RZ_EXP NodeConnection
@@ -31,8 +19,6 @@ namespace rczEngine
 		PlanetQuadTreeNode* node;
 		Vector3 Pos;
 		eSide Side;
-		ePointQNode QPoint;
-		bool Connector; 
 	};
 
 	class RZ_EXP PlanetQuadTreeNode : public MeshPlane
@@ -40,7 +26,8 @@ namespace rczEngine
 	public:
 		virtual ~PlanetQuadTreeNode() { DestroyQuadTreeNode(); };
 
-		void InitQuadTree(Planet * planetRef, PlanetQuadTreeNode * parent, PerlinNoise3D * noise, Vector3 StartPos, int32 ChildNumber, int32 depth, eMeshPlaneOrientation side);
+		void InitQuadTree(Planet* planetRef, PlanetQuadTreeNode* parent, PerlinNoise3D * noise, Vector3 StartPos, int32 ChildNumber, int32 depth, eMeshPlaneOrientation side);
+		void Subdivide();
 		void Update(Vector3 playerPos);
 		void DestroyQuadTreeNode() noexcept;
 
@@ -60,18 +47,17 @@ namespace rczEngine
 		void DestroyChildren();
 
 		int32 GetQuadTreeDepth() { return m_QuadTreeDepth; };
-		bool done = false;
-		Plane Planes[5];
-		Planet* PlanetOwner = nullptr;
-		bool Override = false;
-		bool ActiveTouch = false;
-		bool m_MeshDirty = false;
 
-		static const int MESH_RES = 64;
-		static const int MESH_ROW_SIZE = MESH_RES - 1;
-		static const int MESH_ROW_HALF = (MESH_RES / 2);
+		Planet* PlanetOwner = nullptr;
 
 		Vector<NodeConnection> Connections;
+
+		FORCEINLINE void SetMeshDirty() noexcept { m_MeshDirty = true; };
+		FORCEINLINE const AABB& GetAABB() const noexcept { return m_MeshAABB; };
+
+		static const int Mesh_Res = 65;
+		static const int Mesh_Row_Size = Mesh_Res - 1;
+		static const int Mesh_Row_Half = (Mesh_Res / 2);
 
 	private:
 		void RenderChildren();
@@ -90,11 +76,17 @@ namespace rczEngine
 
 		PlanetQuadTreeNode* Parent = nullptr;
 		PlanetQuadTreeNode* Children[4];
+		
 		bool ChildrenReady[4];
+
+		bool m_Subdivided = false;
+		bool m_PlayerInside = false;
+		bool m_MeshDirty = false;
 
 		PerlinNoise3D* Noise;
 
 		WeakPtr<DebuggerLineList> AABB_Debug;
+		Plane m_NodePlanes[5];
 
 		float m_TimeTillDeath = 0.1f;
 		Timer DeathTimer;

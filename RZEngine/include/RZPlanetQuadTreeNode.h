@@ -78,6 +78,7 @@ namespace rczEngine
 		PlanetQuadTreeNode* Children[4];
 		
 		bool ChildrenReady[4];
+		bool done = false;
 
 		bool m_Subdivided = false;
 		bool m_PlayerInside = false;

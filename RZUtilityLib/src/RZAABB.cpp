@@ -33,12 +33,12 @@ namespace rczEngine
 
 	void AABB::AddPoint(Vector3 point) noexcept
 	{
-			if (point.m_x < m_PointMin.m_x) m_PointMin.m_x = point.m_x;
-			if (point.m_x > m_PointMax.m_x) m_PointMax.m_x = point.m_x;
-			if (point.m_y < m_PointMin.m_y) m_PointMin.m_y = point.m_y;
-			if (point.m_y > m_PointMax.m_y) m_PointMax.m_y = point.m_y;
-			if (point.m_z < m_PointMin.m_z) m_PointMin.m_z = point.m_z;
-			if (point.m_z > m_PointMax.m_z) m_PointMax.m_z = point.m_z;
+		if (point.m_x < m_PointMin.m_x) m_PointMin.m_x = point.m_x;
+		if (point.m_x > m_PointMax.m_x) m_PointMax.m_x = point.m_x;
+		if (point.m_y < m_PointMin.m_y) m_PointMin.m_y = point.m_y;
+		if (point.m_y > m_PointMax.m_y) m_PointMax.m_y = point.m_y;
+		if (point.m_z < m_PointMin.m_z) m_PointMin.m_z = point.m_z;
+		if (point.m_z > m_PointMax.m_z) m_PointMax.m_z = point.m_z;
 	}
 
 	void AABB::Clear() noexcept

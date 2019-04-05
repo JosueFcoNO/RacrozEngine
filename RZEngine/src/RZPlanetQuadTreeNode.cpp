@@ -125,28 +125,28 @@ namespace rczEngine
 		node.Side = eSide::Up;
 		node.Pos = GetVertex(Mesh_Row_Half, 0).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
-		GraphicDebugger::Pointer()->AddPoint("Rand1 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
+		GraphicDebugger::Pointer()->AddPoint("Rand1 " + std::to_string(rand()), node.Pos, 1, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Left;
 		node.Pos = GetVertex(0, Mesh_Row_Half).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
-		GraphicDebugger::Pointer()->AddPoint("Rand2 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
+		GraphicDebugger::Pointer()->AddPoint("Rand2 " + std::to_string(rand()), node.Pos, 1, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Right;
 		node.Pos = GetVertex(Mesh_Row_Size, Mesh_Row_Half).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
-		GraphicDebugger::Pointer()->AddPoint("Rand3 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
+		GraphicDebugger::Pointer()->AddPoint("Rand3 " + std::to_string(rand()), node.Pos, 1, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Down;
 		node.Pos = GetVertex(Mesh_Row_Half, Mesh_Row_Size).VertexPosition;
 		node.Hash = HashCorner(node.Pos);
-		GraphicDebugger::Pointer()->AddPoint("Rand4 " + std::to_string(rand()), node.Pos, 0.05f, Color(1, 0, 0));
+		GraphicDebugger::Pointer()->AddPoint("Rand4 " + std::to_string(rand()), node.Pos, 1, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
@@ -365,31 +365,31 @@ namespace rczEngine
 		const auto resPtr = ResVault::Pointer();
 		const auto gfxPtr = Gfx::GfxCore::Pointer();
 
-		//if (!done)
-		//{
-		//	Vector<Vector3> Points = m_MeshAABB.GetCorners();
-		//	auto gDebug = GraphicDebugger::Pointer();
-		//	
-		//	Vector<uint32> Indices;
-		//	Indices.push_back(0); Indices.push_back(1);
-		//	Indices.push_back(0); Indices.push_back(2);
-		//	Indices.push_back(1); Indices.push_back(3);
-		//	Indices.push_back(2); Indices.push_back(3);
-		//	
-		//	Indices.push_back(0); Indices.push_back(4);
-		//	Indices.push_back(1); Indices.push_back(5);
-		//	Indices.push_back(2); Indices.push_back(6);
-		//	Indices.push_back(3); Indices.push_back(7);
-		//	
-		//	Indices.push_back(4); Indices.push_back(5);
-		//	Indices.push_back(4); Indices.push_back(6);
-		//	Indices.push_back(5); Indices.push_back(7);
-		//	Indices.push_back(6); Indices.push_back(7);
-		//	
-		//	AABB_Debug = gDebug->AddLineListIndex("AABB" + std::to_string(rand()), Points, Indices, Color(1, 0, 1), -1.0f);
-		//
-		//	done = true;
-		//}
+		if (!done)
+		{
+			Vector<Vector3> Points = m_MeshAABB.GetCorners();
+			auto gDebug = GraphicDebugger::Pointer();
+			
+			Vector<uint32> Indices;
+			Indices.push_back(0); Indices.push_back(1);
+			Indices.push_back(0); Indices.push_back(2);
+			Indices.push_back(1); Indices.push_back(3);
+			Indices.push_back(2); Indices.push_back(3);
+			
+			Indices.push_back(0); Indices.push_back(4);
+			Indices.push_back(1); Indices.push_back(5);
+			Indices.push_back(2); Indices.push_back(6);
+			Indices.push_back(3); Indices.push_back(7);
+			
+			Indices.push_back(4); Indices.push_back(5);
+			Indices.push_back(4); Indices.push_back(6);
+			Indices.push_back(5); Indices.push_back(7);
+			Indices.push_back(6); Indices.push_back(7);
+			
+			AABB_Debug = gDebug->AddLineListIndex("_AABB" + std::to_string(rand()), Points, Indices, Color(1, 0, 1), -1.0f);
+			AABB_Debug.lock()->Active(true);
+			done = true;
+		}
 
 		auto ptr = resPtr->GetResource<Material>(PlanetOwner->m_Materials).lock();
 

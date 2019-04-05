@@ -40,7 +40,20 @@ namespace rczEngine
 			return (a+b+c) / denom;
 		}
 
+		static bool PlaneLineIntersection(const Plane& p, const Vector3& linePoint1, const Vector3& linePoint2)
+		{
+			auto num = -((p.Normal | linePoint1) + p.D);
+			auto den = p.Normal | (linePoint2 - linePoint1);
+
+			if (den == 0.0f) return false;
+
+			auto s = num / den;
+
+			return (s > 0.0f && s < 1.0f);
+		}
+
 		Vector3 Normal;
 		float D;
+		Vector3 Point;
 	};
 }

@@ -18,7 +18,7 @@ namespace rczEngine
 			RZ_EXP bool SetThisIndexBuffer(GfxCore* gfx);
 			RZ_EXP void AddIndex(uint32 newIndex);
 
-			RZ_EXP uint32 GetSize() { return m_IndexSize; };
+			RZ_EXP uint32 GetSize() { return m_IndexList.size(); };
 			RZ_EXP int32 GetIndex(int32 index) { return m_IndexList[index]; };
 
 			RZ_EXP void ClearIndexList();

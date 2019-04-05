@@ -99,13 +99,13 @@ namespace rczEngine
 
 		///Of all the nodes visible, get their connection points that are visible using the frustum and put them in the adyacent node info list.
 		for (auto nodes : nodesToDraw)
-		{
+		{ 
 			for (auto& c : nodes->Connections)
 			{
-				if (frustum.TestPoint(c.Pos))
-				{
+				//if (frustum.TestPoint(c.Pos))
+				//{
 					ProcessConnectionNode(c);
-				}
+				//}
 			}
 		}
 

@@ -14,7 +14,7 @@ namespace rczEngine
 	public:
 		void Render(Gfx::GfxCore* gfx)
 		{
-			if (!m_Active) return;
+			//if (!m_Active) return;
 
 			if (UseIndex)
 			{
@@ -40,7 +40,7 @@ namespace rczEngine
 			m_TimeToExist -= deltaTime;
 			if (m_TimeToExist < 0.0f && m_TimeToExist > -0.5f)
 			{
-				Destroy();
+				//Destroy();
 			}
 		}
 

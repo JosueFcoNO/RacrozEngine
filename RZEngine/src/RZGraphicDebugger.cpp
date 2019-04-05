@@ -74,7 +74,7 @@ namespace rczEngine
 
 			if (obj.second->CanRemove())
 			{
-				m_Objects.erase(obj.first);
+				//m_Objects.erase(obj.first);
 			}
 		}
 	}

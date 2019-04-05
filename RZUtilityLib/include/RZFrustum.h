@@ -18,7 +18,8 @@ namespace rczEngine
 		public:
 			void CalculateFrustum(const Camera& camera);
 			
-			bool TestPoint(Vector3 point) const noexcept;
+			bool TestPoint(const Vector3 & point) const noexcept;
+			bool TestLineSegment(const Vector3 & p0, const Vector3 & p1) const noexcept;
 			bool TestAABB(const AABB& aabb) const noexcept;
 			
 			Vector4 NearPoints[4];

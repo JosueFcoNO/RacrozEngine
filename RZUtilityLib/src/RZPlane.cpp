@@ -11,18 +11,21 @@ namespace rczEngine
 	Plane::Plane() noexcept
 	{
 		Normal.Set(0, 1, 0);
+		Point.Set(0, 0, 0);
 		D = 0;
 	}
 
 	Plane::Plane(float x, float y, float z, float w) noexcept
 	{
 		Normal.Set(x, y, z);
+		Point.Set(0, 0, 0);
 		D = w;
 	}
 
 	Plane::Plane(const Vector3& normal, float d) noexcept
 	{ 
 		Normal = normal;
+		Point.Set(0, 0, 0);
 		D = d;
 	}
 
@@ -41,6 +44,7 @@ namespace rczEngine
 	{
 		Normal = normal;
 		D = -(Pt | normal);
+		Point = Pt;
 	}
 
 	void Plane::ConstructFromPointVectors(const Vector3 &Pt, const Vector3 &V1, const Vector3 &V2) noexcept

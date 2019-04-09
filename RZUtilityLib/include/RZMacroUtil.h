@@ -17,3 +17,5 @@
 #endif
 
 #pragma warning (disable: 4201) //Anonymous struct warning.
+#pragma warning (disable: 26446) //gsl::at() warning.
+#pragma warning (disable: 26482) //Array indexing with constexprs

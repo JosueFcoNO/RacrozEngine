@@ -387,7 +387,6 @@ namespace rczEngine
 			Indices.push_back(6); Indices.push_back(7);
 			
 			AABB_Debug = gDebug->AddLineListIndex("_AABB" + std::to_string(rand()), Points, Indices, Color(1, 0, 1), -1.0f);
-			AABB_Debug.lock()->Active(true);
 			done = true;
 		}
 
@@ -400,7 +399,7 @@ namespace rczEngine
 
 		ptr->SetThisMaterial(gfxPtr, resPtr);
 
-		//AABB_Debug.lock()->Active(!m_Dirty);
+		AABB_Debug.lock()->Active(!m_Subdivided);
 
 		if (m_Subdivided)
 		{
@@ -564,5 +563,200 @@ namespace rczEngine
 	{
 		auto temp = (v + Vector3(1.0f, 1.0f, 1.0f)) * 100.0f;
 		return Vector3::Hash(temp);
+	}
+
+	void MeshPlane::GenerateMesh(const Vector3& startPos)
+	{
+		ProfilerObj meshY("GenerateMesh", PROFILE_EVENTS::PROF_GAME);
+
+		TerrainVertex* TempVertex;
+		auto size = Size;
+
+		double halfSize = HalfSize;
+
+		double LastX = -halfSize - distVertex;
+		double LastZ = -halfSize;
+
+		for (int32 x = 0; x < size; ++x)
+		{
+			for (int32 y = 0; y < size; ++y)
+			{
+				TempVertex = &GetVertex(x, y);
+
+				TempVertex->VertexPosition.m_x = LastX += distVertex;
+				TempVertex->VertexPosition.m_y = 0.0f;
+				TempVertex->VertexPosition.m_z = LastZ;
+
+				TempVertex->VertexPosition += startPos;
+
+				TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
+
+				TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
+				TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
+			}
+
+			LastZ += distVertex;
+			LastX = -halfSize - distVertex;
+		}
+	}
+
+	void MeshPlane::GenerateMeshYNeg(const Vector3& startPos)
+	{
+		ProfilerObj meshY("GenerateMeshYNeg", PROFILE_EVENTS::PROF_GAME);
+
+		TerrainVertex* TempVertex;
+		auto size = Size;
+		auto vertexSize = m_VertexBuffer.GetSize();
+
+		double halfSize = HalfSize;
+
+#pragma omp parallel for
+		for (uint32 i = 0; i < vertexSize; ++i)
+		{
+			TempVertex = &m_VertexBuffer.GetVertex(i);
+
+			int32 x = i / size;
+			int32 y = i % size;
+
+			TempVertex->VertexPosition.m_x = CastStatic<float>(((distVertex*(size - y)) - halfSize) - distVertex);
+			TempVertex->VertexPosition.m_y = 0.0f;
+			TempVertex->VertexPosition.m_z = CastStatic<float>(((distVertex*(size - x)) - halfSize) - distVertex);
+
+			TempVertex->VertexPosition += startPos;
+
+			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
+
+			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
+
+			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
+			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
+		}
+	}
+
+	void MeshPlane::GenerateMeshXPos(const Vector3& startPos)
+	{
+		TerrainVertex* TempVertex;
+		auto size = Size;
+		auto vertexSize = m_VertexBuffer.GetSize();
+
+		double halfSize = HalfSize;
+
+#pragma omp parallel for
+		for (uint32 i = 0; i < vertexSize; ++i)
+		{
+			TempVertex = &m_VertexBuffer.GetVertex(i);
+
+			int32 x = i / size;
+			int32 y = i % size;
+
+			TempVertex->VertexPosition.m_x = 0.0f;
+			TempVertex->VertexPosition.m_y = CastStatic<float>((distVertex*y) - halfSize);
+			TempVertex->VertexPosition.m_z = CastStatic<float>((distVertex*x) - halfSize);
+
+			TempVertex->VertexPosition += startPos;
+
+			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
+
+			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
+
+			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
+			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
+		}
+	}
+
+	void MeshPlane::GenerateMeshXNeg(const Vector3& startPos)
+	{
+		TerrainVertex* TempVertex;
+		auto size = Size;
+		auto vertexSize = m_VertexBuffer.GetSize();
+
+		double Size = size * distVertex;
+		double halfSize = HalfSize;
+
+#pragma omp parallel for
+		for (uint32 i = 0; i < vertexSize; ++i)
+		{
+			TempVertex = &m_VertexBuffer.GetVertex(i);
+
+			int32 x = i / size;
+			int32 y = i % size;
+
+			TempVertex->VertexPosition.m_x = 0.0f;
+			TempVertex->VertexPosition.m_y = CastStatic<float>(((distVertex*(size - x)) - halfSize) - distVertex);
+			TempVertex->VertexPosition.m_z = CastStatic<float>(((distVertex*(size - y)) - halfSize) - distVertex);
+
+			TempVertex->VertexPosition += startPos;
+
+			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
+
+			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
+
+			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
+			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
+		}
+	}
+
+	void MeshPlane::GenerateMeshZPos(const Vector3& startPos)
+	{
+		TerrainVertex* TempVertex;
+		auto size = Size;
+		auto vertexSize = m_VertexBuffer.GetSize();
+
+		double Size = size * distVertex;
+		double halfSize = HalfSize;
+
+#pragma omp parallel for
+		for (uint32 i = 0; i < vertexSize; ++i)
+		{
+			TempVertex = &m_VertexBuffer.GetVertex(i);
+
+			int32 x = i / size;
+			int32 y = i % size;
+
+			TempVertex->VertexPosition.m_x = CastStatic<float>((distVertex*y) - halfSize);
+			TempVertex->VertexPosition.m_y = CastStatic<float>((distVertex*x) - halfSize);
+			TempVertex->VertexPosition.m_z = 0.0f;
+
+			TempVertex->VertexPosition += startPos;
+
+			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
+
+			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
+
+			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
+			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
+		}
+	}
+
+	void MeshPlane::GenerateMeshZNeg(const Vector3& startPos)
+	{
+		TerrainVertex* TempVertex;
+		auto size = Size;
+		auto vertexSize = m_VertexBuffer.GetSize();
+
+		double Size = size * distVertex;
+		double halfSize = HalfSize;
+
+#pragma omp parallel for
+		for (uint32 i = 0; i < vertexSize; ++i)
+		{
+			TempVertex = &m_VertexBuffer.GetVertex(i);
+
+			int32 x = i / size;
+			int32 y = i % size;
+
+			TempVertex->VertexPosition.m_x = CastStatic<float>(((distVertex*(size - x)) - halfSize) - distVertex);
+			TempVertex->VertexPosition.m_y = CastStatic<float>(((distVertex*(size - y)) - halfSize) - distVertex);
+			TempVertex->VertexPosition.m_z = 0.0f;
+
+			TempVertex->VertexPosition += startPos;
+
+			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
+
+			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
+
+			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
+			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
+		}
 	}
 }

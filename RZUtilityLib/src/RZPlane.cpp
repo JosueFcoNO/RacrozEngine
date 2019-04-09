@@ -39,7 +39,6 @@ namespace rczEngine
 		ConstructFromPointNormal(p1, normal);
 	}
 
-
 	void Plane::ConstructFromPointNormal(const Vector3 &Pt, const Vector3 &normal) noexcept
 	{
 		Normal = normal;
@@ -64,5 +63,31 @@ namespace rczEngine
 		Normal.Set(a, b, c);
 		Normal.Normalize();
 		D = d;
+	}
+
+	Vector3 Plane::ThreePlaneIntersect(const Plane one, const Plane two, const Plane three) noexcept
+	{
+		const auto twoThreeNCross = (two.Normal^three.Normal);
+
+		const Vector3 a = twoThreeNCross * -one.D;
+		const Vector3 b = (three.Normal^one.Normal)*-two.D;
+		const Vector3 c = (one.Normal^two.Normal)*-three.D;
+		const float denom = one.Normal | twoThreeNCross;
+
+		return (a + b + c) / denom;
+	}
+
+	bool Plane::PlaneLineIntersection(const Plane & p, const Vector3 & linePoint1, const Vector3 & linePoint2, Vector3 & out_pointOfIntersection) noexcept
+	{
+		auto num = -((p.Normal | linePoint1) + p.D);
+		auto den = p.Normal | (linePoint2 - linePoint1);
+
+		if (den == 0.0f) return false;
+
+		auto s = num / den;
+
+		out_pointOfIntersection = Math::Lerp(linePoint1, linePoint2, s);
+
+		return (s > 0.0f && s < 1.0f);
 	}
 }

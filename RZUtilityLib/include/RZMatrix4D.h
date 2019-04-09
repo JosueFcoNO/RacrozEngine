@@ -93,14 +93,14 @@ namespace rczEngine
 			} m_elements;
 		};
 
-		static const Matrix4& IDENTITY() { static Matrix4 Identity(
+		static const Matrix4& IDENTITY() noexcept { static Matrix4 Identity(
 			{ 1.0f, 0.0f, 0.0f, 0.0f },
 			{ 0.0f, 1.0f, 0.0f, 0.0f },
 			{ 0.0f, 0.0f, 1.0f, 0.0f },
 			{ 0.0f, 0.0f, 0.0f, 1.0f }
 		); return Identity; };
 		
-		static const Matrix4& ZERO() { static Matrix4 Zero(
+		static const Matrix4& ZERO() noexcept { static Matrix4 Zero(
 			{ 0.0f, 0.0f, 0.0f, 0.0f },
 			{ 0.0f, 0.0f, 0.0f, 0.0f },
 			{ 0.0f, 0.0f, 0.0f, 0.0f },

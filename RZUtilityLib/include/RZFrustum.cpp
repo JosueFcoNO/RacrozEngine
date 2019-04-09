@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void Frustum::CalculateFrustum(const Camera& camera)
+	void Frustum::CalculateFrustum(const Camera& camera) noexcept
 	{
 		const auto fovRad = Math::DegreesToRad(camera.GetFov());
 
@@ -52,28 +52,31 @@ namespace rczEngine
 
 	bool Frustum::TestLineSegment(const Vector3& p0, const Vector3& p1) const noexcept
 	{
+		Vector3 outPoint;
 
-		auto ints = 0;
+		if (m_Planes[0].SignedDistance(p0) > 0.0f ||
+			m_Planes[0].SignedDistance(p1) > 0.0f)
+		{
 
 #pragma omp for
-		for (auto& plane : m_Planes)
-		{
-			if (Plane::PlaneLineIntersection(plane, p0, p1)) ints++;
-		}
+			for (auto& plane : m_Planes)
+			{
+				if (Plane::PlaneLineIntersection(plane, p0, p1, outPoint))
+				{
+					return true;
+				}
+			}
 
-		return (ints > 1);
+		}
+		return false;
 	}
 
 	bool Frustum::TestAABB(const AABB & aabb) const noexcept
 	{
+		return true;
 		Vector<Vector3> points = aabb.GetCorners();
 
-		//if (TestPoint(aabb.GetCenter())) return true;
-		//
-		//for (auto pt : points)
-		//{
-		//	if (TestPoint(pt)) return true;
-		//}
+		if (TestPoint(aabb.GetCenter())) return true;
 
 		if (TestLineSegment(points[0], points[1])) return true;
 		if (TestLineSegment(points[1], points[2])) return true;
@@ -84,11 +87,11 @@ namespace rczEngine
 		if (TestLineSegment(points[5], points[6])) return true;
 		if (TestLineSegment(points[6], points[7])) return true;
 		if (TestLineSegment(points[4], points[7])) return true;
-
-		//if (TestLineSegment(points[0], points[4])) return true;
-		//if (TestLineSegment(points[1], points[5])) return true;
-		//if (TestLineSegment(points[2], points[6])) return true;
-		//if (TestLineSegment(points[3], points[7])) return true;
+		
+		if (TestLineSegment(points[0], points[4])) return true;
+		if (TestLineSegment(points[1], points[5])) return true;
+		if (TestLineSegment(points[2], points[6])) return true;
+		if (TestLineSegment(points[3], points[7])) return true;
 
 		return false;
 	}

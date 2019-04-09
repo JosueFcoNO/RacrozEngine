@@ -16,7 +16,7 @@ namespace rczEngine
 	class RZ_EXP Frustum
 	{
 		public:
-			void CalculateFrustum(const Camera& camera);
+			void CalculateFrustum(const Camera& camera) noexcept;
 			
 			bool TestPoint(const Vector3 & point) const noexcept;
 			bool TestLineSegment(const Vector3 & p0, const Vector3 & p1) const noexcept;

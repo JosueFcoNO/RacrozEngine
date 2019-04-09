@@ -39,9 +39,9 @@ namespace rczEngine
 		const Matrix4 GetViewMatrix() noexcept;
 		const Matrix4 GetProjMatrix() noexcept;
 
-		FORCEINLINE const void SetPosition(const Vector3& position) { m_Position = position; m_CachedViewMatrix = false; };
-		FORCEINLINE const void SetTarget(const Vector3& target) { m_Target = target; m_CachedViewMatrix = false; };
-		FORCEINLINE const void SetUp(const Vector3& up) { m_Up = up; m_CachedViewMatrix = false; };
+		FORCEINLINE const void SetPosition(const Vector3& position) noexcept { m_Position = position; m_CachedViewMatrix = false; };
+		FORCEINLINE const void SetTarget(const Vector3& target) noexcept { m_Target = target; m_CachedViewMatrix = false; };
+		FORCEINLINE const void SetUp(const Vector3& up) noexcept { m_Up = up; m_CachedViewMatrix = false; };
 
 		FORCEINLINE const Vector3 GetViewDir() const noexcept { return (m_Target - m_Position).GetNormalized(); }
 		FORCEINLINE const Vector3 GetTarget() const noexcept { return m_Target; }

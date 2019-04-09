@@ -17,8 +17,8 @@ namespace rczEngine {
 		Vector2(const Vector4& v4) noexcept;
 		Vector2(float x, float y) noexcept : m_x(x), m_y(y) {};
 
-		FORCEINLINE void Set(float x, float y) { m_x = x; m_y = y; }
-		FORCEINLINE void Scale(float scale) { *this *= scale; }
+		FORCEINLINE void Set(float x, float y) noexcept { m_x = x; m_y = y; }
+		FORCEINLINE void Scale(float scale) noexcept { *this *= scale; }
 
 		FORCEINLINE Vector2 operator+(const Vector2& v) const noexcept { return Vector2{ m_x, m_y } += v; }
 		FORCEINLINE Vector2 operator-(const Vector2& v) const noexcept { return Vector2{ m_x, m_y } -= v; }

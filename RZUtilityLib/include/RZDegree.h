@@ -13,10 +13,10 @@ namespace rczEngine
 		FORCEINLINE float Value() const noexcept { return m_Value; };
 
 		///Returns the value as a Radian object that has the Value in Radians inside
-		FORCEINLINE Radian ValueRadian() const;
+		FORCEINLINE Radian ValueRadian() const noexcept;
 
 		///Unwinds the degrees, calls the real function from Math
-		FORCEINLINE void Degree::UnwindDegree(float F);
+		FORCEINLINE void Degree::UnwindDegree(float F) noexcept;
 
 		///Equals a Radian to a Degree, conversion included
 		Degree operator= (Radian R) noexcept { return R.ValueDegree(); };

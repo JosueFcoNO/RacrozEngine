@@ -7,9 +7,9 @@ namespace rczEngine
 		class RZ_EXP AppAndroid : App
 		{
 		public:
-			void StartApp() {};
-			void UpdateApp() {};
-			void CloseApp() {};
+			void StartApp() noexcept final {};
+			void UpdateApp() noexcept final {};
+			void CloseApp() noexcept final {};
 
 		private:
 

@@ -10,6 +10,17 @@ namespace rczEngine
 		Left
 	};
 
+	enum eMeshPlaneOrientation
+	{
+		Ypos,
+		Yneg,
+		Xpos,
+		Xneg,
+		Zpos,
+		Zneg,
+		Sides_Max
+	};
+
 	class PlanetQuadTreeNode;
 
 	struct RZ_EXP NodeConnection
@@ -21,7 +32,7 @@ namespace rczEngine
 		eSide Side;
 	};
 
-	class RZ_EXP PlanetQuadTreeNode : public MeshPlane
+	class RZ_EXP PlanetQuadTreeNode
 	{
 	public:
 		virtual ~PlanetQuadTreeNode() { DestroyQuadTreeNode(); };
@@ -65,6 +76,13 @@ namespace rczEngine
 		bool CheckChildrenReady();
 		void UpdateSideVertices();
 		void SetChildrenReady(int indexOfChild, bool value);
+
+		void GenerateMeshYPos(const Vector3 & startPos);
+		void GenerateMeshYNeg(const Vector3 & startPos);
+		void GenerateMeshXPos(const Vector3 & startPos);
+		void GenerateMeshXNeg(const Vector3 & startPos);
+		void GenerateMeshZPos(const Vector3 & startPos);
+		void GenerateMeshZNeg(const Vector3 & startPos);
 
 		static uint32 HashCorner(Vector3 v);
 

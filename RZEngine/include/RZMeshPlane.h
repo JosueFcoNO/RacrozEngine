@@ -6,17 +6,6 @@ namespace rczEngine
 	class RZ_EXP SpaceManager;
 	class RZ_EXP TerrainPatch;
 
-	enum eMeshPlaneOrientation
-	{
-		Ypos,
-		Yneg,
-		Xpos,
-		Xneg,
-		Zpos,
-		Zneg,
-		Sides_Max
-	};
-
 	///The Vertex structure
 	class RZ_EXP TerrainVertex
 	{
@@ -49,18 +38,11 @@ namespace rczEngine
 
 		Gfx::VertexBuffer<TerrainVertex> m_VertexBuffer;
 
-		void GenerateMesh(const Vector3& startPos, eMeshPlaneOrientation orientation);
+		void GenerateMesh();
 
 	protected:
 		void GenerateNormals();
 		void GenerateSmoothNormals();
-
-		void GenerateMeshYPos(const Vector3 & startPos);
-		void GenerateMeshYNeg(const Vector3 & startPos);
-		void GenerateMeshXPos(const Vector3 & startPos);
-		void GenerateMeshXNeg(const Vector3 & startPos);
-		void GenerateMeshZPos(const Vector3 & startPos);
-		void GenerateMeshZNeg(const Vector3 & startPos);
 
 		Gfx::IndexBuffer* m_IndexBuffer;
 		ResourceHandle m_Material;

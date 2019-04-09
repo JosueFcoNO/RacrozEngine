@@ -16,8 +16,8 @@ namespace rczEngine
 		FORCEINLINE const Color& operator=(const Vector4& rv) noexcept { m_x = rv.m_x;  m_y = rv.m_y;  m_z = rv.m_z;  m_w = rv.m_w; return *this; };
 		FORCEINLINE const Color& operator=(const Vector3& rv) noexcept { m_x = rv.m_x;  m_y = rv.m_y;  m_z = rv.m_z;  m_w = 1.0f; return *this; };
 
-		void AddColor(const Color& c) noexcept;
-		void RemoveColor(const Color& c) noexcept;
+		FORCEINLINE void AddColor(const Color& c) noexcept;
+		FORCEINLINE void RemoveColor(const Color& c) noexcept;
 
 		FORCEINLINE Color GetLineal()
 		{

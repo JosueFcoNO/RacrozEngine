@@ -16,8 +16,8 @@ namespace rczEngine
 		///unwinds the radians, calls the real function from Math
 		void UnwindRadian(float f);
 
-		Radian operator= (float f) { return Radian(f); };
-		Radian operator= (int32 i) { return Radian(gsl::narrow_cast<float>(i)); };
+		Radian operator= (float f) noexcept { return Radian(f); };
+		Radian operator= (int32 i) noexcept { return Radian(gsl::narrow_cast<float>(i)); };
 
 		float operator+(Radian R) noexcept { return m_Value + R.m_Value; };
 		float operator-(Radian R) noexcept { return m_Value - R.m_Value; };

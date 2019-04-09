@@ -23,7 +23,7 @@ namespace rczEngine
 			m_IndexBuffer = nullptr;
 		}
 
-		GenerateMesh(startPos, orientation);
+		GenerateMesh();
 		GenerateNormals();
 		//GenerateSmoothNormals();
 
@@ -139,9 +139,9 @@ namespace rczEngine
 		indexBuffer.CreateIndexBuffer(Gfx::USAGE_DEFAULT, false, Gfx::GfxCore::Pointer());
 	}
 
-	void MeshPlane::GenerateMeshYPos(const Vector3& startPos)
+	void MeshPlane::GenerateMesh()
 	{
-		ProfilerObj meshY("GenerateMeshYPos", PROFILE_EVENTS::PROF_GAME);
+		ProfilerObj meshY(__FUNCTION__, PROFILE_EVENTS::PROF_GAME);
 
 		TerrainVertex* TempVertex;
 		auto size = Size;
@@ -161,8 +161,6 @@ namespace rczEngine
 				TempVertex->VertexPosition.m_y = 0.0f;
 				TempVertex->VertexPosition.m_z = LastZ;
 
-				TempVertex->VertexPosition += startPos;
-
 				TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
 
 				TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
@@ -172,195 +170,6 @@ namespace rczEngine
 			LastZ += distVertex;
 			LastX = -halfSize - distVertex;
 		}
-	}
-
-	void MeshPlane::GenerateMeshYNeg(const Vector3& startPos)
-	{
-		ProfilerObj meshY("GenerateMeshYNeg", PROFILE_EVENTS::PROF_GAME);
-
-		TerrainVertex* TempVertex;
-		auto size = Size;
-		auto vertexSize = m_VertexBuffer.GetSize();
-
-		double halfSize = HalfSize;
-
-#pragma omp parallel for
-		for (uint32 i = 0; i < vertexSize; ++i)
-		{
-			TempVertex = &m_VertexBuffer.GetVertex(i);
-
-			int32 x = i / size;
-			int32 y = i % size;
-
-			TempVertex->VertexPosition.m_x = CastStatic<float>(((distVertex*(size - y)) - halfSize) - distVertex);
-			TempVertex->VertexPosition.m_y = 0.0f;
-			TempVertex->VertexPosition.m_z = CastStatic<float>(((distVertex*(size - x)) - halfSize) - distVertex);
-
-			TempVertex->VertexPosition += startPos;
-
-			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
-
-			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
-
-			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
-			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
-		}
-	}
-
-	void MeshPlane::GenerateMeshXPos(const Vector3& startPos)
-	{
-		TerrainVertex* TempVertex;
-		auto size = Size;
-		auto vertexSize = m_VertexBuffer.GetSize();
-
-		double halfSize = HalfSize;
-
-#pragma omp parallel for
-		for (uint32 i = 0; i < vertexSize; ++i)
-		{
-			TempVertex = &m_VertexBuffer.GetVertex(i);
-
-			int32 x = i / size;
-			int32 y = i % size;
-
-			TempVertex->VertexPosition.m_x = 0.0f;
-			TempVertex->VertexPosition.m_y = CastStatic<float>((distVertex*y) - halfSize);
-			TempVertex->VertexPosition.m_z = CastStatic<float>((distVertex*x) - halfSize);
-		
-			TempVertex->VertexPosition += startPos;
-
-			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
-
-			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
-
-			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
-			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
-		}
-	}
-
-	void MeshPlane::GenerateMeshXNeg(const Vector3& startPos)
-	{
-		TerrainVertex* TempVertex;
-		auto size = Size;
-		auto vertexSize = m_VertexBuffer.GetSize();
-
-		double Size = size * distVertex;
-		double halfSize = HalfSize;
-
-#pragma omp parallel for
-		for (uint32 i = 0; i < vertexSize; ++i)
-		{
-			TempVertex = &m_VertexBuffer.GetVertex(i);
-
-			int32 x = i / size;
-			int32 y = i % size;
-
-			TempVertex->VertexPosition.m_x = 0.0f;
-			TempVertex->VertexPosition.m_y = CastStatic<float>(((distVertex*(size - x)) - halfSize) - distVertex);
-			TempVertex->VertexPosition.m_z = CastStatic<float>(((distVertex*(size - y)) - halfSize) - distVertex);
-			
-			TempVertex->VertexPosition += startPos;
-
-			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
-
-			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
-
-			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
-			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
-		}
-	}
-
-	void MeshPlane::GenerateMeshZPos(const Vector3& startPos)
-	{
-		TerrainVertex* TempVertex;
-		auto size = Size;
-		auto vertexSize = m_VertexBuffer.GetSize();
-
-		double Size = size * distVertex;
-		double halfSize = HalfSize;
-
-#pragma omp parallel for
-		for (uint32 i = 0; i < vertexSize; ++i)
-		{
-			TempVertex = &m_VertexBuffer.GetVertex(i);
-
-			int32 x = i / size;
-			int32 y = i % size;
-
-			TempVertex->VertexPosition.m_x = CastStatic<float>((distVertex*y) - halfSize);
-			TempVertex->VertexPosition.m_y = CastStatic<float>((distVertex*x) - halfSize);
-			TempVertex->VertexPosition.m_z = 0.0f;
-	
-			TempVertex->VertexPosition += startPos;
-
-			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
-
-			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
-
-			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
-			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
-		}
-	}
-
-	void MeshPlane::GenerateMeshZNeg(const Vector3& startPos)
-	{
-		TerrainVertex* TempVertex;
-		auto size = Size;
-		auto vertexSize = m_VertexBuffer.GetSize();
-
-		double Size = size * distVertex;
-		double halfSize = HalfSize;
-
-#pragma omp parallel for
-		for (uint32 i = 0; i < vertexSize; ++i)
-		{
-			TempVertex = &m_VertexBuffer.GetVertex(i);
-
-			int32 x = i / size;
-			int32 y = i % size;
-
-			TempVertex->VertexPosition.m_x = CastStatic<float>(((distVertex*(size - x)) - halfSize) - distVertex);
-			TempVertex->VertexPosition.m_y = CastStatic<float>(((distVertex*(size - y)) - halfSize) - distVertex);
-			TempVertex->VertexPosition.m_z = 0.0f;
-
-			TempVertex->VertexPosition += startPos;
-
-			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
-
-			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
-
-			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
-			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
-		}
-	}
-
-	void MeshPlane::GenerateMesh(const Vector3& startPos, eMeshPlaneOrientation orientation)
-	{
-		ProfilerObj obj("GenerateMesh", PROFILE_EVENTS::PROF_GAME);
-
-		switch (orientation)
-		{
-		case rczEngine::Ypos:
-			GenerateMeshYPos(startPos);
-			break;
-		case rczEngine::Yneg:
-			GenerateMeshYNeg(startPos);
-			break;
-		case rczEngine::Xpos:
-			GenerateMeshXPos(startPos);
-			break;
-		case rczEngine::Xneg:
-			GenerateMeshXNeg(startPos);
-			break;
-		case rczEngine::Zpos:
-			GenerateMeshZPos(startPos);
-			break;
-		case rczEngine::Zneg:
-			GenerateMeshZNeg(startPos);
-			break;
-		}
-
-		//FixBorders();
 	}
 
 	TerrainVertex& MeshPlane::GetVertex(int32 x, int32 y)

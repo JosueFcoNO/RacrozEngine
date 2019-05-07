@@ -135,7 +135,7 @@ namespace rczEngine
 		{
 			if (frustum.TestAABB(divs->GetAABB()))
 			{
-				divs->Subdivide();
+				divs->SubdivideNode();
 			}
 		}
 

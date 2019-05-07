@@ -38,57 +38,76 @@ namespace rczEngine
 		virtual ~PlanetQuadTreeNode() { DestroyQuadTreeNode(); };
 
 		void InitQuadTree(Planet* planetRef, PlanetQuadTreeNode* parent, PerlinNoise3D * noise, Vector3 StartPos, int32 ChildNumber, int32 depth, eMeshPlaneOrientation side);
-		void Subdivide();
 		void Update(Vector3 playerPos);
 		void DestroyQuadTreeNode() noexcept;
+		void Render();
 
-		void InitPlaneAndCorners();
+		void GenerateMesh(eMeshPlaneOrientation side);
+		void ConstructPlanesAndCorners();
 
-		bool TestIfInside(const Vector3& pos);
+		Vector3 CalculateVertexPos(const Vector3& pos, float& out_displacement);
+
 		void CalculateLOD(const Vector3& pos);
-
-		void TestVisibility(const Frustum& camFrustum, Vector<PlanetQuadTreeNode*>& nodesToDraw);
-
-		static void ConnectNodesSameDepth(const NodeConnection& one, const NodeConnection& two);
-
-		virtual void Render();
-		Vector3 CalculateVertexPos(const Vector3& pos, float& out_displacement) override;
+		void SubdivideNode();
 
 		void GenerateChildren();
 		void DestroyChildren();
 
-		int32 GetQuadTreeDepth() { return m_QuadTreeDepth; };
+		bool TestIfInside(const Vector3& pos);
+		void TestVisibility(const Frustum& camFrustum, Vector<PlanetQuadTreeNode*>& nodesToDraw);
 
-		Planet* PlanetOwner = nullptr;
-
-		Vector<NodeConnection> Connections;
-
+		FORCEINLINE int32 GetQuadTreeDepth() const noexcept { return m_QuadTreeDepth; };
+		FORCEINLINE TerrainVertex& GetVertex(int32 x, int32 y) { return m_VertexBuffer.GetVertex(Size * y + x); }
 		FORCEINLINE void SetMeshDirty() noexcept { m_MeshDirty = true; };
 		FORCEINLINE const AABB& GetAABB() const noexcept { return m_MeshAABB; };
+
+		static void ConnectNodesSameDepth(const NodeConnection& one, const NodeConnection& two);
 
 		static const int Mesh_Res = 65;
 		static const int Mesh_Row_Size = Mesh_Res - 1;
 		static const int Mesh_Row_Half = (Mesh_Res / 2);
 
-	private:
-		void RenderChildren();
-		void GenerateChild(int index, int depth);
-		bool CheckChildrenReady();
-		void UpdateSideVertices();
-		void SetChildrenReady(int indexOfChild, bool value);
+		Planet* PlanetOwner = nullptr;
+		Vector<NodeConnection> Connections;
 
+	private:
 		void GenerateMeshYPos(const Vector3 & startPos);
 		void GenerateMeshYNeg(const Vector3 & startPos);
 		void GenerateMeshXPos(const Vector3 & startPos);
 		void GenerateMeshXNeg(const Vector3 & startPos);
 		void GenerateMeshZPos(const Vector3 & startPos);
 		void GenerateMeshZNeg(const Vector3 & startPos);
+		void GenerateNormals();
+		void GenerateSmoothNormals();
+
+		void RenderChildren();
+		
+		void GenerateChild(int index, int depth);
+		void SetChildrenReady(int indexOfChild, bool value);
+		bool CheckChildrenReady();
+
+		void UpdateSideVertices();
 
 		static uint32 HashCorner(Vector3 v);
+
+		Gfx::VertexBuffer<TerrainVertex> m_VertexBuffer;
+		Gfx::IndexBuffer m_IndexBuffer;
+
+		Vector3 m_StartPos;
+		Plane m_NodePlanes[5];
+
+		float m_TimeTillDeath = 0.1f;
+		Timer DeathTimer;
+
+		bool m_ChildGenerated = false;
 
 		std::thread m_ChildThread[4];
 		int32 m_QuadTreeDepth = 0;
 		eMeshPlaneOrientation m_Side;
+
+		ResourceHandle m_Material;
+
+		AABB m_MeshAABB;
 
 		Vector<TerrainVertex*> SideVertices[4];
 
@@ -105,11 +124,11 @@ namespace rczEngine
 		PerlinNoise3D* Noise;
 
 		WeakPtr<DebuggerLineList> AABB_Debug;
-		Plane m_NodePlanes[5];
 
-		float m_TimeTillDeath = 0.1f;
-		Timer DeathTimer;
+		int32 Size;
+		double distVertex;
+		double HalfSize;
 
-		bool m_ChildGenerated = false;
+		int m_ChildNumber = 0;
 	};
 }

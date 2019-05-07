@@ -36,7 +36,10 @@ namespace rczEngine
 		
 		m_ActiveScene->CreateComponent(CMP_CAMERA_WALK, defaultCamera->GetID());
 		auto camera = defaultCamera->GetComponent<CameraWalk>(CMP_CAMERA_WALK).lock();
-		
+
+		StrGameObjectPtr obj = DefaultScene->CreateActor("obj", NULL).lock();
+		m_ActiveScene->CreateComponent(CMP_SKINNED_MODEL_RENDERER, obj->GetID());
+
 		CameraManager::Pointer()->SetActiveCamera(camera->GetComponentID(), Gfx::GfxCore::Pointer());
 
 		DefaultScene->m_RootNode->SetScale(1.0f, 1.0f, 1.0f);

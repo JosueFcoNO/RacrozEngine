@@ -23,7 +23,7 @@ namespace rczEngine
 
 		void BuildSkeleton(StrPtr<SkinnedModel> skin);
 		void AddBones(StrPtr<SkinnedModel> model, aiMesh * mesh, uint32 vertexOffset);
-		void AddBoneToSkeleton(StrPtr<SkinnedModel> model, aiNode* pNode, Bone* parentBone);
+		void AddBoneToSkeleton(StrPtr<SkinnedModel> model, aiNode* pNode);
 		void CopyMatrix(Matrix4& dest, aiMatrix4x4& src);
 
 		Assimp::Importer* m_Manager = NULL;

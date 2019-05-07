@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	void SkinnedModelRenderer::Update(float deltaTime)
 	{
-		if (m_Model == -1)
+		if (m_Model == 0)
 		{
 			return;
 		}
@@ -19,10 +19,8 @@ namespace rczEngine
 			Anim = Res->GetResource<Animation>(Model.lock()->m_SetAnimation);
 
 			m_CurrentTime += deltaTime*Anim.lock()->m_TicksPerSecond;
-			if (m_CurrentTime > Anim.lock()->m_Duration)
-			{
-				m_CurrentTime = 0.0f;
-			}
+
+			m_CurrentTime = Math::fMod(m_CurrentTime, Anim.lock()->m_Duration);
 		}
 
 		Model.lock()->m_MeshSkeleton.UpdateSkeleton(Anim, m_CurrentTime);

@@ -23,7 +23,7 @@ namespace rczEngine
 	public:
 		virtual ~MeshPlane() { DestroyMeshPlane(); };
 
-		void InitMeshPlane(int32 vertices, double size, double halfSize, Vector3 startPos, eMeshPlaneOrientation orientation, bool CreateIndexBuffer = true, bool CreateVertexBuffer = true);
+		void InitMeshPlane(int32 vertices, double size, double halfSize, Vector3 startPos, bool CreateIndexBuffer = true, bool CreateVertexBuffer = true);
 		void DestroyMeshPlane() noexcept;
 
 		virtual void Render();

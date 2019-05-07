@@ -20,7 +20,7 @@ namespace rczEngine
 
 		void RenderSkinned(Gfx::GfxCore* gfx, ResVault* res, Scene* scene, MATERIAL_TYPE matType = MAT_ANY)
 		{
-			if (m_Model != -1)
+			if (m_Model != INVALID_RESOURCE)
 			{
 				auto Skinned = res->GetResource<SkinnedModel>(m_Model).lock();
 				Skinned->DrawModel(gfx, res, &m_Materials, matType);
@@ -67,7 +67,7 @@ namespace rczEngine
 		virtual ComponentType GetComponentType() { return SkinnedModelRenderer::s_ComponentType; };
 		virtual ComponentId GetComponentID() { return m_ID; };
 
-		ResourceHandle m_Model = -1;
+		ResourceHandle m_Model = 0;
 
 		Map<String, ResourceHandle> m_Materials;
 

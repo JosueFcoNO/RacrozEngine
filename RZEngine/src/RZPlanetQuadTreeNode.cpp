@@ -29,6 +29,7 @@ namespace rczEngine
 		Vector2 signs;
 		signs.m_x = CastStatic<float>((ChildNumber < 2) ? -1 : 1);
 		signs.m_y = CastStatic<float>((ChildNumber == 0 || ChildNumber == 2) ? -1 : 1);
+		m_ChildNumber = ChildNumber;
 
 		Vector3 startPos;
 
@@ -66,9 +67,22 @@ namespace rczEngine
 			break;
 		}
 
+		m_StartPos = startPos;
 		Noise = noise;
-		InitMeshPlane(Mesh_Res, planeSize, planeSize / 2.0, startPos, side, true, false);
-		InitPlaneAndCorners();
+
+		Size = Mesh_Res;
+		distVertex = planeSize / double(Mesh_Res - 1);
+		HalfSize = planeSize / 2.0;
+
+		MeshPlane::GenerateIndices(Mesh_Res, m_IndexBuffer);
+
+		m_VertexBuffer.ResizeVertexVector(Math::Pow(Size, 2));
+		GenerateMesh(side);
+		GenerateNormals();
+
+		m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DYNAMIC, false, Gfx::GfxCore::Pointer());
+
+		ConstructPlanesAndCorners();
 
 		std::mutex buenMutex;
 		buenMutex.lock();
@@ -78,7 +92,7 @@ namespace rczEngine
 		m_Material = ResVault::Pointer()->FindResourceByName<Material>("lambert1").lock()->GetHandle();
 	}
 
-	void PlanetQuadTreeNode::Subdivide()
+	void PlanetQuadTreeNode::SubdivideNode()
 	{
 		m_Subdivided = true;
 
@@ -100,10 +114,145 @@ namespace rczEngine
 
 	void PlanetQuadTreeNode::DestroyQuadTreeNode() noexcept
 	{
-		DestroyMeshPlane();
+		m_VertexBuffer.Destroy();
 	}
 
-	void PlanetQuadTreeNode::InitPlaneAndCorners()
+	void PlanetQuadTreeNode::GenerateNormals()
+	{
+		ProfilerObj obj("GenerateNormals", PROFILE_EVENTS::PROF_GAME);
+
+		auto size = Size;
+		auto indexSize = m_IndexBuffer.GetSize();
+
+		//Le saco normales a todo.
+#pragma omp parallel for
+		for (uint32 i = 0; i < indexSize; i += 3)
+		{
+			auto index1 = m_IndexBuffer.GetIndex(i);
+			auto index2 = m_IndexBuffer.GetIndex(i + 1);
+			auto index3 = m_IndexBuffer.GetIndex(i + 2);
+
+			TerrainVertex* Vert1 = &m_VertexBuffer.GetVertex(index1);
+			TerrainVertex* Vert2 = &m_VertexBuffer.GetVertex(index2);
+			TerrainVertex* Vert3 = &m_VertexBuffer.GetVertex(index3);
+
+			Vector3 V1 = (Vert1->VertexPosition - Vert2->VertexPosition).GetNormalized();
+			Vector3 V2 = (Vert1->VertexPosition - Vert3->VertexPosition).GetNormalized();
+
+			Vert1->VertexNormals = Vert2->VertexNormals = Vert3->VertexNormals = (V1^V2).GetNormalized();
+			Vert1->Tangents = Vert2->Tangents = Vert3->Tangents = (V1);
+			Vert1->BiNormals = Vert2->BiNormals = Vert3->BiNormals = (V2);
+		}
+
+		auto index1 = m_IndexBuffer.GetIndex(indexSize - 1);
+		auto index2 = m_IndexBuffer.GetIndex(indexSize - 2);
+		auto index3 = m_IndexBuffer.GetIndex(indexSize - 3);
+
+		TerrainVertex* Vert1 = &m_VertexBuffer.GetVertex(index1);
+		TerrainVertex* Vert2 = &m_VertexBuffer.GetVertex(index2);
+		TerrainVertex* Vert3 = &m_VertexBuffer.GetVertex(index3);
+
+		Vector3 V1 = (Vert1->VertexPosition - Vert2->VertexPosition).GetNormalized();
+		Vector3 V2 = (Vert1->VertexPosition - Vert3->VertexPosition).GetNormalized();
+
+		Vert1->VertexNormals = Vert2->VertexNormals = Vert3->VertexNormals = (V1^V2).GetNormalized();
+		Vert1->Tangents = Vert2->Tangents = Vert3->Tangents = (V1);
+		Vert1->BiNormals = Vert2->BiNormals = Vert3->BiNormals = (V2);
+	}
+
+	void PlanetQuadTreeNode::GenerateSmoothNormals()
+	{
+		ProfilerObj obj("GenerateSmoothNormals", PROFILE_EVENTS::PROF_GAME);
+
+		auto size = Size;
+		auto bufferSize = m_VertexBuffer.GetSize();
+
+		//Le saco normales suaves ya a todo.
+		for (uint32 i = 0; i < bufferSize; ++i)
+		{
+			TerrainVertex* ThisVertex = &m_VertexBuffer.GetVertex(i);
+
+			int32 x = i % size;
+			int32 y = i / size;
+
+			TerrainVertex* NearbyVertices[8];
+			int32 VerticesUsed = 0;
+
+			if (i + size > bufferSize)
+			{
+				continue;
+			}
+
+			if (x > 0)
+			{
+				NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i - 1);
+				++VerticesUsed;
+			}
+
+			if (x < size - 1)
+			{
+				NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i + 1);
+				++VerticesUsed;
+			}
+
+			if (y > 0)
+			{
+				if (x > 0)
+				{
+					NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i - 1 - size);
+					++VerticesUsed;
+				}
+
+				NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i - size);
+				++VerticesUsed;
+
+				if (x < size - 1)
+				{
+					NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i + 1 - size);
+					++VerticesUsed;
+				}
+			}
+
+			if (y < size - 1)
+			{
+				if (x > 0)
+				{
+					NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i - 1 + size);
+					++VerticesUsed;
+				}
+
+				NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i + size);
+				++VerticesUsed;
+
+				if (x < size - 1)
+				{
+					NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i + 1 + size);
+					++VerticesUsed;
+				}
+			}
+
+			Vector3 normalAvg;
+			Vector3 binormalAvg;
+			Vector3 TangentAvg;
+
+			for (int32 k = 0; k < VerticesUsed; ++k)
+			{
+				normalAvg += NearbyVertices[k]->VertexNormals;
+				binormalAvg += NearbyVertices[k]->BiNormals;
+				TangentAvg += NearbyVertices[k]->Tangents;
+			}
+
+			normalAvg /= float(VerticesUsed + 1);
+			binormalAvg /= float(VerticesUsed + 1);
+			TangentAvg /= float(VerticesUsed + 1);
+			//
+			ThisVertex->VertexNormals = normalAvg.GetNormalized();
+			ThisVertex->BiNormals = binormalAvg.GetNormalized();
+			ThisVertex->Tangents = TangentAvg.GetNormalized();
+		}
+	}
+
+	void PlanetQuadTreeNode::ConstructPlanesAndCorners()
 	{
 		auto topleft = GetVertex(0, 0).VertexPosition;
 		auto topright = GetVertex(Mesh_Row_Size, 0).VertexPosition;
@@ -195,7 +344,7 @@ namespace rczEngine
 		{
 			auto mag = pos.Magnitude() - 100.0f;
 
-			if ((1.0f / (m_QuadTreeDepth + 1)) 
+			if ((1.0f / (m_QuadTreeDepth + 1))
 				* 100.0f > mag)
 			{
 				m_Subdivided = true;
@@ -321,26 +470,26 @@ namespace rczEngine
 
 			if (Vector3::Distance(oneVertices[0]->VertexPosition, twoVertices[0]->VertexPosition) < 0.05f)
 			{
-				for (int i = 0, k = 0; i < Mesh_Res; ++i, k+= 2)
+				for (int i = 0, k = 0; i < Mesh_Res; ++i, k += 2)
 				{
-					*(*DeepSide)[k]  = *(*ShallowSide)[i];
+					*(*DeepSide)[k] = *(*ShallowSide)[i];
 				}
 			}
 			else
 			{
 				for (int i = 0, k = 0; i < Mesh_Res; ++i, k += 2)
 				{
-					*(*DeepSide)[Mesh_Res * 2 - 2 - k]  = *(*ShallowSide)[i];
+					*(*DeepSide)[Mesh_Res * 2 - 2 - k] = *(*ShallowSide)[i];
 				}
 			}
 
-			for (int i = 1; i < Mesh_Res*2-1; i+=2)
+			for (int i = 1; i < Mesh_Res * 2 - 1; i += 2)
 			{
 				auto correctedIndex = i;
 
 				auto PrevDeep = (*DeepSide)[correctedIndex - 1];
 				auto CurrentDeep = (*DeepSide)[correctedIndex];
-				
+
 				*CurrentDeep = *PrevDeep;
 			}
 
@@ -365,30 +514,30 @@ namespace rczEngine
 		const auto resPtr = ResVault::Pointer();
 		const auto gfxPtr = Gfx::GfxCore::Pointer();
 
-		if (!done)
-		{
-			Vector<Vector3> Points = m_MeshAABB.GetCorners();
-			auto gDebug = GraphicDebugger::Pointer();
-			
-			Vector<uint32> Indices;
-			Indices.push_back(0); Indices.push_back(1);
-			Indices.push_back(0); Indices.push_back(2);
-			Indices.push_back(1); Indices.push_back(3);
-			Indices.push_back(2); Indices.push_back(3);
-			
-			Indices.push_back(0); Indices.push_back(4);
-			Indices.push_back(1); Indices.push_back(5);
-			Indices.push_back(2); Indices.push_back(6);
-			Indices.push_back(3); Indices.push_back(7);
-			
-			Indices.push_back(4); Indices.push_back(5);
-			Indices.push_back(4); Indices.push_back(6);
-			Indices.push_back(5); Indices.push_back(7);
-			Indices.push_back(6); Indices.push_back(7);
-			
-			AABB_Debug = gDebug->AddLineListIndex("_AABB" + std::to_string(rand()), Points, Indices, Color(1, 0, 1), -1.0f);
-			done = true;
-		}
+		//if (!done)
+		//{
+		//	Vector<Vector3> Points = m_MeshAABB.GetCorners();
+		//	auto gDebug = GraphicDebugger::Pointer();
+		//
+		//	Vector<uint32> Indices;
+		//	Indices.push_back(0); Indices.push_back(1);
+		//	Indices.push_back(0); Indices.push_back(2);
+		//	Indices.push_back(1); Indices.push_back(3);
+		//	Indices.push_back(2); Indices.push_back(3);
+		//
+		//	Indices.push_back(0); Indices.push_back(4);
+		//	Indices.push_back(1); Indices.push_back(5);
+		//	Indices.push_back(2); Indices.push_back(6);
+		//	Indices.push_back(3); Indices.push_back(7);
+		//
+		//	Indices.push_back(4); Indices.push_back(5);
+		//	Indices.push_back(4); Indices.push_back(6);
+		//	Indices.push_back(5); Indices.push_back(7);
+		//	Indices.push_back(6); Indices.push_back(7);
+		// 
+		//	AABB_Debug = gDebug->AddLineListIndex("_AABB" + std::to_string(rand()), Points, Indices, Color(1, 0, 1), -1.0f);
+		//	done = true;
+		//}
 
 		auto ptr = resPtr->GetResource<Material>(PlanetOwner->m_Materials).lock();
 
@@ -399,7 +548,7 @@ namespace rczEngine
 
 		ptr->SetThisMaterial(gfxPtr, resPtr);
 
-		AABB_Debug.lock()->Active(!m_Subdivided);
+		//AABB_Debug.lock()->Active(!m_Subdivided);
 
 		if (m_Subdivided)
 		{
@@ -407,7 +556,15 @@ namespace rczEngine
 				return RenderChildren();
 		}
 
-		MeshPlane::Render();
+		m_VertexBuffer.SetThisVertexBuffer(gfxPtr, 0);
+
+		int32 vertexSize;
+
+
+		m_IndexBuffer.SetThisIndexBuffer(gfxPtr);
+		vertexSize = m_IndexBuffer.m_IndexSize;
+
+		gfxPtr->DrawIndexed(vertexSize, 0, 0);
 
 	}
 
@@ -431,7 +588,7 @@ namespace rczEngine
 
 		noise = pow(Noise->RidgedOctaveNoise(Pos128, 6, 0.4f), 2) *
 			Noise->OctaveNoise(Pos24, 6, 0.5f) *
-			Noise->OctaveNoise(NoisePos, 3, 0.5f) * 
+			//Noise->OctaveNoise(NoisePos, 3, 0.5f) *
 			pow(Noise->RidgedOctaveNoise(Pos12, 3, 0.2f), 2);
 
 		out_displacement = noise;
@@ -481,6 +638,42 @@ namespace rczEngine
 				m_ChildGenerated = false;
 			}
 
+		}
+	}
+
+	void PlanetQuadTreeNode::GenerateMesh(eMeshPlaneOrientation side)
+	{
+		switch (side)
+		{
+		case rczEngine::Ypos:
+			GenerateMeshYPos(m_StartPos);
+			break;
+		case rczEngine::Yneg:
+			GenerateMeshYNeg(m_StartPos);
+			break;
+		case rczEngine::Xpos:
+			GenerateMeshXPos(m_StartPos);
+			break;
+		case rczEngine::Xneg:
+			GenerateMeshXNeg(m_StartPos);
+			break;
+		case rczEngine::Zpos:
+			GenerateMeshZPos(m_StartPos);
+			break;
+		case rczEngine::Zneg:
+			GenerateMeshZNeg(m_StartPos);
+			break;
+		default:
+			break;
+		}
+
+#pragma omp parallel for
+		for (uint32 i = 1; i < Size; i += 2)
+		{
+			GetVertex(i, 0).VertexPosition = Math::Lerp(GetVertex(i - 1, 0).VertexPosition, GetVertex(i + 1, 0).VertexPosition, 0.5f);
+			GetVertex(0, i).VertexPosition = Math::Lerp(GetVertex(0, i - 1).VertexPosition, GetVertex(0, i + 1).VertexPosition, 0.5f);
+			GetVertex(i, Mesh_Row_Size).VertexPosition = Math::Lerp(GetVertex(i - 1, Mesh_Row_Size).VertexPosition, GetVertex(i + 1, Mesh_Row_Size).VertexPosition, 0.5f);
+			GetVertex(Mesh_Row_Size, i).VertexPosition = Math::Lerp(GetVertex(Mesh_Row_Size, i - 1).VertexPosition, GetVertex(Mesh_Row_Size, i + 1).VertexPosition, 0.5f);
 		}
 	}
 
@@ -565,42 +758,74 @@ namespace rczEngine
 		return Vector3::Hash(temp);
 	}
 
-	void MeshPlane::GenerateMesh(const Vector3& startPos)
+	void PlanetQuadTreeNode::GenerateMeshYPos(const Vector3& startPos)
 	{
 		ProfilerObj meshY("GenerateMesh", PROFILE_EVENTS::PROF_GAME);
 
 		TerrainVertex* TempVertex;
-		auto size = Size;
+		auto vertexSize = m_VertexBuffer.GetSize();
 
 		double halfSize = HalfSize;
 
-		double LastX = -halfSize - distVertex;
-		double LastZ = -halfSize;
-
-		for (int32 x = 0; x < size; ++x)
+#pragma omp parallel for
+		for (uint32 i = 0; i < vertexSize; ++i)
 		{
-			for (int32 y = 0; y < size; ++y)
+			TempVertex = &m_VertexBuffer.GetVertex(i);
+
+			int32 x = i / Size;
+			int32 y = i % Size;
+
+			TempVertex->VertexPosition.m_x = CastStatic<float>(((distVertex*x) - halfSize));
+			TempVertex->VertexPosition.m_y = 0.0f;
+			TempVertex->VertexPosition.m_z = CastStatic<float>(((distVertex*y) - halfSize));
+
+			TempVertex->VertexPosition += startPos;
+
+			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
+
+			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
+
+			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
+			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
+		}
+
+		if (Parent)
+		{
+#pragma omp parallel for
+			for (uint32 i = 0; i < vertexSize; i += 2)
 			{
-				TempVertex = &GetVertex(x, y);
+				auto TempVertex = &m_VertexBuffer.GetVertex(i);
 
-				TempVertex->VertexPosition.m_x = LastX += distVertex;
-				TempVertex->VertexPosition.m_y = 0.0f;
-				TempVertex->VertexPosition.m_z = LastZ;
+				int32 y = i / Size;
+				int32 x = i % Size;
 
-				TempVertex->VertexPosition += startPos;
+				if ((y + 1) % 2 == 0)
+				{
+					continue;
+				}
 
-				TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
+				switch (m_ChildNumber)
+				{
+				case 0:
+					*TempVertex = Parent->GetVertex(x / 2, y / 2);
+					break;
+				case 1:
+					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2);
+					break;
 
-				TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
-				TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
+				case 2:
+					*TempVertex = Parent->GetVertex(x / 2, y / 2 + Mesh_Row_Half);
+					break;
+				case 3:
+					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2 + Mesh_Row_Half);
+					break;
+				}
+
 			}
-
-			LastZ += distVertex;
-			LastX = -halfSize - distVertex;
 		}
 	}
 
-	void MeshPlane::GenerateMeshYNeg(const Vector3& startPos)
+	void PlanetQuadTreeNode::GenerateMeshYNeg(const Vector3& startPos)
 	{
 		ProfilerObj meshY("GenerateMeshYNeg", PROFILE_EVENTS::PROF_GAME);
 
@@ -631,9 +856,44 @@ namespace rczEngine
 			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
 			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
 		}
+
+		if (Parent)
+		{
+#pragma omp parallel for
+			for (uint32 i = 0; i < vertexSize; i += 2)
+			{
+				auto TempVertex = &m_VertexBuffer.GetVertex(i);
+
+				int32 y = i / Size;
+				int32 x = i % Size;
+
+				if ((y + 1) % 2 == 0)
+				{
+					continue;
+				}
+
+				switch (m_ChildNumber)
+				{
+				case 0:
+					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2 + Mesh_Row_Half);
+					break;
+				case 1:
+					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2 );
+					break;
+
+				case 2:
+					*TempVertex = Parent->GetVertex(x / 2 , y / 2 + Mesh_Row_Half);
+					break;
+				case 3:
+					*TempVertex = Parent->GetVertex(x / 2, y / 2);
+					break;
+				}
+
+			}
+		}
 	}
 
-	void MeshPlane::GenerateMeshXPos(const Vector3& startPos)
+	void PlanetQuadTreeNode::GenerateMeshXPos(const Vector3& startPos)
 	{
 		TerrainVertex* TempVertex;
 		auto size = Size;
@@ -657,20 +917,52 @@ namespace rczEngine
 
 			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
 
-			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
-
 			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
 			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
 		}
+
+		if (Parent)
+		{
+#pragma omp parallel for
+			for (uint32 i = 0; i < vertexSize; i += 2)
+			{
+				auto TempVertex = &m_VertexBuffer.GetVertex(i);
+
+				int32 y = i / Size;
+				int32 x = i % Size;
+
+				if ((y + 1) % 2 == 0)
+				{
+					continue;
+				}
+
+				switch (m_ChildNumber)
+				{
+				case 0:
+					*TempVertex = Parent->GetVertex(x / 2, y / 2);
+					break;
+				case 1:
+					*TempVertex = Parent->GetVertex(x / 2, y / 2 + Mesh_Row_Half);
+					break;
+
+				case 2:
+					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2);
+					break;
+				case 3:
+					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2 + Mesh_Row_Half);
+					break;
+				}
+
+			}
+		}
 	}
 
-	void MeshPlane::GenerateMeshXNeg(const Vector3& startPos)
+	void PlanetQuadTreeNode::GenerateMeshXNeg(const Vector3& startPos)
 	{
 		TerrainVertex* TempVertex;
 		auto size = Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
 
-		double Size = size * distVertex;
 		double halfSize = HalfSize;
 
 #pragma omp parallel for
@@ -689,20 +981,52 @@ namespace rczEngine
 
 			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
 
-			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
-
 			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
 			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
 		}
+
+		if (Parent)
+		{
+#pragma omp parallel for
+			for (uint32 i = 0; i < vertexSize; i += 2)
+			{
+				auto TempVertex = &m_VertexBuffer.GetVertex(i);
+
+				int32 y = i / Size;
+				int32 x = i % Size;
+
+				if ((y + 1) % 2 == 0)
+				{
+					continue;
+				}
+
+				switch (m_ChildNumber)
+				{
+				case 0:
+					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2 + Mesh_Row_Half);
+					break;
+				case 1:
+					*TempVertex = Parent->GetVertex(x / 2, y / 2 + Mesh_Row_Half);
+					break;
+
+				case 2:
+					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2);
+					break;
+				case 3:
+					*TempVertex = Parent->GetVertex(x / 2, y / 2);
+					break;
+				}
+
+			}
+		}
 	}
 
-	void MeshPlane::GenerateMeshZPos(const Vector3& startPos)
+	void PlanetQuadTreeNode::GenerateMeshZPos(const Vector3& startPos)
 	{
 		TerrainVertex* TempVertex;
 		auto size = Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
 
-		double Size = size * distVertex;
 		double halfSize = HalfSize;
 
 #pragma omp parallel for
@@ -721,20 +1045,51 @@ namespace rczEngine
 
 			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
 
-			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
-
 			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
 			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
 		}
+
+		if (Parent)
+		{
+#pragma omp parallel for
+			for (uint32 i = 0; i < vertexSize; i += 2)
+			{
+				auto TempVertex = &m_VertexBuffer.GetVertex(i);
+
+				int32 y = i / Size;
+				int32 x = i % Size;
+
+				if ((y + 1) % 2 == 0)
+				{
+					continue;
+				}
+
+				switch (m_ChildNumber)
+				{
+				case 0:
+					*TempVertex = Parent->GetVertex(x / 2, y / 2);
+					break;
+				case 1:
+					*TempVertex = Parent->GetVertex(x / 2 , y / 2 + Mesh_Row_Half);
+					break;
+				case 2:
+					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2 );
+					break;
+				case 3:
+					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2 + Mesh_Row_Half);
+					break;
+				}
+
+			}
+		}
 	}
 
-	void MeshPlane::GenerateMeshZNeg(const Vector3& startPos)
+	void PlanetQuadTreeNode::GenerateMeshZNeg(const Vector3& startPos)
 	{
 		TerrainVertex* TempVertex;
 		auto size = Size;
 		auto vertexSize = m_VertexBuffer.GetSize();
 
-		double Size = size * distVertex;
 		double halfSize = HalfSize;
 
 #pragma omp parallel for
@@ -757,6 +1112,40 @@ namespace rczEngine
 
 			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
 			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
+		}
+
+		if (Parent)
+		{
+#pragma omp parallel for
+			for (uint32 i = 0; i < vertexSize; i += 2)
+			{
+				auto TempVertex = &m_VertexBuffer.GetVertex(i);
+
+				int32 y = i / Size;
+				int32 x = i % Size;
+
+				if ((y + 1) % 2 == 0)
+				{
+					continue;
+				}
+
+				switch (m_ChildNumber)
+				{
+				case 0:
+					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2 + Mesh_Row_Half);
+					break;
+				case 1:
+					*TempVertex = Parent->GetVertex(x / 2, y / 2 + Mesh_Row_Half);
+					break;
+				case 2:
+					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2);
+					break;
+				case 3:
+					*TempVertex = Parent->GetVertex(x / 2, y / 2); 
+					break;
+				}
+
+			}
 		}
 	}
 }

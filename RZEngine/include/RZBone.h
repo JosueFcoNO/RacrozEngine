@@ -20,8 +20,6 @@ namespace rczEngine
 		void InitBone(StrPtr<BoneComponent> boneCmp)
 		{
 			m_BoneComponent = boneCmp;
-			m_AccumulatedTransform.Identity();
-			m_TransformMatrix = m_BoneComponent->GetOwner().lock()->GetLocalMatrix().GetTransposed();
 			m_OffsetInverse = m_OffsetMatrix.GetInverse();
 		};
 
@@ -41,12 +39,12 @@ namespace rczEngine
 		Vector<Bone*> m_ChildrenBones;
 		Matrix4 m_JointMatrix;
 		Matrix4 m_TransformMatrix;
+		bool m_RealBone = true;
 
 	private:
 		StrPtr<BoneComponent> m_BoneComponent;
 		Matrix4 m_OffsetInverse;
 		Matrix4 m_AccumulatedMatrix;
-		Matrix4 m_AccumulatedTransform;
 		Bone * m_Parent = NULL;
 	};
 }

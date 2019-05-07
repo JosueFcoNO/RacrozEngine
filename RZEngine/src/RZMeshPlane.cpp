@@ -3,7 +3,7 @@
 namespace rczEngine
 {
 
-	void MeshPlane::InitMeshPlane(int32 vertices, double size, double halfSize, Vector3 startPos, eMeshPlaneOrientation orientation, bool CreateIndexBuffer, bool CreateVertexBuffer)
+	void MeshPlane::InitMeshPlane(int32 vertices, double size, double halfSize, Vector3 startPos, bool CreateIndexBuffer, bool CreateVertexBuffer)
 	{
 		ProfilerObj obj("InitMeshPlane", PROFILE_EVENTS::PROF_GAME);
 

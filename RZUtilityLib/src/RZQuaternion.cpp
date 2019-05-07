@@ -150,7 +150,7 @@ namespace rczEngine
 		M.m_rows[0] = { 1 - (2 * yy) - (2 * zz),	(2 * x*y) + (2 * z*w),	(2 * x*z) - (2 * w*y)};
 		M.m_rows[1] = { (2 * x*y) - (2 * z*w),	1 - (2 * xx) - (2 * zz),	(2 * y*z) + (2 * w*x) };
 		M.m_rows[2] = { (2 * x*z) + (2 * w*y),	(2 * y*z) - (2 * w*x),	1 - (2 * xx) - (2 * yy) };
-
+		Logger::Pointer()->Log("Que pasa");
 		return M;
 	}
 

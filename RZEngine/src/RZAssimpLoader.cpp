@@ -1,4 +1,5 @@
 #include <RZEnginePCH.h>
+#include <assimp/pbrmaterial.h>
 
 namespace rczEngine
 {
@@ -118,6 +119,7 @@ namespace rczEngine
 
 		///Create an Importer and Read the file in fileName
 		Assimp::Importer B;
+		B.SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
 		m_Scene = B.ReadFile(filePath, 
 			aiProcess_Triangulate | 
 			aiProcess_GenSmoothNormals | 
@@ -234,7 +236,7 @@ namespace rczEngine
 		else
 		{
 			auto ptrParent = scene->FindActor(parent);
-			if (ptrParent.expired())
+			//if (ptrParent.expired())
 			{
 				node = scene->CreateActor(nodeName, ptrParent.lock().get(), trans, rot, scale);
 			}
@@ -282,7 +284,7 @@ namespace rczEngine
 
 			ResourceHandle tempHandle = m_Res->InsertResource(Temp);
 			materialMap.insert(Pair<String, ResourceHandle>(Temp->GetName(), tempHandle));
-			Temp->InitMaterial(MAT_PBR_SpecSmooth_Alpha, Gfx::GfxCore::Pointer());
+			Temp->InitMaterial(MAT_PBR_MetRough, Gfx::GfxCore::Pointer());
 
 
 			aiColor4D outV = { 0, 0, 0, 0};
@@ -623,6 +625,10 @@ namespace rczEngine
 			///Set the TempBone's offset matrix to the BoneList[i]'s offset matrix.
 			CopyMatrix(TempBone.m_OffsetMatrix, CurrentBone->mOffsetMatrix);
 
+			CopyMatrix(TempBone.m_TransformMatrix, CurrentNode->mTransformation);
+
+			TempBone.m_RealBone = true;
+
 			///Add the Temp bone to the m_Skeleton's Bone Map
 			skin->m_MeshSkeleton.AddBone(TempBone, CurrentBone->mName.C_Str());
 		}
@@ -644,6 +650,7 @@ namespace rczEngine
 		TempRoot.m_BoneIndex = 0;
 		skin->m_MeshSkeleton.AddBone(TempRoot, TempRoot.m_Name);
 		skin->m_MeshSkeleton.m_RootBone = &skin->m_MeshSkeleton.m_Bones[TempRoot.m_Name];
+
 		BoneNames.push_back(TempRoot.m_Name);
 		BoneIndex[TempRoot.m_Name] = 0;
 
@@ -657,7 +664,7 @@ namespace rczEngine
 		///Iterate through the string of the children's name
 		for (uint32 o = 0; o < RootNode->mNumChildren; ++o)
 		{
-			AddBoneToSkeleton(skin, RootNode->mChildren[o], skin->m_MeshSkeleton.m_RootBone);
+			AddBoneToSkeleton(skin, RootNode->mChildren[o]);
 		}
 
 		for (auto it = BoneIndex.begin(); it != BoneIndex.end(); ++it)
@@ -811,10 +818,6 @@ namespace rczEngine
 					Logger::Pointer()->LogMessageToFileLog("ModelSkinned", ("Dandole Index: "), (int32)Bones.size());
 
 				}
-				//else if (CurrentBone->mNumWeights < Bones[CurrentBone->mName.C_Str()]->mNumWeights)
-				//{
-				//	continue;
-				//}
 
 				///Create a temp Gfx::SkinnedVertex pointer
 				Gfx::SkinnedVertex* SkndVertex;
@@ -843,18 +846,12 @@ namespace rczEngine
 		}
 	}
 
-	void AssimpLoader::AddBoneToSkeleton(StrPtr<SkinnedModel> model, aiNode * pNode, Bone* parentBone)
+	void AssimpLoader::AddBoneToSkeleton(StrPtr<SkinnedModel> model, aiNode * pNode)
 	{
 		BasicString<CHAR> BoneName = pNode->mName.C_Str();
 
-		auto Check = Parser::ParseToStrings<CHAR>(BoneName, String("_"), 0);
-
 		bool IsNullNode = false;
 
-		//if (Check.size() > 1)
-		//{
-		//	IsNullNode = Check[1] == "$AssimpFbx$";
-		//}
 		
 		if (!IsNullNode)
 		{
@@ -868,27 +865,32 @@ namespace rczEngine
 
 			///if it found something, add it to the BoneTemp children list and set its parent to BoneTemp which is
 			///the bone i'm currently iterating over.
-			if (currentBone == NULL)
+			if (currentBone == nullptr)
 			{
 				Bone NoBone;
 				NoBone.m_Name = BoneName;
-				NoBone.m_JointMatrix.Identity();
+				CopyMatrix(NoBone.m_TransformMatrix, pNode->mTransformation);
 				NoBone.m_OffsetMatrix.Identity();
 				NoBone.m_BoneIndex = 0;
+				NoBone.m_RealBone = false;
+
 				model->m_MeshSkeleton.AddBone(NoBone, BoneName);
 				BoneNames.push_back(NoBone.m_Name.c_str());
 
 				currentBone = model->m_MeshSkeleton.GetBone(BoneName);
 			}
 
-			parentBone->AddBoneChildren(currentBone);
-			currentBone->SetParent(parentBone);
-			CopyMatrix(currentBone->m_TransformMatrix, pNode->mTransformation);
+			auto parent = model->m_MeshSkeleton.GetBone(pNode->mParent->mName.C_Str());
+
+			if (pNode->mParent)
+				parent->AddBoneChildren(currentBone);
+
+			currentBone->SetParent(parent);
 
 			///Iterate through the string of the children's name
 			for (uint32 o = 0; o < pNode->mNumChildren; ++o)
 			{
-				AddBoneToSkeleton(model, pNode->mChildren[o], currentBone);
+				AddBoneToSkeleton(model, pNode->mChildren[o]);
 			}
 		}
 		else
@@ -896,7 +898,7 @@ namespace rczEngine
 			///Iterate through the string of the children's name
 			for (uint32 o = 0; o < pNode->mNumChildren; ++o)
 			{
-				AddBoneToSkeleton(model, pNode->mChildren[o], parentBone);
+				AddBoneToSkeleton(model, pNode->mChildren[o]);
 			}
 		}
 

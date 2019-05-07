@@ -7,20 +7,10 @@ Texture2D EMTexture : register(t10);
 
 sampler Sampler_ : register(s0);
 
-cbuffer cbChangesSometimes : register(b0)
-{
-    matrix viewMatrix;
-	matrix previousWorldMatrix;
-};
-
-cbuffer cbChangeOnResize : register(b1)
-{
-    matrix projMatrix;
-};
-
 cbuffer cbChangeEveryFrame : register(b2)
 {
-    matrix worldMatrix;
+	matrix worldMatrix;
+	matrix previousWorldMatrix;
 };
 
 struct Light
@@ -41,20 +31,38 @@ cbuffer cbLights : register(b3)
 
 cbuffer cbMaterial : register(b4)
 {
-    float4 DiffuseColor : packoffset(c0);
-    float4 AmbientColor : packoffset(c1);
-    float3 SpecularColor : packoffset(c2);
-    float SpecularStrength : packoffset(c2.w);
+	float3 g_Albedo;
+	float OverrideAlbedo;
+
+	float3 g_Specular;
+	float OverrideMetallicSpecular;
+
+	float3 g_Emmisive;
+	float OverriveEmmisive;
+
+	float g_RoughGloss;
+	float g_Metallic;
+	float g_Opacity;
+	float g_TesselationFactor;
+
+	float OverrideOpacity;
+	float AOStrength;
+	float tileX;
+	float tileY;
+
+	float OverrideNormal;
+	float OverrideRoughGloss;
+	float paddings[2];
 };
 
 cbuffer cbCamera : register(b5)
 {
-    float4 ViewPosition;
-    float4 ViewDirection;
-    float4 NearPlane;
-    float4 FarPlane;
-    matrix ViewMatrix;
-    matrix ProjectionMatrix;
+	float4 ViewPosition;
+	float4 ViewDirection;
+	float4 NearPlane;
+	float4 FarPlane;
+	matrix ViewMatrix;
+	matrix ProjectionMatrix;
 	matrix PreviousViewMatrix;
 	matrix PreviousProjectionMatrix;
 };

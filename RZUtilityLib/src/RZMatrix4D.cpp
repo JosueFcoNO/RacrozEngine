@@ -28,9 +28,10 @@ namespace rczEngine
 	Matrix4::Matrix4(const Matrix3& matrix) noexcept
 	{
 		m_rows[0] = Vector4(matrix.m_rows[0]);
-		m_rows[0] = Vector4(matrix.m_rows[1]);
-		m_rows[0] = Vector4(matrix.m_rows[2]);
-		m_rows[0] = Vector4(0, 0, 0, 1);
+		m_rows[1] = Vector4(matrix.m_rows[1]);
+		m_rows[2] = Vector4(matrix.m_rows[2]);
+		m_rows[3] = Vector4(0, 0, 0, 1);
+		Logger::Pointer()->Log("Wafataf");
 	}
 
 	Matrix4::Matrix4(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33) noexcept

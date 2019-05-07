@@ -46,13 +46,13 @@ namespace rczEngine {
 		FORCEINLINE float Magnitude() const noexcept;
 		FORCEINLINE float SqrMagnitude() const noexcept;
 
-		FORCEINLINE Vector3 operator+(const Vector3& v) const noexcept { return Vector3(*this) += v; }
-		FORCEINLINE Vector3 operator-(const Vector3& v) const noexcept { return Vector3(*this) -= v; }
-		FORCEINLINE Vector3 operator*(const Vector3& v) const noexcept { return Vector3(*this) *= v; }
-		FORCEINLINE Vector3 operator/(const Vector3& v) const noexcept { return Vector3(*this) /= v; }
+		Vector3 operator+(const Vector3& v) const noexcept;
+		Vector3 operator-(const Vector3& v) const noexcept;
+		Vector3 operator*(const Vector3& v) const noexcept;
+		Vector3 operator/(const Vector3& v) const noexcept;
 
-		FORCEINLINE Vector3 operator*(const float& f) const noexcept { return Vector3(*this) *= f; }
-		FORCEINLINE Vector3 operator/(const float& f) const noexcept { return Vector3(*this) /= f; }
+		Vector3 operator*(float f) const noexcept;
+		Vector3 operator/(float f) const noexcept;
 
 		Vector3& operator+=(const Vector3& v) noexcept;
 		Vector3& operator-=(const Vector3& v) noexcept;

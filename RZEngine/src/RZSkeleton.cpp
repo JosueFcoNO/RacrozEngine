@@ -9,7 +9,7 @@ namespace rczEngine
 		if (!anim.expired())
 		{
 			StrPtr<Animation> animation(anim);
-
+		
 			///if the animation is not null, update the skeleton with the animation.
 			if (animation)
 			{

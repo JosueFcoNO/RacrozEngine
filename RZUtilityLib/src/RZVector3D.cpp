@@ -232,4 +232,33 @@ namespace rczEngine
 		return add;
 	}
 
+	Vector3 Vector3::operator+(const Vector3 & v) const noexcept
+	{
+		return Vector3(m_x + v.m_x, m_y + v.m_y, m_z + v.m_z);
+	}
+
+	Vector3 Vector3::operator-(const Vector3 & v) const noexcept
+	{
+		return Vector3(m_x - v.m_x, m_y - v.m_y, m_z - v.m_z);
+	}
+
+	Vector3 Vector3::operator*(const Vector3 & v) const noexcept
+	{
+		return Vector3(m_x * v.m_x, m_y * v.m_y, m_z * v.m_z);
+	}
+
+	Vector3 Vector3::operator/(const Vector3 & v) const noexcept
+	{
+		return Vector3(m_x / v.m_x, m_y / v.m_y, m_z / v.m_z);
+	}
+
+	Vector3 Vector3::operator*(float f) const noexcept
+	{
+		return Vector3(m_x * f, m_y * f, m_z * f);
+	}
+
+	Vector3 Vector3::operator/(float f) const noexcept
+	{
+		return Vector3(m_x / f, m_y/ f, m_z / f);
+	}
 }

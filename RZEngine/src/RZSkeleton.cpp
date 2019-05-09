@@ -30,6 +30,7 @@ namespace rczEngine
 		Value.first = name;
 		Value.second = bone;
 		m_Bones.insert(Value);
+		bones.push_back(name);
 	}
 
 	Bone* Skeleton::GetBone(String name)

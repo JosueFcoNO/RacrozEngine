@@ -80,7 +80,10 @@ namespace rczEngine
 		float Exposure = 1.0f;
 		float FPS = 0.0f;
 		bool Wireframe = false;
-
+		int SkinMode = 0;
+		bool TransposeJoint = false;
+		bool ByOffset = false;
+		bool UseParents = false;
 	private:
 		void CreateFontsTexture();
 		void InvalidateDeviceObjects();

@@ -340,6 +340,11 @@ namespace rczEngine
 
 			ImGui::Checkbox("Wireframe", &Wireframe);
 
+			ImGui::SliderInt("Skin Transform Mode:", &SkinMode, 0, 5);
+			ImGui::Checkbox("Joint", &TransposeJoint);
+			ImGui::Checkbox("ByOffset", &ByOffset);
+			ImGui::Checkbox("UseParents", &UseParents);
+
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / FPS, FPS);
 
 			ImGui::SliderInt("Correction Mode:", &ColorMode, 0, 3);

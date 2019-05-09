@@ -625,7 +625,7 @@ namespace rczEngine
 			///Set the TempBone's offset matrix to the BoneList[i]'s offset matrix.
 			CopyMatrix(TempBone.m_OffsetMatrix, CurrentBone->mOffsetMatrix);
 
-			CopyMatrix(TempBone.m_TransformMatrix, CurrentNode->mTransformation);
+			//CopyMatrix(TempBone.m_JointMatrix, CurrentNode->mTransformation);
 
 			TempBone.m_RealBone = true;
 
@@ -634,17 +634,17 @@ namespace rczEngine
 		}
 
 		/////If its named like its parent, change the parent's name
-		while (RealRootNode->mParent->mName != aiString("RootNode"))
-		{
-			RealRootNode = RealRootNode->mParent;
-		}
+		//while (RealRootNode->mParent->mName != aiString("RootNode"))
+		//{
+		//	RealRootNode = RealRootNode->mParent;
+		//}
 
 		///Create a tempRoot to insert the Skeleton's root bone
 		Bone TempRoot;
 		TempRoot.m_Name = RealRootNode->mName.C_Str();
+		
+		//CopyMatrix(TempRoot.m_JointMatrix, RealRootNode->mTransformation);
 		TempRoot.m_OffsetMatrix.Identity();
-		TempRoot.m_JointMatrix.Identity();
-		CopyMatrix(TempRoot.m_TransformMatrix, RealRootNode->mTransformation);
 
 		TempRoot.SetParent(NULL);
 		TempRoot.m_BoneIndex = 0;
@@ -667,9 +667,9 @@ namespace rczEngine
 			AddBoneToSkeleton(skin, RootNode->mChildren[o]);
 		}
 
-		for (auto it = BoneIndex.begin(); it != BoneIndex.end(); ++it)
+		for (auto& bone : skin->m_MeshSkeleton.m_Bones)
 		{
-			skin->m_MeshSkeleton.GetBone(it->first)->m_BoneIndex = it->second;
+			bone.second.m_BoneIndex = BoneIndex[bone.first];
 		}
 
 		Logger::Pointer()->CloseLog("ModelSkinned");
@@ -799,13 +799,13 @@ namespace rczEngine
 				aiBone* CurrentBone = mesh->mBones[i];
 				bool boneAlreadyInVector = false;
 
-				Logger::Pointer()->LogMessageToFileLog("ModelSkinned", String("Agregando Bone: ") + CurrentBone->mName.C_Str());
+				Logger::Pointer()->LogMessageToFileLog("ModelSkinned", String("Adding Bone: ") + CurrentBone->mName.C_Str());
 
 				auto it = Bones.find(CurrentBone->mName.C_Str());
 				if (it != Bones.end())
 				{
 					boneAlreadyInVector = true;
-					Logger::Pointer()->LogMessageToFileLog("ModelSkinned", String("Ya estaba en el vector"));
+					Logger::Pointer()->LogMessageToFileLog("ModelSkinned", String("Bone Already in Vector"));
 				}
 
 				if (!boneAlreadyInVector)
@@ -814,16 +814,23 @@ namespace rczEngine
 					Bones[CurrentBone->mName.C_Str()] = CurrentBone;
 					BoneNames.push_back(CurrentBone->mName.C_Str());
 					BoneIndex[CurrentBone->mName.C_Str()] = (int)Bones.size();
-					Logger::Pointer()->LogMessageToFileLog("ModelSkinned", String("No estaba en el vector."));
-					Logger::Pointer()->LogMessageToFileLog("ModelSkinned", ("Dandole Index: "), (int32)Bones.size());
+					
+					Logger::Pointer()->LogMessageToFileLog("ModelSkinned", String("Bone not in vector."));
+					Logger::Pointer()->LogMessageToFileLog("ModelSkinned", ("Index: "), BoneIndex[CurrentBone->mName.C_Str()]);
 
 				}
 
+				int index = BoneIndex[CurrentBone->mName.C_Str()];
+				Logger::Pointer()->LogMessageToFileLog("ModelSkinned", ("Using Index: "), index);
+
 				///Create a temp Gfx::SkinnedVertex pointer
 				Gfx::SkinnedVertex* SkndVertex;
+				Logger::Pointer()->LogMessageToFileLog("ModelSkinned", ("Bone Has Weights: "), CurrentBone->mNumWeights);
+
 				///Iterate through the weights in my bone
 				for (uint32 o = 0; o < CurrentBone->mNumWeights; ++o)
 				{
+
 					///Get the vertex in this aiWeight.VertexId
 					SkndVertex = &model->m_VertexBuffer.GetVertex(CurrentBone->mWeights[o].mVertexId + vertexOffset);
 
@@ -835,7 +842,7 @@ namespace rczEngine
 						{
 							///Set the bone index and the corresponding weight in the skinnedVertex
 							SkndVertex->BonesWeights[k] = CurrentBone->mWeights[o].mWeight;
-							SkndVertex->BoneIndex[k] = int32(Bones.size());
+							SkndVertex->BoneIndex[k] = index;
 
 							break;
 						}
@@ -869,9 +876,10 @@ namespace rczEngine
 			{
 				Bone NoBone;
 				NoBone.m_Name = BoneName;
-				CopyMatrix(NoBone.m_TransformMatrix, pNode->mTransformation);
+				//CopyMatrix(NoBone.m_JointMatrix, pNode->mTransformation);
 				NoBone.m_OffsetMatrix.Identity();
-				NoBone.m_BoneIndex = 0;
+
+				NoBone.m_BoneIndex = BoneNames.size()+1;
 				NoBone.m_RealBone = false;
 
 				model->m_MeshSkeleton.AddBone(NoBone, BoneName);
@@ -911,16 +919,16 @@ namespace rczEngine
 		//aiVector3D translation;
 		//aiVector3D rotation;
 		//aiVector3D scaling;
-
+		//
 		//src.Decompose(scaling, rotation, translation);
-
+		//
 		//Vector3 trans(translation.x, translation.y, translation.z);
 		//Vector3 rot(
 		//	Math::RadiansToDegrees(-rotation.x),
 		//	Math::RadiansToDegrees(-rotation.y),
 		//	Math::RadiansToDegrees(-rotation.z));
 		//Vector3 scale(scaling.x, scaling.y, scaling.z);
-
+		//
 		//dest =
 		//	Matrix4::Scale3D(scale.m_x, scale.m_y, scale.m_z)*
 		//	Matrix4::Rotate3D(rot.m_x, rot.m_y, rot.m_z)*

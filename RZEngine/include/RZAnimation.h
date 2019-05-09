@@ -10,8 +10,8 @@ namespace rczEngine
 	public:
 		RZ_EXP void AddKeyFrame(KeyFrame& keyFrame, String boneName);
 		RZ_EXP KeyFrameVector& GetChannel(String boneName);
-		RZ_EXP KeyFrame GetKeyFrame(String& boneName, float time);
-		RZ_EXP KeyFrame GetNextKeyFrame(String& boneName, float time);
+		RZ_EXP const KeyFrame* GetKeyFrame(String& boneName, float time);
+		RZ_EXP const KeyFrame* GetNextKeyFrame(String& boneName, float time);
 
 		RZ_EXP virtual void Load(const String& filePath, const String& resName);
 		RZ_EXP virtual void Release() { m_Timeline.clear(); };

@@ -20,9 +20,9 @@ namespace rczEngine
 		return m_Timeline[boneName];
 	}
 
-	KeyFrame Animation::GetKeyFrame(String & boneName, float time)
+	const KeyFrame* Animation::GetKeyFrame(String & boneName, float time)
 	{
-		KeyFrame Temp;
+		const KeyFrame* ptr = nullptr;
 		auto tempKeyframe = m_Timeline.find(boneName);
 		if (tempKeyframe != m_Timeline.end())
 		{
@@ -32,7 +32,7 @@ namespace rczEngine
 			{
 				if (time > BoneKeyFrame->at(i).m_Time)
 				{
-					Temp = BoneKeyFrame->at(i);
+					ptr = &BoneKeyFrame->at(i);
 				}
 				else
 				{
@@ -41,12 +41,13 @@ namespace rczEngine
 			}
 		}
 
-		return Temp;
+		return ptr;
 	}
 
-	KeyFrame Animation::GetNextKeyFrame(String & boneName, float time)
+	const KeyFrame* Animation::GetNextKeyFrame(String & boneName, float time)
 	{
-		KeyFrame Temp;
+		const KeyFrame* ptr = nullptr;
+
 		auto tempKeyframe = m_Timeline.find(boneName);
 		if (tempKeyframe != m_Timeline.end())
 		{
@@ -58,11 +59,11 @@ namespace rczEngine
 				{
 					if (i + 1 < BoneKeyFrame->size())
 					{
-						Temp = BoneKeyFrame->at(i + 1);
+						ptr = &BoneKeyFrame->at(i + 1);
 					}
 					else
 					{
-						Temp = BoneKeyFrame->at(i);
+						ptr = &BoneKeyFrame->at(i);
 					}
 				}
 				else
@@ -72,7 +73,7 @@ namespace rczEngine
 			}
 		}
 
-		return Temp;
+		return ptr;
 	}
 
 	void Animation::Load(const String& filePath, const String& resName)

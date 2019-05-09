@@ -36,5 +36,6 @@ namespace rczEngine
 		Gfx::ConstantBuffer m_BoneMatrices;
 		///The bone number constant buffer
 		Gfx::ConstantBuffer m_BoneNumber;
+		List<String> bones;
 	};
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include <RZGraphicDebuggerPoint.h>
 
 namespace rczEngine
 {
@@ -20,7 +21,6 @@ namespace rczEngine
 		void InitBone(StrPtr<BoneComponent> boneCmp)
 		{
 			m_BoneComponent = boneCmp;
-			m_OffsetInverse = m_OffsetMatrix.GetInverse();
 		};
 
 		void AddBoneChildren(Bone* child);
@@ -28,7 +28,7 @@ namespace rczEngine
 
 		void UpdateAccumulatedMatrix(Vector<Matrix4>& matrixPalette);
 		void UpdateChildren(Vector<Matrix4>& matrixPalette);
-		void InterpolateBone(KeyFrame& k0, KeyFrame& k1, float time);
+		void InterpolateBone(const KeyFrame* k0, const KeyFrame* k1, float time);
 
 		void InterpolateBoneWithAnim(float time, WeakPtr<Animation> anim);
 		void InterpolateChildren(float time, WeakPtr<Animation> anim);
@@ -36,15 +36,17 @@ namespace rczEngine
 		String m_Name;
 		int32 m_BoneIndex = -1;
 		Matrix4 m_OffsetMatrix;
-		Vector<Bone*> m_ChildrenBones;
 		Matrix4 m_JointMatrix;
 		Matrix4 m_TransformMatrix;
-		bool m_RealBone = true;
+
+		Vector<Bone*> m_ChildrenBones;
+
+		bool m_RealBone = false;
 
 	private:
 		StrPtr<BoneComponent> m_BoneComponent;
-		Matrix4 m_OffsetInverse;
 		Matrix4 m_AccumulatedMatrix;
 		Bone * m_Parent = NULL;
+		StrPtr<DebuggerPoint> element;
 	};
 }

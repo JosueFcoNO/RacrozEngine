@@ -22,11 +22,11 @@ namespace rczEngine
 
 		///Create an Importer and Read the file in fileName
 		Assimp::Importer B;
-		m_Scene = B.ReadFile(filePath, 
-			aiProcess_Triangulate | 
-			aiProcess_GenSmoothNormals | 
-			aiProcess_JoinIdenticalVertices | 
-			aiProcess_CalcTangentSpace | 
+		m_Scene = B.ReadFile(filePath,
+			aiProcess_Triangulate |
+			aiProcess_GenSmoothNormals |
+			aiProcess_JoinIdenticalVertices |
+			aiProcess_CalcTangentSpace |
 			aiProcess_FlipUVs);
 
 		LoadMaterials();
@@ -120,14 +120,14 @@ namespace rczEngine
 		///Create an Importer and Read the file in fileName
 		Assimp::Importer B;
 		B.SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
-		m_Scene = B.ReadFile(filePath, 
-			aiProcess_Triangulate | 
-			aiProcess_GenSmoothNormals | 
-			aiProcess_FlipUVs | 
-			aiProcess_CalcTangentSpace | 
-			aiProcess_LimitBoneWeights | 			 
+		m_Scene = B.ReadFile(filePath,
+			aiProcess_Triangulate |
+			aiProcess_GenSmoothNormals |
+			aiProcess_FlipUVs |
+			aiProcess_CalcTangentSpace |
+			aiProcess_LimitBoneWeights |
 			aiProcess_OptimizeMeshes
-			);
+		);
 
 		LoadMaterials();
 		model->m_MaterialMap = materialMap;
@@ -177,7 +177,7 @@ namespace rczEngine
 
 		///Create a tempAnim pointer
 		StrPtr<Animation> TempAnim = std::make_shared<Animation>();
-        TempAnim->Load(filePath, "Anim");
+		TempAnim->Load(filePath, "Anim");
 		model->m_SetAnimation = m_Res->InsertResource(TempAnim);
 
 		///Create the vertex and index buffers
@@ -287,7 +287,7 @@ namespace rczEngine
 			Temp->InitMaterial(MAT_PBR_MetRough, Gfx::GfxCore::Pointer());
 
 
-			aiColor4D outV = { 0, 0, 0, 0};
+			aiColor4D outV = { 0, 0, 0, 0 };
 			aimatTemp->Get(AI_MATKEY_COLOR_SPECULAR, outV);
 			Temp->m_core.g_Specular.Set(outV.r, outV.g, outV.b);
 			Logger::Pointer()->Log("Spec R: " + std::to_string(outV.r));
@@ -405,7 +405,7 @@ namespace rczEngine
 				Temp->m_core.OverrideRoughGloss = 1.0f;
 				Temp->m_core.g_RoughGloss = 0.5f;
 			}
-			
+
 
 			Path = "";
 			aimatTemp->GetTexture(aiTextureType_EMISSIVE, 0, &Path);
@@ -589,7 +589,7 @@ namespace rczEngine
 
 		int i = 0;
 		///iterate through my BoneList
-		for (auto it = Bones.begin(); it != Bones.end(); ++it, ++i)
+		for (auto it = AssimpBone.begin(); it != AssimpBone.end(); ++it, ++i)
 		{
 			aiBone* CurrentBone = it->second;
 			///Set the depth to 0
@@ -616,50 +616,37 @@ namespace rczEngine
 				///Set the RealRoot Node to the Node of this bone
 				RealRootNode = m_Scene->mRootNode->FindNode(CurrentBone->mName);
 			}
-
-			///Create a TempBone
-			Bone TempBone;
-			///Give it the current bone's name
-			TempBone.m_Name = String(CurrentBone->mName.data);
-
-			///Set the TempBone's offset matrix to the BoneList[i]'s offset matrix.
-			CopyMatrix(TempBone.m_OffsetMatrix, CurrentBone->mOffsetMatrix);
-
-			//CopyMatrix(TempBone.m_JointMatrix, CurrentNode->mTransformation);
-
-			TempBone.m_RealBone = true;
-
-			///Add the Temp bone to the m_Skeleton's Bone Map
-			skin->m_MeshSkeleton.AddBone(TempBone, CurrentBone->mName.C_Str());
 		}
 
-		/////If its named like its parent, change the parent's name
-		//while (RealRootNode->mParent->mName != aiString("RootNode"))
-		//{
-		//	RealRootNode = RealRootNode->mParent;
-		//}
+		auto rootNodeName = String(RealRootNode->mName.C_Str());
 
-		///Create a tempRoot to insert the Skeleton's root bone
-		Bone TempRoot;
-		TempRoot.m_Name = RealRootNode->mName.C_Str();
-		
-		//CopyMatrix(TempRoot.m_JointMatrix, RealRootNode->mTransformation);
-		TempRoot.m_OffsetMatrix.Identity();
+		if (SkeletonBone.find(rootNodeName) == SkeletonBone.end())
+		{
+			///Create a tempRoot to insert the Skeleton's root bone
+			Bone TempRoot;
+			TempRoot.m_Name = rootNodeName;
 
-		TempRoot.SetParent(NULL);
-		TempRoot.m_BoneIndex = 0;
-		skin->m_MeshSkeleton.AddBone(TempRoot, TempRoot.m_Name);
-		skin->m_MeshSkeleton.m_RootBone = &skin->m_MeshSkeleton.m_Bones[TempRoot.m_Name];
+			//CopyMatrix(TempRoot.m_JointMatrix, RealRootNode->mTransformation);
+			TempRoot.m_OffsetMatrix.Identity();
 
-		BoneNames.push_back(TempRoot.m_Name);
-		BoneIndex[TempRoot.m_Name] = 0;
+			TempRoot.SetParent(NULL);
+			TempRoot.m_BoneIndex = 0;
+
+			skin->m_MeshSkeleton.AddBone(TempRoot, TempRoot.m_Name);
+			skin->m_MeshSkeleton.m_RootBone = &skin->m_MeshSkeleton.m_Bones[TempRoot.m_Name];
+		}
+		else
+		{
+			skin->m_MeshSkeleton.m_RootBone = &SkeletonBone.find(rootNodeName)->second;
+		}
+
 
 		///Create a Temp aiNode pointer to the scene node that has this bone's name.
-		aiNode* RootNode = m_Scene->mRootNode->FindNode(TempRoot.m_Name.c_str());
+		aiNode* RootNode = m_Scene->mRootNode->FindNode(rootNodeName.c_str());
 
 		Matrix4 matrice(eInit::Unit);
 		///Create a matrix for this bone in the final bone matrix vector
-		skin->m_MeshSkeleton.m_BoneFinalMatrixVector.push_back(matrice);
+		.push_back(matrice);
 
 		///Iterate through the string of the children's name
 		for (uint32 o = 0; o < RootNode->mNumChildren; ++o)
@@ -667,10 +654,7 @@ namespace rczEngine
 			AddBoneToSkeleton(skin, RootNode->mChildren[o]);
 		}
 
-		for (auto& bone : skin->m_MeshSkeleton.m_Bones)
-		{
-			bone.second.m_BoneIndex = BoneIndex[bone.first];
-		}
+		skin->m_MeshSkeleton.m_BoneFinalMatrixVector.resize(SkeletonBone.size());
 
 		Logger::Pointer()->CloseLog("ModelSkinned");
 
@@ -796,43 +780,51 @@ namespace rczEngine
 			for (uint32 i = 0; i < mesh->mNumBones; ++i)
 			{
 				///Create pointer CurrentBone to mBones[i]
-				aiBone* CurrentBone = mesh->mBones[i];
-				bool boneAlreadyInVector = false;
+				aiBone* currentBone = mesh->mBones[i];
+				auto currentBoneName = String(currentBone->mName.C_Str());
 
-				Logger::Pointer()->LogMessageToFileLog("ModelSkinned", String("Adding Bone: ") + CurrentBone->mName.C_Str());
+				///Create a newBone
+				Bone newBone;
 
-				auto it = Bones.find(CurrentBone->mName.C_Str());
-				if (it != Bones.end())
+				Logger::Pointer()->LogMessageToFileLog("ModelSkinned", String("Adding Bone: ") + currentBone->mName.C_Str());
+
+				//Bone does not exist yet.
+				if (AssimpBone.find(currentBoneName) == AssimpBone.end())
 				{
-					boneAlreadyInVector = true;
-					Logger::Pointer()->LogMessageToFileLog("ModelSkinned", String("Bone Already in Vector"));
-				}
+					///Give it the current bone's name
+					newBone.m_Name = currentBoneName;
 
-				if (!boneAlreadyInVector)
-				{
+					///Set the TempBone's offset matrix to the BoneList[i]'s offset matrix.
+					CopyMatrix(newBone.m_OffsetMatrix, currentBone->mOffsetMatrix);
+
+					newBone.m_RealBone = true;
+
+					newBone.m_BoneIndex = i + 1;
+
+					BoneNames.push_back(currentBoneName);
 					///Save all the bones in a bone list
-					Bones[CurrentBone->mName.C_Str()] = CurrentBone;
-					BoneNames.push_back(CurrentBone->mName.C_Str());
-					BoneIndex[CurrentBone->mName.C_Str()] = (int)Bones.size();
-					
+					AssimpBone[currentBoneName] = currentBone;
+
+					SkeletonBone[currentBoneName] = newBone;
+
+
+
 					Logger::Pointer()->LogMessageToFileLog("ModelSkinned", String("Bone not in vector."));
-					Logger::Pointer()->LogMessageToFileLog("ModelSkinned", ("Index: "), BoneIndex[CurrentBone->mName.C_Str()]);
+					Logger::Pointer()->LogMessageToFileLog("ModelSkinned", ("Index: "), i + 1);
 
 				}
 
-				int index = BoneIndex[CurrentBone->mName.C_Str()];
-				Logger::Pointer()->LogMessageToFileLog("ModelSkinned", ("Using Index: "), index);
+				Logger::Pointer()->LogMessageToFileLog("ModelSkinned", ("Using Index: "), newBone.m_BoneIndex);
 
 				///Create a temp Gfx::SkinnedVertex pointer
 				Gfx::SkinnedVertex* SkndVertex;
-				Logger::Pointer()->LogMessageToFileLog("ModelSkinned", ("Bone Has Weights: "), CurrentBone->mNumWeights);
+				Logger::Pointer()->LogMessageToFileLog("ModelSkinned", ("Bone Has Weights: "), currentBone->mNumWeights);
 
 				///Iterate through the weights in my bone
-				for (uint32 o = 0; o < CurrentBone->mNumWeights; ++o)
+				for (uint32 o = 0; o < currentBone->mNumWeights; ++o)
 				{
-
 					///Get the vertex in this aiWeight.VertexId
-					SkndVertex = &model->m_VertexBuffer.GetVertex(CurrentBone->mWeights[o].mVertexId + vertexOffset);
+					SkndVertex = &model->m_VertexBuffer.GetVertex(currentBone->mWeights[o].mVertexId + vertexOffset);
 
 					///iterate through the 4 Gfx::Vertex's indices and weights
 					for (int32 k = 0; k < 4; ++k)
@@ -841,8 +833,8 @@ namespace rczEngine
 						if (SkndVertex->BoneIndex[k] < 0)
 						{
 							///Set the bone index and the corresponding weight in the skinnedVertex
-							SkndVertex->BonesWeights[k] = CurrentBone->mWeights[o].mWeight;
-							SkndVertex->BoneIndex[k] = index;
+							SkndVertex->BonesWeights[k] = currentBone->mWeights[o].mWeight;
+							SkndVertex->BoneIndex[k] = newBone.m_BoneIndex;
 
 							break;
 						}
@@ -855,62 +847,39 @@ namespace rczEngine
 
 	void AssimpLoader::AddBoneToSkeleton(StrPtr<SkinnedModel> model, aiNode * pNode)
 	{
-		BasicString<CHAR> BoneName = pNode->mName.C_Str();
+		auto BoneName = String(pNode->mName.C_Str());
 
-		bool IsNullNode = false;
+		///get the bone from my own skeleton's map that contains the childrenStrings[o]
+		Bone* currentBone = &SkeletonBone.at(BoneName);
 
-		
-		if (!IsNullNode)
+		if (currentBone == nullptr)
 		{
-			///for each children string
-			///get the bone from my own skeleton's map that contains the childrenStrings[o]
-			Bone* currentBone = model->m_MeshSkeleton.GetBone(BoneName);
+			Bone NoBone;
+			NoBone.m_Name = BoneName;
+			//CopyMatrix(NoBone.m_JointMatrix, pNode->mTransformation);
+			NoBone.m_OffsetMatrix.Identity();
 
-			Matrix4 matrice(eInit::Unit);
-			///Create a matrix for this bone in the final bone matrix vector
-			model->m_MeshSkeleton.m_BoneFinalMatrixVector.push_back(matrice);
+			NoBone.m_BoneIndex = SkeletonBone.size() + 1;
+			NoBone.m_RealBone = false;
 
-			///if it found something, add it to the BoneTemp children list and set its parent to BoneTemp which is
-			///the bone i'm currently iterating over.
-			if (currentBone == nullptr)
-			{
-				Bone NoBone;
-				NoBone.m_Name = BoneName;
-				//CopyMatrix(NoBone.m_JointMatrix, pNode->mTransformation);
-				NoBone.m_OffsetMatrix.Identity();
+			model->m_MeshSkeleton.AddBone(NoBone, BoneName);
+			BoneNames.push_back(NoBone.m_Name.c_str());
 
-				NoBone.m_BoneIndex = BoneNames.size()+1;
-				NoBone.m_RealBone = false;
-
-				model->m_MeshSkeleton.AddBone(NoBone, BoneName);
-				BoneNames.push_back(NoBone.m_Name.c_str());
-
-				currentBone = model->m_MeshSkeleton.GetBone(BoneName);
-			}
-
-			auto parent = model->m_MeshSkeleton.GetBone(pNode->mParent->mName.C_Str());
-
-			if (pNode->mParent)
-				parent->AddBoneChildren(currentBone);
-
-			currentBone->SetParent(parent);
-
-			///Iterate through the string of the children's name
-			for (uint32 o = 0; o < pNode->mNumChildren; ++o)
-			{
-				AddBoneToSkeleton(model, pNode->mChildren[o]);
-			}
-		}
-		else
-		{
-			///Iterate through the string of the children's name
-			for (uint32 o = 0; o < pNode->mNumChildren; ++o)
-			{
-				AddBoneToSkeleton(model, pNode->mChildren[o]);
-			}
+			currentBone = model->m_MeshSkeleton.GetBone(BoneName);
 		}
 
+		auto parent = model->m_MeshSkeleton.GetBone(pNode->mParent->mName.C_Str());
 
+		if (pNode->mParent)
+			parent->AddBoneChildren(currentBone);
+
+		currentBone->SetParent(parent);
+
+		///Iterate through the string of the children's name
+		for (uint32 o = 0; o < pNode->mNumChildren; ++o)
+		{
+			AddBoneToSkeleton(model, pNode->mChildren[o]);
+		}
 	}
 
 	void AssimpLoader::CopyMatrix(Matrix4 & dest, aiMatrix4x4 & src)

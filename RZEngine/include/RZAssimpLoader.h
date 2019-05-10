@@ -35,9 +35,9 @@ namespace rczEngine
 		Map<String, ResourceHandle> materialMap;
 		Path m_FilePath;
 
-		Map<String, aiBone*> Bones;
+		Map<String, aiBone*> AssimpBone;
 		Map<String, StrPtr<BoneComponent>> BoneComponents;
-		Map<String, int> BoneIndex;
+		Map<String, Bone> SkeletonBone;
 		Vector<String> BoneNames;
 	};
 }

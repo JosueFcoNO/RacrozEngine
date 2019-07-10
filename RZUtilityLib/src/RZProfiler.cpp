@@ -18,12 +18,12 @@ namespace rczEngine
 		return _Instance();
 	}
 
-	void Profiler::ShutDown()
+	void Profiler::ShutDown() noexcept
 	{
 		delete _Instance();
 	}
 
-	void Profiler::Destroy() noexcept
+	void Profiler::Destroy()
 	{
 		SaveResults();
 		m_GfxEvents.clear();
@@ -43,7 +43,7 @@ namespace rczEngine
 		m_GfxEvents.clear();
 	}
 
-	void Profiler::SaveResults(const String& filePath) noexcept
+	void Profiler::SaveResults(const String& filePath)
 	{
 		const String LoggerFile(filePath);
 		const auto logger = Logger::PointerOrCreate();
@@ -91,10 +91,10 @@ namespace rczEngine
 		switch (eventType)
 		{
 		case PROF_GFX:
-				m_GfxEvents[event].AddTimeEntry(time);
+				m_GfxEvents.at(event).AddTimeEntry(time);
 			break;
 		case PROF_GAME:
-				m_GameEvents[event].AddTimeEntry(time);
+				m_GameEvents.at(event).AddTimeEntry(time);
 			break;
 		default:
 			break;

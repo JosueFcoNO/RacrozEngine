@@ -30,6 +30,6 @@ namespace rczEngine
 		m_VertexBuffer.AddVertex(bottomBackLeft);
 		m_VertexBuffer.AddVertex(bottomBackRight);
 
-		m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DEFAULT, false, Gfx::GfxCore::Pointer());
+		m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DYNAMIC, false, Gfx::GfxCore::Pointer());
 	}
 };

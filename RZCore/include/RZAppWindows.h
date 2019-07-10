@@ -11,7 +11,7 @@ namespace rczEngine
 			void UpdateApp() noexcept final {};
 			void CloseApp() noexcept final {};
 
-			HWND m_WindowHandle;
+			HWND m_WindowHandle = nullptr;
 		};
 	}
 }

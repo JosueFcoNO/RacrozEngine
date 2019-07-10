@@ -37,5 +37,6 @@ namespace rczEngine
 
 	private:
 		Gfx::MeshAPI* m_MeshToDraw = nullptr;
+		bool once = false;
 	};
 }

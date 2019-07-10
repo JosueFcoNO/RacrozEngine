@@ -449,34 +449,22 @@ int main(void)
 	double Pid = (4.0f * atanf(1.0f));
 	float Pi = (4.0f * atanf(1.0f));
 
-	MathUnitTest();
-	VectorUnitTest();
-	MatrixUnitText();
+	//MathUnitTest();
+	//VectorUnitTest();
+	//MatrixUnitText();
 
-	/*float angle = 3.14f;
+	Vector3 v;
 
-	float sin = 0;
-	float cos = 0;
+	v.Set(0,0,0);
+	std::cout << Vector3::Hash(v) << std::endl;
 
-	for (float k = 0; k < 2*3.1416; k+=.5f)
-	{
-		std::cout <<"fast seno "<< rczEngine::Math::FastSin0(k) << std::endl;
-		std::cout << "seno " <<sinf(k) << std::endl;
+	v.Set(1.0f, 1.0f, 1.0f);
+	std::cout << Vector3::Hash(v) << std::endl;
 
-		std::cout << "fast cos" << rczEngine::Math::FastCos0(k) << std::endl;
-		std::cout << "cos "<< cosf(k) << std::endl;
+	v.Set(-1.0f, -1.0f, -1.0f);
+	std::cout << Vector3::Hash(v) << std::endl;
 
-		system("cls");
-	}
-
-	using namespace rczEngine;
-
-	RandomBoxMuller box;
-	box.SetRandomSeed(3124);
-	for (int i = 0; i < 100; ++i)
-	{
-		std::cout<<box.GetRandomNumberN()<<std::endl;
-	}*/
+	std::cin;
 
 	Profiler::Pointer()->AddTime("Utilities", PROFILE_EVENTS::PROF_GAME);
 

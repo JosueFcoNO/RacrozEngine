@@ -5,7 +5,7 @@ namespace rczEngine
 	class ProfilerObj
 	{
 	public:
-		RZ_EXP ProfilerObj(const String& event, PROFILE_EVENTS eventType) noexcept :
+		RZ_EXP ProfilerObj(const String& event, PROFILE_EVENTS eventType) :
 			m_EventID(event), 
 			m_EventType(eventType)
 		{

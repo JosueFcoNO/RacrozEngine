@@ -29,18 +29,6 @@ namespace rczEngine
 
 	void PlanetPass::RenderPass()
 	{
-		if (Input::Pointer()->CheckKeyboardState(KEY_NUMPAD1))
-		{
-			m_PlanetDshader.Destroy();
-			m_gfx->CompileAndCreateDomainShader(m_PlanetDshader, L"Shaders/ProcGen/Planet/PlanetDomainShader.hlsl");
-		}
-
-		if (Input::Pointer()->CheckKeyboardState(KEY_NUMPAD3))
-		{
-			m_PlanetHshader.Destroy();
-			m_gfx->CompileAndCreateHullShader(m_PlanetHshader, L"Shaders/ProcGen/Planet/PlanetHullShader.hlsl");
-		}
-
 		auto space = SpaceManager::Pointer();
 
 		if (space)

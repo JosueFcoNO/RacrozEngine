@@ -6,6 +6,9 @@ namespace rczEngine
 
 	void Planet::InitPlanet(int32 seed, float x, float y, float z, SpaceManager* spaceMng)
 	{
+
+		Logger::Pointer()->Log("Size of Node: " + std::to_string(sizeof(PlanetQuadTreeNode)));
+
 		m_SpaceMng = spaceMng;
 		m_CurrentScene = SceneManager::Pointer()->GetActiveScene();
 		m_GfxCore = Gfx::GfxCore::Pointer();

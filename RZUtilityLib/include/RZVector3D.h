@@ -36,7 +36,7 @@ namespace rczEngine {
 		static float Distance(const Vector3& vhead, const Vector3& vtail);
 		static float SqrDistance(const Vector3 & vhead, const Vector3 & vtail);
 		static float Anglexz(const Vector3& v, bool getAsDegree);
-		static uint32 Hash(const Vector3& v) noexcept;
+		static uint32 Hash(const Vector3& v, int mult = 10000) noexcept;
 
 		void Set(const float& x, const float& y, const float& z) noexcept;
 		void Set(const Vector3& v) noexcept;

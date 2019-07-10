@@ -17,7 +17,7 @@ namespace rczEngine
 		void AddPoint(Vector3 point) noexcept;
 		void Clear() noexcept;
 
-		Vector<Vector3> GetCorners() const noexcept;
+		std::array<Vector3, 8> GetCorners() const noexcept;
 
 		void TransformAndRecalculateAABB(Matrix3 newMatrix) noexcept;
 

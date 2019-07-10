@@ -35,8 +35,6 @@ namespace rczEngine
 		int32 VerticalScale = 5;
 		int32 MipMap = 0;
 
-		//SpaceTravel* m_Traveller = NULL;
-
 		int32 m_PlayerCubeSide;
 
 		float surfaceScale = 1.0f;

@@ -11,7 +11,7 @@ namespace rczEngine
 		virtual void OnKeyDown(int32 k) = 0;
 		virtual void OnKeyPressed(int32 k) = 0;
 		virtual void OnKeyUp(int32 k) = 0;
-		EVENT_HANDLER GetEventHandlerType() { return EVENT_HANDLER::HANDLER_KEY; };
+		FORCEINLINE EVENT_HANDLER GetEventHandlerType() const noexcept override { return EVENT_HANDLER::HANDLER_KEY; };
 
 	};
 

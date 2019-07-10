@@ -33,7 +33,7 @@ namespace rczEngine
 		///////////////////////
 
 		///Returns the cofactor of the nRow and nCol from this Matrix
-		float CoFactor3x3(uint32 nRow, uint32 nCol) const;
+		float CoFactor3x3(uint32 nRow, uint32 nCol) const noexcept;
 		///Transposes the Matrix
 		void Transpose() noexcept;
 		///Makes it an Identity Matrix

@@ -13,7 +13,7 @@ namespace rczEngine
 
 			if (m_Parent && GUIEditor::Pointer()->UseParents)
 			{
-				m_AccumulatedMatrix = transform * m_Parent->m_AccumulatedMatrix;
+				m_AccumulatedMatrix = m_Parent->m_AccumulatedMatrix * transform;
 			}
 			else
 			{
@@ -24,8 +24,6 @@ namespace rczEngine
 				matrixPalette[m_BoneIndex] = m_AccumulatedMatrix * m_OffsetMatrix;
 			else
 				matrixPalette[m_BoneIndex] = m_AccumulatedMatrix;
-
-			matrixPalette[m_BoneIndex].m_linear[0] = m_BoneIndex;
 		}
 		else
 		{
@@ -95,10 +93,6 @@ namespace rczEngine
 		{
 			InterpolateBone(k0, k1, time);
 		}
-		else
-		{
-			Logger::Pointer()->Log(String("Mal: ") + m_Name.c_str());
-		}
 
 		for (int32 i = 0; i < m_ChildrenBones.size(); ++i)
 		{
@@ -117,6 +111,8 @@ namespace rczEngine
 	void Bone::AddBoneChildren(Bone* child)
 	{
 		m_ChildrenBones.push_back(child);
+
+		child->SetParent(this);
 	}
 
 	void Bone::SetParent(Bone * parent)

@@ -40,6 +40,8 @@ namespace rczEngine
 
 	void Logger::StartLog(const String& pszFileName)
 	{
+		m_LoggedStrings.reserve(128);
+
 		///Create the fstream obj
 		m_Logs[pszFileName] = std::make_unique<FileStream>();
 

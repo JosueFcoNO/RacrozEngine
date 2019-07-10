@@ -43,11 +43,11 @@ namespace rczEngine
 		////// 2D Graphics Operations
 		///////////////////////
 
-		static Matrix3 Translate2D(float xDelta, float yDelta);
-		static Matrix3 Scale2D(float xScale, float yScale);
-		static Matrix3 Rotate2D(Degree deg);
-		static Matrix3 ShearX2D(float xShear);
-		static Matrix3 ShearY2D(float yShear);
+		static Matrix3 Translate2D(float xDelta, float yDelta) noexcept;
+		static Matrix3 Scale2D(float xScale, float yScale) noexcept;
+		static Matrix3 Rotate2D(Degree deg) noexcept;
+		static Matrix3 ShearX2D(float xShear) noexcept;
+		static Matrix3 ShearY2D(float yShear) noexcept;
 
 		///////////////////////
 		////// 3D Graphics Operations

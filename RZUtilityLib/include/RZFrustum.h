@@ -26,7 +26,7 @@ namespace rczEngine
 			Vector4 FarPoints[4];
 
 		private:
-			Plane m_Planes[eFrustum::fMax_Sides];
+			std::array<Plane, eFrustum::fMax_Sides> m_Planes;
 
 
 	};

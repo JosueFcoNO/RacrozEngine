@@ -119,7 +119,7 @@ namespace rczEngine
 
 		///Create an Importer and Read the file in fileName
 		Assimp::Importer B;
-		B.SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
+		//B.SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
 		m_Scene = B.ReadFile(filePath,
 			aiProcess_Triangulate |
 			aiProcess_GenSmoothNormals |
@@ -236,7 +236,7 @@ namespace rczEngine
 		else
 		{
 			auto ptrParent = scene->FindActor(parent);
-			//if (ptrParent.expired())
+			if (!ptrParent.expired())
 			{
 				node = scene->CreateActor(nodeName, ptrParent.lock().get(), trans, rot, scale);
 			}
@@ -620,13 +620,13 @@ namespace rczEngine
 
 		auto rootNodeName = String(RealRootNode->mName.C_Str());
 
-		if (SkeletonBone.find(rootNodeName) == SkeletonBone.end())
+		if (skin->m_MeshSkeleton.m_Bones.find(rootNodeName) == skin->m_MeshSkeleton.m_Bones.end())
 		{
 			///Create a tempRoot to insert the Skeleton's root bone
 			Bone TempRoot;
 			TempRoot.m_Name = rootNodeName;
 
-			//CopyMatrix(TempRoot.m_JointMatrix, RealRootNode->mTransformation);
+			CopyMatrix(TempRoot.m_JointMatrix, RealRootNode->mTransformation);
 			TempRoot.m_OffsetMatrix.Identity();
 
 			TempRoot.SetParent(NULL);
@@ -637,24 +637,17 @@ namespace rczEngine
 		}
 		else
 		{
-			skin->m_MeshSkeleton.m_RootBone = &SkeletonBone.find(rootNodeName)->second;
+			skin->m_MeshSkeleton.m_RootBone = &skin->m_MeshSkeleton.m_Bones.find(rootNodeName)->second;
 		}
-
 
 		///Create a Temp aiNode pointer to the scene node that has this bone's name.
 		aiNode* RootNode = m_Scene->mRootNode->FindNode(rootNodeName.c_str());
 
-		Matrix4 matrice(eInit::Unit);
-		///Create a matrix for this bone in the final bone matrix vector
-		.push_back(matrice);
+		AddBoneToSkeleton(skin, RootNode);
 
-		///Iterate through the string of the children's name
-		for (uint32 o = 0; o < RootNode->mNumChildren; ++o)
-		{
-			AddBoneToSkeleton(skin, RootNode->mChildren[o]);
-		}
+		skin->m_MeshSkeleton.m_RootBone = skin->m_MeshSkeleton.GetBone(rootNodeName);
 
-		skin->m_MeshSkeleton.m_BoneFinalMatrixVector.resize(SkeletonBone.size());
+		skin->m_MeshSkeleton.m_BoneFinalMatrixVector.resize(skin->m_MeshSkeleton.m_Bones.size(), Matrix4::IDENTITY());
 
 		Logger::Pointer()->CloseLog("ModelSkinned");
 
@@ -805,9 +798,7 @@ namespace rczEngine
 					///Save all the bones in a bone list
 					AssimpBone[currentBoneName] = currentBone;
 
-					SkeletonBone[currentBoneName] = newBone;
-
-
+					model->m_MeshSkeleton.m_Bones[currentBoneName] = newBone;
 
 					Logger::Pointer()->LogMessageToFileLog("ModelSkinned", String("Bone not in vector."));
 					Logger::Pointer()->LogMessageToFileLog("ModelSkinned", ("Index: "), i + 1);
@@ -850,16 +841,18 @@ namespace rczEngine
 		auto BoneName = String(pNode->mName.C_Str());
 
 		///get the bone from my own skeleton's map that contains the childrenStrings[o]
-		Bone* currentBone = &SkeletonBone.at(BoneName);
+		Bone* currentBone = nullptr;
+		if (model->m_MeshSkeleton.m_Bones.find(BoneName) != model->m_MeshSkeleton.m_Bones.end())
+			currentBone = &model->m_MeshSkeleton.m_Bones.at(BoneName);
 
 		if (currentBone == nullptr)
 		{
 			Bone NoBone;
 			NoBone.m_Name = BoneName;
-			//CopyMatrix(NoBone.m_JointMatrix, pNode->mTransformation);
+
 			NoBone.m_OffsetMatrix.Identity();
 
-			NoBone.m_BoneIndex = SkeletonBone.size() + 1;
+			NoBone.m_BoneIndex = model->m_MeshSkeleton.m_Bones.size() + 1;
 			NoBone.m_RealBone = false;
 
 			model->m_MeshSkeleton.AddBone(NoBone, BoneName);
@@ -868,9 +861,11 @@ namespace rczEngine
 			currentBone = model->m_MeshSkeleton.GetBone(BoneName);
 		}
 
+		CopyMatrix(currentBone->m_JointMatrix, pNode->mTransformation);
+
 		auto parent = model->m_MeshSkeleton.GetBone(pNode->mParent->mName.C_Str());
 
-		if (pNode->mParent)
+		if (pNode->mParent && parent)
 			parent->AddBoneChildren(currentBone);
 
 		currentBone->SetParent(parent);
@@ -884,23 +879,35 @@ namespace rczEngine
 
 	void AssimpLoader::CopyMatrix(Matrix4 & dest, aiMatrix4x4 & src)
 	{
-		memcpy(&dest.m_elements, &src, sizeof(Matrix4));
-		//aiVector3D translation;
-		//aiVector3D rotation;
-		//aiVector3D scaling;
-		//
-		//src.Decompose(scaling, rotation, translation);
-		//
-		//Vector3 trans(translation.x, translation.y, translation.z);
-		//Vector3 rot(
-		//	Math::RadiansToDegrees(-rotation.x),
-		//	Math::RadiansToDegrees(-rotation.y),
-		//	Math::RadiansToDegrees(-rotation.z));
-		//Vector3 scale(scaling.x, scaling.y, scaling.z);
-		//
-		//dest =
-		//	Matrix4::Scale3D(scale.m_x, scale.m_y, scale.m_z)*
-		//	Matrix4::Rotate3D(rot.m_x, rot.m_y, rot.m_z)*
-		//	Matrix4::Translate3D(trans.m_x, trans.m_y, trans.m_z);
+		//memcpy(&dest.m_elements, &src, sizeof(Matrix4));
+		aiVector3D translation;
+		aiVector3D rotation;
+		aiVector3D scaling;
+
+		src.Decompose(scaling, rotation, translation);
+
+		Vector3 newPos(translation.x, translation.y, translation.z);
+		Vector3 newRot(
+			Math::RadiansToDegrees(-rotation.x),
+			Math::RadiansToDegrees(-rotation.y),
+			Math::RadiansToDegrees(-rotation.z));
+		Vector3 newScale(scaling.x, scaling.y, scaling.z);
+
+		switch (GUIEditor::Pointer()->SkinMode)
+		{
+		default:
+		case 0:
+			dest = Matrix4::Rotate3D(newRot.m_x, newRot.m_y, newRot.m_z)*Matrix4::Scale3D(newScale.m_x, newScale.m_y, newScale.m_z)*Matrix4::Translate3D(newPos.m_x, newPos.m_y, newPos.m_z);
+			break;
+		case 1:
+			dest = Matrix4::Rotate3D(newRot.m_x, newRot.m_y, newRot.m_z)*Matrix4::Translate3D(newPos.m_x, newPos.m_y, newPos.m_z)*Matrix4::Scale3D(newScale.m_x, newScale.m_y, newScale.m_z);
+			break;
+		case 2:
+			dest = Matrix4::Translate3D(newPos.m_x, newPos.m_y, newPos.m_z) * Matrix4::Rotate3D(newRot.m_x, newRot.m_y, newRot.m_z) * Matrix4::Scale3D(newScale.m_x, newScale.m_y, newScale.m_z);
+			break;
+		case 3:
+			dest = Matrix4::Scale3D(newScale.m_x, newScale.m_y, newScale.m_z) * Matrix4::Rotate3D(newRot.m_x, newRot.m_y, newRot.m_z) * Matrix4::Translate3D(newPos.m_x, newPos.m_y, newPos.m_z);
+			break;
+		}
 	}
 }

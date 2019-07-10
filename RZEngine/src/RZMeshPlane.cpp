@@ -5,7 +5,9 @@ namespace rczEngine
 
 	void MeshPlane::InitMeshPlane(int32 vertices, double size, double halfSize, Vector3 startPos, bool CreateIndexBuffer, bool CreateVertexBuffer)
 	{
+#ifdef RZ_PROFILING
 		ProfilerObj obj("InitMeshPlane", PROFILE_EVENTS::PROF_GAME);
+#endif
 
 		Size = vertices;
 		distVertex = size / double(vertices - 1);
@@ -67,7 +69,9 @@ namespace rczEngine
 
 	void MeshPlane::GenerateIndices(int32 vertices, Gfx::IndexBuffer & indexBuffer)
 	{
+#ifdef RZ_PROFILING
 		ProfilerObj obj("GenerateIndices", PROFILE_EVENTS::PROF_GAME);
+#endif
 
 		indexBuffer.ClearIndexList();
 
@@ -141,7 +145,9 @@ namespace rczEngine
 
 	void MeshPlane::GenerateMesh()
 	{
+#ifdef RZ_PROFILING
 		ProfilerObj meshY(__FUNCTION__, PROFILE_EVENTS::PROF_GAME);
+#endif
 
 		TerrainVertex* TempVertex;
 		auto size = Size;
@@ -185,7 +191,9 @@ namespace rczEngine
 
 	void MeshPlane::GenerateNormals()
 	{
+#ifdef RZ_PROFILING
 		ProfilerObj obj("GenerateNormals", PROFILE_EVENTS::PROF_GAME);
+#endif
 
 		auto size = Size;
 		auto indexSize = m_IndexBuffer->GetSize();
@@ -228,7 +236,9 @@ namespace rczEngine
 
 	void MeshPlane::GenerateSmoothNormals()
 	{
+#ifdef RZ_PROFILING
 		ProfilerObj obj("GenerateSmoothNormals", PROFILE_EVENTS::PROF_GAME);
+#endif
 
 		auto size = Size;
 		auto bufferSize = m_VertexBuffer.GetSize();

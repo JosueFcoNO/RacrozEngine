@@ -4,12 +4,16 @@ namespace rczEngine
 {
 	void PlanetQuadTreeNode::InitQuadTree(Planet* planetRef, PlanetQuadTreeNode* parent, PerlinNoise3D* noise, Vector3 StartPos, int32 ChildNumber, int32 depth, eMeshPlaneOrientation side)
 	{
+#ifdef RZ_PROFILING
 		ProfilerObj obj("InitQuadTree", PROFILE_EVENTS::PROF_GAME);
+#endif
 
 		for (int i = 0; i < 4; ++i)
 			SetChildrenReady(i, false);
 
 		PlanetOwner = planetRef;
+
+		planetRef->NewQuad();
 
 		m_QuadTreeDepth = depth;
 
@@ -95,12 +99,13 @@ namespace rczEngine
 	void PlanetQuadTreeNode::SubdivideNode()
 	{
 		m_Subdivided = true;
-
 	}
 
 	void PlanetQuadTreeNode::Update(Vector3 playerPos)
 	{
+#ifdef RZ_PROFILING
 		ProfilerObj obj("PlanetQuadTreeNode::Update", PROFILE_EVENTS::PROF_GAME);
+#endif
 
 		CalculateLOD(playerPos);
 
@@ -119,7 +124,9 @@ namespace rczEngine
 
 	void PlanetQuadTreeNode::GenerateNormals()
 	{
+#ifdef RZ_PROFILING
 		ProfilerObj obj("GenerateNormals", PROFILE_EVENTS::PROF_GAME);
+#endif
 
 		auto size = Size;
 		auto indexSize = m_IndexBuffer.GetSize();
@@ -162,7 +169,9 @@ namespace rczEngine
 
 	void PlanetQuadTreeNode::GenerateSmoothNormals()
 	{
+#ifdef RZ_PROFILING
 		ProfilerObj obj("GenerateSmoothNormals", PROFILE_EVENTS::PROF_GAME);
+#endif
 
 		auto size = Size;
 		auto bufferSize = m_VertexBuffer.GetSize();
@@ -273,29 +282,29 @@ namespace rczEngine
 
 		node.Side = eSide::Up;
 		node.Pos = GetVertex(Mesh_Row_Half, 0).VertexPosition;
-		node.Hash = HashCorner(node.Pos);
-		GraphicDebugger::Pointer()->AddPoint("Rand1 " + std::to_string(rand()), node.Pos, 1, Color(1, 0, 0));
+		node.Hash = Vector3::Hash(node.Pos.GetNormalized());
+		GraphicDebugger::Pointer()->AddPoint("Rand1 " + std::to_string(rand() % 2000), node.Pos, 1, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Left;
 		node.Pos = GetVertex(0, Mesh_Row_Half).VertexPosition;
-		node.Hash = HashCorner(node.Pos);
-		GraphicDebugger::Pointer()->AddPoint("Rand2 " + std::to_string(rand()), node.Pos, 1, Color(1, 0, 0));
+		node.Hash = Vector3::Hash(node.Pos.GetNormalized());
+		GraphicDebugger::Pointer()->AddPoint("Rand2 " + std::to_string(rand() % 2000), node.Pos, 1, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Right;
 		node.Pos = GetVertex(Mesh_Row_Size, Mesh_Row_Half).VertexPosition;
-		node.Hash = HashCorner(node.Pos);
-		GraphicDebugger::Pointer()->AddPoint("Rand3 " + std::to_string(rand()), node.Pos, 1, Color(1, 0, 0));
+		node.Hash = Vector3::Hash(node.Pos.GetNormalized());
+		GraphicDebugger::Pointer()->AddPoint("Rand3 " + std::to_string(rand() % 2000), node.Pos, 1, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Down;
 		node.Pos = GetVertex(Mesh_Row_Half, Mesh_Row_Size).VertexPosition;
-		node.Hash = HashCorner(node.Pos);
-		GraphicDebugger::Pointer()->AddPoint("Rand4 " + std::to_string(rand()), node.Pos, 1, Color(1, 0, 0));
+		node.Hash = Vector3::Hash(node.Pos.GetNormalized());
+		GraphicDebugger::Pointer()->AddPoint("Rand4 " + std::to_string(rand()%2000), node.Pos, 1, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
@@ -336,8 +345,9 @@ namespace rczEngine
 
 	void PlanetQuadTreeNode::CalculateLOD(const Vector3& pos)
 	{
+#ifdef RZ_PROFILING
 		ProfilerObj obj("CalculateLOD", PROFILE_EVENTS::PROF_GAME);
-
+#endif
 		m_PlayerInside = TestIfInside(pos);
 
 		if (m_PlayerInside)
@@ -570,7 +580,9 @@ namespace rczEngine
 
 	Vector3 PlanetQuadTreeNode::CalculateVertexPos(const Vector3& pos, float& out_displacement)
 	{
+#ifdef RZ_PROFILING
 		ProfilerObj obj("CalculateVertexPos", PROFILE_EVENTS::PROF_GAME);
+#endif
 
 		Vector3 PosNormal = Math::CubeToSphere(pos);
 		Vector3 NoisePos = PosNormal + Vector3(1.0f, 1.0f, 1.0f);
@@ -752,15 +764,11 @@ namespace rczEngine
 		BuenMutex.unlock();
 	}
 
-	uint32 PlanetQuadTreeNode::HashCorner(Vector3 v)
-	{
-		auto temp = (v + Vector3(1.0f, 1.0f, 1.0f)) * 100.0f;
-		return Vector3::Hash(temp);
-	}
-
 	void PlanetQuadTreeNode::GenerateMeshYPos(const Vector3& startPos)
 	{
+#ifdef RZ_PROFILING
 		ProfilerObj meshY("GenerateMesh", PROFILE_EVENTS::PROF_GAME);
+#endif
 
 		TerrainVertex* TempVertex;
 		auto vertexSize = m_VertexBuffer.GetSize();
@@ -788,46 +796,13 @@ namespace rczEngine
 			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
 			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
 		}
-
-		if (Parent)
-		{
-#pragma omp parallel for
-			for (uint32 i = 0; i < vertexSize; i += 2)
-			{
-				auto TempVertex = &m_VertexBuffer.GetVertex(i);
-
-				int32 y = i / Size;
-				int32 x = i % Size;
-
-				if ((y + 1) % 2 == 0)
-				{
-					continue;
-				}
-
-				switch (m_ChildNumber)
-				{
-				case 0:
-					*TempVertex = Parent->GetVertex(x / 2, y / 2);
-					break;
-				case 1:
-					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2);
-					break;
-
-				case 2:
-					*TempVertex = Parent->GetVertex(x / 2, y / 2 + Mesh_Row_Half);
-					break;
-				case 3:
-					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2 + Mesh_Row_Half);
-					break;
-				}
-
-			}
-		}
 	}
 
 	void PlanetQuadTreeNode::GenerateMeshYNeg(const Vector3& startPos)
 	{
+#ifdef RZ_PROFILING
 		ProfilerObj meshY("GenerateMeshYNeg", PROFILE_EVENTS::PROF_GAME);
+#endif
 
 		TerrainVertex* TempVertex;
 		auto size = Size;
@@ -855,41 +830,6 @@ namespace rczEngine
 
 			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
 			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
-		}
-
-		if (Parent)
-		{
-#pragma omp parallel for
-			for (uint32 i = 0; i < vertexSize; i += 2)
-			{
-				auto TempVertex = &m_VertexBuffer.GetVertex(i);
-
-				int32 y = i / Size;
-				int32 x = i % Size;
-
-				if ((y + 1) % 2 == 0)
-				{
-					continue;
-				}
-
-				switch (m_ChildNumber)
-				{
-				case 0:
-					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2 + Mesh_Row_Half);
-					break;
-				case 1:
-					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2 );
-					break;
-
-				case 2:
-					*TempVertex = Parent->GetVertex(x / 2 , y / 2 + Mesh_Row_Half);
-					break;
-				case 3:
-					*TempVertex = Parent->GetVertex(x / 2, y / 2);
-					break;
-				}
-
-			}
 		}
 	}
 
@@ -921,40 +861,6 @@ namespace rczEngine
 			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
 		}
 
-		if (Parent)
-		{
-#pragma omp parallel for
-			for (uint32 i = 0; i < vertexSize; i += 2)
-			{
-				auto TempVertex = &m_VertexBuffer.GetVertex(i);
-
-				int32 y = i / Size;
-				int32 x = i % Size;
-
-				if ((y + 1) % 2 == 0)
-				{
-					continue;
-				}
-
-				switch (m_ChildNumber)
-				{
-				case 0:
-					*TempVertex = Parent->GetVertex(x / 2, y / 2);
-					break;
-				case 1:
-					*TempVertex = Parent->GetVertex(x / 2, y / 2 + Mesh_Row_Half);
-					break;
-
-				case 2:
-					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2);
-					break;
-				case 3:
-					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2 + Mesh_Row_Half);
-					break;
-				}
-
-			}
-		}
 	}
 
 	void PlanetQuadTreeNode::GenerateMeshXNeg(const Vector3& startPos)
@@ -985,40 +891,6 @@ namespace rczEngine
 			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
 		}
 
-		if (Parent)
-		{
-#pragma omp parallel for
-			for (uint32 i = 0; i < vertexSize; i += 2)
-			{
-				auto TempVertex = &m_VertexBuffer.GetVertex(i);
-
-				int32 y = i / Size;
-				int32 x = i % Size;
-
-				if ((y + 1) % 2 == 0)
-				{
-					continue;
-				}
-
-				switch (m_ChildNumber)
-				{
-				case 0:
-					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2 + Mesh_Row_Half);
-					break;
-				case 1:
-					*TempVertex = Parent->GetVertex(x / 2, y / 2 + Mesh_Row_Half);
-					break;
-
-				case 2:
-					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2);
-					break;
-				case 3:
-					*TempVertex = Parent->GetVertex(x / 2, y / 2);
-					break;
-				}
-
-			}
-		}
 	}
 
 	void PlanetQuadTreeNode::GenerateMeshZPos(const Vector3& startPos)
@@ -1049,39 +921,6 @@ namespace rczEngine
 			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
 		}
 
-		if (Parent)
-		{
-#pragma omp parallel for
-			for (uint32 i = 0; i < vertexSize; i += 2)
-			{
-				auto TempVertex = &m_VertexBuffer.GetVertex(i);
-
-				int32 y = i / Size;
-				int32 x = i % Size;
-
-				if ((y + 1) % 2 == 0)
-				{
-					continue;
-				}
-
-				switch (m_ChildNumber)
-				{
-				case 0:
-					*TempVertex = Parent->GetVertex(x / 2, y / 2);
-					break;
-				case 1:
-					*TempVertex = Parent->GetVertex(x / 2 , y / 2 + Mesh_Row_Half);
-					break;
-				case 2:
-					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2 );
-					break;
-				case 3:
-					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2 + Mesh_Row_Half);
-					break;
-				}
-
-			}
-		}
 	}
 
 	void PlanetQuadTreeNode::GenerateMeshZNeg(const Vector3& startPos)
@@ -1112,40 +951,6 @@ namespace rczEngine
 
 			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
 			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;
-		}
-
-		if (Parent)
-		{
-#pragma omp parallel for
-			for (uint32 i = 0; i < vertexSize; i += 2)
-			{
-				auto TempVertex = &m_VertexBuffer.GetVertex(i);
-
-				int32 y = i / Size;
-				int32 x = i % Size;
-
-				if ((y + 1) % 2 == 0)
-				{
-					continue;
-				}
-
-				switch (m_ChildNumber)
-				{
-				case 0:
-					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2 + Mesh_Row_Half);
-					break;
-				case 1:
-					*TempVertex = Parent->GetVertex(x / 2, y / 2 + Mesh_Row_Half);
-					break;
-				case 2:
-					*TempVertex = Parent->GetVertex(x / 2 + Mesh_Row_Half, y / 2);
-					break;
-				case 3:
-					*TempVertex = Parent->GetVertex(x / 2, y / 2); 
-					break;
-				}
-
-			}
 		}
 	}
 }

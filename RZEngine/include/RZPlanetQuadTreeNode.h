@@ -81,14 +81,12 @@ namespace rczEngine
 		void GenerateSmoothNormals();
 
 		void RenderChildren();
-		
+
 		void GenerateChild(int index, int depth);
 		void SetChildrenReady(int indexOfChild, bool value);
 		bool CheckChildrenReady();
 
 		void UpdateSideVertices();
-
-		static uint32 HashCorner(Vector3 v);
 
 		Gfx::VertexBuffer<TerrainVertex> m_VertexBuffer;
 		Gfx::IndexBuffer m_IndexBuffer;
@@ -113,7 +111,7 @@ namespace rczEngine
 
 		PlanetQuadTreeNode* Parent = nullptr;
 		PlanetQuadTreeNode* Children[4];
-		
+
 		bool ChildrenReady[4];
 		bool done = false;
 
@@ -130,5 +128,7 @@ namespace rczEngine
 		double HalfSize;
 
 		int m_ChildNumber = 0;
+
+		int m_ID = -1;
 	};
 }

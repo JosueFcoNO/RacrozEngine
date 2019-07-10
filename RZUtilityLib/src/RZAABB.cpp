@@ -50,9 +50,9 @@ namespace rczEngine
 		m_PointMax.Set(Lowest, Lowest, Lowest);
 	}
 
-	Vector<Vector3> AABB::GetCorners() const noexcept
+	std::array<Vector3, 8> AABB::GetCorners() const noexcept
 	{
-		Vector<Vector3> points;
+		std::array<Vector3, 8> points;
 
 		//
 		//		4---5
@@ -63,15 +63,15 @@ namespace rczEngine
 		//  |/  |/
 		//  2---3
 
-		points.push_back(Vector3(m_PointMin.m_x, m_PointMin.m_y, m_PointMin.m_z));
-		points.push_back(Vector3(m_PointMax.m_x, m_PointMin.m_y, m_PointMin.m_z));
-		points.push_back(Vector3(m_PointMin.m_x, m_PointMax.m_y, m_PointMin.m_z));
-		points.push_back(Vector3(m_PointMax.m_x, m_PointMax.m_y, m_PointMin.m_z));
+		points[0].Set(m_PointMin.m_x, m_PointMin.m_y, m_PointMin.m_z);
+		points[1].Set(m_PointMax.m_x, m_PointMin.m_y, m_PointMin.m_z);
+		points[2].Set(m_PointMin.m_x, m_PointMax.m_y, m_PointMin.m_z);
+		points[3].Set(m_PointMax.m_x, m_PointMax.m_y, m_PointMin.m_z);
 
-		points.push_back(Vector3(m_PointMin.m_x, m_PointMin.m_y, m_PointMax.m_z));
-		points.push_back(Vector3(m_PointMax.m_x, m_PointMin.m_y, m_PointMax.m_z));
-		points.push_back(Vector3(m_PointMin.m_x, m_PointMax.m_y, m_PointMax.m_z));
-		points.push_back(Vector3(m_PointMax.m_x, m_PointMax.m_y, m_PointMax.m_z));
+		points[4].Set(m_PointMin.m_x, m_PointMin.m_y, m_PointMax.m_z);
+		points[5].Set(m_PointMax.m_x, m_PointMin.m_y, m_PointMax.m_z);
+		points[6].Set(m_PointMin.m_x, m_PointMax.m_y, m_PointMax.m_z);
+		points[7].Set(m_PointMax.m_x, m_PointMax.m_y, m_PointMax.m_z);
 
 		return points;
 	}

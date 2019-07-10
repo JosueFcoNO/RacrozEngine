@@ -50,7 +50,7 @@ namespace rczEngine
 		return Vector3(v.m_x, v.m_y, 1.0f) * Sign(s);
 	}
 
-	Vector3 Math::SphereToCubePoint(const Vector3 & spherePoint)
+	Vector3 Math::SphereToCubePoint(const Vector3 & spherePoint) noexcept
 	{
 		Vector3 f = (spherePoint);
 		f.m_x = fabs(f.m_x);

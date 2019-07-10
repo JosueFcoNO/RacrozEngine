@@ -98,33 +98,41 @@ namespace rczEngine
 		ReleaseDevices();
 	}
 
-	void Input::GetKeyboard(byte * b)
+	void Input::UpdateKeyData()
 	{
-		if (m_KeyBoardDevice->GetDeviceState(256, (LPVOID)b) == DI_OK)
-		{
-			return;
-		};
+		std::array<byte, 256> CurrentKeyState;
+		m_KeyBoardDevice->GetDeviceState(256, CurrentKeyState.data());
 
-		ZeroMemory(b, 256);
-	}
+		lastPress = 0;
 
-	bool Input::CheckKeyboardState(byte scan_code)
-	{
-		byte Keyboard[256];
-		if (m_KeyBoardDevice->GetDeviceState(256, Keyboard) == DI_OK)
+		for (auto it = 1; it < 256; ++it)
 		{
-			if (Keyboard[scan_code] & 0x80)
+			//Hold
+			if ((CurrentKeyState[it] & 0x80) && (m_LastKeyState[it] & 0x80))
 			{
-				return true;
+				m_KeyEvent[it] = InputEvent::Hold;
+				continue;
 			}
+
+			//KEY UP
+			if (!(CurrentKeyState[it] & 0x80) && (m_LastKeyState[it] & 0x80))
+			{
+				m_KeyEvent[it] = InputEvent::Released;
+				continue;
+			}
+
+			//KEY DOWN
+			if ((CurrentKeyState[it] & 0x80) && !(m_LastKeyState[it] & 0x80))
+			{
+				m_KeyEvent[it] = InputEvent::Pressed;
+				lastPress = it;
+				continue;
+			}
+
+			m_KeyEvent[it] = InputEvent::None;
 		}
 
-		return false;
-	}
-
-	MouseData Input::GetMouseData()
-	{
-		return m_MouseData;
+		m_LastKeyState = CurrentKeyState;
 	}
 
 	void Input::UpdateMouseData()

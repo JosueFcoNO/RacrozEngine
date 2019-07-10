@@ -79,12 +79,12 @@ namespace rczEngine
 
 	bool Plane::PlaneLineIntersection(const Plane & p, const Vector3 & linePoint1, const Vector3 & linePoint2, Vector3 & out_pointOfIntersection) noexcept
 	{
-		auto num = -((p.Normal | linePoint1) + p.D);
-		auto den = p.Normal | (linePoint2 - linePoint1);
+		const auto num = -((p.Normal | linePoint1) + p.D);
+		const auto den = p.Normal | (linePoint2 - linePoint1);
 
 		if (den == 0.0f) return false;
 
-		auto s = num / den;
+		const auto s = num / den;
 
 		out_pointOfIntersection = Math::Lerp(linePoint1, linePoint2, s);
 

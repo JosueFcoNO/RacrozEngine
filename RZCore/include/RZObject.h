@@ -10,7 +10,7 @@ namespace rczEngine
 	{
 	public:
 		virtual ~Object() {};
-		Object() { static int32 ObjectIndex = 0;  m_ObjID = ObjectIndex++; };
+		Object() noexcept { static int32 ObjectIndex = 0;  m_ObjID = ObjectIndex++; };
 
 	protected:
 		ObjectID m_ObjID = -1;

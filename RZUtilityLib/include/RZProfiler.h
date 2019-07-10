@@ -9,8 +9,9 @@ namespace rczEngine
 		PROF_MAX
 	};
 
-#define RZ_PROFILING
+//#define RZ_PROFILING
 
+	/// The profiler, can count the time between frames and functions using ProfileObjects.
 	class Profiler
 	{
 	public:
@@ -24,14 +25,21 @@ namespace rczEngine
 
 		RZ_EXP static void Start();
 		RZ_EXP static Profiler* Pointer() noexcept;
-		RZ_EXP static void ShutDown();
+		RZ_EXP static void ShutDown() noexcept;
 
-		RZ_EXP void Destroy() noexcept;
+		/// Destroy the profiler, clear everything.
+		RZ_EXP void Destroy();
 
+		///STarts the profiler.
 		RZ_EXP void StartProfiler() noexcept;
-		RZ_EXP void Reset() noexcept;
-		RZ_EXP void SaveResults(const String& filePath = "autoProfileLog ") noexcept;
 
+		/// Resets completely the Profiler.
+		RZ_EXP void Reset() noexcept;
+
+		/// Saves the profiler Log to the file path given in the param.
+		RZ_EXP void SaveResults(const String& filePath = "autoProfileLog ");
+		
+		/// Starts a new frame which ends when this function is called again.
 		RZ_EXP void NewFrameStart() noexcept;
 
 		RZ_EXP void AddTime(const String& event, PROFILE_EVENTS eventType) noexcept;

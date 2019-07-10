@@ -103,13 +103,17 @@ namespace rczEngine
 		}
 	}
 
-	uint32 Vector3::Hash(const Vector3 & v) noexcept
+	uint32 Vector3::Hash(const Vector3 & v, int mult) noexcept
 	{
 #ifdef RZ_PROFILING
 		ProfilerObj autoProfiler(RZ__FUNCTION__, PROFILE_EVENTS::PROF_GAME);
 #endif
 
-		return ((gsl::narrow_cast<int32>(v.m_x) * 73856093) ^ (gsl::narrow_cast<int32>(v.m_y) * 83492791) ^ (gsl::narrow_cast<int32>(v.m_z) * 19349663));
+		const auto x = gsl::narrow_cast<int32>(v.m_x * 10000);
+		const auto y = gsl::narrow_cast<int32>(v.m_y * 10000);
+		const auto z = gsl::narrow_cast<int32>(v.m_z * 10000);
+
+		return (x * 73856093) ^ (y * 83492791) ^ (z * 19349663);
 	}
 
 	Vector3& Vector3::operator+=(const Vector3& v) noexcept

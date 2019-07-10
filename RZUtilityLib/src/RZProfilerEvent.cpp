@@ -21,7 +21,7 @@ namespace rczEngine
 			m_AverageTime = time;
 	}
 
-	void ProfilerEvent::SaveResults(const String& loggerFile, Logger& logger) noexcept
+	void ProfilerEvent::SaveResults(const String& loggerFile, Logger& logger)
 	{
 		logger.LogMessageToFileLog(loggerFile, "Average Time: ", m_AverageTime * 10);
 		logger.LogMessageToFileLog(loggerFile, "Largest Time: ", m_LargestTime * 10);

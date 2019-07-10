@@ -11,6 +11,14 @@ namespace rczEngine
 		byte buttons[4];
 	};
 
+	enum class InputEvent
+	{
+		None,
+		Hold,
+		Pressed,
+		Released
+	};
+
 	class RZ_EXP Input
 	{
 	private:
@@ -23,26 +31,37 @@ namespace rczEngine
 
 		~Input();
 		bool InitInput();
-		void EnumDevices();
+		void Destroy();
 
 		void RegainDevices();
 		void ReleaseDevices();
 
-		void Destroy();
+		FORCEINLINE void UpdateInput() noexcept { UpdateKeyData(); UpdateMouseData(); };
 
-		void GetKeyboard(byte* b);
-		bool CheckKeyboardState(byte scan_code);
-		MouseData GetMouseData();
-		void UpdateMouseData();
-		FORCEINLINE Vector2 GetMousePos() { return m_MousePos; };
+		FORCEINLINE static bool GetKeyDown(byte key) noexcept { return (Input::Pointer()->m_KeyEvent[key] == InputEvent::Pressed); };
+		FORCEINLINE static bool GetKeyUp(byte key) noexcept { return (Input::Pointer()->m_KeyEvent[key] == InputEvent::Released); };
+		FORCEINLINE static bool GetKeyHold(byte key) noexcept { return (Input::Pointer()->m_KeyEvent[key] == InputEvent::Hold); };
 
-		HINSTANCE hinstance = 0;
-		HWND hwnd = 0;
+		FORCEINLINE static Vector2 GetMousePos() noexcept { return Input::Pointer()->m_MousePos; };
+		FORCEINLINE static MouseData GetMouseData() noexcept { return Input::Pointer()->m_MouseData; };
+		
+		HINSTANCE hinstance = nullptr;
+		HWND hwnd = nullptr;
+
+		byte lastPress = 0;
 
 	private:
+		void UpdateKeyData();
+		void UpdateMouseData();
+
+		void EnumDevices();
+
 		IDirectInput8A* InputPtr = NULL;
-		LPDIRECTINPUTDEVICE8  m_KeyBoardDevice;
-		LPDIRECTINPUTDEVICE8  m_MouseDevice;
+		LPDIRECTINPUTDEVICE8  m_KeyBoardDevice = nullptr;
+		LPDIRECTINPUTDEVICE8  m_MouseDevice = nullptr;
+
+		std::array<byte, 256> m_LastKeyState;
+		std::array<InputEvent, 256> m_KeyEvent;
 
 		MouseData m_MouseData;
 		Vector2 m_MousePos;

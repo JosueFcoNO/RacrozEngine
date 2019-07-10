@@ -178,12 +178,12 @@ namespace rczEngine
 	class RZ_EXP IEventHandler
 	{
 	public:
-		virtual EVENT_HANDLER GetEventHandlerType() = 0;
+		virtual EVENT_HANDLER GetEventHandlerType() const noexcept = 0;
 	};
 
 	class EventSub
 	{
 	public:
-		virtual EVENT_HANDLER GetEventHandler() = 0;
+		virtual EVENT_HANDLER GetEventHandler() const noexcept = 0;
 	};
 }

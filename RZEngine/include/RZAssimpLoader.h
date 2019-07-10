@@ -37,7 +37,6 @@ namespace rczEngine
 
 		Map<String, aiBone*> AssimpBone;
 		Map<String, StrPtr<BoneComponent>> BoneComponents;
-		Map<String, Bone> SkeletonBone;
 		Vector<String> BoneNames;
 	};
 }

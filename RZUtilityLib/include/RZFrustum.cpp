@@ -73,8 +73,7 @@ namespace rczEngine
 
 	bool Frustum::TestAABB(const AABB & aabb) const noexcept
 	{
-		return true;
-		Vector<Vector3> points = aabb.GetCorners();
+		const auto points = aabb.GetCorners();
 
 		if (TestPoint(aabb.GetCenter())) return true;
 

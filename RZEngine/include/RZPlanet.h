@@ -49,7 +49,7 @@ namespace rczEngine
 	};
 
 	class RZ_EXP Planet
-	{
+	{ 
 	public:
 		PlanetQuadTreeNode* ActiveQuadTree = nullptr;
 
@@ -61,6 +61,7 @@ namespace rczEngine
 		void CreateMaterial();
 
 		void CreateNewNode();
+
 
 		FORCEINLINE Vector3 GetSpacePosition() { return m_SpacePosition; };
 
@@ -75,7 +76,11 @@ namespace rczEngine
 
 		Map<uint32, PatchData> m_PatchInfo;
 
+		void NewQuad() { m_NodesCount++; Logger::Pointer()->Log("Node Count: " + std::to_string(m_NodesCount)); }
+
 	private:
+		int m_NodesCount = 6;
+
 		void LoadAndProcessModel();
 		void ProcessConnectionNode(NodeConnection& node);
 

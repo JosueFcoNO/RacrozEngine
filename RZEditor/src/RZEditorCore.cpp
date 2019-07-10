@@ -71,10 +71,10 @@ namespace rczEngine
 	{
 		while (!Quit)
 		{
-			Quit = Input::Pointer()->CheckKeyboardState(DIK_ESCAPE);
+			Quit = Input::GetKeyDown(KEY_ESCAPE);
 			float deltaTime = (float)Time.GetFrameTime();
 			
-			EventManager::Pointer()->CheckEvents();
+			Input::Pointer()->UpdateInput();
 			m_scnManager->GetActiveScene()->Update(deltaTime);
 
 			m_renderer->Render(m_scnManager->GetActiveScene().get(), GUIEditor::Pointer());

@@ -54,6 +54,8 @@ namespace rczEngine
 		///Iterate through the Static Objs and Draw Them
 		for (auto obj : m_Objects)
 		{
+			if (!obj.second) continue;
+
 			auto color = obj.second->GetColor();
 
 			///Update the color buffer
@@ -109,6 +111,12 @@ namespace rczEngine
 
 		newPoint->SetPoint(point, radius);
 		newPoint->SetColor(color);
+
+		if (m_Objects.find(ID) != m_Objects.end())
+		{
+			m_Objects[ID+std::to_string(rand()%10000)] = newPoint;
+			return newPoint;
+		}
 
 		m_Objects[ID] = (newPoint);
 

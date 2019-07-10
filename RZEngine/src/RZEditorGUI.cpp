@@ -36,7 +36,8 @@ namespace rczEngine
 
 	IMGUI_API LRESULT ImguiWndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
-		ImGuiIO& io = ImGui::GetIO();
+		ImGuiIO& io = ImGui::GetIO();		
+
 		switch (msg)
 		{
 		case WM_LBUTTONDOWN:
@@ -85,9 +86,11 @@ namespace rczEngine
 		case WM_CHAR:
 			// You can also use ToAscii()+GetKeyboardState() to retrieve characters.
 			if (wParam > 0 && wParam < 0x10000)
-				io.AddInputCharacter((unsigned short)wParam);
+				io.AddInputCharacter(wParam);
 			return 0;
 		}
+
+
 		return 0;
 	}
 
@@ -370,7 +373,7 @@ namespace rczEngine
 			m_GameObjectGUI.SetNewGameObject(m_SceneGraphGUI.m_ActiveGameObject);
 		m_GameObjectGUI.RenderWindow();
 		m_ResourcesGUI.RenderResources();
-		//m_ConsoleGUI.RenderWindow();
+		m_ConsoleGUI.RenderWindow();
 
 		for (auto it = m_Windows.begin(); it != m_Windows.end(); ++it)
 		{

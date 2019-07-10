@@ -44,7 +44,7 @@ namespace rczEngine
 		static Vector3 PolarToPos3D(Vector3 polar) noexcept;
 		
 		static Vector3 cubify(const Vector3& s) noexcept;
-		static Vector3 SphereToCubePoint(const Vector3& spherePoint);
+		static Vector3 SphereToCubePoint(const Vector3& spherePoint) noexcept;
 		static Vector3 CubeToSphere(const Vector3 &cubepoint) noexcept;
 
 		///Elevate a float to ipow
@@ -409,7 +409,7 @@ namespace rczEngine
 
 		///Lerp the value
 		template <class T, class U>
-		static FORCEINLINE T Lerp(const T& A, const T& B, const U& Alpha)
+		static FORCEINLINE T Lerp(const T& A, const T& B, const U& Alpha) noexcept
 		{
 			return (T)(A + (B - A)*Alpha);
 		}

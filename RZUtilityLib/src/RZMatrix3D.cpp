@@ -221,7 +221,7 @@ namespace rczEngine
 		return Quaternion(x, y, z, w);
 	}
 
-	Matrix3 Matrix3::Translate2D(float xDelta, float yDelta)
+	Matrix3 Matrix3::Translate2D(float xDelta, float yDelta) noexcept
 	{
 		///Create an Identity Matrix
 		Matrix3 Temp(eInit::Unit);
@@ -237,7 +237,7 @@ namespace rczEngine
 		return Temp;
 	}
 
-	Matrix3 Matrix3::Scale2D(float xScale, float yScale)
+	Matrix3 Matrix3::Scale2D(float xScale, float yScale) noexcept
 	{
 		///Create an Identity Matrix
 		Matrix3 Temp(eInit::Unit);
@@ -253,7 +253,7 @@ namespace rczEngine
 		return Temp;
 	}
 
-	Matrix3 Matrix3::Rotate2D(Degree deg)
+	Matrix3 Matrix3::Rotate2D(Degree deg) noexcept
 	{
 		///Create a 2D rotation Matrix
 		Matrix3 R(eInit::Unit);
@@ -267,7 +267,7 @@ namespace rczEngine
 		return R;
 	}
 
-	Matrix3 Matrix3::ShearX2D(float xShear)
+	Matrix3 Matrix3::ShearX2D(float xShear) noexcept
 	{
 		///Create an Identity Matrix
 		Matrix3 Temp(eInit::Unit);
@@ -282,7 +282,7 @@ namespace rczEngine
 		return Temp;
 	}
 
-	Matrix3 Matrix3::ShearY2D(float yShear)
+	Matrix3 Matrix3::ShearY2D(float yShear) noexcept
 	{
 		///Create an Identity Matrix
 		Matrix3 Temp(eInit::Unit);

@@ -14,7 +14,7 @@ namespace rczEngine
 	class LogObject
 	{
 	public:
-		LogObject(const String& string, eLogMsgType type = eLogMsgType::Message, const String& logFile = "") noexcept : 
+		LogObject(const String& string, eLogMsgType type = eLogMsgType::Message, const String& logFile = "") : 
 			m_String(string), m_LogFile(logFile), m_Type(type) {};
 
 		FORCEINLINE const String& GetString() const noexcept { return m_String; };

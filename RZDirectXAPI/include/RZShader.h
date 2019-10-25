@@ -17,7 +17,7 @@ namespace rczEngine
 			virtual void Destroy();
 
 			//The path to the shader
-			Path ShaderPath;
+			FilePath ShaderPath;
 			///The blob of the compiled shader
 			ID3D10Blob* m_ShaderBlob;
 		};

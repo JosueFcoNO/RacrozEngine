@@ -154,7 +154,7 @@ namespace rczEngine
 		m_FilePath = fileName;
 		m_Name = resName;
 
-		rsc->InsertResource(shared_from_this());
+		rsc->InsertResource(StrPtr<Model>(this));
 
 		///Clear the index and vertex buffer's lists
 		m_IndexBuffer.ClearIndexList();

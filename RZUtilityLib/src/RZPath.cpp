@@ -2,12 +2,12 @@
 
 namespace rczEngine
 {
-	Path::Path(const String& str) : m_Hash(size_t{ 0 })
+	FilePath::FilePath(const String& str) : m_Hash(size_t{ 0 })
 	{
 		ResetPath(str);
 	}
 
-	void Path::ResetPath(const String& filePath)
+	void FilePath::ResetPath(const String& filePath)
 	{
 		m_FilePath = filePath;
 
@@ -22,12 +22,12 @@ namespace rczEngine
 		m_Hash = hash(m_FilePath);
 	}
 
-	void Path::ResetPath()
+	void FilePath::ResetPath()
 	{
 		ResetPath(m_FilePath);
 	}
 
-	String Path::GetFileName() const
+	String FilePath::GetFileName() const
 	{
 		///Parse the filepath to find the extension
 		Vector<String> parsedFilePath = Parser::ParseToStrings<ANSICHAR>(m_FilePath, ".", 0);
@@ -41,7 +41,7 @@ namespace rczEngine
 		return parsedFilePath[parsedFilePath.size() - 1];
 	}
 
-	String Path::GetFileDir() const
+	String FilePath::GetFileDir() const
 	{
 		///Parse the filepath to find the extension
 		Vector<String> parsedFilePath = Parser::ParseToStrings<ANSICHAR>(m_FilePath, ".", 0);
@@ -60,12 +60,13 @@ namespace rczEngine
 		return pathDir;
 	}
 
-	String Path::GetFileExtension() const
+	String FilePath::GetFileExtension() const
 	{
 		///Parse the filepath to find the extension
 		Vector<String> parsedFilePath = Parser::ParseToStrings<ANSICHAR>(m_FilePath, ".", 0);
 		//Get the extension substring into fileExtension
 		String fileExtension = parsedFilePath[parsedFilePath.size() - 1];
+		std::transform(fileExtension.begin(), fileExtension.end(), fileExtension.begin(), ::tolower);
 
 		//If the string was not divided, it did not contain any . or file extension
 		if (parsedFilePath.size() < 2)
@@ -76,13 +77,13 @@ namespace rczEngine
 		return fileExtension;
 	}
 
-	bool Path::IsDirectory() const
+	bool FilePath::IsDirectory() const
 	{
 		//If there is no path extension. It means it is a directory path.
 		return (GetFileExtension() == "null");
 	}
 
-	bool Path::FileExists() const
+	bool FilePath::FileExists() const
 	{
 		std::ifstream infile(m_FilePath);
 		const bool FileExists = infile.good();
@@ -90,7 +91,7 @@ namespace rczEngine
 		return FileExists;
 	}
 
-	bool Path::FileExists(const String& filePath)
+	bool FilePath::FileExists(const String& filePath)
 	{
 		std::ifstream infile(filePath);
 		const bool FileExists = infile.good();
@@ -98,17 +99,17 @@ namespace rczEngine
 		return FileExists;
 	}
 
-	bool Path::operator==(const Path & other) const noexcept
+	bool FilePath::operator==(const FilePath & other) const noexcept
 	{
 		return (m_Hash == other.m_Hash);
 	}
 
-	bool Path::operator!=(const Path & other) const noexcept
+	bool FilePath::operator!=(const FilePath & other) const noexcept
 	{
 		return !(m_Hash == other.m_Hash);
 	}
 
-	void Path::Serialize()
+	void FilePath::Serialize()
 	{
 		const gsl::not_null<Serializer*> ser = Serializer::Pointer();
 
@@ -120,7 +121,7 @@ namespace rczEngine
 		ser->WriteData(&m_Hash, sizeof(m_Hash));
 	}
 
-	void Path::DeSerialize()
+	void FilePath::DeSerialize()
 	{
 		const gsl::not_null<Serializer*> ser = Serializer::Pointer();
 

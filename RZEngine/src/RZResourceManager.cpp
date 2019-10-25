@@ -47,6 +47,8 @@ namespace rczEngine
 		{ "jpeg"}
 	};
 
+	const String ResVault::LOG_ResourceVault = "LogRes";
+
 	ResVault*& ResVault::_Instance()
 	{
 		static ResVault* instance = nullptr;
@@ -84,7 +86,7 @@ namespace rczEngine
 
 		m_CubeMapDefault = LoadResource("CubeMaps/Enviroment.dds", "assetCubeMap");
 
-		Logger::Pointer()->StartLog("Material");
+		Logger::Pointer()->StartLog(LOG_ResourceVault);
 	};
 
 	void ResVault::Destroy()
@@ -96,31 +98,47 @@ namespace rczEngine
 		//}
 	};
 
+	ResourceHandle ResVault::IsResourceLoaded(const String& filePath)
+	{
+		///Look for the Resource to see if it is already loaded and if it is, return that.
+		for (auto it = m_ResourceMap.begin(); it != m_ResourceMap.end(); ++it)
+		{
+			if (it->second->GetFilePath() == filePath)
+			{
+				Logger::Pointer()->LogMessageToFileLog(LOG_ResourceVault, "Found in map");
+				return it->second->GetHandle();
+			}
+		}
+	
+		return NULL;
+	}
+
 	ResourceHandle ResVault::LoadResource(const String& filePath, const String& resName)
 	{
 		try
 		{
-			///Look for the Resource to see if it is already loaded and if it is, return that.
-			for (auto it = m_ResourceMap.begin(); it != m_ResourceMap.end(); ++it)
+			auto loggerPtr = Logger::Pointer();
+
+			loggerPtr->LogMessageToFileLog(LOG_ResourceVault, "Loading Resource: " + filePath);
+
+			if (auto existingHandle = IsResourceLoaded(filePath); existingHandle)
 			{
-				if (it->second->GetFilePath() == filePath)
-				{
-					Logger::Pointer()->LogMessageToFileLog("Material", "Found in map");
-					return it->second->GetHandle();
-				}
+				Logger::Pointer()->LogMessageToFileLog(LOG_ResourceVault, "Already in Map as: " + m_ResourceMap[existingHandle]->GetName());
+				return existingHandle;
 			}
 
-			Logger::Pointer()->LogMessageToFileLog("Material", "Not found in map");
+			FilePath path(filePath);
 
 			///Parse the filepath to find the extension
-			Vector<String> parsedFilePath = Parser::ParseToStrings<ANSICHAR>(filePath, ".", 0);
-			String fileExtension = parsedFilePath[parsedFilePath.size() - 1];
+			String fileExtension = path.GetFileExtension();
 
 			///If there's not a name parameter, set the resource name to its filePath minus the extension.
+			
 			String ResName;
+
 			if (resName == "")
 			{
-				ResName = parsedFilePath[0];
+				ResName = path.GetFileName();
 			}
 			else
 			{
@@ -129,12 +147,7 @@ namespace rczEngine
 
 			StrPtr<Resource> NewRes;
 
-			bool textures = false, animations = false, bones = false;
-
-			bool fileExists = Path::FileExists(filePath);
-
-			///Make the extension lower case.
-			std::transform(fileExtension.begin(), fileExtension.end(), fileExtension.begin(), ::tolower);
+			bool fileExists = FilePath::FileExists(filePath);	
 
 			///Get the resource type from the extension and put it in a switch
 			switch (GetResourceType(fileExtension.c_str()))
@@ -151,15 +164,19 @@ namespace rczEngine
 				break;
 
 			case RES_3DMODEL:
-
+			{
 				if (!fileExists)
 				{
 					return m_ModelCube;
 				}
 
-				QueryModel(filePath, bones, textures, animations);
+				auto hasBones = false;
+				auto hasTextures = false;
+				auto hasTextures = false;
 
-				if (bones)
+				QueryModel(filePath, hasBones, hasTextures, hasTextures);
+
+				if (hasBones)
 				{
 					NewRes = std::make_shared<SkinnedModel>();
 					NewRes->Load(filePath, ResName);
@@ -169,14 +186,15 @@ namespace rczEngine
 					NewRes = std::make_shared<Model>();
 					NewRes->Load(filePath, ResName);
 				}
-				break;
 
+				break;
+			}
 			case RES_TEXTURE:
 				if (!fileExists)
 				{
-					Logger::Pointer()->LogMessageToFileLog("Material", "File does not exist.");
 					return m_WhiteTex;
 				}
+
 				Logger::Pointer()->LogMessageToFileLog("Material", String("Loading Texture: ") + String(filePath).c_str());
 
 				NewRes = std::make_shared<Texture2D>();
@@ -194,7 +212,6 @@ namespace rczEngine
 		catch (std::exception& exception)
 		{
 			std::cout<<exception.what();
-
 		};
 	};
 

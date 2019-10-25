@@ -37,7 +37,8 @@ namespace rczEngine
 	public:
 		virtual ~PlanetQuadTreeNode() { DestroyQuadTreeNode(); };
 
-		void InitQuadTree(Planet* planetRef, PlanetQuadTreeNode* parent, PerlinNoise3D * noise, Vector3 StartPos, int32 ChildNumber, int32 depth, eMeshPlaneOrientation side);
+		void InitQuadTree(const StrPtr<Planet> planetRef, const StrPtr<PlanetQuadTreeNode>& parent, const StrPtr<PerlinNoise3D>& noise, Vector3 StartPos, int32 ChildNumber, int32 depth, eMeshPlaneOrientation side);
+
 		void Update(Vector3 playerPos);
 		void DestroyQuadTreeNode() noexcept;
 		void Render();
@@ -61,14 +62,11 @@ namespace rczEngine
 		FORCEINLINE void SetMeshDirty() noexcept { m_MeshDirty = true; };
 		FORCEINLINE const AABB& GetAABB() const noexcept { return m_MeshAABB; };
 
-		static void ConnectNodesSameDepth(const NodeConnection& one, const NodeConnection& two);
-
 		static const int Mesh_Res = 65;
 		static const int Mesh_Row_Size = Mesh_Res - 1;
 		static const int Mesh_Row_Half = (Mesh_Res / 2);
 
-		Planet* PlanetOwner = nullptr;
-		Vector<NodeConnection> Connections;
+		StrPtr<Planet> PlanetOwner = nullptr;
 
 	private:
 		void GenerateMeshYPos(const Vector3 & startPos);
@@ -86,8 +84,6 @@ namespace rczEngine
 		void SetChildrenReady(int indexOfChild, bool value);
 		bool CheckChildrenReady();
 
-		void UpdateSideVertices();
-
 		Gfx::VertexBuffer<TerrainVertex> m_VertexBuffer;
 		Gfx::IndexBuffer m_IndexBuffer;
 
@@ -99,7 +95,7 @@ namespace rczEngine
 
 		bool m_ChildGenerated = false;
 
-		std::thread m_ChildThread[4];
+		std::thread m_ChildThread[9];
 		int32 m_QuadTreeDepth = 0;
 		eMeshPlaneOrientation m_Side;
 
@@ -107,21 +103,17 @@ namespace rczEngine
 
 		AABB m_MeshAABB;
 
-		Vector<TerrainVertex*> SideVertices[4];
+		StrPtr<PlanetQuadTreeNode> Parent = nullptr;
+		StrPtr<PlanetQuadTreeNode> Children[9];
 
-		PlanetQuadTreeNode* Parent = nullptr;
-		PlanetQuadTreeNode* Children[4];
-
-		bool ChildrenReady[4];
+		bool ChildrenReady[9];
 		bool done = false;
 
 		bool m_Subdivided = false;
 		bool m_PlayerInside = false;
 		bool m_MeshDirty = false;
 
-		PerlinNoise3D* Noise;
-
-		WeakPtr<DebuggerLineList> AABB_Debug;
+		StrPtr<PerlinNoise3D> m_PlanetNoise;
 
 		int32 Size;
 		double distVertex;
@@ -131,4 +123,4 @@ namespace rczEngine
 
 		int m_ID = -1;
 	};
-}
+};

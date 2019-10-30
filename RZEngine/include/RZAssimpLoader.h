@@ -33,7 +33,7 @@ namespace rczEngine
 		Gfx::GfxCore* m_Gfx = NULL;
 
 		Map<String, ResourceHandle> materialMap;
-		Path m_FilePath;
+		FilePath m_FilePath;
 
 		Map<String, aiBone*> AssimpBone;
 		Map<String, StrPtr<BoneComponent>> BoneComponents;

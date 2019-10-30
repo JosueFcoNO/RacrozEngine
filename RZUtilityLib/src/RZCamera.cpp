@@ -61,7 +61,7 @@ namespace rczEngine
 		m_CachedViewMatrix = false;
 	}
 
-	void Camera::Rotate(const Vector3& vector) noexcept
+	void Camera::Rotate(const Vector3& vector)
 	{
 		const Vector3 NewVec = (m_Target - m_Position).GetNormalized();
 		const Vector3 NewVec2 = m_Up.GetNormalized();
@@ -87,7 +87,7 @@ namespace rczEngine
 		CalculateUp();
 	}
 
-	void Camera::RotateComplete(const Vector3& vector)  noexcept
+	void Camera::RotateComplete(const Vector3& vector)
 	{
 		const Vector3 NewVec = (m_Target - m_Position).GetNormalized();
 		const Vector3 NewVec2 = m_Up.GetNormalized();
@@ -116,7 +116,7 @@ namespace rczEngine
 		CalculateUp();
 	}
 
-	void Camera::Orbit(const Vector3& vector) noexcept
+	void Camera::Orbit(const Vector3& vector)
 	{
 		const Vector3 NewVec  = (m_Target - m_Position).GetNormalized();
 		const Vector3 NewVec2 = m_Up.GetNormalized();

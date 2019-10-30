@@ -109,9 +109,9 @@ namespace rczEngine
 		ProfilerObj autoProfiler(RZ__FUNCTION__, PROFILE_EVENTS::PROF_GAME);
 #endif
 
-		const auto x = gsl::narrow_cast<int32>(v.m_x * 10000);
-		const auto y = gsl::narrow_cast<int32>(v.m_y * 10000);
-		const auto z = gsl::narrow_cast<int32>(v.m_z * 10000);
+		const auto x = gsl::narrow_cast<int32>(v.m_x * mult);
+		const auto y = gsl::narrow_cast<int32>(v.m_y * mult);
+		const auto z = gsl::narrow_cast<int32>(v.m_z * mult);
 
 		return (x * 73856093) ^ (y * 83492791) ^ (z * 19349663);
 	}

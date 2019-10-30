@@ -370,7 +370,7 @@ namespace rczEngine
 			if (path != "")
 			{
 				RealPath = Dir + path.c_str();
-				if (FilePath::FileExists(RealPath.c_str()))
+				if (Path::FileExists(RealPath.c_str()))
 					Temp->m_TextureAlbedo = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
 			}
 			else
@@ -385,7 +385,7 @@ namespace rczEngine
 			if (path != "")
 			{
 				RealPath = Dir + path.c_str();
-				if (FilePath::FileExists(RealPath.c_str()))
+				if (Path::FileExists(RealPath.c_str()))
 					Temp->m_TextureNormal = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
 			}
 
@@ -396,7 +396,7 @@ namespace rczEngine
 			if (path != "")
 			{
 				RealPath = Dir + path.c_str();
-				if (FilePath::FileExists(RealPath.c_str()))
+				if (Path::FileExists(RealPath.c_str()))
 					Temp->m_TextureMetSpec = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
 			}
 			else
@@ -413,7 +413,7 @@ namespace rczEngine
 			if (path != "")
 			{
 				RealPath = Dir + path.c_str();
-				if (FilePath::FileExists(RealPath.c_str()))
+				if (Path::FileExists(RealPath.c_str()))
 					Temp->m_TextureEm = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
 			}
 			else
@@ -428,7 +428,7 @@ namespace rczEngine
 			if (path != "")
 			{
 				RealPath = Dir + path.c_str();
-				if (FilePath::FileExists(RealPath.c_str()))
+				if (Path::FileExists(RealPath.c_str()))
 					Temp->m_TextureO = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
 			}
 			else
@@ -444,7 +444,7 @@ namespace rczEngine
 				if (path != "")
 				{
 					RealPath = Dir + path.c_str();
-					if (FilePath::FileExists(RealPath.c_str()))
+					if (Path::FileExists(RealPath.c_str()))
 						Temp->m_TextureEm = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
 				}
 			}
@@ -457,7 +457,7 @@ namespace rczEngine
 				if (path != "")
 				{
 					RealPath = Dir + path.c_str();
-					if (FilePath::FileExists(RealPath.c_str()))
+					if (Path::FileExists(RealPath.c_str()))
 						Temp->m_TextureEm = m_Res->LoadResource(RealPath.c_str(), name.C_Str());
 				}
 			}

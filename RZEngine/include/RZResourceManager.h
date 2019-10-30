@@ -17,12 +17,11 @@ namespace rczEngine
 		///Loads the standard and default assets.
 		void InitResourceManager();
 		void Destroy();
-		ResourceHandle IsResourceLoaded(const String & filePath);
 		ResourceHandle LoadResource(const String& filePath, const String& resName = NULL);
 		void FreeResource(ResourceHandle handleToDelete);
 		void LoadModel(StrPtr<GameObject> gameobject, const String& filePath, bool withHierarchy = false);
-
-
+		
+		
 		template <class type>
 		WeakPtr<type> GetResource(ResourceHandle requestedHandle)
 		{
@@ -83,8 +82,6 @@ namespace rczEngine
 		uint32 m_iResourceIndex = 0;
 		ResourceType QueryModel(const String& filePath, bool& out_hasBones, bool& out_hasTextures, bool& out_hasAnimations);
 		ResourceType GetResourceType(const String& fileExtension);
-
-		static const String LOG_ResourceVault;
 	};
 
 	String RZ_EXP GetFilePath(const String& instruction);

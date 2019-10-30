@@ -2,13 +2,13 @@
 
 namespace rczEngine
 {
-	void PlanetQuadTreeNode::InitQuadTree(const StrPtr<Planet> planetRef, const StrPtr<PlanetQuadTreeNode>& parent, const StrPtr<PerlinNoise3D>& noise, Vector3 StartPos, int32 ChildNumber, int32 depth, eMeshPlaneOrientation side)
+	void PlanetQuadTreeNode::InitQuadTree(Planet* planetRef, PlanetQuadTreeNode* parent, PerlinNoise3D* noise, Vector3 StartPos, int32 ChildNumber, int32 depth, eMeshPlaneOrientation side)
 	{
 #ifdef RZ_PROFILING
 		ProfilerObj obj("InitQuadTree", PROFILE_EVENTS::PROF_GAME);
 #endif
 
-		for (int i = 0; i < 9; ++i)
+		for (int i = 0; i < 4; ++i)
 			SetChildrenReady(i, false);
 
 		PlanetOwner = planetRef;
@@ -72,7 +72,7 @@ namespace rczEngine
 		}
 
 		m_StartPos = startPos;
-		m_PlanetNoise = noise;
+		Noise = noise;
 
 		Size = Mesh_Res;
 		distVertex = planeSize / double(Mesh_Res - 1);
@@ -274,6 +274,64 @@ namespace rczEngine
 		m_NodePlanes[3].ConstructFromPoints(bottomleft, topleft, bottomleft * 2);
 
 		m_NodePlanes[4].ConstructFromPoints(topleft, topright, bottomright);
+
+		NodeConnection node;
+
+		node.Depth = m_QuadTreeDepth;
+		node.node = this;
+
+		node.Side = eSide::Up;
+		node.Pos = GetVertex(Mesh_Row_Half, 0).VertexPosition;
+		node.Hash = Vector3::Hash(node.Pos.GetNormalized());
+		GraphicDebugger::Pointer()->AddPoint("Rand1 " + std::to_string(rand() % 2000), node.Pos, 1, Color(1, 0, 0));
+
+		Connections.push_back(node);
+
+		node.Side = eSide::Left;
+		node.Pos = GetVertex(0, Mesh_Row_Half).VertexPosition;
+		node.Hash = Vector3::Hash(node.Pos.GetNormalized());
+		GraphicDebugger::Pointer()->AddPoint("Rand2 " + std::to_string(rand() % 2000), node.Pos, 1, Color(1, 0, 0));
+
+		Connections.push_back(node);
+
+		node.Side = eSide::Right;
+		node.Pos = GetVertex(Mesh_Row_Size, Mesh_Row_Half).VertexPosition;
+		node.Hash = Vector3::Hash(node.Pos.GetNormalized());
+		GraphicDebugger::Pointer()->AddPoint("Rand3 " + std::to_string(rand() % 2000), node.Pos, 1, Color(1, 0, 0));
+
+		Connections.push_back(node);
+
+		node.Side = eSide::Down;
+		node.Pos = GetVertex(Mesh_Row_Half, Mesh_Row_Size).VertexPosition;
+		node.Hash = Vector3::Hash(node.Pos.GetNormalized());
+		GraphicDebugger::Pointer()->AddPoint("Rand4 " + std::to_string(rand()%2000), node.Pos, 1, Color(1, 0, 0));
+
+		Connections.push_back(node);
+
+		TerrainVertex* vertex;
+		for (int i = 0; i < Size; ++i)
+		{
+			vertex = &GetVertex(i, 0);
+			SideVertices[(int)eSide::Up].push_back(vertex);
+		}
+
+		for (int i = 0; i < Size; ++i)
+		{
+			vertex = &GetVertex(Mesh_Row_Size, i);
+			SideVertices[(int)eSide::Right].push_back(vertex);
+		}
+
+		for (int i = 0; i < Size; ++i)
+		{
+			vertex = &GetVertex(i, Mesh_Row_Size);
+			SideVertices[(int)eSide::Down].push_back(vertex);
+		}
+
+		for (int i = 0; i < Size; ++i)
+		{
+			vertex = &GetVertex(0, i);
+			SideVertices[(int)eSide::Left].push_back(vertex);
+		}
 	}
 
 	bool PlanetQuadTreeNode::TestIfInside(const Vector3& pos)
@@ -367,6 +425,100 @@ namespace rczEngine
 
 	}
 
+	void PlanetQuadTreeNode::ConnectNodesSameDepth(const NodeConnection & one, const NodeConnection & two)
+	{
+		auto& oneVertices = one.node->SideVertices[(int)one.Side];
+		auto& twoVertices = two.node->SideVertices[(int)two.Side];
+
+		if (oneVertices.size() == twoVertices.size())
+		{
+			if (Vector3::Distance(oneVertices[0]->VertexPosition, twoVertices[0]->VertexPosition) < 0.005f)
+			{
+				for (int i = 0; i < Mesh_Res; ++i)
+				{
+					*oneVertices[i] = *twoVertices[i];
+				}
+			}
+			else
+			{
+				for (int i = 0; i < Mesh_Res; ++i)
+				{
+					*oneVertices[i] = *twoVertices[Mesh_Row_Size - i];
+				}
+			}
+
+			one.node->m_MeshDirty = true;
+			two.node->m_MeshDirty = true;
+		}
+		else
+		{
+			if (one.Depth == two.Depth) return;
+
+			const NodeConnection* dobleNode;
+			if (one.Depth > two.Depth)
+			{
+				dobleNode = &one;
+			}
+			else if (one.Depth < two.Depth)
+			{
+				dobleNode = &two;
+			}
+
+			Vector<TerrainVertex*>* DeepSide = &oneVertices;
+			Vector<TerrainVertex*>* ShallowSide = &twoVertices;
+
+			if (oneVertices.size() > twoVertices.size())
+			{
+				DeepSide = &oneVertices;
+				ShallowSide = &twoVertices;
+			}
+			else
+			{
+				DeepSide = &twoVertices;
+				ShallowSide = &oneVertices;
+			}
+
+			if (Vector3::Distance(oneVertices[0]->VertexPosition, twoVertices[0]->VertexPosition) < 0.05f)
+			{
+				for (int i = 0, k = 0; i < Mesh_Res; ++i, k += 2)
+				{
+					*(*DeepSide)[k] = *(*ShallowSide)[i];
+				}
+			}
+			else
+			{
+				for (int i = 0, k = 0; i < Mesh_Res; ++i, k += 2)
+				{
+					*(*DeepSide)[Mesh_Res * 2 - 2 - k] = *(*ShallowSide)[i];
+				}
+			}
+
+			for (int i = 1; i < Mesh_Res * 2 - 1; i += 2)
+			{
+				auto correctedIndex = i;
+
+				auto PrevDeep = (*DeepSide)[correctedIndex - 1];
+				auto CurrentDeep = (*DeepSide)[correctedIndex];
+
+				*CurrentDeep = *PrevDeep;
+			}
+
+			if (&one != dobleNode)
+				one.node->m_MeshDirty = true;
+
+			if (&two != dobleNode)
+				two.node->m_MeshDirty = true;
+
+			if (dobleNode->node->CheckChildrenReady())
+			{
+				dobleNode->node->Children[0]->m_MeshDirty = true;
+				dobleNode->node->Children[1]->m_MeshDirty = true;
+				dobleNode->node->Children[2]->m_MeshDirty = true;
+				dobleNode->node->Children[3]->m_MeshDirty = true;
+			}
+		}
+	}
+
 	void PlanetQuadTreeNode::Render()
 	{
 		const auto resPtr = ResVault::Pointer();
@@ -446,10 +598,10 @@ namespace rczEngine
 
 		float noise;
 
-		noise = pow(m_PlanetNoise->RidgedOctaveNoise(Pos128, 6, 0.4f), 2) *
-			m_PlanetNoise->OctaveNoise(Pos24, 6, 0.5f) *
+		noise = pow(Noise->RidgedOctaveNoise(Pos128, 6, 0.4f), 2) *
+			Noise->OctaveNoise(Pos24, 6, 0.5f) *
 			//Noise->OctaveNoise(NoisePos, 3, 0.5f) *
-			pow(m_PlanetNoise->RidgedOctaveNoise(Pos12, 3, 0.2f), 2);
+			pow(Noise->RidgedOctaveNoise(Pos12, 3, 0.2f), 2);
 
 		out_displacement = noise;
 
@@ -547,8 +699,8 @@ namespace rczEngine
 
 	void PlanetQuadTreeNode::GenerateChild(int index, int depth)
 	{
-		Children[index] = std::make_shared<PlanetQuadTreeNode>();
-		Children[index]->InitQuadTree(PlanetOwner, this, m_PlanetNoise, m_StartPos, index, depth, m_Side);
+		Children[index] = new PlanetQuadTreeNode();
+		Children[index]->InitQuadTree(PlanetOwner, this, Noise, m_StartPos, index, depth, m_Side);
 		SetChildrenReady(index, true);
 	}
 
@@ -564,9 +716,43 @@ namespace rczEngine
 			ChildrenReady[2] &&
 			ChildrenReady[3];
 
+		if (retValue && SideVertices[0].size() == Mesh_Res)
+		{
+			UpdateSideVertices();
+		}
+
 		BuenMutex.unlock();
 
 		return retValue;
+	}
+
+	void PlanetQuadTreeNode::UpdateSideVertices()
+	{
+		return;
+		SideVertices[0].clear();
+		SideVertices[1].clear();
+		SideVertices[2].clear();
+		SideVertices[3].clear();
+
+		auto side = (int)eSide::Up;
+		SideVertices[side].insert(SideVertices[side].end(), Children[0]->SideVertices[side].begin(), Children[0]->SideVertices[side].end());
+		SideVertices[side].pop_back();
+		SideVertices[side].insert(SideVertices[side].end(), Children[2]->SideVertices[side].begin(), Children[2]->SideVertices[side].end());
+
+		side = (int)eSide::Right;
+		SideVertices[side].insert(SideVertices[side].end(), Children[2]->SideVertices[side].begin(), Children[2]->SideVertices[side].end());
+		SideVertices[side].pop_back();
+		SideVertices[side].insert(SideVertices[side].end(), Children[3]->SideVertices[side].begin(), Children[3]->SideVertices[side].end());
+
+		side = (int)eSide::Left;
+		SideVertices[side].insert(SideVertices[side].end(), Children[0]->SideVertices[side].begin(), Children[0]->SideVertices[side].end());
+		SideVertices[side].pop_back();
+		SideVertices[side].insert(SideVertices[side].end(), Children[1]->SideVertices[side].begin(), Children[1]->SideVertices[side].end());
+
+		side = (int)eSide::Down;
+		SideVertices[side].insert(SideVertices[side].end(), Children[1]->SideVertices[side].begin(), Children[1]->SideVertices[side].end());
+		SideVertices[side].pop_back();
+		SideVertices[side].insert(SideVertices[side].end(), Children[3]->SideVertices[side].begin(), Children[3]->SideVertices[side].end());
 	}
 
 	void PlanetQuadTreeNode::SetChildrenReady(int indexOfChild, bool value)

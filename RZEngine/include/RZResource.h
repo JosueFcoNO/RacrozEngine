@@ -16,11 +16,11 @@ namespace rczEngine
 	};
 
 	///The resource base class. 
-	class Resource
+	class Resource : public std::enable_shared_from_this<Resource>, public Serializable
 	{
 	public:
 		RZ_EXP Resource() {};
-		RZ_EXP virtual ~Resource() { Release(); };
+		RZ_EXP virtual ~Resource() {};
 
 		//Return the handle of the resource. If it is equal to NULL. It is not resource managed.
 		RZ_EXP ResourceHandle GetHandle() const { return m_FilePath.GetHash(); };
@@ -33,7 +33,7 @@ namespace rczEngine
 		//Returns the FilePath const char
 		RZ_EXP String GetFilePath() const { return m_FilePath.GetFilePath(); };
 		//Returns the FilePath Object
-		RZ_EXP const FilePath& GetPath() { return m_FilePath; };
+		RZ_EXP const Path& GetPath() { return m_FilePath; };
 
 		//Init the FilePath object.
 		RZ_EXP void SetFilePath(const String& filePath) { m_FilePath.ResetPath(filePath); };
@@ -50,7 +50,7 @@ namespace rczEngine
 		RZ_EXP virtual void RenderResourceGUI() = 0;
 #endif
 	protected:
-		FilePath m_FilePath;
+		Path m_FilePath;
 		String m_Name = "Unnamed Resource";
 	};
 };

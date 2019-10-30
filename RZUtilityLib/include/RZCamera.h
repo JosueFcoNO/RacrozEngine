@@ -30,9 +30,9 @@ namespace rczEngine
 		void MoveRight(float delta) noexcept;
 		void MoveUp(float delta) noexcept;
 		void Move(float x, float y, float z) noexcept;
-		void Rotate(const Vector3& vector);
-		void RotateComplete(const Vector3& vector);
-		void Orbit(const Vector3& vector);
+		void Rotate(const Vector3& vector) noexcept;
+		void RotateComplete(const Vector3& vector) noexcept;
+		void Orbit(const Vector3& vector) noexcept;
 
 		void Reset(const Vector3& position, const Vector3& target, const Vector3& Up) noexcept;
 

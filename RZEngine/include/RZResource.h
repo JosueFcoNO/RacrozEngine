@@ -20,7 +20,7 @@ namespace rczEngine
 	{
 	public:
 		RZ_EXP Resource() {};
-		RZ_EXP virtual ~Resource() { Release(); };
+		RZ_EXP virtual ~Resource() {  };
 
 		//Return the handle of the resource. If it is equal to NULL. It is not resource managed.
 		RZ_EXP ResourceHandle GetHandle() const { return m_FilePath.GetHash(); };

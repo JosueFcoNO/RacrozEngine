@@ -5,7 +5,7 @@
 namespace rczEngine
 {
 
-	void Color::Set(float R, float G, float B, float A) noexcept
+	void Color::SetColor(float R, float G, float B, float A) noexcept
 	{
 		m_x = R;
 		m_y = G;
@@ -22,4 +22,29 @@ namespace rczEngine
 		m_z = (Math::Max(m_z - c.m_z, 0.0f));
 		m_w = (Math::Max(m_w - c.m_w, 0.0f));
 	}
+
+	Color Color::GetLineal() const noexcept
+	{
+		Color newColor;
+
+#pragma omp for
+		for (int i = 0; i < 4; ++i)
+		{
+			newColor.m_elements[i] = Math::Pow(newColor.m_elements[i], 2.2f);
+		};
+
+		return newColor;
+	}
+	Color Color::GetSRGB() const noexcept
+	{
+		Color newColor;
+
+#pragma omp for
+		for (int i = 0; i < 4; ++i)
+		{
+			newColor.m_elements[i] = Math::Pow(m_elements[i], 1.0f / 2.2f);
+		};
+
+		return newColor;
+	};
 }

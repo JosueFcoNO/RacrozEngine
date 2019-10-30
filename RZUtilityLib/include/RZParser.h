@@ -34,9 +34,6 @@ namespace rczEngine
 					}
 
 					TempStringIndex += Separator.size();
-					/*TempStringIndex += sizeof(T.c_str());*/
-				
-
 			}
 
 			return TempVectorString;
@@ -46,7 +43,6 @@ namespace rczEngine
 		///Parses the stringToParse from strinPos to the first Separator it finds and it returns the first separator's position. 
 		FORCEINLINE static int ParseToStringPosition(BasicString<Char> stringToParse, BasicString<Char> Separator, uint32 stringPos)
 		{
-			///Return stringToParse.find(Separator, TempStringIndex)
 			return stringToParse.find(Separator, TempStringIndex);
 		}
 	};

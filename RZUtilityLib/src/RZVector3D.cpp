@@ -64,7 +64,7 @@ namespace rczEngine
 		m_z(v4.m_z) {}
 
 	///Returns the distance of the vector3: vhead-vtail.
-	float Vector3::Distance(const Vector3 & vhead, const Vector3 & vtail)
+	float Vector3::Distance(const Vector3 & vhead, const Vector3 & vtail) noexcept
 	{
 #ifdef RZ_PROFILING
 		ProfilerObj autoProfiler(RZ__FUNCTION__, PROFILE_EVENTS::PROF_GAME);
@@ -74,7 +74,7 @@ namespace rczEngine
 	}
 
 	///Returns the distance of the vector3: vhead-vtail.
-	float Vector3::SqrDistance(const Vector3 & vhead, const Vector3 & vtail)
+	float Vector3::SqrDistance(const Vector3 & vhead, const Vector3 & vtail) noexcept
 	{
 #ifdef RZ_PROFILING
 		ProfilerObj autoProfiler(RZ__FUNCTION__, PROFILE_EVENTS::PROF_GAME);
@@ -84,7 +84,7 @@ namespace rczEngine
 	}
 
 	///returns the angle of the x and y components of the vector
-	float Vector3::Anglexz(const Vector3 & v, bool getAsDegree)
+	float Vector3::Anglexz(const Vector3 & v, bool getAsDegree) noexcept
 	{
 #ifdef RZ_PROFILING
 		ProfilerObj autoProfiler(RZ__FUNCTION__, PROFILE_EVENTS::PROF_GAME);

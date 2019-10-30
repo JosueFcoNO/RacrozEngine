@@ -7,11 +7,11 @@ namespace rczEngine
 	{
 	public:
 		RZ_EXP static void Start();
-		RZ_EXP static gsl::not_null<Logger*> Pointer();
+		RZ_EXP static gsl::not_null<Logger*> Pointer() noexcept;
 		RZ_EXP static gsl::not_null<Logger*> PointerOrCreate();
 		RZ_EXP static void ShutDown();
 
-		RZ_EXP void Log(const String& string, eLogMsgType type = eLogMsgType::Message);
+		RZ_EXP void Log(const String& string, eLogMsgType type = eLogMsgType::Message) noexcept;
 		RZ_EXP FORCEINLINE void ClearLog() noexcept { m_LoggedStrings.clear(); };
 		RZ_EXP FORCEINLINE auto& GetLoggedStrings() const noexcept { return m_LoggedStrings; };
 	

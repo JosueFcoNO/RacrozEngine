@@ -17,11 +17,12 @@ namespace rczEngine
 
 		PlayerCamera = CameraManager::Pointer()->GetActiveCamera().lock();
 
-		noise.InitPerlinNoise(seed);
+		noise = new PerlinNoise3D();
+		noise->InitPerlinNoise(seed);
 
 		for (int i = 0; i < 6; ++i)
 		{
-			m_QTreeRoots[i].InitQuadTree(this, nullptr, &noise, Vector3(0, 0, 0), 0, 0, (eMeshPlaneOrientation)i);
+			m_QTreeRoots[i].InitQuadTree(this, nullptr, noise, Vector3(0, 0, 0), 0, 0, (eMeshPlaneOrientation)i);
 		}
 
 		m_HeightCameracb.CreateConstantBuffer(sizeof(Vector4), Gfx::USAGE_DEFAULT, m_GfxCore);

@@ -53,7 +53,7 @@ namespace rczEngine
 		////// 3D Graphics Operations
 		///////////////////////
 
-		static Matrix3 Rotate3D(Degree xRotation, Degree yRotation, Degree zRotation);
+		static Matrix3 Rotate3D(Degree xRotation, Degree yRotation, Degree zRotation) noexcept;
 
 		///////////////////////
 		////// Aritmethic Operations

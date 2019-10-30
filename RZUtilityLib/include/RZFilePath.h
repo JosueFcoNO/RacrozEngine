@@ -7,7 +7,7 @@ namespace rczEngine
 	{
 	public:
 		RZ_EXP FilePath(const String& str);
-		RZ_EXP FilePath() : m_FilePath(""), m_Hash(0ull) {};
+		RZ_EXP FilePath() noexcept {};
 
 		virtual ~FilePath() = default;            // destructor (virtual if X is meant to be a base class)
 		FilePath(const FilePath&) = default;             // copy constructor
@@ -50,7 +50,7 @@ namespace rczEngine
 		//The file path string.
 		String m_FilePath;
 		//The hash of the file path. Used to compare FilePath objects and as handles.
-		size_t m_Hash;
+		size_t m_Hash = 0;
 	};
 
 

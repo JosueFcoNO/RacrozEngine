@@ -172,9 +172,9 @@ namespace rczEngine
 
 				auto hasBones = false;
 				auto hasTextures = false;
-				auto hasTextures = false;
+				auto hasAnims = false;
 
-				QueryModel(filePath, hasBones, hasTextures, hasTextures);
+				QueryModel(filePath, hasBones, hasTextures, hasAnims);
 
 				if (hasBones)
 				{

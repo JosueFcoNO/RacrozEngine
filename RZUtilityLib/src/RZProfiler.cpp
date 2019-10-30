@@ -23,7 +23,7 @@ namespace rczEngine
 		delete _Instance();
 	}
 
-	void Profiler::Destroy()
+	void Profiler::Destroy() noexcept
 	{
 		SaveResults();
 		m_GfxEvents.clear();
@@ -43,37 +43,44 @@ namespace rczEngine
 		m_GfxEvents.clear();
 	}
 
-	void Profiler::SaveResults(const String& filePath)
+	void Profiler::SaveResults(const String& filePath) noexcept
 	{
-		const String LoggerFile(filePath);
-		const auto logger = Logger::PointerOrCreate();
-		
-		String eventStr("Event: ");
-
-		///Start the profiler Log
-		logger->StartLog(LoggerFile);
-		logger->LogMessageToFileLog(LoggerFile, "+++PROFILER LOG+++", eLogMsgType::Error);
-
-		///Log every Game Event
-		logger->LogMessageToFileLog(LoggerFile, "+Game Events+", eLogMsgType::Error);
-
-		for (auto event : m_GameEvents)
+		try
 		{
-			eventStr = "Event: " + event.first;
-			logger->LogMessageToFileLog(LoggerFile, eventStr, eLogMsgType::Warning);
-			event.second.SaveResults(LoggerFile, *logger);
-		}
+			const String LoggerFile(filePath);
+			const auto logger = Logger::PointerOrCreate();
 
-		///Log every Gfx Event
-		logger->LogMessageToFileLog(LoggerFile, "+Gfx Events+", eLogMsgType::Error);
-		for (auto event : m_GfxEvents)
+			String eventStr("Event: ");
+
+			///Start the profiler Log
+			logger->StartLog(LoggerFile);
+			logger->LogMessageToFileLog(LoggerFile, "+++PROFILER LOG+++", eLogMsgType::Error);
+
+			///Log every Game Event
+			logger->LogMessageToFileLog(LoggerFile, "+Game Events+", eLogMsgType::Error);
+
+			for (auto event : m_GameEvents)
+			{
+				eventStr = "Event: " + event.first;
+				logger->LogMessageToFileLog(LoggerFile, eventStr, eLogMsgType::Warning);
+				event.second.SaveResults(LoggerFile, *logger);
+			}
+
+			///Log every Gfx Event
+			logger->LogMessageToFileLog(LoggerFile, "+Gfx Events+", eLogMsgType::Error);
+			for (auto event : m_GfxEvents)
+			{
+				eventStr = "Event: " + event.first;
+				logger->LogMessageToFileLog(LoggerFile, eventStr, eLogMsgType::Warning);
+				event.second.SaveResults(LoggerFile, *logger);
+			}
+
+			logger->CloseLog(LoggerFile);
+		}
+		catch (...)
 		{
-			eventStr = "Event: " + event.first;
-			logger->LogMessageToFileLog(LoggerFile, eventStr, eLogMsgType::Warning);
-			event.second.SaveResults(LoggerFile, *logger);
+			Logger::Pointer()->Log("Save Results Failed", eLogMsgType::CriticalError);
 		}
-
-		logger->CloseLog(LoggerFile);
 	}
 
 	void Profiler::NewFrameStart() noexcept
@@ -88,16 +95,23 @@ namespace rczEngine
 
 	void Profiler::AddTime(const String& event, long double time, PROFILE_EVENTS eventType) noexcept
 	{
-		switch (eventType)
+		try
 		{
-		case PROF_GFX:
+			switch (eventType)
+			{
+			case PROF_GFX:
 				m_GfxEvents.at(event).AddTimeEntry(time);
-			break;
-		case PROF_GAME:
+				break;
+			case PROF_GAME:
 				m_GameEvents.at(event).AddTimeEntry(time);
-			break;
-		default:
-			break;
+				break;
+			default:
+				break;
+			}
+		}
+		catch (...)
+		{
+			Logger::Pointer()->Log("AddTime failed", eLogMsgType::Error);
 		}
 	}
 

@@ -70,7 +70,7 @@ namespace rczEngine
 		Vector4 m_HeightScale;
 
 		int32 Seed = 0;
-		PerlinNoise3D noise;
+		PerlinNoise3D* noise;
 
 		AtmosData m_Atmosphere;
 

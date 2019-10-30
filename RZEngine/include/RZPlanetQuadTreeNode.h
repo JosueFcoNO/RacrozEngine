@@ -37,8 +37,6 @@ namespace rczEngine
 	public:
 		virtual ~PlanetQuadTreeNode() { DestroyQuadTreeNode(); };
 
-		void InitQuadTree(const StrPtr<Planet> planetRef, const StrPtr<PlanetQuadTreeNode>& parent, const StrPtr<PerlinNoise3D>& noise, Vector3 StartPos, int32 ChildNumber, int32 depth, eMeshPlaneOrientation side);
-
 		void Update(Vector3 playerPos);
 		void DestroyQuadTreeNode() noexcept;
 		void Render();
@@ -49,6 +47,7 @@ namespace rczEngine
 		Vector3 CalculateVertexPos(const Vector3& pos, float& out_displacement);
 
 		void CalculateLOD(const Vector3& pos);
+		void InitQuadTree(Planet * planetRef, PlanetQuadTreeNode * parent, PerlinNoise3D * noise, Vector3 StartPos, int32 ChildNumber, int32 depth, eMeshPlaneOrientation side);
 		void SubdivideNode();
 
 		void GenerateChildren();
@@ -66,7 +65,7 @@ namespace rczEngine
 		static const int Mesh_Row_Size = Mesh_Res - 1;
 		static const int Mesh_Row_Half = (Mesh_Res / 2);
 
-		StrPtr<Planet> PlanetOwner = nullptr;
+		Planet* PlanetOwner = nullptr;
 
 	private:
 		void GenerateMeshYPos(const Vector3 & startPos);
@@ -103,8 +102,8 @@ namespace rczEngine
 
 		AABB m_MeshAABB;
 
-		StrPtr<PlanetQuadTreeNode> Parent = nullptr;
-		StrPtr<PlanetQuadTreeNode> Children[9];
+		PlanetQuadTreeNode* Parent = nullptr;
+		PlanetQuadTreeNode* Children[9];
 
 		bool ChildrenReady[9];
 		bool done = false;
@@ -113,7 +112,7 @@ namespace rczEngine
 		bool m_PlayerInside = false;
 		bool m_MeshDirty = false;
 
-		StrPtr<PerlinNoise3D> m_PlanetNoise;
+		PerlinNoise3D* m_PlanetNoise;
 
 		int32 Size;
 		double distVertex;

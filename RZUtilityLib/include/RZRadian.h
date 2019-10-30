@@ -14,7 +14,7 @@ namespace rczEngine
 		Degree ValueDegree() const noexcept;
 
 		///unwinds the radians, calls the real function from Math
-		void UnwindRadian(float f) noexcept;
+		void UnwindRadian(float f);
 
 		Radian operator= (float f) noexcept { return Radian(f); };
 		Radian operator= (int32 i) noexcept { return Radian(gsl::narrow_cast<float>(i)); };

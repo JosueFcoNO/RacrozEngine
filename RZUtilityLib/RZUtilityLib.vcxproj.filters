@@ -18,6 +18,9 @@
     <Filter Include="Archivos de encabezado\Logger">
       <UniqueIdentifier>{7cb9f6ae-a38f-4723-9646-d0ce0b46995a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\File Manager">
+      <UniqueIdentifier>{6858b6dc-7a30-461c-a70e-3c8448e3c5c1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Archivos de código fuente\Math">
       <UniqueIdentifier>{175239da-f4b5-42bc-a4bf-5738f4987695}</UniqueIdentifier>
     </Filter>
@@ -105,12 +108,6 @@
     <Filter Include="Archivos de código fuente\Math\Rendering">
       <UniqueIdentifier>{4e530201-4460-4182-a685-140ec767e5c9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de encabezado\File">
-      <UniqueIdentifier>{6858b6dc-7a30-461c-a70e-3c8448e3c5c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Archivos de encabezado\Parsers">
-      <UniqueIdentifier>{9aa98c20-6804-4d9f-96ca-aaabcd109335}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZUtilityPCH.h">
@@ -138,7 +135,7 @@
       <Filter>Archivos de encabezado\Prerequisites</Filter>
     </ClInclude>
     <ClInclude Include="include\RZFileCoder.h">
-      <Filter>Archivos de encabezado\File</Filter>
+      <Filter>Archivos de encabezado\File Manager</Filter>
     </ClInclude>
     <ClInclude Include="include\RZMemoryAllocators.h">
       <Filter>Archivos de encabezado\Memory Allocators</Filter>
@@ -175,6 +172,12 @@
     </ClInclude>
     <ClInclude Include="include\RZSerializer.h">
       <Filter>Archivos de encabezado\Serializable</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZPath.h">
+      <Filter>Archivos de encabezado\File Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZParser.h">
+      <Filter>Archivos de encabezado\File Manager</Filter>
     </ClInclude>
     <ClInclude Include="include\RZSphere.h">
       <Filter>Archivos de encabezado\Math\Primitives</Filter>
@@ -241,15 +244,6 @@
     </ClInclude>
     <ClInclude Include="include\RZCamera.h">
       <Filter>Archivos de encabezado\Math\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RZParser.h">
-      <Filter>Archivos de encabezado\Parsers</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RZFilePath.h">
-      <Filter>Archivos de encabezado\File</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RZLogEnum.h">
-      <Filter>Archivos de encabezado\Logger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

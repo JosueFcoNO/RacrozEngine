@@ -28,7 +28,7 @@ namespace rczEngine
 		RZ_EXP static void ShutDown() noexcept;
 
 		/// Destroy the profiler, clear everything.
-		RZ_EXP void Destroy() noexcept;
+		RZ_EXP void Destroy();
 
 		///STarts the profiler.
 		RZ_EXP void StartProfiler() noexcept;
@@ -37,7 +37,7 @@ namespace rczEngine
 		RZ_EXP void Reset() noexcept;
 
 		/// Saves the profiler Log to the file path given in the param.
-		RZ_EXP void SaveResults(const String& filePath = "autoProfileLog ") noexcept;
+		RZ_EXP void SaveResults(const String& filePath = "autoProfileLog ");
 		
 		/// Starts a new frame which ends when this function is called again.
 		RZ_EXP void NewFrameStart() noexcept;

@@ -58,7 +58,7 @@ namespace rczEngine
 		static Matrix4 Scale3D(float xScale, float yScale, float zScale);
 		static Matrix4 Rotate3D(Degree xRotation, Degree yRotation, Degree zRotation);
 		static Matrix4 OrthoProjectedSpace(float width, float height, float ZNear, float ZFar);
-		static Matrix4 PerpsProjectedSpace(float FovY, float AspectRatio, float ZNear, float ZFar) noexcept;
+		static Matrix4 PerpsProjectedSpace(float FovY, float AspectRatio, float ZNear, float ZFar);
 		static Matrix4 LookAtMatrix(Vector3 eye, Vector3 up, Vector3 target) noexcept;
 		static Matrix4 LookAtMatrixZ(Vector3 eye, Vector3 up, Vector3 target) noexcept;
 		static Matrix4 LookAtMatrixY(Vector3 eye, Vector3 up, Vector3 target) noexcept;

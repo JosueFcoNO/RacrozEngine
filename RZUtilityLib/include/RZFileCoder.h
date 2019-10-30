@@ -6,7 +6,7 @@ namespace rczEngine
 	class FileManager
 	{
 	public:
-		RZ_EXP FileManager() :
+		RZ_EXP FileManager() noexcept :
 			m_strFileName(std::make_unique<String>()),
 			m_File(std::make_unique<FileStream>()),
 			m_iFileIndex(0u),

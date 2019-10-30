@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void PlanetQuadTreeNode::InitQuadTree(Planet* planetRef, PlanetQuadTreeNode* parent, PerlinNoise3D* noise, Vector3 StartPos, int32 ChildNumber, int32 depth, eMeshPlaneOrientation side)
+	void PlanetQuadTreeNode::InitQuadTree(const StrPtr<Planet> planetRef, const StrPtr<PlanetQuadTreeNode>& parent, const StrPtr<PerlinNoise3D>& noise, Vector3 StartPos, int32 ChildNumber, int32 depth, eMeshPlaneOrientation side)
 	{
 #ifdef RZ_PROFILING
 		ProfilerObj obj("InitQuadTree", PROFILE_EVENTS::PROF_GAME);
@@ -547,7 +547,7 @@ namespace rczEngine
 
 	void PlanetQuadTreeNode::GenerateChild(int index, int depth)
 	{
-		Children[index] = new PlanetQuadTreeNode();
+		Children[index] = std::make_shared<PlanetQuadTreeNode>();
 		Children[index]->InitQuadTree(PlanetOwner, this, m_PlanetNoise, m_StartPos, index, depth, m_Side);
 		SetChildrenReady(index, true);
 	}

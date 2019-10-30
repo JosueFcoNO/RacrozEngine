@@ -49,7 +49,7 @@ namespace rczEngine
 
 		///Elevate a float to ipow
 		template<class valueType, class powerType>
-		static FORCEINLINE valueType Pow(valueType V, powerType ipow) noexcept { return gsl::narrow_cast<valueType>(std::pow(V, gsl::narrow_cast<valueType>(ipow))); };
+		static FORCEINLINE valueType Pow(valueType V, powerType ipow) noexcept { return std::pow(V, ipow); };
 		///Float module
 		static FORCEINLINE float fMod(float X, float Y) noexcept { return std::fmodf(X, Y); };
 		///Float absolute value

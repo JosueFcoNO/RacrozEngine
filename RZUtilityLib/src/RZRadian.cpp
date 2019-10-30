@@ -9,7 +9,7 @@ namespace rczEngine
 		m_Value = F;
 	};
 
-	void Radian::UnwindRadian(float f) noexcept
+	void Radian::UnwindRadian(float f)
 	{
 		m_Value = Math::UnwindRadian(f);
 	};

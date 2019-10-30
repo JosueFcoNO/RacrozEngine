@@ -2,18 +2,13 @@
 
 namespace rczEngine
 {
-	Texture2D::~Texture2D()
-	{
-		Release();
-	};
-
 	uint32 Texture2D::Width()
 	{
-		return m_TextureCore.m_Width;
+		return 1;
 	}
 	uint32 Texture2D::Height()
 	{
-		return m_TextureCore.m_Height;
+		return 1;
 	}
 
 	Gfx::TextureCore2D * Texture2D::GetTextureCore()
@@ -104,7 +99,7 @@ namespace rczEngine
 		m_FilePath = filePath;
 		m_Name = resName;
 		
-		ResVault::Pointer()->InsertResource(StrPtr<Texture2D>(this));
+		ResVault::Pointer()->InsertResource(shared_from_this());
 
 		Gfx::GfxCore::Pointer()->CreateTextureFromFile(filePath, m_TextureCore, Gfx::USAGE_DEFAULT, Gfx::BIND_SHADER_RESOURCE, Gfx::CPU_DEFAULT);
 	}

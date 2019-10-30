@@ -16,7 +16,6 @@
 #include "RZSerializable.h"
 #include "RZSerializer.h"
 
-#include "RZLogEnum.h"
 #include "RZLogObject.h"
 #include "RZLogger.h"
 
@@ -61,4 +60,4 @@
 #include "RZProfiler.h"
 #include "RZProfilerObj.h"
 
-#include "RZFilePath.h"
+#include "RZPath.h"

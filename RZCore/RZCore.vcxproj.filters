@@ -63,7 +63,7 @@
       <Filter>Archivos de encabezado\App</Filter>
     </ClInclude>
     <ClInclude Include="include\RZCorePCH.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\Text Parser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

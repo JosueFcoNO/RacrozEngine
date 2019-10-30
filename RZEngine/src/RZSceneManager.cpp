@@ -94,7 +94,7 @@ namespace rczEngine
 		for (int32 i = 0; i < resSize; ++i)
 		{
 			auto ptr = getNewResource((SERIALS)ser->GetNextObjectSerial());
-			//ptr->DeSerialize();
+			ptr->DeSerialize();
 			res->InsertResource(ptr);
 		}
 
@@ -143,7 +143,7 @@ namespace rczEngine
 
 		for (auto it = vault->m_ResourceMap.begin(); it != vault->m_ResourceMap.end(); ++it)
 		{
-			//it->second->Serialize();
+			it->second->Serialize();
 		}
 
 		for (auto it : m_ActiveScene->m_SceneActorMap)

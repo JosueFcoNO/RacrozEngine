@@ -17,22 +17,9 @@ namespace rczEngine
 			RegisterTime();
 		};
 
-		RZ_EXP ProfilerObj() = delete;
-		RZ_EXP ProfilerObj(const ProfilerObj& other) = delete;
-		RZ_EXP ProfilerObj(const ProfilerObj&& other) = delete;
-		RZ_EXP ProfilerObj& operator=(const ProfilerObj& rhs) = delete;
-		RZ_EXP ProfilerObj& operator=(const ProfilerObj&& rhs) = delete;
-
 		RZ_EXP FORCEINLINE void RegisterTime() noexcept
 		{
-			try
-			{
-				Profiler::Pointer()->AddTime(m_EventID, m_InnerTimer.GetFrameTime(), m_EventType);
-			}
-			catch (...)
-			{
-				Logger::Pointer()->Log("Profiler: RegisterTime Failed", eLogMsgType::Error);
-			}
+			Profiler::Pointer()->AddTime(m_EventID, m_InnerTimer.GetFrameTime(), m_EventType);
 		};
 
 	private:

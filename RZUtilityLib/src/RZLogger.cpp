@@ -13,7 +13,7 @@ namespace rczEngine
 		(_Instance()) = new Logger;
 	}
 
-	gsl::not_null<Logger*> Logger::Pointer() noexcept
+	gsl::not_null<Logger*> Logger::Pointer()
 	{
 		return _Instance();
 	}
@@ -33,16 +33,9 @@ namespace rczEngine
 		delete _Instance();
 	}
 
-	RZ_EXP void Logger::Log(const String & string, eLogMsgType type) noexcept
+	RZ_EXP void Logger::Log(const String & string, eLogMsgType type)
 	{
-		try
-		{
-			m_LoggedStrings.push_back(LogObject{ string, type });
-		}
-		catch (...)
-		{
-			return;
-		}
+		m_LoggedStrings.push_back(LogObject{ string, type });
 	}
 
 	void Logger::StartLog(const String& pszFileName)

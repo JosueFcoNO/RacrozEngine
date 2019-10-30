@@ -327,7 +327,7 @@ namespace rczEngine
 		return Temp;
 	}
 
-	Matrix4 Matrix4::PerpsProjectedSpace(float FovY, float AspectRatio, float ZNear, float ZFar) noexcept
+	Matrix4 Matrix4::PerpsProjectedSpace(float FovY, float AspectRatio, float ZNear, float ZFar)
 	{
 		Matrix4 Temp(eInit::Zero);
 

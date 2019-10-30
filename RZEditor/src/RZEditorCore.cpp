@@ -25,11 +25,11 @@ namespace rczEngine
 		input->hwnd = platformData->WindowHandle;
 		input->InitInput();
 	
-		//ComputeAPI::Start();
+		ComputeAPI::Start();
 		//ComputeAPI::Pointer()->InitComputeAPI(Gfx::GfxCore::Pointer());
 
-		//SoundAPI* SndAPI = new SoundAPI;
-		//SndAPI->InitSound();
+		SoundAPI* SndAPI = new SoundAPI;
+		SndAPI->InitSound();
 
 		EventManager::Start();
 		EventManager::Pointer()->InitEventManager();
@@ -63,7 +63,8 @@ namespace rczEngine
 		m_gfx = Gfx::GfxCore::Pointer();
 		m_renderer = RacrozRenderer::Pointer();
 		m_scnManager = SceneManager::Pointer();
-
+		//FbxLoader loader;
+		//loader.LoadModel();
 	}
 
 	void EditorCore::RunEditor()

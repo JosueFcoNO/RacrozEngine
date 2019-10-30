@@ -2,6 +2,14 @@
 
 namespace rczEngine
 {
+	enum class eLogMsgType
+	{
+		Message,
+		Warning, 
+		Error, 
+		CriticalError
+	};
+
 	///A class used to hold and remember differents logs. Used by the console to look at log history, filter log history or write the logs to a file.
 	class LogObject
 	{

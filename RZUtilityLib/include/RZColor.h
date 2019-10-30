@@ -8,16 +8,35 @@ namespace rczEngine
 		Color() noexcept : Vector4() {}
 		Color(float x, float y, float z, float w = 1.0f) noexcept : Vector4(x, y, z, w) {}
 
-		void SetColor(float R, float G, float B, float a = 1.0f) noexcept;
-		FORCEINLINE void SetColor(const Color& color) noexcept { *this = color; };
+		void Set(float R, float G, float B, float a = 1.0f) noexcept;
+		FORCEINLINE void Set(const Color& color) noexcept { *this = color; };
 
 		FORCEINLINE void AddColor(const Color& c) noexcept;
 		FORCEINLINE void RemoveColor(const Color& c) noexcept;
 
-		///Copies the color and converts into Lineal.
-		FORCEINLINE Color GetLineal() const noexcept;
+		FORCEINLINE Color GetLineal() const noexcept
+		{
+			Color newColor;
 
-		///Copies and converts into sRGB.
-		FORCEINLINE Color GetSRGB() const noexcept;
+#pragma omp for
+			for (int i = 0; i < 4; ++i)
+			{
+				newColor.m_elements[i] = Math::Pow(newColor.m_elements[i], 2.2f);
+			};
+
+			return newColor;
+		};
+		FORCEINLINE Color GetSRGB() const noexcept
+		{
+			Color newColor;
+
+#pragma omp for
+			for (int i = 0; i < 4; ++i)
+			{
+				newColor.m_elements[i] = Math::Pow(m_elements[i], 1.0f / 2.2f);
+			};
+
+			return newColor;
+		};
 	};
 };

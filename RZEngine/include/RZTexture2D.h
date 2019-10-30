@@ -6,7 +6,17 @@ namespace rczEngine
 	{
 	public:
 		Texture2D() { m_Type = ResourceType::RES_TEXTURE; };
-		virtual ~Texture2D();
+		virtual ~Texture2D()
+		{
+			try
+			{
+				Release();
+			}
+			catch (...)
+			{
+				
+			}
+		};
 
 		uint32 Width();
 		uint32 Height();
@@ -36,17 +46,13 @@ namespace rczEngine
 #endif
 
 		virtual void Load(const String& filePath, const String& resName);
-		virtual void Release()
-		{
+		virtual void Release() 
+		{ 
 			if (m_TextureCore.m_ShaderResource)
-			{
-				m_TextureCore.m_ShaderResource->Release();
-			}
+			m_TextureCore.m_ShaderResource->Release(); 
 
 			if (m_TextureCore.m_Texture)
-			{
-				m_TextureCore.m_Texture->Release();
-			}
+			m_TextureCore.m_Texture->Release(); 
 		};
 		
 		Gfx::TextureCore2D m_TextureCore;

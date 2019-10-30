@@ -89,7 +89,7 @@ namespace rczEngine
 		///If the scene has animations
 		if (Scene->HasAnimations())
 		{
-			ResVault::Pointer()->InsertResource(StrPtr<Animation>(this));
+			ResVault::Pointer()->InsertResource(shared_from_this());
 			
 			///Iterate through the animations
 			for (uint32 i = 0; i < Scene->mNumAnimations; ++i)

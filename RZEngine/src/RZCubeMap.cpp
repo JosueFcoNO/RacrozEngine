@@ -7,7 +7,7 @@ namespace rczEngine
 		m_FilePath = filePath;
 		m_Name = resName;
 
-		ResVault::Pointer()->InsertResource(StrPtr<CubeMap>(this));
+		ResVault::Pointer()->InsertResource(shared_from_this());
 
 		Gfx::GfxCore::Pointer()->CreateCubeMapFromDDS(filePath, m_TextureCore);
 	}

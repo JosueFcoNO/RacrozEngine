@@ -54,7 +54,7 @@ namespace rczEngine
 
 		m_PlatformID = plat[1];
 
-		cl_context_properties cps[] = { CL_CONTEXT_PLATFORM, (cl_context_properties)m_PlatformID, CL_CONTEXT_D3D11_DEVICE_KHR, NULL, CL_CONTEXT_INTEROP_USER_SYNC, CL_FALSE, 0 };
+		//cl_context_properties cps[] = { CL_CONTEXT_PLATFORM, (cl_context_properties)m_PlatformID, CL_CONTEXT_D3D11_DEVICE_KHR, NULL, CL_CONTEXT_INTEROP_USER_SYNC, CL_FALSE, 0 };
 		m_Context = clCreateContext(NULL, 1, &m_DeviceID, NULL, NULL, &ret);
 
 		m_CommandQueue = clCreateCommandQueue(m_Context, m_DeviceID, 0, &ret);
@@ -145,7 +145,7 @@ namespace rczEngine
 	{
 		cl_int ret;
 
-		out_memBuffer.m_MemBuffer = func(m_Context, flags, buffer->m_Buffer, &ret);
+		//out_memBuffer.m_MemBuffer = func(m_Context, flags, buffer->m_Buffer, &ret);
 
 		return (ret == CL_SUCCESS);
 	}

@@ -47,7 +47,7 @@ namespace rczEngine {
 		FORCEINLINE float SqrMagnitude() const noexcept;
 
 		Vector3 operator+(const Vector3& v) const noexcept;
-		Vector3 operator-(const Vector3& v) const noexcept;
+		Vector3& operator-(const Vector3& v) const noexcept;
 		Vector3 operator*(const Vector3& v) const noexcept;
 		Vector3 operator/(const Vector3& v) const noexcept;
 

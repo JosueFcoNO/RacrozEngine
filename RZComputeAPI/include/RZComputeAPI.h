@@ -36,7 +36,6 @@ namespace rczEngine
 		cl_command_queue m_CommandQueue;
 		cl_device_id m_DeviceID = NULL;
 		cl_platform_id m_PlatformID = NULL;
-		clCreateFromD3D11BufferKHR_fn func;
 	};
 
 }

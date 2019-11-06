@@ -95,7 +95,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZUtilityLib\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZEngine\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZComputeAPI/include;$(SolutionDir)Plug-Ins/assimp-master\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(FBXSDK)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(GSL)\include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZUtilityLib\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZEngine\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZComputeAPI/include;$(Assimp)\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(FBXSDK)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(GSL)/include;$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(FBXSDK)lib\$(Platform)\$(Configuration)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

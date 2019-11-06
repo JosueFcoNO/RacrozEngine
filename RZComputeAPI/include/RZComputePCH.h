@@ -4,7 +4,7 @@
 
 #define CL_USE_DEPRECATED_OPENCL_1_2_APIS
 #include <CL/cl.h>
-#include <CL/cl_d3d11.h>
+#include <CL/cl_d3d11_ext.h>
 
 #include "RZForwardDecl.h"
 #include "RZComputeEnums.h"

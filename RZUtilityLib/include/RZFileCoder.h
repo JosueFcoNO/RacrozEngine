@@ -7,10 +7,18 @@ namespace rczEngine
 	{
 	public:
 		RZ_EXP FileManager() noexcept :
-			m_strFileName(std::make_unique<String>()),
-			m_File(std::make_unique<FileStream>()),
 			m_iFileIndex(0u),
-			m_fFlags(0u) {};
+			m_fFlags(0u) 
+		{
+			try
+			{
+				m_strFileName = std::make_unique<String>();
+				m_File = std::make_unique<FileStream>();
+			}
+			catch (...)
+			{
+			}
+		};
 
 		///Opens a text File and returns true on success. Receives File name, and FileManager::f_File* flags
 		RZ_EXP void OpenFile(const String& pszFileName, uint32 fileFlags);

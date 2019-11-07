@@ -7,7 +7,7 @@ namespace rczEngine
 	{
 	public:
 		RZ_EXP Path(const String& str);
-		RZ_EXP Path() : m_FilePath(""), m_Hash(0ull) {};
+		RZ_EXP Path() noexcept : m_Hash(0ull) {};
 
 		virtual ~Path() = default;            // destructor (virtual if X is meant to be a base class)
 		Path(const Path&) = default;             // copy constructor

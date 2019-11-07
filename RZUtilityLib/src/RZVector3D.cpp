@@ -64,7 +64,7 @@ namespace rczEngine
 		m_z(v4.m_z) {}
 
 	///Returns the distance of the vector3: vhead-vtail.
-	float Vector3::Distance(const Vector3 & vhead, const Vector3 & vtail)
+	float Vector3::Distance(const Vector3 & vhead, const Vector3 & vtail) noexcept
 	{
 #ifdef RZ_PROFILING
 		ProfilerObj autoProfiler(RZ__FUNCTION__, PROFILE_EVENTS::PROF_GAME);
@@ -74,7 +74,7 @@ namespace rczEngine
 	}
 
 	///Returns the distance of the vector3: vhead-vtail.
-	float Vector3::SqrDistance(const Vector3 & vhead, const Vector3 & vtail)
+	float Vector3::SqrDistance(const Vector3 & vhead, const Vector3 & vtail) noexcept
 	{
 #ifdef RZ_PROFILING
 		ProfilerObj autoProfiler(RZ__FUNCTION__, PROFILE_EVENTS::PROF_GAME);
@@ -84,7 +84,7 @@ namespace rczEngine
 	}
 
 	///returns the angle of the x and y components of the vector
-	float Vector3::Anglexz(const Vector3 & v, bool getAsDegree)
+	float Vector3::Anglexz(const Vector3 & v, bool getAsDegree) noexcept
 	{
 #ifdef RZ_PROFILING
 		ProfilerObj autoProfiler(RZ__FUNCTION__, PROFILE_EVENTS::PROF_GAME);
@@ -109,9 +109,9 @@ namespace rczEngine
 		ProfilerObj autoProfiler(RZ__FUNCTION__, PROFILE_EVENTS::PROF_GAME);
 #endif
 
-		const auto x = gsl::narrow_cast<int32>(v.m_x * 10000);
-		const auto y = gsl::narrow_cast<int32>(v.m_y * 10000);
-		const auto z = gsl::narrow_cast<int32>(v.m_z * 10000);
+		const auto x = gsl::narrow_cast<int32>(v.m_x * mult);
+		const auto y = gsl::narrow_cast<int32>(v.m_y * mult);
+		const auto z = gsl::narrow_cast<int32>(v.m_z * mult);
 
 		return (x * 73856093) ^ (y * 83492791) ^ (z * 19349663);
 	}
@@ -234,35 +234,35 @@ namespace rczEngine
 		}
 
 		return add;
+	};
+
+	Vector3 Vector3::operator+(const Vector3& rhs) const noexcept
+	{
+		return Vector3(m_x + rhs.m_x, m_y + rhs.m_y, m_z + rhs.m_z);
 	}
 
-	Vector3 Vector3::operator+(const Vector3 & v) const noexcept
+	Vector3 Vector3::operator-(const Vector3& rhs) const noexcept
 	{
-		return Vector3(m_x + v.m_x, m_y + v.m_y, m_z + v.m_z);
+		return Vector3(m_x - rhs.m_x, m_y - rhs.m_y, m_z - rhs.m_z);
 	}
 
-	Vector3& Vector3::operator-(const Vector3 & v) const noexcept
+	Vector3 Vector3::operator*(const Vector3& rhs) const noexcept
 	{
-		return Vector3(m_x - v.m_x, m_y - v.m_y, m_z - v.m_z);
+		return Vector3(m_x * rhs.m_x, m_y * rhs.m_y, m_z * rhs.m_z);
 	}
 
-	Vector3 Vector3::operator*(const Vector3 & v) const noexcept
+	Vector3 Vector3::operator/(const Vector3& rhs) const noexcept
 	{
-		return Vector3(m_x * v.m_x, m_y * v.m_y, m_z * v.m_z);
+		return Vector3(m_x / rhs.m_x, m_y / rhs.m_y, m_z / rhs.m_z);
 	}
 
-	Vector3 Vector3::operator/(const Vector3 & v) const noexcept
+	Vector3 Vector3::operator*(float rhs) const noexcept
 	{
-		return Vector3(m_x / v.m_x, m_y / v.m_y, m_z / v.m_z);
+		return Vector3(m_x * rhs, m_y * rhs, m_z * rhs);
 	}
 
-	Vector3 Vector3::operator*(float f) const noexcept
+	Vector3 Vector3::operator/(float rhs) const noexcept
 	{
-		return Vector3(m_x * f, m_y * f, m_z * f);
-	}
-
-	Vector3 Vector3::operator/(float f) const noexcept
-	{
-		return Vector3(m_x / f, m_y/ f, m_z / f);
+		return Vector3(m_x / rhs, m_y/ rhs, m_z / rhs);
 	}
 }

@@ -4,15 +4,6 @@
 
 namespace rczEngine
 {
-
-	void Color::Set(float R, float G, float B, float A) noexcept
-	{
-		m_x = R;
-		m_y = G;
-		m_z = B;
-		m_w = A;
-	}
-
 	void Color::AddColor(const Color& c) noexcept {	*this += c;	}
 
 	void Color::RemoveColor(const Color& c) noexcept

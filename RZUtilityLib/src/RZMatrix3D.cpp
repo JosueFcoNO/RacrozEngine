@@ -297,7 +297,7 @@ namespace rczEngine
 		return Temp;
 	}
 
-	Matrix3 Matrix3::Rotate3D(Degree xRotation, Degree yRotation, Degree zRotation)
+	Matrix3 Matrix3::Rotate3D(Degree xRotation, Degree yRotation, Degree zRotation) noexcept
 	{
 		///Create a 3D rotation Matrix using the rczAXIS given
 		Matrix3 x(eInit::Unit), y(eInit::Unit), z(eInit::Unit), fin(eInit::Unit);

@@ -21,8 +21,8 @@ namespace rczEngine
 		void Normalize() noexcept;
 		Quaternion GetNormalized() noexcept;
 
-		Matrix4 GetAsMatrix4();
-		Matrix3 GetAsMatrix3();
+		Matrix4 GetAsMatrix4() noexcept;
+		Matrix3 GetAsMatrix3() noexcept;
 
 		float operator|(Quaternion rh) noexcept;
 		Quaternion operator*(Quaternion rh) noexcept;

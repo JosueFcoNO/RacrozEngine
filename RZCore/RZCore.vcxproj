@@ -101,7 +101,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)/include;$(SolutionDir)RZUtilityLib\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZfmodSound\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(GSL)include;$(SolutionDir)RZUtilityLib\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZfmodSound\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\</LibraryPath>
     <CodeAnalysisRuleSet>CppCoreCheckRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>

@@ -28,7 +28,7 @@ namespace rczEngine
 		RZ_EXP static void ShutDown() noexcept;
 
 		/// Destroy the profiler, clear everything.
-		RZ_EXP void Destroy();
+		RZ_EXP void Destroy() noexcept;
 
 		///STarts the profiler.
 		RZ_EXP void StartProfiler() noexcept;

@@ -13,7 +13,7 @@ namespace rczEngine
 		(_Instance()) = new Logger;
 	}
 
-	gsl::not_null<Logger*> Logger::Pointer()
+	gsl::not_null<Logger*> Logger::Pointer() noexcept
 	{
 		return _Instance();
 	}
@@ -28,7 +28,7 @@ namespace rczEngine
 		return Pointer();
 	}
 
-	void Logger::ShutDown()
+	void Logger::ShutDown() noexcept
 	{
 		delete _Instance();
 	}

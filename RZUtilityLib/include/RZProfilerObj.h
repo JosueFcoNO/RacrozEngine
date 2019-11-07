@@ -12,6 +12,13 @@ namespace rczEngine
 			m_InnerTimer.StartTimer();
 		};
 
+		ProfilerObj() = delete;
+		ProfilerObj(const ProfilerObj& other) = delete;
+		ProfilerObj& operator=(const ProfilerObj& other) = delete;
+		ProfilerObj(const ProfilerObj&& other) = delete;
+		ProfilerObj& operator=(const ProfilerObj&& other) = delete;
+
+
 		RZ_EXP ~ProfilerObj() noexcept
 		{
 			RegisterTime();

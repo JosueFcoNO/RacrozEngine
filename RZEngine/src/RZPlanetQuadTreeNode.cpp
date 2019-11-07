@@ -8,7 +8,7 @@ namespace rczEngine
 		ProfilerObj obj("InitQuadTree", PROFILE_EVENTS::PROF_GAME);
 #endif
 
-		for (int i = 0; i < 4; ++i)
+		for (int i = 0; i < QUAD_DIVS; ++i)
 			SetChildrenReady(i, false);
 
 		PlanetOwner = planetRef;
@@ -26,13 +26,54 @@ namespace rczEngine
 
 		if (depth > 0)
 		{
-			planeSize /= (m_QuadTreeDepth*2.0);
-			Offset = (planeSize / 2.0);
+			planeSize /= (m_QuadTreeDepth*3.0);
+			Offset = (planeSize);
 		}
 
 		Vector2 signs;
-		signs.m_x = CastStatic<float>((ChildNumber < 2) ? -1 : 1);
-		signs.m_y = CastStatic<float>((ChildNumber == 0 || ChildNumber == 2) ? -1 : 1);
+
+		switch (ChildNumber)
+		{
+		case 0:
+		case 3:
+		case 6:
+			signs.m_x = -1;
+			break;
+			
+		case 1:
+		case 4:
+		case 7:
+			signs.m_x = 0;
+			break;
+
+		case 2:
+		case 5:
+		case 8:
+			signs.m_x = 1;
+			break;
+		}
+
+		switch (ChildNumber)
+		{
+		case 0:
+		case 1:
+		case 2:
+			signs.m_y = -1;
+			break;
+
+		case 3:
+		case 4:
+		case 5:
+			signs.m_y = 0;
+			break;
+
+		case 6:
+		case 7:
+		case 8:
+			signs.m_y = 1;
+			break;
+		}
+		
 		m_ChildNumber = ChildNumber;
 
 		Vector3 startPos;
@@ -110,7 +151,7 @@ namespace rczEngine
 		CalculateLOD(playerPos);
 
 		if (m_Subdivided)
-			for (int i = 0; i < 4; ++i)
+			for (int i = 0; i < QUAD_DIVS; ++i)
 			{
 				if (CheckChildrenReady())
 					Children[i]->Update(playerPos);
@@ -283,55 +324,26 @@ namespace rczEngine
 		node.Side = eSide::Up;
 		node.Pos = GetVertex(Mesh_Row_Half, 0).VertexPosition;
 		node.Hash = Vector3::Hash(node.Pos.GetNormalized());
-		GraphicDebugger::Pointer()->AddPoint("Rand1 " + std::to_string(rand() % 2000), node.Pos, 1, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Left;
 		node.Pos = GetVertex(0, Mesh_Row_Half).VertexPosition;
 		node.Hash = Vector3::Hash(node.Pos.GetNormalized());
-		GraphicDebugger::Pointer()->AddPoint("Rand2 " + std::to_string(rand() % 2000), node.Pos, 1, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Right;
 		node.Pos = GetVertex(Mesh_Row_Size, Mesh_Row_Half).VertexPosition;
 		node.Hash = Vector3::Hash(node.Pos.GetNormalized());
-		GraphicDebugger::Pointer()->AddPoint("Rand3 " + std::to_string(rand() % 2000), node.Pos, 1, Color(1, 0, 0));
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Down;
 		node.Pos = GetVertex(Mesh_Row_Half, Mesh_Row_Size).VertexPosition;
 		node.Hash = Vector3::Hash(node.Pos.GetNormalized());
-		GraphicDebugger::Pointer()->AddPoint("Rand4 " + std::to_string(rand()%2000), node.Pos, 1, Color(1, 0, 0));
 
 		Connections.push_back(node);
-
-		TerrainVertex* vertex;
-		for (int i = 0; i < Size; ++i)
-		{
-			vertex = &GetVertex(i, 0);
-			SideVertices[(int)eSide::Up].push_back(vertex);
-		}
-
-		for (int i = 0; i < Size; ++i)
-		{
-			vertex = &GetVertex(Mesh_Row_Size, i);
-			SideVertices[(int)eSide::Right].push_back(vertex);
-		}
-
-		for (int i = 0; i < Size; ++i)
-		{
-			vertex = &GetVertex(i, Mesh_Row_Size);
-			SideVertices[(int)eSide::Down].push_back(vertex);
-		}
-
-		for (int i = 0; i < Size; ++i)
-		{
-			vertex = &GetVertex(0, i);
-			SideVertices[(int)eSide::Left].push_back(vertex);
-		}
 	}
 
 	bool PlanetQuadTreeNode::TestIfInside(const Vector3& pos)
@@ -406,7 +418,7 @@ namespace rczEngine
 		{
 			if (CheckChildrenReady())
 			{
-				for (int i = 0; i < 4; ++i)
+				for (int i = 0; i < QUAD_DIVS; ++i)
 				{
 					Children[i]->TestVisibility(camFrustum, nodesToDraw);
 				}
@@ -423,100 +435,6 @@ namespace rczEngine
 			return;
 		}
 
-	}
-
-	void PlanetQuadTreeNode::ConnectNodesSameDepth(const NodeConnection & one, const NodeConnection & two)
-	{
-		auto& oneVertices = one.node->SideVertices[(int)one.Side];
-		auto& twoVertices = two.node->SideVertices[(int)two.Side];
-
-		if (oneVertices.size() == twoVertices.size())
-		{
-			if (Vector3::Distance(oneVertices[0]->VertexPosition, twoVertices[0]->VertexPosition) < 0.005f)
-			{
-				for (int i = 0; i < Mesh_Res; ++i)
-				{
-					*oneVertices[i] = *twoVertices[i];
-				}
-			}
-			else
-			{
-				for (int i = 0; i < Mesh_Res; ++i)
-				{
-					*oneVertices[i] = *twoVertices[Mesh_Row_Size - i];
-				}
-			}
-
-			one.node->m_MeshDirty = true;
-			two.node->m_MeshDirty = true;
-		}
-		else
-		{
-			if (one.Depth == two.Depth) return;
-
-			const NodeConnection* dobleNode;
-			if (one.Depth > two.Depth)
-			{
-				dobleNode = &one;
-			}
-			else if (one.Depth < two.Depth)
-			{
-				dobleNode = &two;
-			}
-
-			Vector<TerrainVertex*>* DeepSide = &oneVertices;
-			Vector<TerrainVertex*>* ShallowSide = &twoVertices;
-
-			if (oneVertices.size() > twoVertices.size())
-			{
-				DeepSide = &oneVertices;
-				ShallowSide = &twoVertices;
-			}
-			else
-			{
-				DeepSide = &twoVertices;
-				ShallowSide = &oneVertices;
-			}
-
-			if (Vector3::Distance(oneVertices[0]->VertexPosition, twoVertices[0]->VertexPosition) < 0.05f)
-			{
-				for (int i = 0, k = 0; i < Mesh_Res; ++i, k += 2)
-				{
-					*(*DeepSide)[k] = *(*ShallowSide)[i];
-				}
-			}
-			else
-			{
-				for (int i = 0, k = 0; i < Mesh_Res; ++i, k += 2)
-				{
-					*(*DeepSide)[Mesh_Res * 2 - 2 - k] = *(*ShallowSide)[i];
-				}
-			}
-
-			for (int i = 1; i < Mesh_Res * 2 - 1; i += 2)
-			{
-				auto correctedIndex = i;
-
-				auto PrevDeep = (*DeepSide)[correctedIndex - 1];
-				auto CurrentDeep = (*DeepSide)[correctedIndex];
-
-				*CurrentDeep = *PrevDeep;
-			}
-
-			if (&one != dobleNode)
-				one.node->m_MeshDirty = true;
-
-			if (&two != dobleNode)
-				two.node->m_MeshDirty = true;
-
-			if (dobleNode->node->CheckChildrenReady())
-			{
-				dobleNode->node->Children[0]->m_MeshDirty = true;
-				dobleNode->node->Children[1]->m_MeshDirty = true;
-				dobleNode->node->Children[2]->m_MeshDirty = true;
-				dobleNode->node->Children[3]->m_MeshDirty = true;
-			}
-		}
 	}
 
 	void PlanetQuadTreeNode::Render()
@@ -622,9 +540,9 @@ namespace rczEngine
 		if (m_QuadTreeDepth == 0)
 			depth = 1;
 		else if (m_QuadTreeDepth >= 1)
-			depth = m_QuadTreeDepth * 2;
+			depth = m_QuadTreeDepth * 3;
 
-		for (int i = 0; i < 4; ++i)
+		for (int i = 0; i < QUAD_DIVS; ++i)
 		{
 			m_ChildThread[i] = std::thread(&PlanetQuadTreeNode::GenerateChild, this, i, depth);
 			m_ChildThread[i].detach();
@@ -638,7 +556,7 @@ namespace rczEngine
 		{
 			if (CheckChildrenReady())
 			{
-				for (int i = 0; i < 4; ++i)
+				for (int i = 0; i < QUAD_DIVS; ++i)
 				{
 					Children[i]->DestroyChildren();
 					Children[i]->DestroyQuadTreeNode();
@@ -691,7 +609,7 @@ namespace rczEngine
 
 	void PlanetQuadTreeNode::RenderChildren()
 	{
-		for (int i = 0; i < 4; ++i)
+		for (int i = 0; i < QUAD_DIVS; ++i)
 		{
 			Children[i]->Render();
 		}
@@ -716,43 +634,9 @@ namespace rczEngine
 			ChildrenReady[2] &&
 			ChildrenReady[3];
 
-		if (retValue && SideVertices[0].size() == Mesh_Res)
-		{
-			UpdateSideVertices();
-		}
-
 		BuenMutex.unlock();
 
 		return retValue;
-	}
-
-	void PlanetQuadTreeNode::UpdateSideVertices()
-	{
-		return;
-		SideVertices[0].clear();
-		SideVertices[1].clear();
-		SideVertices[2].clear();
-		SideVertices[3].clear();
-
-		auto side = (int)eSide::Up;
-		SideVertices[side].insert(SideVertices[side].end(), Children[0]->SideVertices[side].begin(), Children[0]->SideVertices[side].end());
-		SideVertices[side].pop_back();
-		SideVertices[side].insert(SideVertices[side].end(), Children[2]->SideVertices[side].begin(), Children[2]->SideVertices[side].end());
-
-		side = (int)eSide::Right;
-		SideVertices[side].insert(SideVertices[side].end(), Children[2]->SideVertices[side].begin(), Children[2]->SideVertices[side].end());
-		SideVertices[side].pop_back();
-		SideVertices[side].insert(SideVertices[side].end(), Children[3]->SideVertices[side].begin(), Children[3]->SideVertices[side].end());
-
-		side = (int)eSide::Left;
-		SideVertices[side].insert(SideVertices[side].end(), Children[0]->SideVertices[side].begin(), Children[0]->SideVertices[side].end());
-		SideVertices[side].pop_back();
-		SideVertices[side].insert(SideVertices[side].end(), Children[1]->SideVertices[side].begin(), Children[1]->SideVertices[side].end());
-
-		side = (int)eSide::Down;
-		SideVertices[side].insert(SideVertices[side].end(), Children[1]->SideVertices[side].begin(), Children[1]->SideVertices[side].end());
-		SideVertices[side].pop_back();
-		SideVertices[side].insert(SideVertices[side].end(), Children[3]->SideVertices[side].begin(), Children[3]->SideVertices[side].end());
 	}
 
 	void PlanetQuadTreeNode::SetChildrenReady(int indexOfChild, bool value)

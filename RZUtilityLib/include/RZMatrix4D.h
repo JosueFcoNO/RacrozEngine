@@ -41,24 +41,24 @@ namespace rczEngine
 		///Returns a copy of this Matrix Transposed
 		Matrix4 GetTransposed() const noexcept;
 		///Returns the Determinant of this Matrix
-		float Determinant() const;
+		float Determinant() const noexcept;
 		///Returns the Adjoint of this Matrix
-		Matrix4 GetAdjoint() const;
+		Matrix4 GetAdjoint() const noexcept;
 		///returns the Inverse of this Matrix
-		Matrix4 GetInverse() const;
+		Matrix4 GetInverse() const noexcept;
 
 		///Returns a Quaternion made from this matrix.
-		Quaternion GetAsQuaternion();
+		Quaternion GetAsQuaternion() const noexcept;
 
 		///////////////////////
 		////// 3D Graphics Operations
 		///////////////////////
 
-		static Matrix4 Translate3D(float xDelta, float yDelta, float zDelta);
-		static Matrix4 Scale3D(float xScale, float yScale, float zScale);
-		static Matrix4 Rotate3D(Degree xRotation, Degree yRotation, Degree zRotation);
-		static Matrix4 OrthoProjectedSpace(float width, float height, float ZNear, float ZFar);
-		static Matrix4 PerpsProjectedSpace(float FovY, float AspectRatio, float ZNear, float ZFar);
+		static Matrix4 Translate3D(float xDelta, float yDelta, float zDelta) noexcept;
+		static Matrix4 Scale3D(float xScale, float yScale, float zScale) noexcept;
+		static Matrix4 Rotate3D(Degree xRotation, Degree yRotation, Degree zRotation) noexcept;
+		static Matrix4 OrthoProjectedSpace(float width, float height, float ZNear, float ZFar) noexcept;
+		static Matrix4 PerpsProjectedSpace(float FovY, float AspectRatio, float ZNear, float ZFar) noexcept;
 		static Matrix4 LookAtMatrix(Vector3 eye, Vector3 up, Vector3 target) noexcept;
 		static Matrix4 LookAtMatrixZ(Vector3 eye, Vector3 up, Vector3 target) noexcept;
 		static Matrix4 LookAtMatrixY(Vector3 eye, Vector3 up, Vector3 target) noexcept;

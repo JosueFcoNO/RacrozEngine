@@ -134,7 +134,7 @@ namespace rczEngine
 		return Temp;
 	}
 
-	float Matrix4::Determinant() const
+	float Matrix4::Determinant() const noexcept
 	{
 		float Det = 0;
 		float sign = -1;
@@ -148,7 +148,7 @@ namespace rczEngine
 		return Det;
 	}
 
-	Matrix4 Matrix4::GetAdjoint() const
+	Matrix4 Matrix4::GetAdjoint() const noexcept
 	{
 		Matrix4 Adj(eInit::None);
 
@@ -163,7 +163,7 @@ namespace rczEngine
 		return Adj;
 	}
 
-	Matrix4 Matrix4::GetInverse() const
+	Matrix4 Matrix4::GetInverse() const noexcept
 	{
 		const float Det = Determinant();
 
@@ -178,7 +178,7 @@ namespace rczEngine
 		return Temp;
 	}
 
-	Quaternion Matrix4::GetAsQuaternion()
+	Quaternion Matrix4::GetAsQuaternion() const noexcept
 	{
 		// Output quaternion
 		float w = 0.0f, x = 0.0f, y = 0.0f, z = 0.0f;
@@ -241,7 +241,7 @@ namespace rczEngine
 		return Quaternion(x, y, z, w);
 	}
 
-	Matrix4 Matrix4::Translate3D(float xDelta, float yDelta, float zDelta)
+	Matrix4 Matrix4::Translate3D(float xDelta, float yDelta, float zDelta) noexcept
 	{
 		///Create an Identity Matrix
 		Matrix4 Temp(eInit::Unit);
@@ -259,7 +259,7 @@ namespace rczEngine
 		return Temp;
 	}
 
-	Matrix4 Matrix4::Scale3D(float xScale, float yScale, float zScale)
+	Matrix4 Matrix4::Scale3D(float xScale, float yScale, float zScale) noexcept
 	{
 		///Create an Identity Matrix
 		Matrix4 Temp(eInit::Unit);
@@ -278,7 +278,7 @@ namespace rczEngine
 		return Temp;
 	}
 
-	Matrix4 Matrix4::Rotate3D(Degree xRotation, Degree yRotation, Degree zRotation)
+	Matrix4 Matrix4::Rotate3D(Degree xRotation, Degree yRotation, Degree zRotation) noexcept
 	{
 		///Create a 3D rotation Matrix using the rczAXIS given
 		Matrix4 x(eInit::Unit), y(eInit::Unit), z(eInit::Unit);
@@ -313,7 +313,7 @@ namespace rczEngine
 		return z * y*x;
 	}
 
-	Matrix4 Matrix4::OrthoProjectedSpace(float width, float height, float ZNear, float ZFar)
+	Matrix4 Matrix4::OrthoProjectedSpace(float width, float height, float ZNear, float ZFar) noexcept
 	{
 		Matrix4 Temp(eInit::Unit);
 
@@ -327,7 +327,7 @@ namespace rczEngine
 		return Temp;
 	}
 
-	Matrix4 Matrix4::PerpsProjectedSpace(float FovY, float AspectRatio, float ZNear, float ZFar)
+	Matrix4 Matrix4::PerpsProjectedSpace(float FovY, float AspectRatio, float ZNear, float ZFar) noexcept
 	{
 		Matrix4 Temp(eInit::Zero);
 

@@ -1,4 +1,5 @@
 #pragma once
+#define QUAD_DIVS 9
 
 namespace rczEngine
 {
@@ -61,8 +62,6 @@ namespace rczEngine
 		FORCEINLINE void SetMeshDirty() noexcept { m_MeshDirty = true; };
 		FORCEINLINE const AABB& GetAABB() const noexcept { return m_MeshAABB; };
 
-		static void ConnectNodesSameDepth(const NodeConnection& one, const NodeConnection& two);
-
 		static const int Mesh_Res = 65;
 		static const int Mesh_Row_Size = Mesh_Res - 1;
 		static const int Mesh_Row_Half = (Mesh_Res / 2);
@@ -99,7 +98,7 @@ namespace rczEngine
 
 		bool m_ChildGenerated = false;
 
-		std::thread m_ChildThread[4];
+		std::thread m_ChildThread[QUAD_DIVS];
 		int32 m_QuadTreeDepth = 0;
 		eMeshPlaneOrientation m_Side;
 
@@ -107,12 +106,10 @@ namespace rczEngine
 
 		AABB m_MeshAABB;
 
-		Vector<TerrainVertex*> SideVertices[4];
-
 		PlanetQuadTreeNode* Parent = nullptr;
-		PlanetQuadTreeNode* Children[4];
+		PlanetQuadTreeNode* Children[QUAD_DIVS];
 
-		bool ChildrenReady[4];
+		bool ChildrenReady[QUAD_DIVS];
 		bool done = false;
 
 		bool m_Subdivided = false;
@@ -120,8 +117,6 @@ namespace rczEngine
 		bool m_MeshDirty = false;
 
 		PerlinNoise3D* Noise;
-
-		WeakPtr<DebuggerLineList> AABB_Debug;
 
 		int32 Size;
 		double distVertex;

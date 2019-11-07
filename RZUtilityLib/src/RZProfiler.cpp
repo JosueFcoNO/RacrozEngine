@@ -23,11 +23,18 @@ namespace rczEngine
 		delete _Instance();
 	}
 
-	void Profiler::Destroy()
+	void Profiler::Destroy() noexcept
 	{
-		SaveResults();
-		m_GfxEvents.clear();
-		m_GameEvents.clear();
+		try
+		{
+			SaveResults();
+			m_GfxEvents.clear();
+			m_GameEvents.clear();
+		}
+		catch (...)
+		{
+			std::abort();
+		}
 	}
 
 	void Profiler::StartProfiler() noexcept
@@ -88,16 +95,23 @@ namespace rczEngine
 
 	void Profiler::AddTime(const String& event, long double time, PROFILE_EVENTS eventType) noexcept
 	{
-		switch (eventType)
+		try
 		{
-		case PROF_GFX:
+			switch (eventType)
+			{
+			case PROF_GFX:
 				m_GfxEvents.at(event).AddTimeEntry(time);
-			break;
-		case PROF_GAME:
+				break;
+			case PROF_GAME:
 				m_GameEvents.at(event).AddTimeEntry(time);
-			break;
-		default:
-			break;
+				break;
+			default:
+				break;
+			}
+		}
+		catch (...)
+		{
+			std::abort();
 		}
 	}
 

@@ -1,8 +1,11 @@
 #pragma once
 #define PERMUTATION_TABLE_SIZE 256
+#define PATCH_NUMBER 256
 
 namespace rczEngine
 {
+	typedef int PatchIndex;
+
 	class RZ_EXP SpaceManager;
 
 	class RZ_EXP PlanetVertex
@@ -60,8 +63,8 @@ namespace rczEngine
 
 		void CreateMaterial();
 
-		void CreateNewNode();
-
+		PatchIndex CreateNewNode(Vector<TerrainVertex*>* & vertexVector);
+		void ReleaseNode(PatchIndex index);
 
 		FORCEINLINE Vector3 GetSpacePosition() { return m_SpacePosition; };
 
@@ -79,6 +82,10 @@ namespace rczEngine
 		void NewQuad() { m_NodesCount++; Logger::Pointer()->Log("Node Count: " + std::to_string(m_NodesCount)); }
 
 	private:
+		Gfx::VertexBuffer<TerrainVertex> m_VertexBuffer;
+		Vector<Vector<TerrainVertex*>> m_VertexVector;
+		bool m_ActivePatches[PATCH_NUMBER];
+
 		int m_NodesCount = 6;
 
 		void LoadAndProcessModel();

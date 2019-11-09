@@ -6,14 +6,28 @@ namespace rczEngine
 
 	void Planet::InitPlanet(int32 seed, float x, float y, float z, SpaceManager* spaceMng)
 	{
-
-		Logger::Pointer()->Log("Size of Node: " + std::to_string(sizeof(PlanetQuadTreeNode)));
-
 		m_SpaceMng = spaceMng;
 		m_CurrentScene = SceneManager::Pointer()->GetActiveScene();
 		m_GfxCore = Gfx::GfxCore::Pointer();
 
 		LoadAndProcessModel();
+		auto patchSize = 32 * 32;
+
+		m_VertexVector.resize(PATCH_NUMBER);
+		m_VertexBuffer.ResizeVertexVector(PATCH_NUMBER * patchSize);
+
+		int index = 0;
+		for (auto& verticesVector : m_VertexVector)
+		{
+			verticesVector.resize(patchSize);
+
+			for (auto i = 0; i < patchSize; ++i)
+			{
+				verticesVector[i] = &m_VertexBuffer.GetVertex(i + index*patchSize);
+			}
+
+			++index;
+		}
 
 		PlayerCamera = CameraManager::Pointer()->GetActiveCamera().lock();
 
@@ -242,6 +256,25 @@ namespace rczEngine
 		m_Materials = ResVault::Pointer()->InsertResource(mat);
 
 		m_Planet->m_MaterialMap["DefaultMaterial"] = m_Materials;
+	}
+
+	PatchIndex Planet::CreateNewNode(Vector<TerrainVertex*>*& vertexVector)
+	{
+		int chosenPatch = -1;
+		for (;chosenPatch < PATCH_NUMBER;)
+		{
+			++chosenPatch;
+			if (m_ActivePatches[chosenPatch]) break;
+		}
+
+		vertexVector = &m_VertexVector[chosenPatch];
+
+		return chosenPatch;
+	}
+
+	void Planet::ReleaseNode(PatchIndex index)
+	{
+		m_ActivePatches[index] = false;
 	}
 
 	void Planet::LoadAndProcessModel()

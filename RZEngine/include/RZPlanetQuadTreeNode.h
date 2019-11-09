@@ -42,7 +42,7 @@ namespace rczEngine
 		void Update(Vector3 playerPos);
 		void DestroyQuadTreeNode() noexcept;
 		void Render();
-
+		                                                                                                                                    
 		void GenerateMesh(eMeshPlaneOrientation side);
 		void ConstructPlanesAndCorners();
 
@@ -58,11 +58,11 @@ namespace rczEngine
 		void TestVisibility(const Frustum& camFrustum, Vector<PlanetQuadTreeNode*>& nodesToDraw);
 
 		FORCEINLINE int32 GetQuadTreeDepth() const noexcept { return m_QuadTreeDepth; };
-		FORCEINLINE TerrainVertex& GetVertex(int32 x, int32 y) { return m_VertexBuffer.GetVertex(Size * y + x); }
+		FORCEINLINE TerrainVertex* GetVertex(int32 x, int32 y) { return m_CurrentVertices->at(Size * y + x); }
 		FORCEINLINE void SetMeshDirty() noexcept { m_MeshDirty = true; };
 		FORCEINLINE const AABB& GetAABB() const noexcept { return m_MeshAABB; };
 
-		static const int Mesh_Res = 65;
+		static const int Mesh_Res = 33;
 		static const int Mesh_Row_Size = Mesh_Res - 1;
 		static const int Mesh_Row_Half = (Mesh_Res / 2);
 
@@ -85,9 +85,9 @@ namespace rczEngine
 		void SetChildrenReady(int indexOfChild, bool value);
 		bool CheckChildrenReady();
 
-		void UpdateSideVertices();
+		PatchIndex m_Index = -1;
 
-		Gfx::VertexBuffer<TerrainVertex> m_VertexBuffer;
+		Vector<TerrainVertex*>* m_CurrentVertices;
 		Gfx::IndexBuffer m_IndexBuffer;
 
 		Vector3 m_StartPos;

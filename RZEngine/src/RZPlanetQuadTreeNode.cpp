@@ -26,7 +26,7 @@ namespace rczEngine
 
 		if (depth > 0)
 		{
-			planeSize /= (m_QuadTreeDepth*3.0);
+			planeSize /= (m_QuadTreeDepth);
 			Offset = (planeSize);
 		}
 
@@ -120,19 +120,13 @@ namespace rczEngine
 		HalfSize = planeSize / 2.0;
 
 		MeshPlane::GenerateIndices(Mesh_Res, m_IndexBuffer);
+		
+		m_Index = PlanetOwner->CreateNewNode(m_CurrentVertices);
 
-		m_VertexBuffer.ResizeVertexVector(Math::Pow(Size, 2));
 		GenerateMesh(side);
 		GenerateNormals();
 
-		m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DYNAMIC, false, Gfx::GfxCore::Pointer());
-
 		ConstructPlanesAndCorners();
-
-		std::mutex buenMutex;
-		buenMutex.lock();
-		m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DYNAMIC, false, Gfx::GfxCore::Pointer());
-		buenMutex.unlock();
 
 		m_Material = ResVault::Pointer()->FindResourceByName<Material>("lambert1").lock()->GetHandle();
 	}
@@ -160,7 +154,10 @@ namespace rczEngine
 
 	void PlanetQuadTreeNode::DestroyQuadTreeNode() noexcept
 	{
-		m_VertexBuffer.Destroy();
+		PlanetOwner->ReleaseNode(m_Index);
+
+		m_Index = -1;
+		m_CurrentVertices = nullptr;
 	}
 
 	void PlanetQuadTreeNode::GenerateNormals()
@@ -180,9 +177,9 @@ namespace rczEngine
 			auto index2 = m_IndexBuffer.GetIndex(i + 1);
 			auto index3 = m_IndexBuffer.GetIndex(i + 2);
 
-			TerrainVertex* Vert1 = &m_VertexBuffer.GetVertex(index1);
-			TerrainVertex* Vert2 = &m_VertexBuffer.GetVertex(index2);
-			TerrainVertex* Vert3 = &m_VertexBuffer.GetVertex(index3);
+			TerrainVertex* Vert1 = m_CurrentVertices->at(index1);
+			TerrainVertex* Vert2 = m_CurrentVertices->at(index2);
+			TerrainVertex* Vert3 = m_CurrentVertices->at(index3);
 
 			Vector3 V1 = (Vert1->VertexPosition - Vert2->VertexPosition).GetNormalized();
 			Vector3 V2 = (Vert1->VertexPosition - Vert3->VertexPosition).GetNormalized();
@@ -196,9 +193,9 @@ namespace rczEngine
 		auto index2 = m_IndexBuffer.GetIndex(indexSize - 2);
 		auto index3 = m_IndexBuffer.GetIndex(indexSize - 3);
 
-		TerrainVertex* Vert1 = &m_VertexBuffer.GetVertex(index1);
-		TerrainVertex* Vert2 = &m_VertexBuffer.GetVertex(index2);
-		TerrainVertex* Vert3 = &m_VertexBuffer.GetVertex(index3);
+		TerrainVertex* Vert1 = m_CurrentVertices->at(index1);
+		TerrainVertex* Vert2 = m_CurrentVertices->at(index2);
+		TerrainVertex* Vert3 = m_CurrentVertices->at(index3);
 
 		Vector3 V1 = (Vert1->VertexPosition - Vert2->VertexPosition).GetNormalized();
 		Vector3 V2 = (Vert1->VertexPosition - Vert3->VertexPosition).GetNormalized();
@@ -215,12 +212,12 @@ namespace rczEngine
 #endif
 
 		auto size = Size;
-		auto bufferSize = m_VertexBuffer.GetSize();
+		auto bufferSize = m_CurrentVertices->size();
 
 		//Le saco normales suaves ya a todo.
 		for (uint32 i = 0; i < bufferSize; ++i)
 		{
-			TerrainVertex* ThisVertex = &m_VertexBuffer.GetVertex(i);
+			TerrainVertex* ThisVertex = m_CurrentVertices->at(i);
 
 			int32 x = i % size;
 			int32 y = i / size;
@@ -235,13 +232,13 @@ namespace rczEngine
 
 			if (x > 0)
 			{
-				NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i - 1);
+				NearbyVertices[VerticesUsed] = m_CurrentVertices->at(i - 1);
 				++VerticesUsed;
 			}
 
 			if (x < size - 1)
 			{
-				NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i + 1);
+				NearbyVertices[VerticesUsed] = m_CurrentVertices->at(i + 1);
 				++VerticesUsed;
 			}
 
@@ -249,16 +246,16 @@ namespace rczEngine
 			{
 				if (x > 0)
 				{
-					NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i - 1 - size);
+					NearbyVertices[VerticesUsed] = m_CurrentVertices->at(i - 1 - size);
 					++VerticesUsed;
 				}
 
-				NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i - size);
+				NearbyVertices[VerticesUsed] = m_CurrentVertices->at(i - size);
 				++VerticesUsed;
 
 				if (x < size - 1)
 				{
-					NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i + 1 - size);
+					NearbyVertices[VerticesUsed] = m_CurrentVertices->at(i + 1 - size);
 					++VerticesUsed;
 				}
 			}
@@ -267,16 +264,16 @@ namespace rczEngine
 			{
 				if (x > 0)
 				{
-					NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i - 1 + size);
+					NearbyVertices[VerticesUsed] = m_CurrentVertices->at(i - 1 + size);
 					++VerticesUsed;
 				}
 
-				NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i + size);
+				NearbyVertices[VerticesUsed] = m_CurrentVertices->at(i + size);
 				++VerticesUsed;
 
 				if (x < size - 1)
 				{
-					NearbyVertices[VerticesUsed] = &m_VertexBuffer.GetVertex(i + 1 + size);
+					NearbyVertices[VerticesUsed] = m_CurrentVertices->at(i + 1 + size);
 					++VerticesUsed;
 				}
 			}
@@ -392,7 +389,7 @@ namespace rczEngine
 		{
 			DeathTimer.StartTimer();
 
-			if (!m_ChildGenerated && m_QuadTreeDepth < 256)
+			if (!m_ChildGenerated && m_QuadTreeDepth < 80)
 			{
 				m_ChildGenerated = true;
 				GenerateChildren();
@@ -484,15 +481,12 @@ namespace rczEngine
 				return RenderChildren();
 		}
 
-		m_VertexBuffer.SetThisVertexBuffer(gfxPtr, 0);
-
 		int32 vertexSize;
-
 
 		m_IndexBuffer.SetThisIndexBuffer(gfxPtr);
 		vertexSize = m_IndexBuffer.m_IndexSize;
 
-		gfxPtr->DrawIndexed(vertexSize, 0, 0);
+		gfxPtr->DrawIndexed(vertexSize, 0, m_Index * Math::Pow(PlanetQuadTreeNode::Mesh_Row_Size, 2));
 
 	}
 
@@ -538,8 +532,8 @@ namespace rczEngine
 		int32 depth;
 
 		if (m_QuadTreeDepth == 0)
-			depth = 1;
-		else if (m_QuadTreeDepth >= 1)
+			depth = 3;
+		else if (m_QuadTreeDepth >= 3)
 			depth = m_QuadTreeDepth * 3;
 
 		for (int i = 0; i < QUAD_DIVS; ++i)
@@ -655,14 +649,14 @@ namespace rczEngine
 #endif
 
 		TerrainVertex* TempVertex;
-		auto vertexSize = m_VertexBuffer.GetSize();
+		auto vertexSize = m_CurrentVertices->size();
 
 		double halfSize = HalfSize;
 
 #pragma omp parallel for
 		for (uint32 i = 0; i < vertexSize; ++i)
 		{
-			TempVertex = &m_VertexBuffer.GetVertex(i);
+			TempVertex = m_CurrentVertices->at(i);
 
 			int32 x = i / Size;
 			int32 y = i % Size;
@@ -690,14 +684,14 @@ namespace rczEngine
 
 		TerrainVertex* TempVertex;
 		auto size = Size;
-		auto vertexSize = m_VertexBuffer.GetSize();
+		auto vertexSize = m_CurrentVertices->size();
 
 		double halfSize = HalfSize;
 
 #pragma omp parallel for
 		for (uint32 i = 0; i < vertexSize; ++i)
 		{
-			TempVertex = &m_VertexBuffer.GetVertex(i);
+			TempVertex = m_CurrentVertices->at(i);
 
 			int32 x = i / size;
 			int32 y = i % size;
@@ -721,14 +715,14 @@ namespace rczEngine
 	{
 		TerrainVertex* TempVertex;
 		auto size = Size;
-		auto vertexSize = m_VertexBuffer.GetSize();
+		auto vertexSize = m_CurrentVertices->size();
 
 		double halfSize = HalfSize;
 
 #pragma omp parallel for
 		for (uint32 i = 0; i < vertexSize; ++i)
 		{
-			TempVertex = &m_VertexBuffer.GetVertex(i);
+			TempVertex = m_CurrentVertices->at(i);
 
 			int32 x = i / size;
 			int32 y = i % size;
@@ -751,14 +745,14 @@ namespace rczEngine
 	{
 		TerrainVertex* TempVertex;
 		auto size = Size;
-		auto vertexSize = m_VertexBuffer.GetSize();
+		auto vertexSize = m_CurrentVertices->size();
 
 		double halfSize = HalfSize;
 
 #pragma omp parallel for
 		for (uint32 i = 0; i < vertexSize; ++i)
 		{
-			TempVertex = &m_VertexBuffer.GetVertex(i);
+			TempVertex = m_CurrentVertices->at(i);
 
 			int32 x = i / size;
 			int32 y = i % size;
@@ -781,14 +775,14 @@ namespace rczEngine
 	{
 		TerrainVertex* TempVertex;
 		auto size = Size;
-		auto vertexSize = m_VertexBuffer.GetSize();
+		auto vertexSize = m_CurrentVertices->size();
 
 		double halfSize = HalfSize;
 
 #pragma omp parallel for
 		for (uint32 i = 0; i < vertexSize; ++i)
 		{
-			TempVertex = &m_VertexBuffer.GetVertex(i);
+			TempVertex = m_CurrentVertices->at(i);
 
 			int32 x = i / size;
 			int32 y = i % size;
@@ -811,14 +805,14 @@ namespace rczEngine
 	{
 		TerrainVertex* TempVertex;
 		auto size = Size;
-		auto vertexSize = m_VertexBuffer.GetSize();
+		auto vertexSize = m_CurrentVertices->size();
 
 		double halfSize = HalfSize;
 
 #pragma omp parallel for
 		for (uint32 i = 0; i < vertexSize; ++i)
 		{
-			TempVertex = &m_VertexBuffer.GetVertex(i);
+			TempVertex = m_CurrentVertices->at(i);
 
 			int32 x = i / size;
 			int32 y = i % size;

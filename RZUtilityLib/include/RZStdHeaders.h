@@ -19,6 +19,7 @@
 
 #include <gsl/gsl.h>
 
+
 #if (RZ_COMPILER == RZ_COMPILER_GCC)
 #if RZ_COMPILER_VER >= 430
 #include <tr1/unordered_map>

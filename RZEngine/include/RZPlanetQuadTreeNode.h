@@ -85,7 +85,7 @@ namespace rczEngine
 		void SetChildrenReady(int indexOfChild, bool value);
 		bool CheckChildrenReady();
 
-		PatchIndex m_Index = -1;
+		int m_Index = -1;
 
 		Vector<TerrainVertex*>* m_CurrentVertices;
 		Gfx::IndexBuffer m_IndexBuffer;

@@ -48,8 +48,8 @@ namespace rczEngine {
 		void Normalize() noexcept;
 		Vector2 GetNormalized() noexcept;
 
-
 		float Magnitude() noexcept;
+		float MagnitudeSqr() noexcept;
 
 		union
 		{

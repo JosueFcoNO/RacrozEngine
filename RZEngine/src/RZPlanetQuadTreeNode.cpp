@@ -590,15 +590,6 @@ namespace rczEngine
 		default:
 			break;
 		}
-
-#pragma omp parallel for
-		for (uint32 i = 1; i < Size; i += 2)
-		{
-			GetVertex(i, 0).VertexPosition = Math::Lerp(GetVertex(i - 1, 0).VertexPosition, GetVertex(i + 1, 0).VertexPosition, 0.5f);
-			GetVertex(0, i).VertexPosition = Math::Lerp(GetVertex(0, i - 1).VertexPosition, GetVertex(0, i + 1).VertexPosition, 0.5f);
-			GetVertex(i, Mesh_Row_Size).VertexPosition = Math::Lerp(GetVertex(i - 1, Mesh_Row_Size).VertexPosition, GetVertex(i + 1, Mesh_Row_Size).VertexPosition, 0.5f);
-			GetVertex(Mesh_Row_Size, i).VertexPosition = Math::Lerp(GetVertex(Mesh_Row_Size, i - 1).VertexPosition, GetVertex(Mesh_Row_Size, i + 1).VertexPosition, 0.5f);
-		}
 	}
 
 	void PlanetQuadTreeNode::RenderChildren()

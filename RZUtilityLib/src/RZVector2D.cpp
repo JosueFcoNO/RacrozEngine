@@ -84,4 +84,9 @@ namespace rczEngine {
 		return Math::Sqrt((Math::Square(m_x) + Math::Square(m_y)));
 	}
 
+	float Vector2::MagnitudeSqr() noexcept
+	{
+		return Math::Square(m_x) + Math::Square(m_y);
+	}
+
 }

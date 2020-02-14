@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_EXP GUIEditor;
+	class RZ_EXP ImGUIEditor;
 
 	namespace Core
 	{

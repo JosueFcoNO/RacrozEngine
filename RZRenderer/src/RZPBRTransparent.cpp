@@ -65,14 +65,14 @@ namespace rczEngine
 		m_GeometryPBRShader.SetThisVertexShaderAndInputLayout(m_gfx);
 		UseDepth = true;
 
-		SetRenderTargetsInPipeline();
-		CullFront.SetThisRasterizerState(m_gfx);
-		RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_MetRough_Trans, false);
-		//m_gfx->UnbindRenderTargets();
-
 		//SetRenderTargetsInPipeline();
-		CullBack.SetThisRasterizerState(m_gfx);
-		RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_MetRough_Trans, false);
+		//CullFront.SetThisRasterizerState(m_gfx);
+		//RacrozRenderer::PrepareRender(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_MetRough_Trans, false);
+		////m_gfx->UnbindRenderTargets();
+		//
+		////SetRenderTargetsInPipeline();
+		//CullBack.SetThisRasterizerState(m_gfx);
+		//RacrozRenderer::PrepareRender(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_MetRough_Trans, false);
 
 		m_gfx->SetRSStateDefault();
 		

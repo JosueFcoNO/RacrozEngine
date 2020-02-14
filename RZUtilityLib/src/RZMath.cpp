@@ -4,6 +4,16 @@
 
 namespace rczEngine
 {
+	Vector3 Math::PosToPolar3D(Vector3 pos) noexcept
+	{
+		Vector3 ret;
+		ret.m_x = pos.Magnitude();
+		ret.m_y = aCos(pos.m_z / ret.m_x);
+		ret.m_z = aTan2(pos.m_y, pos.m_x);
+
+		return ret;
+	};
+
 	Vector2 Math::PolarToPos2D(Vector3 polar) noexcept
 	{
 		return Vector2(
@@ -127,6 +137,45 @@ namespace rczEngine
 		return posFinal;
 	}
 
+	Vector2 Math::Sign(Vector2 x) noexcept
+	{
+		Vector2 ret;
+		ret.m_x = (x.m_x >= 0) ? 1.0f : -1.0f;
+		ret.m_y = (x.m_y >= 0) ? 1.0f : -1.0f;
+
+		return ret;
+	}
+
+	Vector2I Math::Sign(Vector2I x) noexcept
+	{
+		Vector2I ret;
+		ret.m.x = (x.m.x >= 0) ? 1 : -1;
+		ret.m.y = (x.m.y >= 0) ? 1 : -1;
+
+		return ret;
+	}
+
+	Vector3 Math::Sign(Vector3 x) noexcept
+	{
+		Vector3 ret;
+		ret.m_x = (x.m_x >= 0) ? 1.0f : -1.0f;
+		ret.m_y = (x.m_y >= 0) ? 1.0f : -1.0f;
+		ret.m_z = (x.m_z >= 0) ? 1.0f : -1.0f;
+
+		return ret;
+	}
+
+	Vector4 Math::Sign(Vector4 x) noexcept
+	{
+		Vector4 ret(eInit::None);
+		ret.m_x = (x.m_x >= 0) ? 1.0f : -1.0f;
+		ret.m_y = (x.m_y >= 0) ? 1.0f : -1.0f;
+		ret.m_z = (x.m_z >= 0) ? 1.0f : -1.0f;
+		ret.m_w = (x.m_w >= 0) ? 1.0f : -1.0f;
+
+		return ret;
+	};
+
 	float Math::UnwindDegree(float f) noexcept
 	{
 		///Check if the value exceeds 360°, else return f
@@ -166,4 +215,248 @@ namespace rczEngine
 			return f;
 		}
 	};
+
+	////////////////////////////
+	/// Fast Trigonometry
+	////////////////////////////
+
+	float TrigFast::FastSin0(float angle) noexcept
+	{
+		///if the angle is not on the accepted range
+		if (angle < 0 || angle > HALFPI)
+		{
+			return sinf(angle);
+		}
+		else
+		{
+			auto sin = 1.0f - 0.16605f * Math::Pow(angle, 2) + 0.00761f * Math::Pow(angle, 4);
+			sin *= angle;
+
+			return sin;
+		}
+	}
+
+	float TrigFast::FastSin1(float angle) noexcept
+	{
+		///if the angle is not on the accepted range
+		if (angle < 0 || angle > HALFPI)
+		{
+			return sinf(angle);
+		}
+		else
+		{
+			auto sin = 1.0f -
+				0.1666666664f*Math::Pow(angle, 2) +
+				0.0083333315f*Math::Pow(angle, 4) -
+				0.0001984090f*Math::Pow(angle, 6) +
+				0.0000027526f*Math::Pow(angle, 8) -
+				0.0000000239f*Math::Pow(angle, 10);
+
+			sin *= angle;
+
+			return sin;
+		}
+	}
+
+	float TrigFast::FastCos0(float angle) noexcept
+	{
+		///if the angle is not on the accepted range
+		if (angle < 0 || angle > HALFPI)
+		{
+			return cosf(angle);
+		}
+		else
+		{
+			float cos = 0;
+
+			for (float i = 0; i < 3; i++)
+			{
+				cos += (Math::Pow(-1, i) / Math::Factorial(2 * i))*(Math::Pow(angle, (2 * i)));
+			}
+
+			return cos;
+		}
+
+	}
+
+	float TrigFast::FastCos1(float angle) noexcept
+	{
+		float cos = 0;
+
+		///if the angle is not on the accepted range
+		if (angle < 0 || angle > HALFPI)
+		{
+			return cosf(angle);
+		}
+		else
+		{
+			cos = 1.0f -
+				0.4999999963f* Math::Pow(angle, 2) +
+				0.0416666418f*Math::Pow(angle, 4) -
+				0.0013888397f*Math::Pow(angle, 6) +
+				0.0000247609f*Math::Pow(angle, 8) -
+				0.0000002605f*Math::Pow(angle, 10);
+
+			return cos;
+		}
+
+	}
+
+	float TrigFast::FastTan0(float angle) noexcept
+	{
+		///if the angle is not on the accepted range
+		if (angle < 0 || angle > HALFPI / 2)
+		{
+			return tanf(angle);
+		}
+		else
+		{
+			auto tan = 1 + 0.31755f*Math::Pow(angle, 2) + 0.20330f*Math::Pow(angle, 4);
+			tan *= angle;
+
+			return tan;
+		}
+	}
+
+	float TrigFast::FastTan1(float angle) noexcept
+	{
+		///if the angle is not on the accepted range
+		if (angle < 0 || angle > HALFPI)
+		{
+			return tanf(angle);
+		}
+		else
+		{
+			auto tan = 1.0f +
+				0.3333314036f*Math::Pow(angle, 2) +
+				0.1333923995f*Math::Pow(angle, 4) +
+				0.0533740603f*Math::Pow(angle, 6) +
+				0.0245650893f*Math::Pow(angle, 8) +
+				0.0029005250f*Math::Pow(angle, 10) +
+				0.0095168091f*Math::Pow(angle, 12);
+
+			tan *= angle;
+
+			return tan;
+		}
+
+	}
+
+	float TrigFast::FastASin0(float angle) noexcept
+	{
+		///if the angle is not on the accepted range
+		if (angle < 0 || angle > 1)
+		{
+			return asinf(angle);
+		}
+		else
+		{
+			const auto asin = PI / 2 - Math::Sqrt(1.0f - angle)*(1.5707288f - 0.2121144f*angle
+				+ 0.0742610f*Math::Pow(angle, 2) - 0.0187293f*Math::Pow(angle, 3));
+
+			return asin;
+		}
+	}
+
+	float TrigFast::FastASin1(float angle) noexcept
+	{
+		///if the angle is not on the accepted range
+		if (angle < 0 || angle > 1)
+		{
+			return asinf(angle);
+		}
+		else
+		{
+			const auto asin = HALFPI -
+				Math::Sqrt(1 - angle)*(1.5707963050f - 0.2145988016f*angle +
+					0.0889789874f* Math::Pow(angle, 2) -
+					0.0501743046f*Math::Pow(angle, 3) +
+					0.0308918810f*Math::Pow(angle, 4) -
+					0.01708812556f*Math::Pow(angle, 5) +
+					0.0066700901f*Math::Pow(angle, 6) -
+					0.0012624911f*Math::Pow(angle, 7));
+
+			return asin;
+		}
+
+	}
+
+	float TrigFast::FastACos0(float angle) noexcept
+	{
+		///if the angle is not on the accepted range
+		if (angle < 0 || angle > 1)
+		{
+			return acosf(angle);
+		}
+		else
+		{
+			const auto acos = PI / 2 - FastASin0(angle);
+
+			return acos;
+		}
+
+	}
+
+	float TrigFast::FastACos1(float angle) noexcept
+	{
+		///if the angle is not on the accepted range
+		if (angle < 0 || angle > 1)
+		{
+			return acosf(angle);
+		}
+		else
+		{
+			const auto acos = PI / 2 - FastASin1(angle);
+
+			return acos;
+		}
+
+	}
+
+	float TrigFast::FastATan0(float angle) noexcept
+	{
+		///if the angle is not on the accepted range
+		if (angle < -1 || angle > 1)
+		{
+			return atanf(angle);
+		}
+		else
+		{
+			const auto atan =
+				0.9998660f*angle -
+				0.3302995f*Math::Pow(angle, 3) +
+				0.1801410f*Math::Pow(angle, 5) -
+				0.0851330f*Math::Pow(angle, 7) +
+				0.0208351f*Math::Pow(angle, 9);
+
+			return atan;
+		}
+
+	}
+
+	float TrigFast::FastATan1(float angle) noexcept
+	{
+		///if the angle is not on the accepted range
+		if (angle < -1 || angle > 1)
+		{
+			return atanf(angle);
+		}
+		else
+		{
+			auto atan = 1.0f -
+				0.3333314528f*Math::Pow(angle, 2) +
+				0.1999355085f*Math::Pow(angle, 4) -
+				0.1420889944f*Math::Pow(angle, 6) +
+				0.1065626393f*Math::Pow(angle, 8) -
+				0.0752896400f*Math::Pow(angle, 10) +
+				0.0429096138f*Math::Pow(angle, 12) -
+				0.0161657367f*Math::Pow(angle, 14) +
+				0.0028662257f*Math::Pow(angle, 16);
+			atan *= angle;
+
+			return atan;
+		}
+
+	}
+
 }

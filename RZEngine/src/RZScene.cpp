@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void Scene::InitScene(const String& name)
+	void Scene::InitScene(const String&& name)
 	{
 		m_Name = name;
 
@@ -10,7 +10,7 @@ namespace rczEngine
 		m_res = ResVault::Pointer();
 
 		m_RootNode = std::make_shared<GameObject>(0, "RootNode");
-		m_RootNode->Init();
+		m_RootNode->Init(std::move(name));
 
 		m_RootNode->Translate(Vector3(0.0f, 0.0f, 0.0f));
 		m_RootNode->Scale(Vector3(1.0f, 1.0f, 1.0f));
@@ -22,7 +22,10 @@ namespace rczEngine
 	void Scene::ClearScene()
 	{
 		m_RootNode = std::make_shared<GameObject>(0, "RootNode");
-		m_RootNode->Init();
+		m_RootNode->Init(std::move(m_Name));
+
+		ActorComponentFactory::Pointer()->CreateActor("RootNode");
+
 
 		m_RootNode->SetScale(1.0f, 1.0f, 1.0f);
 		m_RootNode->SetPosition(0, 0, 0);
@@ -44,7 +47,7 @@ namespace rczEngine
 			}
 		}
 
-		m_RootNode->Update(this, deltaTime);
+		m_RootNode->Update(deltaTime);
 	}
 
 	void Scene::Destroy()
@@ -58,10 +61,11 @@ namespace rczEngine
 	}
 
 	
-	WeakGameObjPtr Scene::CreateActor(const String& name, GameObject * parent, Vector3 position, Vector3 orientation, Vector3 scale)
+	WeakGameObjPtr Scene::CreateActor(const String&& name, GameObject * parent, Vector3 position, Vector3 orientation, Vector3 scale)
 	{
-		auto ptr = ActorComponentFactory::Pointer()->CreateActor(name, position, orientation, scale);
+		auto ptr = ActorComponentFactory::Pointer()->CreateActor(std::move(m_Name), std::move(name), position, orientation, scale);
 		AddActor(ptr);
+
 		if (parent)
 		{
 			parent->AddChild(ptr);
@@ -74,12 +78,12 @@ namespace rczEngine
 		return ptr;
 	}
 
-	StrCmpPtr Scene::CreateComponent(eCOMPONENT_ID type, GameObjectID owner)
+	StrCmpPtr Scene::CreateComponent(eComponentID type, GameObjectID owner)
 	{
 		return ActorComponentFactory::Pointer()->CreateComponent(type, m_SceneActorMap[owner]);
 	}
 
-	StrCmpPtr Scene::CreateComponent(eCOMPONENT_ID type, StrGameObjectPtr owner)
+	StrCmpPtr Scene::CreateComponent(eComponentID type, StrGameObjectPtr owner)
 	{
 		return ActorComponentFactory::Pointer()->CreateComponent(type, owner);
 	}
@@ -131,7 +135,7 @@ namespace rczEngine
 		m_SceneActorMap[node->GetID()] = node;
 	}
 
-	Vector<WeakPtr<GameObject>> Scene::FindActorsWithComponent(eCOMPONENT_ID cmp)
+	Vector<WeakPtr<GameObject>> Scene::FindActorsWithComponent(eComponentID cmp)
 	{
 		Vector<WeakPtr<GameObject>> TempVector;
 

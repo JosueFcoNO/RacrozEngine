@@ -48,10 +48,10 @@ namespace rczEngine
 
 	void PBR_Forward_Pass::RenderPass()
 	{
-		m_GeometryPBRShader.SetThisVertexShaderAndInputLayout(m_gfx);
-		RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_MetRough, true);
-		m_SkinnedGeometryPBRShader.SetThisVertexShaderAndInputLayout(m_gfx);
-		RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_SKINNED_MODEL_RENDERER, MAT_PBR_MetRough, true);
+		//m_GeometryPBRShader.SetThisVertexShaderAndInputLayout(m_gfx);
+		//RacrozRenderer::PrepareRender(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, PBR_MetRough, true);
+		//m_SkinnedGeometryPBRShader.SetThisVertexShaderAndInputLayout(m_gfx);
+		//RacrozRenderer::PrepareRender(SceneManager::Pointer()->GetActiveScene().get(), CMP_SKINNED_MODEL_RENDERER, PBR_MetRough, true);
 	}
 
 	void PBR_Forward_Pass::PostRenderPass()

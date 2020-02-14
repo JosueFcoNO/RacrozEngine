@@ -3,7 +3,7 @@
 
 namespace rczEngine
 {
-	void SkinnedModel::DrawModel(Gfx::GfxCore * gfx, void * res, Map<String, ResourceHandle>* materialOverride, MATERIAL_TYPE matType)
+	void SkinnedModel::DrawModel(Gfx::GfxCore * gfx, void * res, Map<String, ResourceHandle>* materialOverride, eMaterialType matType)
 	{
 		//TODO: Pasarle el material override ya me hace sucio.
 		ResVault* Res = ResVault::Pointer();
@@ -20,9 +20,9 @@ namespace rczEngine
 		{
 			auto mat = Res->GetResource<Material>(materials->at(m_VectorMeshes[i].m_Material)).lock();
 
-			if (mat->m_MatType == matType || matType == MAT_ANY)
+			if (mat->m_MatType == matType || matType == eMaterialType::AnyMaterial)
 			{
-				mat->SetThisMaterial(gfx, Res);
+				mat->SetThisMaterial();
 				m_VectorMeshes[i].Draw(gfx);
 			}
 		}
@@ -78,7 +78,7 @@ namespace rczEngine
 		//		materialIndexOffset = tempHandle;
 		//	}
 		//
-		//	Temp->InitMaterial(MAT_PBR_MetRough, gfx);
+		//	Temp->InitMaterial(PBR_MetRough, gfx);
 		//}
 		//
 		//for (uint32 n = 0; n < Scene->mNumMeshes; ++n)

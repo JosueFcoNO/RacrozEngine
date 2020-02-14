@@ -12,6 +12,9 @@
     <Filter Include="Archivos de encabezado\UI">
       <UniqueIdentifier>{ab53e037-0f37-4491-88ec-5e39c27577d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\Project">
+      <UniqueIdentifier>{578a4f61-6f62-4297-b91e-1c9b1b7ad43b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZEditorPCH.h" />

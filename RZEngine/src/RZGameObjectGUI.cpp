@@ -50,7 +50,7 @@ namespace rczEngine
 						ImGui::Combo("Components", &comboint, "Model Renderer \0Skinned Model Renderer\0Light \0Move \0CameraWalk");
 						if (ImGui::Button("Add"))
 						{
-							SceneManager::Pointer()->GetActiveScene()->CreateComponent((eCOMPONENT_ID)componentIds[comboint], m_ActiveObject->GetID());
+							SceneManager::Pointer()->GetActiveScene()->CreateComponent((eComponentID)componentIds[comboint], m_ActiveObject->GetID());
 							AddComponentMenu = false;
 							return;
 						}

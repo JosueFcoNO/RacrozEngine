@@ -5,9 +5,8 @@ namespace rczEngine
 	class ProfilerObj
 	{
 	public:
-		RZ_EXP ProfilerObj(const String& event, PROFILE_EVENTS eventType) :
-			m_EventID(event), 
-			m_EventType(eventType)
+		RZ_EXP ProfilerObj(const String&& event) :
+			m_EventID(event)
 		{
 			m_InnerTimer.StartTimer();
 		};
@@ -26,12 +25,11 @@ namespace rczEngine
 
 		RZ_EXP FORCEINLINE void RegisterTime() noexcept
 		{
-			Profiler::Pointer()->AddTime(m_EventID, m_InnerTimer.GetFrameTime(), m_EventType);
+			Profiler::Pointer()->AddTime(std::move(m_EventID), m_InnerTimer.GetFrameTime());
 		};
 
 	private:
 		Timer m_InnerTimer;
 		String m_EventID;
-		PROFILE_EVENTS m_EventType;
 	};
 };

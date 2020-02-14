@@ -9,12 +9,14 @@ namespace rczEngine
 
 		virtual void Init() {};
 		virtual void Update(float deltaTime) {};
-		virtual void Render(Gfx::GfxCore* gfx, ResVault* res, Scene* scene) {};
+		virtual void Render(Gfx::GfxCore* gfx, ResVault* res) {};
 
 		ComponentId m_ID;
 
+		virtual eComponentID GetComponentEnumType() { return (eComponentID)GetComponentType(); };
 		virtual ComponentType GetComponentType() { return CMP_NONE; };
 		virtual ComponentId GetComponentId() { return m_ID; };
+		bool IsRendereable() const { return m_Renderable; };
 
 		void SetOwner(WeakGameObjPtr owner) { m_Owner = owner; };
 		WeakGameObjPtr GetOwner() { return m_Owner; };
@@ -28,6 +30,7 @@ namespace rczEngine
 #endif
 
 	protected:
+		bool m_Renderable = false;
 		WeakGameObjPtr m_Owner;
 	};
 }

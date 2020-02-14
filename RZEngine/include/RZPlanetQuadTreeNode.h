@@ -24,6 +24,16 @@ namespace rczEngine
 
 	class PlanetQuadTreeNode;
 
+	class RZ_EXP PlanetVertex
+	{
+		Vector3 VertexPosition;
+		Vector2 TextureCoordinates;
+		Vector3 VertexNormals;
+		Vector3 Tangents;
+		Vector3 BiNormals;
+		int Gradient[4];
+	};
+
 	struct RZ_EXP NodeConnection
 	{
 		uint32 Hash;
@@ -85,7 +95,7 @@ namespace rczEngine
 		void SetChildrenReady(int indexOfChild, bool value);
 		bool CheckChildrenReady();
 
-		PatchIndex m_Index = -1;
+		int m_Index = -1;
 
 		Vector<TerrainVertex*>* m_CurrentVertices;
 		Gfx::IndexBuffer m_IndexBuffer;

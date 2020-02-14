@@ -51,7 +51,16 @@ cbuffer cbMaterial : register(b4)
 
 	float OverrideNormal;
 	float OverrideRoughGloss;
-	float paddings[2];
+	float g_TesselationScale = 1.0f;
+	float padd;
+
+	float pad3 = 0.0f;
+	float pad4 = 0.0f;
+	float pad5 = 0.0f;
+	float pad6 = 0.0f;
+
+	float pad7 = 0.0f;
+	float padding[3];
 };
 
 cbuffer cbCamera : register(b5)

@@ -22,7 +22,7 @@
     <ProjectGuid>{D8086649-B35F-40FF-AD8C-869EEB67A70B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>RZDirectXAPI</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <ProjectName>RZVulkanAPI</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

@@ -63,7 +63,7 @@ namespace rczEngine
 
 		void InitWindow()
 		{
-			GUIEditor::Pointer()->AddWindow("Renderer", this);
+			ImGUIEditor::Pointer()->AddWindow("Renderer", this);
 		};
 
 		void RenderWindow()
@@ -95,7 +95,7 @@ namespace rczEngine
 		///Inits the variables, render targets and shaders for a specific rendering mode. Can be changed mid game.
 		void SetRenderingMode(RENDERING_MODE renderingMode);
 		///Renders the scene and Canvas
-		void Render(Scene* sceneGraph, GUIEditor * editor);
+		void Render(Scene* sceneGraph, ImGUIEditor * editor);
 		///Destroys the renderer
 		void Destroy();
 
@@ -113,7 +113,12 @@ namespace rczEngine
 		ResourceHandle CreateCubeMap(const String& name, Scene* sceneGraph, Vector<String>& RenderPasses, int width, int height);
 
 		///Draws the sceneGraph
-		static void RenderScene(Scene * sceneGraph, eCOMPONENT_ID componentID, MATERIAL_TYPE matType, bool Forward);
+		void PrepareRender(Scene * sceneGraph);
+
+		UoMap<int, MMap<float, WeakGameObjPtr>> m_ObjectsToRender;
+
+		void RenderObjs(bool forward, eComponentID componentID, eMaterialType matType, eShadingType shading, eBlendType blendType, bool Tesselated, bool TwoSided, bool blendedMaterial, bool wireframe);
+
 		///Draws a screen aligned quad
 		static void RenderScreenAlignedQuad();
 
@@ -163,7 +168,7 @@ namespace rczEngine
 
 		void InitRasterizers();
 		void InitSamplerStates();
-		
+
 
 		GaussPass m_BlurPass;
 

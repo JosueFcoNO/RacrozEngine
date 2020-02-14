@@ -28,7 +28,7 @@ namespace rczEngine
 		CreateRenderTarget("Bloom", width, height, Gfx::FORMAT_R16G16B16A16_FLOAT, 2);
 		CreateRenderTarget("AvgLuminance", width, height, Gfx::FORMAT_R16G16B16A16_FLOAT, 1);
 		CreateRenderTarget("HDRBloom", width, height, Gfx::FORMAT_R16G16B16A16_FLOAT, 1);
-
+		
 		CreateRenderTarget("SSAO", width, height, Gfx::FORMAT_R32_FLOAT, 2);
 
 		/////////////////
@@ -60,37 +60,20 @@ namespace rczEngine
 
 		m_PassesOrder.push_back(name + "Geometry");
 
-		///////////////////
-		///TERRAIN GEOMETRY PASS///
-		///////////////////
-
-		///Create the geometry pass
-		//auto passTerrainGeometry = m_Renderer->CreatePass("Terrain", PASSES::TERRAIN_GEOMETRY_PASS, m_CurrentRenderingMode);
-		//
-		//passTerrainGeometry->AddRenderTarget(m_RTs["ColorAO"], 0);
-		//passTerrainGeometry->AddRenderTarget(m_RTs["Position"], 1);
-		//passTerrainGeometry->AddRenderTarget(m_RTs["NormalsMR"], 2);
-		//passTerrainGeometry->AddRenderTarget(m_RTs["Emmisive"], 3);
-		//passTerrainGeometry->AddRenderTarget(m_RTs["Velocity"], 4);
-		//
-		//m_PassesOrder.push_back("Terrain");
-
 		/////Start the post processing.
 
-		///Create the geometry pass
 		m_PassesOrder.push_back("PostProcess");
 
-
-		//////////////////////
-		///SS Ambient Occlusion PASS
-		//////////////////////
-
+		////////////////////////
+		/////SS Ambient Occlusion PASS
+		////////////////////////
+		
 		///Create the geometry pass
 		auto passSSAO = m_Renderer->CreatePass(name + "SSAO", PASSES::SSAO, RENDERING_MODE::DEFERRED);
-
+		
 		passSSAO->AddRenderTarget(m_RTs["SSAO"], 0);
 		passSSAO->AddDepthStencyl(&depth);
-
+		
 		passSSAO->AddTexture2D(m_Textures["Position"], 0);
 		passSSAO->AddTexture2D(m_Textures["NormalsMR"], 1);
 		m_PassesOrder.push_back(name + "SSAO");
@@ -129,15 +112,15 @@ namespace rczEngine
 		m_PassesOrder.push_back(name + "Transparent");
 
 		//////////////////////
-		///Transparent PASS///
+		///GDebugger PASS///
 		//////////////////////
 
 		///Create the geometry pass
 		auto passDebugger = m_Renderer->CreatePass(name + "Debugger", PASSES::GDEBUGGER, RENDERING_MODE::DEFERRED);
-
+		
 		passDebugger->AddRenderTarget(m_RTs["PBR"], 0);
 		passDebugger->AddDepthStencyl(&depth);
-
+		
 		m_PassesOrder.push_back(name + "Debugger");
 
 		///////////////////
@@ -145,12 +128,12 @@ namespace rczEngine
 		///////////////////
 
 		auto passPlanet = m_Renderer->CreatePass(name + "Planet", PASSES::PLANET_PASS, RENDERING_MODE::DEFERRED);
-
+		
 		passPlanet->AddRenderTarget(m_RTs["PBR"], 0);
 		passPlanet->AddRenderTarget(m_RTs["Position"], 1);
 		passPlanet->AddRenderTarget(m_RTs["NormalsMR"], 2);
 		//passPlanet->AddDepthStencyl(&depth);
-
+		
 		m_PassesOrder.push_back(name + "Planet");
 
 		///////////////////
@@ -158,12 +141,12 @@ namespace rczEngine
 		///////////////////
 
 		auto passAtmos = m_Renderer->CreatePass(name + "Atmos", PASSES::ATMOS_SCATTER_PASS, RENDERING_MODE::DEFERRED);
-
+		
 		passAtmos->AddRenderTarget(m_RTs["PBR"], 0);
 		passAtmos->AddDepthStencyl(&depth);
-
+		
 		m_PassesOrder.push_back(name + "Atmos");
-
+		
 		m_PassesOrder.push_back("PostProcess");
 
 		/////////////////
@@ -172,13 +155,13 @@ namespace rczEngine
 
 		///Create the PBR pass
 		auto passMotionBlur = m_Renderer->CreatePass(name + "MotionBlur", PASSES::MOTION_BLUR, RENDERING_MODE::DEFERRED);
-
+		
 		passMotionBlur->AddRenderTarget(m_RTs["MotionBlur"], 0);
 		passMotionBlur->AddDepthStencyl(&depth);
-
+		
 		passMotionBlur->AddTexture2D(m_Textures["PBR"], 0);
 		passMotionBlur->AddTexture2D(m_Textures["Velocity"], 1);
-
+		
 		m_PassesOrder.push_back(name + "MotionBlur");
 
 		///////////////
@@ -187,13 +170,13 @@ namespace rczEngine
 
 		//Receives the PBR pass and outputs a R16F luminance map.
 
-		///Create the Luminance pass
+		//create the Luminance pass
 		auto passLuminance = m_Renderer->CreatePass(name + "Luminance", PASSES::LUMINANCE, RENDERING_MODE::DEFERRED);
-
+		
 		passLuminance->AddRenderTarget(m_RTs["Luminance"], 0);
 		passLuminance->AddTexture2D(m_Textures["MotionBlur"], 0);
 		passLuminance->AddDepthStencyl(&depth);
-
+		
 		m_PassesOrder.push_back(name + "Luminance");
 
 		////////////
@@ -204,13 +187,13 @@ namespace rczEngine
 
 		///Create the Bright pass
 		auto passBright = m_Renderer->CreatePass(name + "Bright", PASSES::BRIGHT, RENDERING_MODE::DEFERRED);
-
+		
 		passBright->AddRenderTarget(m_RTs["Bright"], 0);
 		passBright->AddDepthStencyl(&depth);
-
+		
 		passBright->AddTexture2D(m_Textures["Luminance"], 0);
 		passBright->AddTexture2D(m_Textures["Emmisive"], 1);
-
+		
 		m_PassesOrder.push_back(name + "Bright");
 
 		///////////
@@ -220,15 +203,15 @@ namespace rczEngine
 		//Receives the Bright pass and blurs it 4 times to generate bloom and glow.
 
 		StrPtr<BloomPass> passBloom = std::static_pointer_cast<BloomPass, Pass>(m_Renderer->CreatePass(name + "Bloom", PASSES::BLOOM, RENDERING_MODE::DEFERRED));
-
+		
 		passBloom->AddRenderTarget(m_RTs["Bloom"], 0);
-
+		
 		passBloom->AddTexture2D(m_Textures["Bright"], 0);
 		passBloom->AddDepthStencyl(&depth);
-
+		
 		passBloom->SetOriginalBloom(m_Textures["Bright"]);
 		passBloom->SetLastBloomResult(m_Textures["Bloom"]);
-
+		
 		m_PassesOrder.push_back(name + "Bloom");
 		m_PassesOrder.push_back(name + "Bloom");
 		m_PassesOrder.push_back(name + "Bloom");
@@ -241,12 +224,12 @@ namespace rczEngine
 		//Receives the Luminance pass and calculates the average luminance.
 
 		auto passAvgLuminance = m_Renderer->CreatePass(name + "AvgLuminance", PASSES::AVG_LUMINANCE, RENDERING_MODE::DEFERRED);
-
+		
 		passAvgLuminance->AddRenderTarget(m_RTs["AvgLuminance"], 0);
 		passAvgLuminance->AddDepthStencyl(&depth);
-
+		
 		passAvgLuminance->AddTexture2D(m_Textures["Luminance"], 0);
-
+		
 		m_PassesOrder.push_back(name + "AvgLuminance");
 
 		//////////////
@@ -257,14 +240,14 @@ namespace rczEngine
 
 		///Create the Bright pass
 		auto passHDRBloom = m_Renderer->CreatePass(name + "HDRBloom", PASSES::HDR_BLOOM, RENDERING_MODE::DEFERRED);
-
+		
 		passHDRBloom->AddRenderTarget(m_RTs["HDRBloom"], 0);
 		passHDRBloom->AddDepthStencyl(&depth);
-
+		
 		passHDRBloom->AddTexture2D(m_Textures["MotionBlur"], 0);
 		passHDRBloom->AddTexture2D(m_Textures["Bloom"], 1);
 		passHDRBloom->AddTexture2D(m_Textures["AvgLuminance"], 2);
-
+		
 		m_PassesOrder.push_back(name + "HDRBloom");
 
 		//////////////////////

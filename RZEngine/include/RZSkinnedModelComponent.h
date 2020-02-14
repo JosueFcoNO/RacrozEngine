@@ -7,9 +7,9 @@ namespace rczEngine
 	public:
 		~SkinnedModelRenderer() { Destroy(); };
 
-		virtual void Init() { m_Model = INVALID_RESOURCE; };
+		virtual void Init() { m_Model = INVALID_RESOURCE; m_Renderable = true;};
 		virtual void Update(float deltaTime);
-		virtual void Render(Gfx::GfxCore* gfx, ResVault* res, Scene* scene, MATERIAL_TYPE matType = MAT_ANY) {};
+		virtual void Render(Gfx::GfxCore* gfx, ResVault* res, Scene* scene, eMaterialType matType = eMaterialType::AnyMaterial) {};
 		void Destroy() {};
 
 		virtual void Serialize()
@@ -18,7 +18,7 @@ namespace rczEngine
 		};
 		virtual void DeSerialize() {};
 
-		void RenderSkinned(Gfx::GfxCore* gfx, ResVault* res, Scene* scene, MATERIAL_TYPE matType = MAT_ANY)
+		void RenderSkinned(Gfx::GfxCore* gfx, ResVault* res, eMaterialType matType = eMaterialType::AnyMaterial)
 		{
 			if (m_Model != INVALID_RESOURCE)
 			{

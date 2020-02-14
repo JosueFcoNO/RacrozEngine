@@ -231,14 +231,14 @@ namespace rczEngine
 		if (parent == "")
 		{
 			node = SceneManager::Pointer()->GetActiveScene()->
-				CreateActor(nodeName, NULL, trans, rot, scale);
+				CreateActor(std::move(nodeName), NULL, trans, rot, scale);
 		}
 		else
 		{
 			auto ptrParent = scene->FindActor(parent);
 			if (!ptrParent.expired())
 			{
-				node = scene->CreateActor(nodeName, ptrParent.lock().get(), trans, rot, scale);
+				node = scene->CreateActor(std::move(nodeName), ptrParent.lock().get(), trans, rot, scale);
 			}
 		}
 
@@ -284,7 +284,7 @@ namespace rczEngine
 
 			ResourceHandle tempHandle = m_Res->InsertResource(Temp);
 			materialMap.insert(Pair<String, ResourceHandle>(Temp->GetName(), tempHandle));
-			Temp->InitMaterial(MAT_PBR_MetRough, Gfx::GfxCore::Pointer());
+			Temp->InitMaterial(eMaterialType::PBR_MetRough);
 
 
 			aiColor4D outV = { 0, 0, 0, 0 };
@@ -893,7 +893,7 @@ namespace rczEngine
 			Math::RadiansToDegrees(-rotation.z));
 		Vector3 newScale(scaling.x, scaling.y, scaling.z);
 
-		switch (GUIEditor::Pointer()->SkinMode)
+		switch (ImGUIEditor::Pointer()->SkinMode)
 		{
 		default:
 		case 0:

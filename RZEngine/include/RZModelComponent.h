@@ -9,9 +9,9 @@ namespace rczEngine
 
 		virtual void Init();
 
-		virtual void Update(float deltaTime) {};
+		virtual void Render(Gfx::GfxCore * gfx, ResVault * res, int renderHash);
 
-		virtual void Render(Gfx::GfxCore* gfx, ResVault* res, Scene* scene, MATERIAL_TYPE matType = MAT_ANY);
+		virtual void Update(float deltaTime) {};
 
 		void SetModel(ResourceHandle model, ResVault* resManager);
 

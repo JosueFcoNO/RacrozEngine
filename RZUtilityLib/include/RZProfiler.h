@@ -2,12 +2,6 @@
 
 namespace rczEngine
 {
-	enum PROFILE_EVENTS
-	{
-		PROF_GFX,
-		PROF_GAME,
-		PROF_MAX
-	};
 
 //#define RZ_PROFILING
 
@@ -42,13 +36,13 @@ namespace rczEngine
 		/// Starts a new frame which ends when this function is called again.
 		RZ_EXP void NewFrameStart() noexcept;
 
-		RZ_EXP void AddTime(const String& event, PROFILE_EVENTS eventType) noexcept;
-		RZ_EXP void AddTime(const String& event, long double time, PROFILE_EVENTS eventType) noexcept;
+		RZ_EXP void AddTime(const String && event) noexcept;
+		RZ_EXP void AddTime(const String && event, long double time) noexcept;
 
 	private:
 		static Profiler*& _Instance() noexcept;
 
-		Map<String, ProfilerEvent> m_GfxEvents;
+		Map<String, ProfilerEvent> m_ProfilerEvents;
 		Map<String, ProfilerEvent> m_GameEvents;
 		double m_AverageFrameTime = 0.0f;
 

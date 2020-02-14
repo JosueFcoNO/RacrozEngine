@@ -22,7 +22,7 @@
     <ProjectGuid>{18F0EAF3-B122-4C92-BF32-2F2AFF22D15F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>RZCore</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <ProjectName>RZEngine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -101,7 +101,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)include;$(SolutionDir)RZUtilityLib\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZComputeAPI/include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZfmodSound\include;$(Assimp)\include;$(SolutionDir)RZDirectInput\include\;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(FBXSDK)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(GSL)/include;$(SolutionDir)RZUtilityLib\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZComputeAPI/include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZfmodSound\include;$(Assimp)\include;$(SolutionDir)RZDirectInput\include\;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(FBXSDK)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(Assimp)\lib\$(Platform)\$(Configuration);$(SolutionDir)Plug-Ins/fmod/;$(FBXSDK)lib\$(Platform)\$(Configuration)</LibraryPath>
     <CodeAnalysisRuleSet>CppCoreCheckRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -201,6 +201,12 @@
   <ItemGroup>
     <ClInclude Include="include\imconfig.h" />
     <ClInclude Include="include\imgui.h" />
+    <ClInclude Include="include\imgui_impl_dx11.h" />
+    <ClInclude Include="include\imgui_impl_win32.h" />
+    <ClInclude Include="include\imgui_internal.h" />
+    <ClInclude Include="include\imstb_rectpack.h" />
+    <ClInclude Include="include\imstb_textedit.h" />
+    <ClInclude Include="include\imstb_truetype.h" />
     <ClInclude Include="include\RZActorComponentFactory.h" />
     <ClInclude Include="include\RZAnimation.h" />
     <ClInclude Include="include\RZAssimpLoader.h" />
@@ -270,7 +276,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\imgui.cpp" />
+    <ClCompile Include="src\imgui_demo.cpp" />
     <ClCompile Include="src\imgui_draw.cpp" />
+    <ClCompile Include="src\imgui_impl_dx11.cpp" />
+    <ClCompile Include="src\imgui_impl_win32.cpp" />
+    <ClCompile Include="src\imgui_widgets.cpp" />
     <ClCompile Include="src\RZActorFactory.cpp" />
     <ClCompile Include="src\RZAnimation.cpp" />
     <ClCompile Include="src\RZAssimpLoader.cpp" />

@@ -2,25 +2,47 @@
 
 namespace rczEngine
 {
-	void Material::InitMaterial(MATERIAL_TYPE mat_type, Gfx::GfxCore* gfx)
+	void Material::InitMaterial(eMaterialType mat_type)
 	{
+		const auto gfx = Gfx::GfxCore::Pointer();
+		const auto Res = ResVault::Pointer();
+
 		m_MaterialCB.CreateConstantBuffer(sizeof(MaterialCore), Gfx::USAGE_DEFAULT, gfx);
 
 		m_MatType = mat_type;
+		m_ShadingType = eShadingType::PBR;
+		m_BlendType = eBlendType::Opaque;
 
-		if (m_MatType == MAT_PBR_MetRough)
+		m_TwoMaterialBlend = false;
+		m_Tesselation = false;
+		m_TwoSided = false;
+
+		m_TextureAlbedo = Res->m_WhiteTex;
+		m_TextureNormal = Res->m_NormalTex;
+		m_TextureRoughSmooth = Res->m_GreyTex;
+		m_TextureAO = Res->m_WhiteTex;
+		m_TextureEm = Res->m_BlackTex;
+		m_TextureH = Res->m_GreyTex;
+		m_TextureO = Res->m_WhiteTex;
+
+		if (m_MatType == eMaterialType::PBR_MetRough)
 		{
 			SetAttributesMet(Vector4(1.0f, 1.0f, 1.0f, 1.0f), 0.0f, 0.5f);
+			
+			m_TextureMetSpec = Res->m_BlackTex;
 		}
-		else if (m_MatType == MAT_PBR_SpecSmooth)
+		else if (m_MatType == eMaterialType::PBR_SpecSmooth)
 		{
 			SetAttributesSpec(Vector4(1.0f, 1.0f, 1.0f, 1.0f), Vector4(1.0f, 1.0f, 1.0f, 1.0f), 0.5f);
+
+			m_TextureMetSpec = Res->m_GreyTex;
 		}
 	}
 
-	void Material::SetThisMaterial(Gfx::GfxCore* gfx, void* res)
+	void Material::SetThisMaterial()
 	{
-		ResVault* Res = (ResVault*)res;
+		auto gfx = Gfx::GfxCore::Pointer();
+		auto Res = ResVault::Pointer();
 
 		ResourceHandle handle = GetHandle();
 
@@ -31,88 +53,21 @@ namespace rczEngine
 			m_MaterialCB.UpdateConstantBuffer(&m_core, gfx);
 			m_MaterialCB.SetBufferInPS(MATERIAL_SLOT, gfx);
 
-			if (m_TextureAlbedo != INVALID_RESOURCE)
+			Res->GetResource<Texture2D>(m_TextureAlbedo).lock()->SetThisTextureInPS((int)eTextureType::BaseColor, 1, gfx);
+			Res->GetResource<Texture2D>(m_TextureNormal).lock()->SetThisTextureInPS((int)eTextureType::Normals, 1, gfx);
+			Res->GetResource<Texture2D>(m_TextureMetSpec).lock()->SetThisTextureInPS((int)eTextureType::MetallicSpecular, 1, gfx);
+			Res->GetResource<Texture2D>(m_TextureRoughSmooth).lock()->SetThisTextureInPS((int)eTextureType::RoughGloss, 1, gfx);
+			Res->GetResource<Texture2D>(m_TextureAO).lock()->SetThisTextureInPS((int)eTextureType::AmbientOcclusion, 1, gfx);
+			Res->GetResource<Texture2D>(m_TextureEm).lock()->SetThisTextureInPS((int)eTextureType::Emissive, 1, gfx);
+
+			if (m_Tesselation)
 			{
-				Res->GetResource<Texture2D>(m_TextureAlbedo).lock()->SetThisTextureInPS(TEX_ALBEDO, 1, gfx);
-			}
-			else
-			{
-				Res->GetResource<Texture2D>(Res->m_WhiteTex).lock()->SetThisTextureInPS(TEX_ALBEDO, 1, gfx);
+				Res->GetResource<Texture2D>(m_TextureH).lock()->SetThisTextureInDS(0, 1, gfx);
 			}
 
-			if (m_TextureNormal != INVALID_RESOURCE)
+			if (m_BlendType != eBlendType::Opaque)
 			{
-				Res->GetResource<Texture2D>(m_TextureNormal).lock()->SetThisTextureInPS(TEX_NORMAL, 1, gfx);
-			}
-			else
-			{
-				Res->GetResource<Texture2D>(Res->m_NormalTex).lock()->SetThisTextureInPS(TEX_NORMAL, 1, gfx);
-			}
-
-			if (m_TextureMetSpec != INVALID_RESOURCE)
-			{
-				Res->GetResource<Texture2D>(m_TextureMetSpec).lock()->SetThisTextureInPS(TEX_MET_SPEC, 1, gfx);
-			}
-			else
-			{
-				if (m_MatType == MAT_PBR_MetRough || m_MatType == MAT_PBR_MetRough_Tess)
-					Res->GetResource<Texture2D>(Res->m_BlackTex).lock()->SetThisTextureInPS(TEX_MET_SPEC, 1, gfx);
-				else
-					Res->GetResource<Texture2D>(Res->m_GreyTex).lock()->SetThisTextureInPS(TEX_MET_SPEC, 1, gfx);
-			}
-
-			if (m_MatType != MAT_PBR_SpecSmooth_Alpha)
-			{
-				if (m_TextureRoughSmooth != INVALID_RESOURCE)
-				{
-					Res->GetResource<Texture2D>(m_TextureRoughSmooth).lock()->SetThisTextureInPS(TEX_ROUGH_SMOOTH, 1, gfx);
-				}
-				else
-				{
-					Res->GetResource<Texture2D>(Res->m_GreyTex).lock()->SetThisTextureInPS(TEX_ROUGH_SMOOTH, 1, gfx);
-				}
-			}
-
-			if (m_TextureAO != INVALID_RESOURCE)
-			{
-				Res->GetResource<Texture2D>(m_TextureAO).lock()->SetThisTextureInPS(TEX_AMBIENT_OCCLUSION, 1, gfx);
-			}
-			else
-			{
-				Res->GetResource<Texture2D>(Res->m_WhiteTex).lock()->SetThisTextureInPS(TEX_AMBIENT_OCCLUSION, 1, gfx);
-			}
-
-			if (m_TextureEm != INVALID_RESOURCE)
-			{
-				Res->GetResource<Texture2D>(m_TextureEm).lock()->SetThisTextureInPS(TEX_EMISSIVE, 1, gfx);
-			}
-			else
-			{
-				Res->GetResource<Texture2D>(Res->m_BlackTex).lock()->SetThisTextureInPS(TEX_EMISSIVE, 1, gfx);
-			}
-
-			if (m_MatType == MATERIAL_TYPE::MAT_PBR_MetRough_Tess)
-			{
-				if (m_TextureH != INVALID_RESOURCE)
-				{
-					Res->GetResource<Texture2D>(m_TextureH).lock()->SetThisTextureInDS(0, 1, gfx);
-				}
-				else
-				{
-					Res->GetResource<Texture2D>(Res->m_GreyTex).lock()->SetThisTextureInDS(0, 1, gfx);
-				}
-			}
-
-			if (m_MatType == MATERIAL_TYPE::MAT_PBR_MetRough_Trans)
-			{
-				if (m_TextureO != INVALID_RESOURCE)
-				{
-					Res->GetResource<Texture2D>(m_TextureO).lock()->SetThisTextureInPS(TEX_OPACITY, 1, gfx);
-				}
-				else
-				{
-					Res->GetResource<Texture2D>(Res->m_WhiteTex).lock()->SetThisTextureInPS(TEX_OPACITY, 1, gfx);
-				}
+				Res->GetResource<Texture2D>(m_TextureO).lock()->SetThisTextureInPS((int)eTextureType::OpacityMask, 1, gfx);
 			}
 		}
 	}
@@ -160,6 +115,8 @@ namespace rczEngine
 
 		if (handle != INVALID_RESOURCE)
 		{
+			throw std::exception();
+
 			auto gfx = Gfx::GfxCore::Pointer();
 
 			m_MaterialCB.UpdateConstantBuffer(&m_core, gfx);
@@ -167,65 +124,65 @@ namespace rczEngine
 
 			if (m_TextureAlbedo != INVALID_RESOURCE)
 			{
-				Res->GetResource<Texture3D>(m_TextureAlbedo).lock()->SetThisTextureInPS(TEX_ALBEDO, 1, gfx);
+				Res->GetResource<Texture3D>(m_TextureAlbedo).lock()->SetThisTextureInPS((int)eTextureType::BaseColor, 1, gfx);
 			}
 
 			if (m_TextureNormal != INVALID_RESOURCE)
 			{
-				Res->GetResource<Texture3D>(m_TextureNormal).lock()->SetThisTextureInPS(TEX_NORMAL, 1, gfx);
+				Res->GetResource<Texture3D>(m_TextureNormal).lock()->SetThisTextureInPS((int)eTextureType::Normals, 1, gfx);
 			}
 
 			if (m_TextureMetSpec != INVALID_RESOURCE)
 			{
-				Res->GetResource<Texture3D>(m_TextureMetSpec).lock()->SetThisTextureInPS(TEX_MET_SPEC, 1, gfx);
+				Res->GetResource<Texture3D>(m_TextureMetSpec).lock()->SetThisTextureInPS((int)eTextureType::MetallicSpecular, 1, gfx);
 			}
 
 
 			if (m_TextureRoughSmooth != INVALID_RESOURCE)
 			{
-				Res->GetResource<Texture3D>(m_TextureRoughSmooth).lock()->SetThisTextureInPS(TEX_ROUGH_SMOOTH, 1, gfx);
+				Res->GetResource<Texture3D>(m_TextureRoughSmooth).lock()->SetThisTextureInPS((int)eTextureType::RoughGloss, 1, gfx);
 			}
 
 			if (m_TextureAO != INVALID_RESOURCE)
 			{
-				Res->GetResource<Texture3D>(m_TextureAO).lock()->SetThisTextureInPS(TEX_AMBIENT_OCCLUSION, 1, gfx);
+				Res->GetResource<Texture3D>(m_TextureAO).lock()->SetThisTextureInPS((int)eTextureType::AmbientOcclusion, 1, gfx);
 			}
 
 
 			if (m_TextureEm != INVALID_RESOURCE)
 			{
-				Res->GetResource<Texture3D>(m_TextureEm).lock()->SetThisTextureInPS(TEX_EMISSIVE, 1, gfx);
+				Res->GetResource<Texture3D>(m_TextureEm).lock()->SetThisTextureInPS((int)eTextureType::Emissive, 1, gfx);
 			}
 		}
 	}
 
-	void Material::SetTexture(TEXTURE_TYPE texType, ResourceHandle rHandle)
+	void Material::SetTexture(eTextureType texType, ResourceHandle rHandle)
 	{
 		switch (texType)
 		{
 		default:
-		case TEX_ALBEDO:
+		case eTextureType::BaseColor:
 			m_TextureAlbedo = rHandle;
 			break;
-		case TEX_NORMAL:
+		case eTextureType::Normals:
 			m_TextureNormal = rHandle;
 			break;
-		case TEX_MET_SPEC:
+		case eTextureType::MetallicSpecular:
 			m_TextureMetSpec = rHandle;
 			break;
-		case TEX_ROUGH_SMOOTH:
+		case eTextureType::RoughGloss:
 			m_TextureRoughSmooth = rHandle;
 			break;
-		case TEX_AMBIENT_OCCLUSION:
+		case eTextureType::AmbientOcclusion:
 			m_TextureAO = rHandle;
 			break;
-		case TEX_EMISSIVE:
+		case eTextureType::Emissive:
 			m_TextureEm = rHandle;
 			break;
-		case TEX_HEIGHT:
+		case eTextureType::HeightMap:
 			m_TextureH = rHandle;
 			break;
-		case TEX_OPACITY:
+		case eTextureType::OpacityMask:
 			m_TextureO = rHandle;
 			break;
 		}
@@ -287,5 +244,56 @@ namespace rczEngine
 
 		m_MaterialCB.CreateConstantBuffer(sizeof(MaterialCore), Gfx::USAGE_DEFAULT, Gfx::GfxCore::Pointer());
 	}
+
+
+	////////////////////////////
+	/// Material Render Info
+	////////////////////////////
+
+	int MaterialRenderInfo::CalculateRenderHash(eComponentID componentID, eMaterialType matType, eShadingType shading, eBlendType blendType, bool Tesselated, bool TwoSided, bool blendedMaterial, bool wireframe)
+	{
+		int hash = 0;
+
+		hash |= (int)componentID;
+		hash |= (int)matType << 5;
+		hash |= (int)shading << 9;
+		hash |= (int)blendType << 13;
+		hash |= (int)Tesselated << 14;
+		hash |= (int)TwoSided << 15;
+		hash |= (int)blendedMaterial << 16;
+		hash |= (int)wireframe << 17;
+
+		return hash;
+	}
+
+	int MaterialRenderInfo::CalculateRenderHash(MaterialRenderInfo rInfo)
+	{
+		return CalculateRenderHash(
+			rInfo.componentID,
+			rInfo.matType,
+			rInfo.shading,
+			rInfo.blendType,
+			rInfo.Tesselated,
+			rInfo.TwoSided,
+			rInfo.blendedMaterial,
+			rInfo.wireframe);
+	}
+
+	MaterialRenderInfo MaterialRenderInfo::DecodeRenderHash(int hash)
+	{
+		MaterialRenderInfo info;
+
+		info.componentID = (eComponentID)(hash & 0b11111);
+		info.matType = (eMaterialType)(hash >> 5 & 0b1111);
+		info.shading = (eShadingType)(hash >> 9 & 0b1111);
+		info.blendType = (eBlendType)(hash >> 13 & 0b1111);
+		info.Tesselated = (bool)(hash >> 14 & 0b1);
+		info.TwoSided = (bool)(hash >> 15 & 0b1);
+		info.blendedMaterial = (bool)(hash >> 16 & 0b1);
+		info.wireframe = (bool)(hash >> 17 & 0b1);
+
+		return info;
+	}
+
 
 }

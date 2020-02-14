@@ -109,7 +109,7 @@ PS_Output PS_Main(PS_Input Input)
     float SSAO = SSAOTex.Sample(LinearWrapSampler, Input.Texcoord).r;
     SSAO = pow(SSAO, 4.0f);
 
-	psout.PBR.xyz *= albedoColor.w * (SSAO);
+	psout.PBR.xyz *= albedoColor.w;
     //FinalColor *= ShadowMapTex.Sample(LinearSampler, Input.Texcoord).r;
     return psout;
 }

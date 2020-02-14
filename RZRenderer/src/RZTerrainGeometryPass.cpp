@@ -39,7 +39,7 @@ namespace rczEngine
 	void TerrainGeometryPass::RenderPass()
 	{
 		///NORMAL MATERIALS
-		RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_TERRAIN_RENDERER, MAT_PBR_MetRough, true);
+		//RacrozRenderer::PrepareRender(SceneManager::Pointer()->GetActiveScene().get(), CMP_TERRAIN_RENDERER, PBR_MetRough, true);
 	}
 
 	void TerrainGeometryPass::PostRenderPass()

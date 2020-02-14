@@ -2,15 +2,17 @@
 
 namespace rczEngine
 {
-	void GameObject::Init()
+	void GameObject::Init(const String&& owningScene)
 	{
+		m_OwningScene = SceneManager::Pointer()->GetScene(owningScene);
+
 		for (auto It = m_Components.begin(); It != m_Components.end(); It++)
 		{
 			(*It).second->Init();
 		}
 	}
 
-	void GameObject::Update(Scene* scene, float deltaTime)
+	void GameObject::Update(float deltaTime)
 	{
 		if (m_ToDestroy) return;
 
@@ -26,7 +28,7 @@ namespace rczEngine
 #pragma omp parallel for
 		for (int i = 0; i < m_ChildrenVector.size(); ++i)
 		{
-			m_ChildrenVector[i].lock()->Update(scene, deltaTime);
+			m_ChildrenVector[i].lock()->Update(deltaTime);
 		}
 	}
 
@@ -57,9 +59,11 @@ namespace rczEngine
 		m_ChildrenVector.clear();
 	}
 
-	void GameObject::PreRender(Scene * scene)
+	void GameObject::PreRender()
 	{
 		m_ToWorld[0].Transpose();
+
+		auto scene = m_OwningScene.lock();
 
 		scene->m_WorldMatrix.UpdateConstantBuffer(m_ToWorld, scene->m_gfx);
 		scene->m_WorldMatrix.SetBufferInVS(2, scene->m_gfx);
@@ -68,43 +72,46 @@ namespace rczEngine
 		m_ToWorld[0].Transpose();
 	}
 
-	void GameObject::Render(Scene * scene, ComponentType cmpType, MATERIAL_TYPE mat)
-	{
+	void GameObject::Render(ComponentType cmpType, int renderHash)
+	{	
+		auto scene = m_OwningScene.lock();
+		auto gfx = scene->m_gfx;
+		auto res = scene->m_res;
 
 		if (cmpType == CMP_MODEL_RENDERER)
 		{
-			auto component = GetComponent<ModelRenderer>(CMP_MODEL_RENDERER);
+			auto component = GetComponent<ModelRenderer>(CMP_MODEL_RENDERER).lock();
 
-			if (component.lock())
+			if (component)
 			{
-				component.lock()->Render(scene->m_gfx, scene->m_res, scene, mat);
+				component->Render(gfx, res, renderHash);
 			}
 		}
 		else if (cmpType == CMP_SKINNED_MODEL_RENDERER)
 		{
-			auto component = GetComponent<SkinnedModelRenderer>(CMP_SKINNED_MODEL_RENDERER);
+			auto component = GetComponent<SkinnedModelRenderer>(CMP_SKINNED_MODEL_RENDERER).lock();
 
-			if (component.lock())
+			if (component)
 			{
-				component.lock()->RenderSkinned(scene->m_gfx, scene->m_res, scene, mat);
+				//component->RenderSkinned(gfx, res, mat);
 			}
 		}
 		else if (cmpType == CMP_TERRAIN_RENDERER)
 		{
-			auto component = GetComponent<TerrainRenderer>(CMP_TERRAIN_RENDERER);
+			auto component = GetComponent<TerrainRenderer>(CMP_TERRAIN_RENDERER).lock();
 
-			if (component.lock())
+			if (component)
 			{
-				component.lock()->Render(scene->m_gfx, scene->m_res, scene);
+				component->Render(gfx, res);
 			}
 		}
 		else if (cmpType == CMP_SPACE_MANAGER)
 		{
-			auto component = GetComponent<SpaceComponent>(CMP_SPACE_MANAGER);
+			auto component = GetComponent<SpaceComponent>(CMP_SPACE_MANAGER).lock();
 
-			if (component.lock())
+			if (component)
 			{
-				component.lock()->Render(scene->m_gfx, scene->m_res, scene);
+				component->Render(gfx, res);
 			}
 		}
 	}
@@ -123,7 +130,7 @@ namespace rczEngine
 		}
 	}
 
-	WeakCmpPtr GameObject::AddComponent(eCOMPONENT_ID cmp, StrCmpPtr ptr)
+	WeakCmpPtr GameObject::AddComponent(eComponentID cmp, StrCmpPtr ptr)
 	{
 		m_Components[cmp] = ptr;
 		ptr->Init();
@@ -132,6 +139,40 @@ namespace rczEngine
 	}
 
 #ifndef RZ_EDITOR
+
+
+	Vector<WeakCmpPtr> GameObject::GetRenderComponents()
+	{
+		Vector<WeakCmpPtr> renderComps;
+
+		for (auto cmp : m_Components)
+		{
+			auto ptr = cmp.second;
+
+			if (ptr->IsRendereable())
+			{
+				renderComps.push_back(cmp.second);
+			}
+		}
+
+		return renderComps;
+	}
+
+	bool GameObject::HasRenderComponents()
+	{
+		for (auto cmp : m_Components)
+		{
+			auto& ptr = *cmp.second;
+
+			if (ptr.IsRendereable())
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	void GameObject::RenderComponents()
 	{
 
@@ -259,7 +300,7 @@ namespace rczEngine
 
 		for (int32 i = 0; i < nComponents; ++i)
 		{
-			eCOMPONENT_ID cmpType = (eCOMPONENT_ID)(ser->GetNextObjectSerial() - SERIAL_COMPONENT_OFFSET);
+			eComponentID cmpType = (eComponentID)(ser->GetNextObjectSerial() - SERIAL_COMPONENT_OFFSET);
 			scenePtr->CreateComponent(cmpType, shared_from_this())->DeSerialize();
 		}
 	}

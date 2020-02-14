@@ -23,13 +23,13 @@ namespace rczEngine
 		delete _Instance();
 	}
 
-	StrGameObjectPtr ActorComponentFactory::CreateActor(const String& name, Vector3 position, Vector3 orientation, Vector3 scale)
+	StrGameObjectPtr ActorComponentFactory::CreateActor(const String&& sceneName, const String&& name, Vector3 position, Vector3 orientation, Vector3 scale)
 	{
 		///Create a strong pointer to the new actor
 		StrGameObjectPtr Temp = std::make_shared<GameObject>(GetNewActorId(), name);
 
 		///Init the new Actor
-		Temp->Init();
+		Temp->Init(std::move(sceneName));
 
 		Temp->SetPosition(position);
 		Temp->SetScale(scale);
@@ -38,8 +38,8 @@ namespace rczEngine
 		///Return the temp, the temp pointer created here stops existing.
 		return Temp;
 	}
-	
-	StrCmpPtr ActorComponentFactory::CreateComponent(eCOMPONENT_ID component, WeakGameObjPtr owner)
+
+	StrCmpPtr ActorComponentFactory::CreateComponent(eComponentID component, WeakGameObjPtr owner)
 	{
 		StrCmpPtr P;
 

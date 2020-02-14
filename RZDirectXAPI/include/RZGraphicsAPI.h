@@ -28,7 +28,7 @@ namespace rczEngine
 #pragma region =	| Init Functions |
 
 			///Starts and sets everything up.
-			void InitAndStart(PlatformData* platform, int width, int height, bool isWindowed);
+			void InitAndStart(bool isWindowed);
 
 			///Releases the allocated memory
 			void Destroy();
@@ -67,6 +67,8 @@ namespace rczEngine
 			int32 GetHeight() { return m_ScreenHeight; };
 
 			ID3D11Device* GetDevice() { return m_Device; };
+
+			ID3D11DeviceContext* GetDeviceContext() { return m_DeviceContext; };
 
 #pragma endregion
 
@@ -347,10 +349,8 @@ namespace rczEngine
 			ResourceHandle m_SetMaterial = INVALID_RESOURCE;
 
 		private:
-			friend GUIEditor;
+			friend ImGUIEditor;
 		
-			PlatformData* m_PlatformData;
-
 			///The Device it is using
 			ID3D11Device* m_Device;
 

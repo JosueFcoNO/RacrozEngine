@@ -132,6 +132,12 @@
     <Filter Include="Archivos de código fuente\Octree">
       <UniqueIdentifier>{ceeb7aa7-7b94-47fa-bc80-1ef0359db193}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\GUI">
+      <UniqueIdentifier>{7b55f3f6-87a8-498a-b5f6-96b4b5639c95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\GUI">
+      <UniqueIdentifier>{b31cf262-c794-4e3a-893c-8f22847bd06c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZScene.h">
@@ -281,29 +287,14 @@
     <ClInclude Include="include\RZEnginePCH.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\RZEditorGUI.h">
-      <Filter>Archivos de encabezado\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RZGameObjectGUI.h">
-      <Filter>Archivos de encabezado\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RZSceneGraphGUI.h">
-      <Filter>Archivos de encabezado\Imgui</Filter>
-    </ClInclude>
     <ClInclude Include="include\RZCameraWalk.h">
       <Filter>Archivos de encabezado\Camera Manager</Filter>
     </ClInclude>
     <ClInclude Include="include\RZCameraGhost.h">
       <Filter>Archivos de encabezado\Camera Manager</Filter>
     </ClInclude>
-    <ClInclude Include="include\RZResourcesGUI.h">
-      <Filter>Archivos de encabezado\Imgui</Filter>
-    </ClInclude>
     <ClInclude Include="include\RZResource.h">
       <Filter>Archivos de encabezado\Resource Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RZBaseWindowGUI.h">
-      <Filter>Archivos de encabezado\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="include\RZModelLoader.h">
       <Filter>Archivos de encabezado\Model</Filter>
@@ -329,14 +320,47 @@
     <ClInclude Include="include\RZEngineFwdDcl.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\RZConsoleGUI.h">
-      <Filter>Archivos de encabezado\Imgui</Filter>
-    </ClInclude>
     <ClInclude Include="include\RZGraphicDebuggerLineList.h">
       <Filter>Archivos de encabezado\GraphicDebugger</Filter>
     </ClInclude>
     <ClInclude Include="include\RZGeometryNode.h">
       <Filter>Archivos de encabezado\Octree</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZBaseWindowGUI.h">
+      <Filter>Archivos de encabezado\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZConsoleGUI.h">
+      <Filter>Archivos de encabezado\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZEditorGUI.h">
+      <Filter>Archivos de encabezado\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZGameObjectGUI.h">
+      <Filter>Archivos de encabezado\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZResourcesGUI.h">
+      <Filter>Archivos de encabezado\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSceneGraphGUI.h">
+      <Filter>Archivos de encabezado\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui_impl_dx11.h">
+      <Filter>Archivos de encabezado\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui_impl_win32.h">
+      <Filter>Archivos de encabezado\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui_internal.h">
+      <Filter>Archivos de encabezado\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imstb_rectpack.h">
+      <Filter>Archivos de encabezado\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imstb_textedit.h">
+      <Filter>Archivos de encabezado\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imstb_truetype.h">
+      <Filter>Archivos de encabezado\Imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -466,15 +490,6 @@
     <ClCompile Include="src\RZSceneManager.cpp">
       <Filter>Archivos de código fuente\Scene Graph</Filter>
     </ClCompile>
-    <ClCompile Include="src\RZEditorGUI.cpp">
-      <Filter>Archivos de código fuente\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RZGameObjectGUI.cpp">
-      <Filter>Archivos de código fuente\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RZSceneGraphGUI.cpp">
-      <Filter>Archivos de código fuente\Imgui</Filter>
-    </ClCompile>
     <ClCompile Include="src\RZFbxLoader.cpp">
       <Filter>Archivos de código fuente\Model</Filter>
     </ClCompile>
@@ -493,14 +508,35 @@
     <ClCompile Include="src\RZSkinnedBoneComponent.cpp">
       <Filter>Archivos de código fuente\Components</Filter>
     </ClCompile>
-    <ClCompile Include="src\RZConsoleGUI.cpp">
-      <Filter>Archivos de código fuente\Imgui</Filter>
-    </ClCompile>
     <ClCompile Include="src\RZGraphicDebuggerLineList.cpp">
       <Filter>Archivos de código fuente\GraphicDebugger</Filter>
     </ClCompile>
     <ClCompile Include="src\RZOctree.cpp">
       <Filter>Archivos de código fuente\Octree</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZConsoleGUI.cpp">
+      <Filter>Archivos de código fuente\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZEditorGUI.cpp">
+      <Filter>Archivos de código fuente\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZGameObjectGUI.cpp">
+      <Filter>Archivos de código fuente\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZSceneGraphGUI.cpp">
+      <Filter>Archivos de código fuente\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_demo.cpp">
+      <Filter>Archivos de código fuente\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_impl_dx11.cpp">
+      <Filter>Archivos de código fuente\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_impl_win32.cpp">
+      <Filter>Archivos de código fuente\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui_widgets.cpp">
+      <Filter>Archivos de código fuente\Imgui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

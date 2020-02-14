@@ -138,7 +138,7 @@ PS_OUTPUT PS_Main(PS_INPUT input)
     }
    
     ao /= (iterations * 4);
-	Out.Color = 1.0f.xxxx - ao.xxxx;
+	Out.Color = 1.0f.xxxx;
    
     return Out;
 }

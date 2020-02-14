@@ -50,25 +50,29 @@ namespace rczEngine
 	void GeometryPass::RenderPass()
 	{
 		auto activeScene = m_ActiveScene.get();
+		auto renderer = RacrozRenderer::Pointer();
 
 		m_PShader.SetThisPixelShader(m_gfx);
-		RacrozRenderer::RenderScene(activeScene, CMP_MODEL_RENDERER, MAT_PBR_MetRough, true);
+		renderer->RenderObjs(true, CMP_MODEL_RENDERER, eMaterialType::PBR_MetRough, eShadingType::PBR, eBlendType::Opaque, false, false, false, false);
 
 		m_SmoothPS.SetThisPixelShader(m_gfx);
-		RacrozRenderer::RenderScene(activeScene, CMP_MODEL_RENDERER, MAT_PBR_SpecSmooth, true);
-
-		m_SmoothSpecAlphaPS.SetThisPixelShader(m_gfx);
-		RacrozRenderer::RenderScene(activeScene, CMP_MODEL_RENDERER, MAT_PBR_SpecSmooth_Alpha, true);
+		renderer->RenderObjs(true, CMP_MODEL_RENDERER, eMaterialType::PBR_SpecSmooth, eShadingType::PBR, eBlendType::Opaque, false, false, false, false);
 
 		m_VTessShader.SetThisVertexShaderAndInputLayout(m_gfx);
 		m_Hshader.SetThisHullShader(m_gfx);
 		m_Dshader.SetThisDomainShader(m_gfx);
-		RacrozRenderer::RenderScene(activeScene, CMP_MODEL_RENDERER, MAT_PBR_MetRough_Tess, true);
+
+		m_PShader.SetThisPixelShader(m_gfx);
+		renderer->RenderObjs(true, CMP_MODEL_RENDERER, eMaterialType::PBR_MetRough, eShadingType::PBR, eBlendType::Opaque, true, false, false, false);
+		
+		m_SmoothPS.SetThisPixelShader(m_gfx);
+		renderer->RenderObjs(true, CMP_MODEL_RENDERER, eMaterialType::PBR_SpecSmooth, eShadingType::PBR, eBlendType::Opaque, true, false, false, false);
+		
 		m_gfx->RemoveDomainShader();
 		m_gfx->RemoveHullShader();
 		
-		m_SkinnedVshader.SetThisVertexShaderAndInputLayout(m_gfx);
-		RacrozRenderer::RenderScene(SceneManager::Pointer()->GetActiveScene().get(), CMP_SKINNED_MODEL_RENDERER, MAT_PBR_MetRough, true);
+		//m_SkinnedVshader.SetThisVertexShaderAndInputLayout(m_gfx);
+		//RacrozRenderer::PrepareRender(SceneManager::Pointer()->GetActiveScene().get(), CMP_SKINNED_MODEL_RENDERER, PBR_MetRough, true);
 	}
 
 	void GeometryPass::PostRenderPass()

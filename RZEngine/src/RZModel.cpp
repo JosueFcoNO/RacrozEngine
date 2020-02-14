@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void Model::DrawModel(Map<String, ResourceHandle>* materialOverride, MATERIAL_TYPE matType)
+	void Model::DrawModel(Map<String, ResourceHandle>* materialOverride, int renderHash)
 	{
 		//TODO: Pasarle el material override ya me hace sucio o no?
 		auto res = ResVault::Pointer();
@@ -18,10 +18,15 @@ namespace rczEngine
 		{
 			auto mat = res->GetResource<Material>(materials->at(m_VectorMeshes[i].m_Material)).lock();
 
-			if (mat->m_MatType == matType || matType == MAT_ANY)
+			MaterialRenderInfo currentRenderInfo;
+			currentRenderInfo.InitFromMaterial(*mat);
+			currentRenderInfo.componentID = CMP_MODEL_RENDERER;
+			auto currentRenderHash = MaterialRenderInfo::CalculateRenderHash(currentRenderInfo);
+
+			if (currentRenderHash == renderHash || renderHash == -1)
 			{
-				if (mat->m_MatType != MAT_PLANET)
-					mat->SetThisMaterial(gfx, res);
+				if (mat->m_MatType != eMaterialType::PlanetSurface)
+					mat->SetThisMaterial();
 
 				m_VectorMeshes[i].Draw(gfx);
 			}
@@ -187,7 +192,7 @@ namespace rczEngine
 
 			m_MaterialMap.insert(Pair<String, ResourceHandle>(Temp->GetName(), tempHandle));
 
-			Temp->InitMaterial(MAT_PBR_MetRough, gfx);
+			Temp->InitMaterial(eMaterialType::PBR_MetRough);
 		}
 
 		///Iterate the scene's meshes.

@@ -9,7 +9,7 @@ namespace rczEngine
 
 		void Init() { };
 		void Update(float deltaTime);
-		void Render(Gfx::GfxCore* gfx, ResVault* res, Scene* scene, MATERIAL_TYPE matType = MAT_ANY);
+		void Render(Gfx::GfxCore* gfx, ResVault* res, Scene* scene, eMaterialType matType = eMaterialType::AnyMaterial);
 		void Destroy() {};
 
 		virtual void Serialize()

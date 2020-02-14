@@ -65,7 +65,7 @@ PS_Input DS_Main(ConstantOutputType input, float3 uvwCoord : SV_DomainLocation, 
 	float height = HeightTexture.SampleLevel(Sampler_, tex, 0).r;
 
 	////Offset the vertex position
-	vertexPosition += normal * (height*2.0f - 1.0f) * 0.05f;
+	vertexPosition += normal * ((height*2.0f - 1.0f) * 0.05f);
 
 	matrix m = mul(worldMatrix, ViewMatrix);
 	m = mul(m, ProjectionMatrix);

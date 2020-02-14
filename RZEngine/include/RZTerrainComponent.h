@@ -9,7 +9,7 @@ namespace rczEngine
 
 		void Init() {};
 		void Update(float deltaTime) {};
-		void Render(Gfx::GfxCore* gfx, ResVault* res, Scene* scene)
+		void Render(Gfx::GfxCore* gfx, ResVault* res)
 		{
 			m_Terrain.RenderTerrain();
 		};

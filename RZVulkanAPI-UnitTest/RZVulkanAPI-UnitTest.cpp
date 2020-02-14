@@ -145,12 +145,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	//ResourceHandle Revolver = RES->LoadResource("Models/Revolver/Revolver.dae", "Rev");
 	//auto mat = RES->GetResource<Model>(Revolver).lock()->m_VectorMaterial[0];
 	//auto Materiale = RES->GetResource<Material>(mat);
-	//Materiale.lock()->SetTexture(TEXTURE_TYPE::TEX_ALBEDO, RES->LoadResource("Models/Revolver/a.tga", "albedo"));
-	//Materiale.lock()->SetTexture(TEXTURE_TYPE::TEX_AMBIENT_OCCLUSION, RES->LoadResource("Models/Revolver/ao.tga", "ao"));
-	//Materiale.lock()->SetTexture(TEXTURE_TYPE::TEX_NORMAL, RES->LoadResource("Models/Revolver/n.tga", "normal"));
-	//Materiale.lock()->SetTexture(TEXTURE_TYPE::TEX_EMISSIVE, RES->LoadResource("Models/Revolver/e.tga", "em"));
-	//Materiale.lock()->SetTexture(TEXTURE_TYPE::TEX_METALLIC, RES->LoadResource("Models/Revolver/m.tga", "met"));
-	//Materiale.lock()->SetTexture(TEXTURE_TYPE::TEX_ROUGHNESS, RES->LoadResource("Models/Revolver/r.tga", "r"));
+	//Materiale.lock()->SetTexture(eTextureType::BaseColor, RES->LoadResource("Models/Revolver/a.tga", "albedo"));
+	//Materiale.lock()->SetTexture(eTextureType::AmbientOcclusion, RES->LoadResource("Models/Revolver/ao.tga", "ao"));
+	//Materiale.lock()->SetTexture(eTextureType::Normals, RES->LoadResource("Models/Revolver/n.tga", "normal"));
+	//Materiale.lock()->SetTexture(eTextureType::Emissive, RES->LoadResource("Models/Revolver/e.tga", "em"));
+	//Materiale.lock()->SetTexture(eTextureType::Metallic, RES->LoadResource("Models/Revolver/m.tga", "met"));
+	//Materiale.lock()->SetTexture(eTextureType::Roughness, RES->LoadResource("Models/Revolver/r.tga", "r"));
 
 	//////////////////////////////////////////////////
 	//////////////Scene///////////////////////////////

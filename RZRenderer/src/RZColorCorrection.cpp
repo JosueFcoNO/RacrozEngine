@@ -11,15 +11,15 @@ namespace rczEngine
 		GammaBuffer.CreateConstantBuffer(sizeof(GammaSetting), Gfx::USAGE_DEFAULT, m_gfx);
 		GammaBuffer.UpdateConstantBuffer(&GammaData, m_gfx);
 
-		GUIEditor::Pointer()->ColorMode = GammaData.Correction;
+		ImGUIEditor::Pointer()->ColorMode = GammaData.Correction;
 	}
 
 	void ColorCorrectionPass::PreRenderPass()
 	{
 		m_PShader.SetThisPixelShader(m_gfx);
 
-		GammaData.Exposure = GUIEditor::Pointer()->Exposure;
-		GammaData.Correction = GUIEditor::Pointer()->ColorMode;
+		GammaData.Exposure = ImGUIEditor::Pointer()->Exposure;
+		GammaData.Correction = ImGUIEditor::Pointer()->ColorMode;
 		GammaBuffer.UpdateConstantBuffer(&GammaData, m_gfx);
 		GammaBuffer.SetBufferInPS(8, m_gfx);
 

@@ -6,7 +6,7 @@ namespace rczEngine
 	{
 	public:
 		RZ_EXP Model() { m_Type = ResourceType::RES_3DMODEL; };
-		RZ_EXP void DrawModel(Map<String, ResourceHandle>* materialOverride, MATERIAL_TYPE matType = MAT_ANY);
+		RZ_EXP void DrawModel(Map<String, ResourceHandle>* materialOverride, int renderHash = -1);
 
 		RZ_EXP virtual void Serialize();
 		RZ_EXP virtual void DeSerialize();

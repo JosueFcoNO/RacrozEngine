@@ -8,10 +8,10 @@ namespace rczEngine
 		{
 			Matrix4 transform = m_JointMatrix;
 
-			if (GUIEditor::Pointer()->TransposeJoint)
+			if (ImGUIEditor::Pointer()->TransposeJoint)
 				transform.Transpose();
 
-			if (m_Parent && GUIEditor::Pointer()->UseParents)
+			if (m_Parent && ImGUIEditor::Pointer()->UseParents)
 			{
 				m_AccumulatedMatrix = m_Parent->m_AccumulatedMatrix * transform;
 			}
@@ -20,7 +20,7 @@ namespace rczEngine
 				m_AccumulatedMatrix = transform;
 			}
 
-			if (GUIEditor::Pointer()->ByOffset)
+			if (ImGUIEditor::Pointer()->ByOffset)
 				matrixPalette[m_BoneIndex] = m_AccumulatedMatrix * m_OffsetMatrix;
 			else
 				matrixPalette[m_BoneIndex] = m_AccumulatedMatrix;
@@ -62,7 +62,7 @@ namespace rczEngine
 		Quaternion newRot = Quaternion::Slerp(k0->m_Rotation, k1->m_Rotation, currentTime);
 
 		///Create the new local joint matrix for the bone.
-		switch (GUIEditor::Pointer()->SkinMode)
+		switch (ImGUIEditor::Pointer()->SkinMode)
 		{
 		default:
 		case 0:

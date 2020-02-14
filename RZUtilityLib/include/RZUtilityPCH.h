@@ -9,6 +9,17 @@
 #include "RZMemoryAllocators.h"
 #include "RZModule.h"
 
+#if RZ_PLATFORM == RZ_PLATFORM_WINDOWS
+#define WIN32_LEAN_AND_MEAN             // Excluir material rara vez utilizado de encabezados de Windows
+// Archivos de encabezado de Windows:
+#include <windows.h>
+#elif RZ_PLATFORM == RZ_PLATFORM_LINUX
+
+#endif
+#include "CbnOSDefs.h"
+#include "CbnWindow.h"
+#include "CbnOSLayer.h"
+
 #include "RZParser.h"
 
 #include "RZFileCoder.h"
@@ -59,5 +70,8 @@
 #include "RZProfilerEvent.h"
 #include "RZProfiler.h"
 #include "RZProfilerObj.h"
+
+#include "RZMemoryProfilerEvent.h"
+#include "RZMemoryProfiler.h"
 
 #include "RZPath.h"

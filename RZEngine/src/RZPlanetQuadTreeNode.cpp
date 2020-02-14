@@ -116,10 +116,10 @@ namespace rczEngine
 		Noise = noise;
 
 		Size = Mesh_Res;
-		distVertex = planeSize / double(Mesh_Res - 1);
+		distVertex = planeSize / double(Size - 1);
 		HalfSize = planeSize / 2.0;
 
-		MeshPlane::GenerateIndices(Mesh_Res, m_IndexBuffer);
+		MeshPlane::GenerateIndices(Size, m_IndexBuffer);
 		
 		m_Index = PlanetOwner->CreateNewNode(m_CurrentVertices);
 
@@ -301,10 +301,10 @@ namespace rczEngine
 
 	void PlanetQuadTreeNode::ConstructPlanesAndCorners()
 	{
-		auto topleft = GetVertex(0, 0).VertexPosition;
-		auto topright = GetVertex(Mesh_Row_Size, 0).VertexPosition;
-		auto bottomright = GetVertex(Mesh_Row_Size, Mesh_Row_Size).VertexPosition;
-		auto bottomleft = GetVertex(0, Mesh_Row_Size).VertexPosition;
+		auto topleft = GetVertex(0, 0)->VertexPosition;
+		auto topright = GetVertex(Mesh_Row_Size, 0)->VertexPosition;
+		auto bottomright = GetVertex(Mesh_Row_Size, Mesh_Row_Size)->VertexPosition;
+		auto bottomleft = GetVertex(0, Mesh_Row_Size)->VertexPosition;
 
 		m_NodePlanes[0].ConstructFromPoints(topleft, topright, topleft * 2);
 		m_NodePlanes[1].ConstructFromPoints(topright, bottomright, topright * 2);
@@ -319,25 +319,25 @@ namespace rczEngine
 		node.node = this;
 
 		node.Side = eSide::Up;
-		node.Pos = GetVertex(Mesh_Row_Half, 0).VertexPosition;
+		node.Pos = GetVertex(Mesh_Row_Half, 0)->VertexPosition;
 		node.Hash = Vector3::Hash(node.Pos.GetNormalized());
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Left;
-		node.Pos = GetVertex(0, Mesh_Row_Half).VertexPosition;
+		node.Pos = GetVertex(0, Mesh_Row_Half)->VertexPosition;
 		node.Hash = Vector3::Hash(node.Pos.GetNormalized());
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Right;
-		node.Pos = GetVertex(Mesh_Row_Size, Mesh_Row_Half).VertexPosition;
+		node.Pos = GetVertex(Mesh_Row_Size, Mesh_Row_Half)->VertexPosition;
 		node.Hash = Vector3::Hash(node.Pos.GetNormalized());
 
 		Connections.push_back(node);
 
 		node.Side = eSide::Down;
-		node.Pos = GetVertex(Mesh_Row_Half, Mesh_Row_Size).VertexPosition;
+		node.Pos = GetVertex(Mesh_Row_Half, Mesh_Row_Size)->VertexPosition;
 		node.Hash = Vector3::Hash(node.Pos.GetNormalized());
 
 		Connections.push_back(node);
@@ -471,14 +471,17 @@ namespace rczEngine
 		else
 			ptr->m_core.g_Albedo.Set(1.0f, 1.0f, 1.0f);
 
-		ptr->SetThisMaterial(gfxPtr, resPtr);
+		ptr->SetThisMaterial();
 
 		//AABB_Debug.lock()->Active(!m_Subdivided);
 
 		if (m_Subdivided)
 		{
 			if (CheckChildrenReady())
+			{
+				DestroyQuadTreeNode();
 				return RenderChildren();
+			}
 		}
 
 		int32 vertexSize;
@@ -486,7 +489,7 @@ namespace rczEngine
 		m_IndexBuffer.SetThisIndexBuffer(gfxPtr);
 		vertexSize = m_IndexBuffer.m_IndexSize;
 
-		gfxPtr->DrawIndexed(vertexSize, 0, m_Index * Math::Pow(PlanetQuadTreeNode::Mesh_Row_Size, 2));
+		gfxPtr->DrawIndexed(vertexSize, 0, m_Index * Math::Pow(PlanetQuadTreeNode::Mesh_Res, 2));
 
 	}
 

@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	enum eCOMPONENT_ID
+	enum eComponentID
 	{
 		CMP_NONE = 0,
 		CMP_CAMERA,

@@ -22,7 +22,7 @@
     <ProjectGuid>{55735495-7D6E-4418-B0CB-FD761AEBCC36}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>RZUtilityLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <ProjectName>RZUtilityLib</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -82,7 +82,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath)</IncludePath>
     <CodeAnalysisRuleSet>CppCoreCheckBoundsRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
@@ -98,7 +98,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath)</IncludePath>
     <CodeAnalysisRuleSet>CppCoreCheckRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
@@ -131,7 +131,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>RZUtilityPCH.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>./include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(GSL)/include;</AdditionalIncludeDirectories>
       <EnablePREfast>true</EnablePREfast>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
@@ -177,7 +177,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>RZUtilityPCH.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>./include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(GSL)/include;</AdditionalIncludeDirectories>
       <EnablePREfast>true</EnablePREfast>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
@@ -191,6 +191,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\CbnOSDefs.h" />
+    <ClInclude Include="include\CbnWindow.h" />
     <ClInclude Include="include\RZAABB.h" />
     <ClInclude Include="include\RZBoxMuller.h" />
     <ClInclude Include="include\RZCamera.h" />
@@ -207,6 +209,8 @@
     <ClInclude Include="include\RZMatrix3D.h" />
     <ClInclude Include="include\RZMatrix4D.h" />
     <ClInclude Include="include\RZMemoryAllocators.h" />
+    <ClInclude Include="include\RZMemoryProfiler.h" />
+    <ClInclude Include="include\RZMemoryProfilerEvent.h" />
     <ClInclude Include="include\RZModule.h" />
     <ClInclude Include="include\RZParser.h" />
     <ClInclude Include="include\RZPath.h" />
@@ -236,10 +240,13 @@
     <ClInclude Include="include\RZVector3D.h" />
     <ClInclude Include="include\RZRandomZiggurat.h" />
     <ClInclude Include="include\RZVector4D.h" />
+    <ClInclude Include="include\CbnOSLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\RZDegree.cpp" />
     <ClCompile Include="include\RZFrustum.cpp" />
+    <ClCompile Include="src\CbnWindow.cpp" />
+    <ClCompile Include="src\CbnOSLayer.cpp" />
     <ClCompile Include="src\RZAABB.cpp" />
     <ClCompile Include="src\RZCamera.cpp" />
     <ClCompile Include="src\RZColor.cpp" />
@@ -249,6 +256,8 @@
     <ClCompile Include="src\RZMatrix3D.cpp" />
     <ClCompile Include="src\RZMatrix4D.cpp" />
     <ClCompile Include="src\RZMemoryAllocators.cpp" />
+    <ClCompile Include="src\RZMemoryProfiler.cpp" />
+    <ClCompile Include="src\RZMemoryProfilerEvent.cpp" />
     <ClCompile Include="src\RZPath.cpp" />
     <ClCompile Include="src\RZPlane.cpp" />
     <ClCompile Include="src\RZProfiler.cpp" />

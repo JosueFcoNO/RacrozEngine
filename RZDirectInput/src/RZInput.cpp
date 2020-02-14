@@ -30,6 +30,9 @@ namespace rczEngine
 
 	bool Input::InitInput()
 	{
+		hinstance = OSLayer::Pointer()->GetInstance();
+		hwnd = OSLayer::Pointer()->GetWindowHandle();
+
 		HRESULT hr = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (LPVOID*)&InputPtr, NULL);
 
 		hr = InputPtr->CreateDevice(GUID_SysKeyboard, &m_KeyBoardDevice, NULL);

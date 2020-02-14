@@ -50,7 +50,7 @@ namespace rczEngine
 
 				if (ImGui::Button("New Resource"))
 				{
-					//GUIEditor::LoadFile("Load Resource", "NewRes", ResVault::Pointer());
+					//ImGUIEditor::LoadFile("Load Resource", "NewRes", ResVault::Pointer());
 				}
 
 				

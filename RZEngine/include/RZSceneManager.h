@@ -12,9 +12,11 @@ namespace rczEngine
 		RZ_EXP static SceneManager* Pointer();
 		RZ_EXP static void ShutDown();
 
-		RZ_EXP StrPtr<Scene> CreateDefaultScene(const String& name);
-		RZ_EXP StrPtr<Scene> CreateEmptyScene(const String& name);
+		RZ_EXP StrPtr<Scene> CreateDefaultScene(const String&& name);
+		RZ_EXP StrPtr<Scene> CreateEmptyScene(const String&& name);
 		RZ_EXP StrPtr<Scene> GetActiveScene();
+
+		WeakPtr<Scene> GetScene(String sceneName);
 
 		RZ_EXP StrPtr<Scene> LoadScene(const String&filePath);
 		RZ_EXP void SaveScene(const String& filePath);
@@ -23,7 +25,7 @@ namespace rczEngine
 		StrPtr<Resource> getNewResource(SERIALS serials);
 
 		StrPtr<Scene> m_ActiveScene;
-		Vector<StrPtr<Scene>> m_SavedScenes;
+		Map<String, StrPtr<Scene>> m_Scenes;
 
 	};
 }

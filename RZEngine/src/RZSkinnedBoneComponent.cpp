@@ -11,7 +11,7 @@ namespace rczEngine
 		}
 	}
 
-	void BoneComponent::Render(Gfx::GfxCore * gfx, ResVault * res, Scene * scene, MATERIAL_TYPE matType)
+	void BoneComponent::Render(Gfx::GfxCore * gfx, ResVault * res, Scene * scene, eMaterialType matType)
 	{
 
 	}

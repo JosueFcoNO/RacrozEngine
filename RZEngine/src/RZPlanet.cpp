@@ -11,7 +11,7 @@ namespace rczEngine
 		m_GfxCore = Gfx::GfxCore::Pointer();
 
 		LoadAndProcessModel();
-		auto patchSize = 32 * 32;
+		auto patchSize = PlanetQuadTreeNode::Mesh_Res * PlanetQuadTreeNode::Mesh_Res;
 
 		m_VertexVector.resize(PATCH_NUMBER);
 		m_VertexBuffer.ResizeVertexVector(PATCH_NUMBER * patchSize);
@@ -28,6 +28,8 @@ namespace rczEngine
 
 			++index;
 		}
+
+		m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DYNAMIC, false, m_GfxCore);
 
 		PlayerCamera = CameraManager::Pointer()->GetActiveCamera().lock();
 
@@ -95,7 +97,7 @@ namespace rczEngine
 			wireframe.CreateRasterizerState(m_GfxCore);
 		}
 
-		if (GUIEditor::Pointer()->Wireframe)
+		if (ImGUIEditor::Pointer()->Wireframe)
 			wireframe.SetThisRasterizerState(m_GfxCore);
 
 		Vector3 PlayerPos = PlayerCamera->GetPosition();
@@ -180,6 +182,9 @@ namespace rczEngine
 		m_HeightCameracb.SetBufferInVS(11, m_GfxCore);
 		m_HeightCameracb.SetBufferInPS(11, m_GfxCore);
 
+		m_VertexBuffer.UpdateVertexBuffer(m_GfxCore);
+		m_VertexBuffer.SetThisVertexBuffer(m_GfxCore, 0);
+
 		for (auto nodes : nodesToDraw)
 		{
 			nodes->Render();
@@ -242,7 +247,7 @@ namespace rczEngine
 		//tex3Dh->LoadTexture3D("Models/PBR/grass/h.png", "Models/PBR/Cliff/h.png", "Models/PBR/crater/h.png", "Models/PBR/Slate/h.png", "TexH", true);
 
 		StrPtr<Material> mat = std::make_shared<Material>();
-		mat->InitMaterial(MAT_PLANET, Gfx::GfxCore::Pointer());
+		mat->InitMaterial(eMaterialType::PlanetSurface);
 		mat->SetFilePath("PlanetMaterialOne");
 		ResVault* res = ResVault::Pointer();
 
@@ -264,11 +269,11 @@ namespace rczEngine
 		for (;chosenPatch < PATCH_NUMBER;)
 		{
 			++chosenPatch;
-			if (m_ActivePatches[chosenPatch]) break;
+			if (!m_ActivePatches[chosenPatch]) break;
 		}
 
 		vertexVector = &m_VertexVector[chosenPatch];
-
+		m_ActivePatches[chosenPatch] = true;
 		return chosenPatch;
 	}
 

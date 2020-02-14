@@ -9,7 +9,7 @@ namespace rczEngine
 		SkinnedModel() { m_Type = ResourceType::RES_SKINNEDMODEL; };
 		~SkinnedModel() { Release(); };
 
-		void DrawModel(Gfx::GfxCore* gfx, void* res, Map<String, ResourceHandle>* materialOverride, MATERIAL_TYPE matType = MAT_ANY);
+		void DrawModel(Gfx::GfxCore* gfx, void* res, Map<String, ResourceHandle>* materialOverride, eMaterialType matType = eMaterialType::AnyMaterial);
 
 		void Load(const String& filePath, const String& resName);
 		void Release() { m_MeshSkeleton.DestroySkeletonBuffers(); m_VertexBuffer.Destroy(); m_IndexBuffer.Destroy(); };

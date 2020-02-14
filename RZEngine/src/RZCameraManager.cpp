@@ -49,7 +49,7 @@ namespace rczEngine
 
 	void CameraManager::RemoveCamera(ComponentId id)
 	{
-		if (m_ActiveCamera == m_Cameras[id])
+		if (m_ActiveCamera == (*m_Cameras.find(id)).second)
 		{
 			if (m_Cameras.size() > 1)
 			{

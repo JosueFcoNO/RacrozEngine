@@ -26,14 +26,10 @@ void ModuleUnitTest()
 
 }
 
-
-
 int main(void)
 {
 	ParserUnitTest();
 	ModuleUnitTest();
-
-
 
 	std::cin.get();
 }

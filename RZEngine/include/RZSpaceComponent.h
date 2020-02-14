@@ -19,7 +19,7 @@ namespace rczEngine
 			m_Space.InitSpaceManager();
 		};
 		virtual void Update(float deltaTime) { m_Space.Update(deltaTime); };
-		virtual void Render(Gfx::GfxCore* gfx, ResVault* res, Scene* scene)
+		virtual void Render(Gfx::GfxCore* gfx, ResVault* res)
 		{
 			m_Space.Render();
 		};

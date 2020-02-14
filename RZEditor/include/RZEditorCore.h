@@ -5,9 +5,7 @@ namespace rczEngine
 	class RZ_EXP EditorCore
 	{
 	public:
-		~EditorCore() { DestroyEditor(); };
-
-		void InitEditor(PlatformData* platformData);
+		void InitEditor();
 		void RunEditor();
 		void DestroyEditor();
 

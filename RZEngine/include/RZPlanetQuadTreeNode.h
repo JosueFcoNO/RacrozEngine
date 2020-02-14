@@ -24,6 +24,16 @@ namespace rczEngine
 
 	class PlanetQuadTreeNode;
 
+	class RZ_EXP PlanetVertex
+	{
+		Vector3 VertexPosition;
+		Vector2 TextureCoordinates;
+		Vector3 VertexNormals;
+		Vector3 Tangents;
+		Vector3 BiNormals;
+		int Gradient[4];
+	};
+
 	struct RZ_EXP NodeConnection
 	{
 		uint32 Hash;

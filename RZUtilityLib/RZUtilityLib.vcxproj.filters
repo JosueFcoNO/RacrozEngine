@@ -30,12 +30,6 @@
     <Filter Include="Archivos de código fuente\File Manager">
       <UniqueIdentifier>{35bf5206-edaf-4752-af36-cfe323af40d8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de encabezado\Memory Allocators">
-      <UniqueIdentifier>{8ebd9295-8009-42a3-8678-5a9ad59fa2cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Archivos de código fuente\Memory Allocators">
-      <UniqueIdentifier>{9b4f51d5-9853-4907-bc90-4e2f6422c2f3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de encabezado\Module">
       <UniqueIdentifier>{b2789131-12f6-4a20-bbfd-38209eb6a024}</UniqueIdentifier>
     </Filter>
@@ -53,9 +47,6 @@
     </Filter>
     <Filter Include="Archivos de código fuente\Random Generators">
       <UniqueIdentifier>{7b4559a9-e2d0-4c7f-9772-a8eba248b3bd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Archivos de encabezado\Profiler">
-      <UniqueIdentifier>{45f967fc-7142-4a78-a52e-ae1faf96d598}</UniqueIdentifier>
     </Filter>
     <Filter Include="Archivos de código fuente\Profiler">
       <UniqueIdentifier>{1353dc7f-c4c5-42f7-bae3-49970e28cc7c}</UniqueIdentifier>
@@ -108,6 +99,21 @@
     <Filter Include="Archivos de código fuente\Math\Rendering">
       <UniqueIdentifier>{4e530201-4460-4182-a685-140ec767e5c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\Profilers">
+      <UniqueIdentifier>{45f967fc-7142-4a78-a52e-ae1faf96d598}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Memory">
+      <UniqueIdentifier>{8ebd9295-8009-42a3-8678-5a9ad59fa2cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Memory">
+      <UniqueIdentifier>{9b4f51d5-9853-4907-bc90-4e2f6422c2f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\OS Layer">
+      <UniqueIdentifier>{09dcc7a3-05a7-48b2-80eb-4ce12df8422d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\OS Layer">
+      <UniqueIdentifier>{56ce8673-af03-40af-af98-7d408d0b5eb0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZUtilityPCH.h">
@@ -138,7 +144,7 @@
       <Filter>Archivos de encabezado\File Manager</Filter>
     </ClInclude>
     <ClInclude Include="include\RZMemoryAllocators.h">
-      <Filter>Archivos de encabezado\Memory Allocators</Filter>
+      <Filter>Archivos de encabezado\Memory</Filter>
     </ClInclude>
     <ClInclude Include="include\RZContainers.h">
       <Filter>Archivos de encabezado\Prerequisites</Filter>
@@ -162,10 +168,10 @@
       <Filter>Archivos de encabezado\Random Generators</Filter>
     </ClInclude>
     <ClInclude Include="include\RZProfiler.h">
-      <Filter>Archivos de encabezado\Profiler</Filter>
+      <Filter>Archivos de encabezado\Profilers</Filter>
     </ClInclude>
     <ClInclude Include="include\RZProfilerEvent.h">
-      <Filter>Archivos de encabezado\Profiler</Filter>
+      <Filter>Archivos de encabezado\Profilers</Filter>
     </ClInclude>
     <ClInclude Include="include\RZSerializable.h">
       <Filter>Archivos de encabezado\Serializable</Filter>
@@ -198,7 +204,7 @@
       <Filter>Archivos de encabezado\Logger</Filter>
     </ClInclude>
     <ClInclude Include="include\RZProfilerObj.h">
-      <Filter>Archivos de encabezado\Profiler</Filter>
+      <Filter>Archivos de encabezado\Profilers</Filter>
     </ClInclude>
     <ClInclude Include="include\RZMatrix3D.h">
       <Filter>Archivos de encabezado\Math\Matrix</Filter>
@@ -245,6 +251,21 @@
     <ClInclude Include="include\RZCamera.h">
       <Filter>Archivos de encabezado\Math\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="include\RZMemoryProfiler.h">
+      <Filter>Archivos de encabezado\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZMemoryProfilerEvent.h">
+      <Filter>Archivos de encabezado\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CbnWindow.h">
+      <Filter>Archivos de encabezado\OS Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CbnOSLayer.h">
+      <Filter>Archivos de encabezado\OS Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CbnOSDefs.h">
+      <Filter>Archivos de encabezado\OS Layer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZUtilityPCH.cpp">
@@ -260,7 +281,7 @@
       <Filter>Archivos de código fuente\File Manager</Filter>
     </ClCompile>
     <ClCompile Include="src\RZMemoryAllocators.cpp">
-      <Filter>Archivos de código fuente\Memory Allocators</Filter>
+      <Filter>Archivos de código fuente\Memory</Filter>
     </ClCompile>
     <ClCompile Include="src\RZTimer.cpp">
       <Filter>Archivos de código fuente\Timer</Filter>
@@ -336,6 +357,18 @@
     </ClCompile>
     <ClCompile Include="include\RZFrustum.cpp">
       <Filter>Archivos de código fuente\Math\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZMemoryProfiler.cpp">
+      <Filter>Archivos de código fuente\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZMemoryProfilerEvent.cpp">
+      <Filter>Archivos de código fuente\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnWindow.cpp">
+      <Filter>Archivos de código fuente\OS Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnOSLayer.cpp">
+      <Filter>Archivos de código fuente\OS Layer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

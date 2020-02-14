@@ -31,14 +31,15 @@ namespace rczEngine
 
 #pragma region =	| Init Functions |
 
-		void GfxCore::InitAndStart(PlatformData* platform, int width, int height, bool isWindowed)
+		void GfxCore::InitAndStart(bool isWindowed)
 		{
 #ifdef LOGGING
 			Logger::Pointer()->StartLog("Gfx");
 #endif
-			m_PlatformData = platform;
+			auto window = OSLayer::Pointer()->GetWindow();
+			auto getRect = window.GetRect();
 
-			CreateDevice(width, height, 2, 144, 1, 0, isWindowed);
+			CreateDevice(getRect.right, getRect.bottom, 2, 144, 1, 0, isWindowed);
 			GetBackBufferInterface();
 			SetRenderTargetViewAndDepthStencil();
 			SetViewPortDefault();
@@ -77,7 +78,7 @@ namespace rczEngine
 			SwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
 
 			SwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-			SwapChainDesc.OutputWindow = m_PlatformData->WindowHandle;
+			SwapChainDesc.OutputWindow = OSLayer::Pointer()->GetWindowHandle();
 			SwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT::DXGI_SWAP_EFFECT_SEQUENTIAL;
 
 			SwapChainDesc.SampleDesc.Count = SampleCount;

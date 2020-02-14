@@ -23,12 +23,12 @@ namespace rczEngine
 		delete _Instance();
 	}
 
-	StrPtr<Scene> SceneManager::CreateDefaultScene(const String& name)
+	StrPtr<Scene> SceneManager::CreateDefaultScene(const String&& name)
 	{
 		StrPtr<Scene> DefaultScene = std::make_shared<Scene>();
-		DefaultScene->InitScene(name);
+		DefaultScene->InitScene(std::move(name));
 
-		m_SavedScenes.push_back(DefaultScene);
+		m_Scenes[name] = (DefaultScene);
 
 		m_ActiveScene = DefaultScene;
 
@@ -49,12 +49,11 @@ namespace rczEngine
 		return DefaultScene;
 	}
 
-	StrPtr<Scene> SceneManager::CreateEmptyScene(const String& name)
+	StrPtr<Scene> SceneManager::CreateEmptyScene(const String&& name)
 	{
 		StrPtr<Scene> DefaultScene = std::make_shared<Scene>();
-		DefaultScene->InitScene(name);
-
-		m_SavedScenes.push_back(DefaultScene);
+		DefaultScene->InitScene(std::move(name));
+		m_Scenes[name] = DefaultScene;
 
 		StrGameObjectPtr defaultCamera = DefaultScene->CreateActor("DefaultCamera", NULL).lock();
 		m_ActiveScene->CreateComponent(CMP_CAMERA_WALK, defaultCamera);
@@ -70,6 +69,11 @@ namespace rczEngine
 	StrPtr<Scene> SceneManager::GetActiveScene()
 	{
 		return m_ActiveScene;
+	}
+
+	WeakPtr<Scene> SceneManager::GetScene(String sceneName)
+	{
+		return m_Scenes[sceneName];
 	}
 
 	StrPtr<Scene> SceneManager::LoadScene(const String& filePath)

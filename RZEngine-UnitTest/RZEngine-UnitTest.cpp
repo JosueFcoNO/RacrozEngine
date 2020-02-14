@@ -10,8 +10,6 @@
 
 HWND hWnd;
 HINSTANCE hInst;
-WCHAR szTitle[MAX_LOADSTRING];
-WCHAR szWindowClass[MAX_LOADSTRING];
 
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -29,27 +27,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-	// Inicializar cadenas globales
-	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-	LoadStringW(hInstance, IDC_RZENGINEUNITTEST, szWindowClass, MAX_LOADSTRING);
 	MyRegisterClass(hInstance);
 
-	// Realizar la inicialización de la aplicación:
-	if (!InitInstance(hInstance, nCmdShow))
-	{
-		return FALSE;
-	}
-
-	std::unique_ptr<PlatformData> PlatformSpecificData = std::make_unique<PlatformData>();
-	PlatformSpecificData->WindowHandle = hWnd;
-	PlatformSpecificData->HandleInstance = hInst;
-
 	EditorCore editor;
-	editor.InitEditor(PlatformSpecificData.get());
-
+	editor.InitEditor();
 	editor.RunEditor();
+	editor.DestroyEditor();
 
 	PostQuitMessage(0);
+
 	return 0;
 }
 
@@ -68,37 +54,18 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_RZENGINEUNITTEST);
-	wcex.lpszClassName = szWindowClass;
+	wcex.lpszClassName = L"CarbonClass";
 	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
 	return RegisterClassExW(&wcex);
 }
 
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
-{
-	hInst = hInstance; // Almacenar identificador de instancia en una variable global
-
-	HWND hwnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, 1920, 1080, nullptr, nullptr, hInstance, nullptr);
-
-	RECT rc;
-	GetWindowRect(hwnd, &rc);
-
-	if (!hwnd)
-	{
-		return FALSE;
-	}
-	hWnd = hwnd;
-	ShowWindow(hwnd, nCmdShow);
-	UpdateWindow(hwnd);
-
-	return TRUE;
-}
-
-extern LRESULT rczEngine::ImguiWndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	if (rczEngine::ImguiWndProcHandler(hWnd, message, wParam, lParam))
-		return true;
+	//if (
+	ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam);
+		//return true;
 
 	switch (message)
 	{
@@ -112,7 +79,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	break;
 	case WM_SETFOCUS:
 		if (Input::Pointer())
-		Input::Pointer()->RegainDevices();
+			Input::Pointer()->RegainDevices();
 		break;
 	case WM_DESTROY:
 		Quit = true;

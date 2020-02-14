@@ -7,7 +7,7 @@ namespace rczEngine
 	{
 		LARGE_INTEGER frequencyCount;
 		QueryPerformanceFrequency(&frequencyCount);
-
+		
 		m_CountsPerSecond = gsl::narrow_cast<double>(frequencyCount.QuadPart);
 
 		QueryPerformanceCounter(&frequencyCount);

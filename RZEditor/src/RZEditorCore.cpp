@@ -2,40 +2,35 @@
 
 namespace rczEngine
 {
-	void EditorCore::InitEditor(PlatformData* platformData)
+	void EditorCore::InitEditor()
 	{
-#if RZ_PLATFORM == RZ_PLATFORM_WINDOWS
-		RECT rc;
-		GetClientRect(platformData->WindowHandle, &rc);
-#endif
+		OSLayer::Start();
+		OSLayer::Pointer()->InitOSLayer(GetModuleHandle(NULL));
 
 		Logger::Start();
 
 		Profiler::Start();
 
 		Gfx::GfxCore::Start();
-		Gfx::GfxCore::Pointer()->InitAndStart(platformData, rc.right, rc.bottom, true);
+		Gfx::GfxCore::Pointer()->InitAndStart(true);
 
 		ResVault::Start();
 		ResVault::Pointer()->InitResourceManager();
 
 		Input::Start();
-		auto input = Input::Pointer();
-		input->hinstance = platformData->HandleInstance;
-		input->hwnd = platformData->WindowHandle;
-		input->InitInput();
+		Input::Pointer()->InitInput();
 	
-		ComputeAPI::Start();
+		//ComputeAPI::Start();
 		//ComputeAPI::Pointer()->InitComputeAPI(Gfx::GfxCore::Pointer());
 
-		SoundAPI* SndAPI = new SoundAPI;
-		SndAPI->InitSound();
+		//SoundAPI* SndAPI = new SoundAPI;
+		//SndAPI->InitSound();
 
 		EventManager::Start();
 		EventManager::Pointer()->InitEventManager();
 
-		GUIEditor::Start();
-		GUIEditor::Pointer()->InitEditor(platformData);
+		ImGUIEditor::Start();
+		ImGUIEditor::Pointer()->InitEditor();
 
 		GraphicDebugger::Start();
 		GraphicDebugger::Pointer()->Init();
@@ -63,6 +58,7 @@ namespace rczEngine
 		m_gfx = Gfx::GfxCore::Pointer();
 		m_renderer = RacrozRenderer::Pointer();
 		m_scnManager = SceneManager::Pointer();
+		
 		//FbxLoader loader;
 		//loader.LoadModel();
 	}
@@ -77,7 +73,7 @@ namespace rczEngine
 			Input::Pointer()->UpdateInput();
 			m_scnManager->GetActiveScene()->Update(deltaTime);
 
-			m_renderer->Render(m_scnManager->GetActiveScene().get(), GUIEditor::Pointer());
+			m_renderer->Render(m_scnManager->GetActiveScene().get(), ImGUIEditor::Pointer());
 
 			// Bucle principal de mensajes:
 			if (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -110,7 +106,7 @@ namespace rczEngine
 
 		EventManager::ShutDown();
 
-		GUIEditor::ShutDown();
+		ImGUIEditor::ShutDown();
 
 		GraphicDebugger::ShutDown();
 

@@ -1,5 +1,11 @@
 #pragma once
 
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+#define DIRECTINPUT_VERSION 0x0800
+#include <dinput.h>
+#include <tchar.h>
+
 namespace rczEngine
 {
 	struct RendererConfig
@@ -26,50 +32,28 @@ namespace rczEngine
 		int ChannelB;
 		int ChannelA;
 	};
-
-	struct VERTEX_CONSTANT_BUFFER
-	{
-		float        mvp[4][4];
-	};
-
-	static ID3D11Buffer * g_pVertexConstantBuffer;
-
-	static ID3D11Buffer* g_pVB;
-	static ID3D11Buffer* g_pIB;
-
-	static ID3D11ShaderResourceView* g_pFontTextureView;
-
-	static ID3D11BlendState * g_pBlendState;
-	static ID3D11DepthStencilState* g_pDepthStencilState;
-	static ID3D11RasterizerState* g_pRasterizerState;
-	static ID3D11SamplerState* g_pFontSampler;
-
-	static Gfx::VertexShader* g_VertexShader;
-	static Gfx::PixelShader* g_PixelShader;
-
+	
 #pragma region Static Functions
 
-	static bool IsAnyMouseButtonDown();
-
-	IMGUI_API LRESULT ImguiWndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-	
 
 #pragma endregion
 
-	class RZ_EXP GUIEditor
+	class RZ_EXP ImGUIEditor
 	{
 	private:
-		static GUIEditor*& _Instance();
+		static ImGUIEditor*& _Instance();
 
 	public:
 		static void Start();
-		static GUIEditor* Pointer();
+		static ImGUIEditor* Pointer();
 		static void ShutDown();
 
-		void InitEditor(PlatformData* platformData);
+		void InitEditor();
 		void PreRender(ImDrawData* draw_data);
 		void DestroyEditor();
 		void RenderEditor(RendererConfig* user);
+
+		void InitImgui();
 		
 		void AddWindow(const String& name, GUIBaseWindow* window)
 		{
@@ -85,9 +69,6 @@ namespace rczEngine
 		bool ByOffset = false;
 		bool UseParents = false;
 	private:
-		void CreateFontsTexture();
-		void InvalidateDeviceObjects();
-		bool CreateDeviceObjects(rczEngine::Gfx::GfxCore* gfx);
 		void NewFrame(Gfx::GfxCore* gfx);
 
 		HWND m_Hwnd;

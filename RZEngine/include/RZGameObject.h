@@ -12,24 +12,26 @@ namespace rczEngine
 		~GameObject() {  };
 
 		///The Node constructor takes an id and a name. There can't be a game object without a name.
-		GameObject(GameObjectID actorID = INVALID_ID, String actorName = "GameObj") : m_Position(eInit::None), m_Orientation(eInit::None), m_Scale(eInit::None), m_ToLocal(eInit::None), m_ToWorld{ Matrix4(eInit::Zero), Matrix4(eInit::Zero) }
+		GameObject(GameObjectID actorID = INVALID_ID, const String& actorName = "GameObj") : m_Position(eInit::None), m_Orientation(eInit::None), m_Scale(eInit::None), m_ToLocal(eInit::None), m_ToWorld{ Matrix4(eInit::Zero), Matrix4(eInit::Zero) }
 		{
 			m_GameObjectID = actorID;
 			m_Name = actorName;
 		};
 
 		///Inits the node's components
-		void Init();
+		void Init(const String&& owningScene);
 		///Updates the node
-		void Update(Scene* scene, float deltaTime);
+		void Update(float deltaTime);
 
 		///Destroys the GameObject's data
 		void Destroy(bool DestroyParentRef = false);
 
+		FORCEINLINE void SetDestroyWithScene(bool destroyWithScene) { m_DestroyWithScene = destroyWithScene; };
+
 		///Sets the pipeline before rendering
-		void PreRender(Scene* scene);
+		void PreRender();
 		///Renders the gameobject
-		void Render(Scene* scene, ComponentType cmpType, MATERIAL_TYPE mat = MAT_ANY);
+		void Render(ComponentType cmpType, int renderHash);
 
 		FORCEINLINE void SetParent(StrGameObjectPtr parent) { m_ParentNode = parent; m_ParentID = m_ParentNode.lock()->GetID(); };
 		///Returns the parent of the node
@@ -113,11 +115,11 @@ namespace rczEngine
 		void UpdateWorldMatrix();
 
 		///Adds a component of ComponenType to the node
-		WeakCmpPtr AddComponent(eCOMPONENT_ID cmp, StrCmpPtr ptr);
+		WeakCmpPtr AddComponent(eComponentID cmp, StrCmpPtr ptr);
 
 		///Returns a strPtr to a component given its id.
 		template <class CType>
-		WeakPtr<CType> GetComponent(eCOMPONENT_ID cmp)
+		WeakPtr<CType> GetComponent(eComponentID cmp)
 		{
 			StrPtr<CType> ret;
 
@@ -141,6 +143,10 @@ namespace rczEngine
 			}
 			return ret;
 		}
+
+		Vector<WeakCmpPtr> GetRenderComponents();
+
+		bool HasRenderComponents();
 
 		///The handle for the node's material
 		ResourceHandle m_Material = NULL;
@@ -194,5 +200,9 @@ namespace rczEngine
 
 		///If the gameobject is to be destroyed.
 		bool m_ToDestroy = false;
+		
+		WeakPtr<Scene> m_OwningScene;
+		bool m_OnlyInteractOwnScene = true;
+		bool m_DestroyWithScene = true;
 	};
 };

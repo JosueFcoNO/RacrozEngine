@@ -8,7 +8,7 @@ namespace rczEngine
 		m_res = res;
 
 		StrPtr<Material> mat = std::make_shared<Material>();
-		mat->InitMaterial(MAT_PBR_MetRough, gfx);
+		mat->InitMaterial(eMaterialType::PBR_MetRough);
 
 		//m_Mesh.InitMeshPlane(64, 512.0f, Vector3(0,0,0), Ypos);
 		//m_Mesh.SetMaterial(res->InsertResource(mat));

@@ -12,14 +12,14 @@ namespace rczEngine
 			Destroy();
 		}; 
 
-		void InitScene(const String& name);
+		void InitScene(const String&& name);
 		void ClearScene();
 		void Update(float deltaTime);
 		void Destroy();
 
-		WeakGameObjPtr CreateActor(const String& name = "GameObj", GameObject* parent = NULL, Vector3 position = { 0,0,0 }, Vector3 orientation = { 0,0,0 }, Vector3 scale = { 1,1,1 });
-		StrCmpPtr CreateComponent(eCOMPONENT_ID type, GameObjectID owner);
-		StrCmpPtr CreateComponent(eCOMPONENT_ID type, StrGameObjectPtr owner);
+		WeakGameObjPtr CreateActor(const String&& name = "GameObj", GameObject* parent = NULL, Vector3 position = { 0,0,0 }, Vector3 orientation = { 0,0,0 }, Vector3 scale = { 1,1,1 });
+		StrCmpPtr CreateComponent(eComponentID type, GameObjectID owner);
+		StrCmpPtr CreateComponent(eComponentID type, StrGameObjectPtr owner);
 
 		WeakGameObjPtr FindActor(GameObjectID id);
 		WeakGameObjPtr FindActor(const String& name);
@@ -28,7 +28,7 @@ namespace rczEngine
 		void RemoveGameObject(GameObjectID actorId);
 
 		void AddActor(StrGameObjectPtr node);
-		Vector<WeakPtr<GameObject>> FindActorsWithComponent(eCOMPONENT_ID cmp);
+		Vector<WeakPtr<GameObject>> FindActorsWithComponent(eComponentID cmp);
 
 		Gfx::ConstantBuffer m_WorldMatrix;
 

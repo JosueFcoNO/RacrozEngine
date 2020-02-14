@@ -9,18 +9,20 @@ namespace rczEngine
 
 		auto resVault = ResVault::Pointer();
 
+		m_Renderable = true;
+
 		//SetModel(resVault->m_ModelCube, resVault);
 	}
 
-	void ModelRenderer::Render(Gfx::GfxCore * gfx, ResVault * res, Scene * scene, MATERIAL_TYPE matType)
+	void ModelRenderer::Render(Gfx::GfxCore * gfx, ResVault * res, int renderHash)
 	{
 		if (m_Materials.size())
 		{
-			res->GetResource<Model>(m_Model).lock()->DrawModel(&m_Materials, matType);
+			res->GetResource<Model>(m_Model).lock()->DrawModel(&m_Materials, renderHash);
 		}
 		else
 		{
-			res->GetResource<Model>(m_Model).lock()->DrawModel(nullptr, matType);
+			res->GetResource<Model>(m_Model).lock()->DrawModel(nullptr, renderHash);
 		}
 	}
 

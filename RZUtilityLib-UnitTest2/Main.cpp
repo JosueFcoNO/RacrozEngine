@@ -86,52 +86,52 @@ void MathUnitTest()
 
 
 	///Fast Sin0
-	assert(Math::FastSin0(PI) - .5 <= sinf(PI) && Math::FastSin0(PI) + .5 >= sinf(PI));
+	assert(TrigFast::FastSin0(PI) - .5 <= sinf(PI) && TrigFast::FastSin0(PI) + .5 >= sinf(PI));
 
 	///Fast Sin1
-	assert(Math::FastSin1(PI) - .5 <= sinf(PI) && Math::FastSin1(PI) + .5 >= sinf(PI));
+	assert(TrigFast::FastSin1(PI) - .5 <= sinf(PI) && TrigFast::FastSin1(PI) + .5 >= sinf(PI));
 
 	///Cos
 	assert(Math::Cos(PI) == cosf(PI));
 
 	///Fast Cos0
-	assert(Math::FastCos0(PI) - .5 <= cosf(PI) && Math::FastCos0(PI) + .5 >= cosf(PI));
+	assert(TrigFast::FastCos0(PI) - .5 <= cosf(PI) && TrigFast::FastCos0(PI) + .5 >= cosf(PI));
 
 	///Fast Cos1
-	assert(Math::FastCos1(PI) - .5 <= cosf(PI) && Math::FastCos1(PI) + .5 >= cosf(PI));
+	assert(TrigFast::FastCos1(PI) - .5 <= cosf(PI) && TrigFast::FastCos1(PI) + .5 >= cosf(PI));
 
 	///Tan
 	assert(Math::Tan(PI) == tanf(PI));
 
 	///Fast Tan0
-	assert(Math::FastTan0(PI) - .5 <= tanf(PI) && Math::FastTan0(PI) + .5 >= tanf(PI));
+	assert(TrigFast::FastTan0(PI) - .5 <= tanf(PI) && TrigFast::FastTan0(PI) + .5 >= tanf(PI));
 
 	///Fast Tan1
-	assert(Math::FastTan1(PI) - .5 <= tanf(PI) && Math::FastTan1(PI) + .5 >= tanf(PI));
+	assert(TrigFast::FastTan1(PI) - .5 <= tanf(PI) && TrigFast::FastTan1(PI) + .5 >= tanf(PI));
 
 	///aSin
 	assert(Math::aSin(1) == asinf(1));
 
 	///Fast aSin0
-	assert(Math::FastASin0(1) - .5 <= asinf(1) && Math::FastASin0(1) + .5 >= asinf(1));
+	assert(TrigFast::FastASin0(1) - .5 <= asinf(1) && TrigFast::FastASin0(1) + .5 >= asinf(1));
 
 	///Fast aSin1
-	assert(Math::FastASin1(1) - .5 <= asinf(1) && Math::FastASin1(1) + .5 >= asinf(1));
+	assert(TrigFast::FastASin1(1) - .5 <= asinf(1) && TrigFast::FastASin1(1) + .5 >= asinf(1));
 
 	///aCos
 	assert(Math::aCos(1) == acosf(1));
 
 	///Fast aCos
-	assert((Math::FastACos0(1) - .5 <= acosf(1) && Math::FastACos0(1) + .5 >= acosf(1)));
+	assert((TrigFast::FastACos0(1) - .5 <= acosf(1) && TrigFast::FastACos0(1) + .5 >= acosf(1)));
 
 	///aTan
 	assert(Math::aTan(1) == atanf(1));
 
 	///Fast aTan0
-	assert(Math::FastATan0(1) - .5 <= atanf(1) && Math::FastATan0(1) + .5 >= atanf(1));
+	assert(TrigFast::FastATan0(1) - .5 <= atanf(1) && TrigFast::FastATan0(1) + .5 >= atanf(1));
 
 	///Fast aTan1
-	assert(Math::FastATan1(1) - .5 <= atanf(1) && Math::FastATan1(1) + .5 >= atanf(1));
+	assert(TrigFast::FastATan1(1) - .5 <= atanf(1) && TrigFast::FastATan1(1) + .5 >= atanf(1));
 
 	///aTan2
 	assert(Math::aTan2(1,.5) == atan2f(1,.5));
@@ -411,7 +411,7 @@ void MatrixUnitText()
 
 	rczEngine::Vector3 Temp3Vector(5, 5, 5);
 	///Multiplies the matrix and a Vector3: Vector * Matrix so it returns a Vector3 . Constant.
-	Temp3Vector = rczEngine::Matrix4::Translate3D(20, 0, 20) *Temp3Vector;
+	Temp3Vector = rczEngine::Matrix4::Translate3D(20, 0, 20) * Temp3Vector;
 	assert(Temp3Vector.m_x == 25);
 	assert(Temp3Vector.m_y == 5);
 	assert(Temp3Vector.m_z == 25);
@@ -438,7 +438,6 @@ void MatrixUnitText()
 
 int main(void)
 {
-
 	using namespace rczEngine;
 
 	Profiler::Start();
@@ -449,9 +448,9 @@ int main(void)
 	double Pid = (4.0f * atanf(1.0f));
 	float Pi = (4.0f * atanf(1.0f));
 
-	//MathUnitTest();
-	//VectorUnitTest();
-	//MatrixUnitText();
+	MathUnitTest();
+	VectorUnitTest();
+	MatrixUnitText();
 
 	Vector3 v;
 
@@ -466,7 +465,7 @@ int main(void)
 
 	std::cin;
 
-	Profiler::Pointer()->AddTime("Utilities", PROFILE_EVENTS::PROF_GAME);
+	Profiler::Pointer()->AddTime("Utilities");
 
 	Profiler::ShutDown();
 	Logger::ShutDown();

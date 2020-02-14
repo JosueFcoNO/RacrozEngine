@@ -229,7 +229,7 @@ namespace rczEngine
 				model->m_VectorMeshes.push_back(meshReal);
 
 				StrPtr<Material> mat = std::make_shared<Material>();
-				mat->InitMaterial(MAT_PBR_MetRough, gfx);
+				mat->InitMaterial(eMaterialType::PBR_MetRough);
 				model->m_MaterialMap["mat"] = m_Res->InsertResource(mat);
 			}
 		}

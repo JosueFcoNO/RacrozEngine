@@ -51,7 +51,7 @@ namespace rczEngine
 
 			ImGui::DragFloat3("Pos", &m_Pos.m_x, 0.1f);
 			ImGui::DragFloat3("Dir", &m_Direction.m_x, 0.1f);
-			ImGui::ColorPicker4("Color", &m_Color.m_x);
+			//ImGui::ColorPicker4("Color", &m_Color.m_x, ImGuiColorEditFlags_::ImGuiColorEditFlags_Float | ImGuiColorEditFlags_::ImGuiColorEditFlags_HDR);
 
 			if (ImGui::Button("SetLight"))
 			{

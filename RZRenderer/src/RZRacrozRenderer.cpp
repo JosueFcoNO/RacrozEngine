@@ -78,8 +78,10 @@ namespace rczEngine
 		}
 	}
 
-	void RacrozRenderer::Render(Scene * sceneGraph, GUIEditor * editor)
+	void RacrozRenderer::Render(Scene * sceneGraph, ImGUIEditor * editor)
 	{
+		PrepareRender(sceneGraph);
+
 		static bool StartingSpaceManager = false;
 
 		deferred.DoRender();
@@ -130,7 +132,7 @@ namespace rczEngine
 			};
 
 			ImGui::Render();
-			GUIEditor::Pointer()->PreRender(ImGui::GetDrawData());
+			ImGUIEditor::Pointer()->PreRender(ImGui::GetDrawData());
 		}
 
 		m_gfx->Present();
@@ -308,47 +310,111 @@ namespace rczEngine
 		return handle;
 	}
 
-	void RacrozRenderer::RenderScene(Scene * sceneGraph, eCOMPONENT_ID componentID, MATERIAL_TYPE matType, bool Forward)
+	void RacrozRenderer::PrepareRender(Scene * sceneGraph)
 	{
-		auto ObjectList = sceneGraph->FindActorsWithComponent(componentID);
+		m_ObjectsToRender.clear();
+
 		auto CurrentCamera = CameraManager::Pointer()->GetActiveCamera().lock();
 		auto pos = CurrentCamera->GetPosition();
 		auto dir = CurrentCamera->GetViewDir();
 
-		auto size = ObjectList.size();
-
-		MMap<float, WeakPtr<GameObject>> ObjectMap;
-
-		for (int32 i = 0; i < size; ++i)
+		for (auto gameObjectPair : sceneGraph->m_SceneActorMap)
 		{
-			auto act = ObjectList[i].lock();
+			auto gameObj = gameObjectPair.second;
+			Set<int> hashesEntered;
 
-			auto VectorToObj = (act->GetAccumulatedPosition() - pos);
-			float Magnitude = VectorToObj.Magnitude();
+			for (auto cmp : gameObj->GetRenderComponents())
+			{
+				auto currentCmp = cmp.lock();
 
-			float Visible = VectorToObj.GetNormalized() | dir;
+				switch (currentCmp->GetComponentType())
+				{
+				case eComponentID::CMP_MODEL_RENDERER:
+				{
+					auto modelRenderer = CastDynamicPtr<ModelRenderer>(currentCmp);
 
-			ObjectMap.insert(Pair<float, WeakPtr<GameObject>>(Magnitude, act));
-			//if (Visible > 0.0f)
-			//{
-			//	ObjectMap.insert(Pair<float, WeakPtr<GameObject>>(Magnitude, act));
-			//}
+					for (auto matHandle : modelRenderer->m_Materials)
+					{
+						auto material = ResVault::Pointer()->GetResource<Material>(matHandle.second).lock();
+
+						MaterialRenderInfo renderInfo;
+						renderInfo.InitFromMaterial(*material);
+						renderInfo.componentID = eComponentID::CMP_MODEL_RENDERER;
+
+						auto hashRender = MaterialRenderInfo::CalculateRenderHash(renderInfo);
+
+						if (hashesEntered.find(hashRender) == hashesEntered.end())
+						{
+							hashesEntered.insert(hashRender);
+						}
+						else
+						{
+							continue;
+						}
+
+						auto VectorToObj = (gameObj->GetAccumulatedPosition() - pos);
+						float Magnitude = VectorToObj.Magnitude();
+
+						if (m_ObjectsToRender.find(hashRender) == m_ObjectsToRender.end())
+						{
+							m_ObjectsToRender[hashRender] = MMap<float, WeakGameObjPtr>();
+						}
+						
+						m_ObjectsToRender[hashRender].insert(Pair<float, WeakGameObjPtr>(Magnitude, gameObj));
+					}
+					break;
+				}
+				case eComponentID::CMP_SKINNED_MODEL_RENDERER:
+				{
+					//auto skinModelRenderer = CastDynamicPtr<SkinnedModelRenderer>(currentCmp);
+					//
+					//for (auto matHandle : skinModelRenderer->m_Materials)
+					//{
+					//	auto material = ResVault::Pointer()->GetResource<Material>(matHandle.second).lock();
+					//
+					//	MaterialRenderInfo renderInfo;
+					//	renderInfo.InitFromMaterial(*material);
+					//	renderInfo.componentID = eComponentID::CMP_MODEL_RENDERER;
+					//
+					//	auto hash = CalculateRenderHash(renderInfo);
+					//
+					//	m_ObjectsToRender[hash].insert(gameObj);
+					//}
+					break;
+				}
+					///TODO: Terrain and planet
+				default:
+					break;
+				}
+			};
 		}
 
-		if (Forward)
+		//for (auto it = ObjectMap.begin(); it != ObjectMap.end(); ++it)
+		//{
+		//	(*it).second.lock()->PreRender(sceneGraph);
+		//	(*it).second.lock()->Render(sceneGraph, componentID, matType);
+		//}
+	}
+
+	void RacrozRenderer::RenderObjs(bool forward, eComponentID componentID, eMaterialType matType, eShadingType shading, eBlendType blendType, bool Tesselated = false, bool TwoSided = false, bool blendedMaterial = false, bool wireframe = false)
+	{
+		auto renderHash = MaterialRenderInfo::CalculateRenderHash(componentID, matType, shading, blendType, Tesselated, TwoSided, blendedMaterial, wireframe);
+		auto scene = SceneManager::Pointer()->GetActiveScene();
+
+		if (forward)
 		{
-			for (auto it = ObjectMap.begin(); it != ObjectMap.end(); ++it)
+			for (auto it = m_ObjectsToRender[renderHash].begin(); it != m_ObjectsToRender[renderHash].end(); ++it)
 			{
-				(*it).second.lock()->PreRender(sceneGraph);
-				(*it).second.lock()->Render(sceneGraph, componentID, matType);
+				it->second.lock()->PreRender();
+				it->second.lock()->Render(componentID, renderHash);
 			}
 		}
 		else
 		{
-			for (auto it = ObjectMap.rbegin(); it != ObjectMap.rend(); ++it)
+			for (auto it = m_ObjectsToRender[renderHash].rbegin(); it != m_ObjectsToRender[renderHash].rend(); ++it)
 			{
-				(*it).second.lock()->PreRender(sceneGraph);
-				(*it).second.lock()->Render(sceneGraph, componentID, matType);
+				it->second.lock()->PreRender();
+				it->second.lock()->Render(componentID, renderHash);
 			}
 		}
 

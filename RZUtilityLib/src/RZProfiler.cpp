@@ -28,8 +28,7 @@ namespace rczEngine
 		try
 		{
 			SaveResults();
-			m_GfxEvents.clear();
-			m_GameEvents.clear();
+			m_ProfilerEvents.clear();
 		}
 		catch (...)
 		{
@@ -47,7 +46,7 @@ namespace rczEngine
 	{
 		m_Time.StartTimer();
 		m_GameEvents.clear();
-		m_GfxEvents.clear();
+		m_ProfilerEvents.clear();
 	}
 
 	void Profiler::SaveResults(const String& filePath)
@@ -61,19 +60,10 @@ namespace rczEngine
 		logger->StartLog(LoggerFile);
 		logger->LogMessageToFileLog(LoggerFile, "+++PROFILER LOG+++", eLogMsgType::Error);
 
-		///Log every Game Event
-		logger->LogMessageToFileLog(LoggerFile, "+Game Events+", eLogMsgType::Error);
+		///Log every Event
+		logger->LogMessageToFileLog(LoggerFile, "+Events+", eLogMsgType::Error);
 
-		for (auto event : m_GameEvents)
-		{
-			eventStr = "Event: " + event.first;
-			logger->LogMessageToFileLog(LoggerFile, eventStr, eLogMsgType::Warning);
-			event.second.SaveResults(LoggerFile, *logger);
-		}
-
-		///Log every Gfx Event
-		logger->LogMessageToFileLog(LoggerFile, "+Gfx Events+", eLogMsgType::Error);
-		for (auto event : m_GfxEvents)
+		for (auto event : m_ProfilerEvents)
 		{
 			eventStr = "Event: " + event.first;
 			logger->LogMessageToFileLog(LoggerFile, eventStr, eLogMsgType::Warning);
@@ -88,26 +78,21 @@ namespace rczEngine
 		m_AverageFrameTime = (m_AverageFrameTime + m_FrameTime.GetFrameTime())/2.0f;
 	}
 
-	void Profiler::AddTime(const String& event, PROFILE_EVENTS eventType) noexcept
+	void Profiler::AddTime(const String&& event) noexcept
 	{
-		AddTime(event, m_Time.GetFrameTime(), eventType);
+		AddTime(std::move(event), m_Time.GetFrameTime());
 	}
 
-	void Profiler::AddTime(const String& event, long double time, PROFILE_EVENTS eventType) noexcept
+	void Profiler::AddTime(const String&& event, long double time) noexcept
 	{
 		try
 		{
-			switch (eventType)
+			if (m_ProfilerEvents.find(event) == m_ProfilerEvents.end())
 			{
-			case PROF_GFX:
-				m_GfxEvents.at(event).AddTimeEntry(time);
-				break;
-			case PROF_GAME:
-				m_GameEvents.at(event).AddTimeEntry(time);
-				break;
-			default:
-				break;
+				m_ProfilerEvents[event] = ProfilerEvent();
 			}
+
+			m_ProfilerEvents.at(event).AddTimeEntry(time);
 		}
 		catch (...)
 		{

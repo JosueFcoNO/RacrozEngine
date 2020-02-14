@@ -12,7 +12,10 @@
 
 #include "RZComponentIDs.h"
 
+#include "imconfig.h"
 #include "imgui.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_win32.h"
 
 #include "../../Plug-Ins/stb-master/stb_image.h"
 #include "RZTextureLoader.h"

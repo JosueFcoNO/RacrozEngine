@@ -17,7 +17,7 @@ namespace rczEngine
 		SetTexturesInPipeline();
 		SetRasterizerState();
 
-		FPS.m_x = GUIEditor::Pointer()->FPS;
+		FPS.m_x = ImGUIEditor::Pointer()->FPS;
 		m_FPSBuffer.UpdateConstantBuffer(&FPS, m_gfx);
 		m_FPSBuffer.SetBufferInPS(7, m_gfx);
 

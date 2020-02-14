@@ -29,16 +29,7 @@ namespace rczEngine
 		///Ceil a float
 		static FORCEINLINE float Ceil(float F) noexcept { return TruncateF(F) + 1.0f; };
 
-		static Vector3 PosToPolar3D(Vector3 pos) noexcept
-		{
-			Vector3 ret;
-			ret.m_x = pos.Magnitude();
-			ret.m_y = aCos(pos.m_z / ret.m_x);
-			ret.m_z = aTan2(pos.m_y, pos.m_x);
-
-			return ret;
-		};
-
+		static Vector3 PosToPolar3D(Vector3 pos) noexcept;
 		static Vector2 PolarToPos2D(Vector3 polar) noexcept;
 		static Vector3 PosToPolar2D(Vector2 pos) noexcept;
 		static Vector3 PolarToPos3D(Vector3 polar) noexcept;
@@ -96,302 +87,20 @@ namespace rczEngine
 		///Square root of a float
 		static FORCEINLINE float Sqrt(float F) noexcept { return std::sqrtf(F);	};
 
-		///Fast Sin function using taylor series, fastest
-		static float FastSin0(float angle) noexcept
-		{
-			float sin = 0;
-
-			///if the angle is not on the accepted range
-			if (angle < 0 || angle > HALFPI)
-			{
-				return sinf(angle);
-			}
-			else
-			{
-				sin = 1 - 0.16605f*angle*angle + 0.00761f*angle*angle*angle*angle;
-				sin *= angle;
-
-				return sin;
-			}
-		}
-
-		///Fast Sin function using taylor series, most accurate
-		static float FastSin1(float angle) noexcept
-		{
-			float sin = 0;
-
-			///if the angle is not on the accepted range
-			if (angle < 0 || angle > HALFPI)
-			{
-				return sinf(angle);
-			}
-			else
-			{
-				sin = 1 - 0.1666666664f*Pow(angle, 2) + 0.0083333315f*Pow(angle, 4) - 0.0001984090f*Pow(angle, 6) + 0.0000027526f*Pow(angle, 8) - 0.0000000239f*Pow(angle, 10);
-				sin *= angle;
-
-				return sin;
-			}
-
-		}
-
-		///Fast Cos function using taylor series, fastest
-		static FORCEINLINE float FastCos0(float angle) noexcept
-		{
-			float cos = 0;
-
-			///if the angle is not on the accepted range
-			if (angle < 0 || angle > HALFPI)
-			{
-				return cosf(angle);
-			}
-			else
-			{
-				for (float i = 0; i < 3; i++)
-				{
-					cos += (powf(-1, i) / rczEngine::Math::Factorial(2 * i))*(powf(angle, (2 * i)));
-				}
-
-				return cos;
-			}
-
-		}
-
-		///Fast Sin function using taylor series, most accurate
-		static FORCEINLINE float FastCos1(float angle) noexcept
-		{
-			float cos = 0;
-
-			///if the angle is not on the accepted range
-			if (angle < 0 || angle > HALFPI)
-			{
-				return cosf(angle);
-			}
-			else
-			{
-				cos = 1 - 0.4999999963f* Pow(angle, 2) + 0.0416666418f*Pow(angle, 4) - 0.0013888397f* Pow(angle, 6) + 0.0000247609f*Pow(angle, 8) - 0.0000002605f*Pow(angle, 10);
-
-
-				return cos;
-			}
-
-		}
+		///Trig Atan2
+		static FORCEINLINE float aTan2(float Y, float X) noexcept { return atan2f(Y, X); };
 
 		static FORCEINLINE constexpr float Sign(float x) noexcept	{ return (x >= 0.0f) ? 1.0f : -1.0f; };
 
 		static FORCEINLINE constexpr int Sign(int x) noexcept { return (x >= 0) ? 1 : -1;	};
 
-		static Vector2 Sign(Vector2 x) noexcept
-		{
-			Vector2 ret;
-			ret.m_x = (x.m_x >= 0) ? 1.0f : -1.0f;
-			ret.m_y = (x.m_y >= 0) ? 1.0f : -1.0f;
+		static Vector2 Sign(Vector2 x) noexcept;
 
-			return ret;
-		};
+		static Vector2I Sign(Vector2I x) noexcept;
 
-		static Vector2I Sign(Vector2I x) noexcept
-		{
-			Vector2I ret;
-			ret.m.x = (x.m.x >= 0) ? 1 : -1;
-			ret.m.y = (x.m.y >= 0) ? 1 : -1;
+		static Vector3 Sign(Vector3 x) noexcept;
 
-			return ret;
-		};
-
-		static Vector3 Sign(Vector3 x) noexcept
-		{
-			Vector3 ret;
-			ret.m_x = (x.m_x >= 0) ? 1.0f : -1.0f;
-			ret.m_y = (x.m_y >= 0) ? 1.0f : -1.0f;
-			ret.m_z = (x.m_z >= 0) ? 1.0f : -1.0f;
-
-			return ret;
-		};
-
-		static Vector4 Sign(Vector4 x) noexcept
-		{
-			Vector4 ret(eInit::None);
-			ret.m_x = (x.m_x >= 0) ? 1.0f : -1.0f;
-			ret.m_y = (x.m_y >= 0) ? 1.0f : -1.0f;
-			ret.m_z = (x.m_z >= 0) ? 1.0f : -1.0f;
-			ret.m_w = (x.m_w >= 0) ? 1.0f : -1.0f;
-
-			return ret;
-		};
-
-		///Fast Tan function using taylor series, fastest
-		static FORCEINLINE float FastTan0(float angle) noexcept
-		{
-			float tan = 0;
-
-			///if the angle is not on the accepted range
-			if (angle < 0 || angle > HALFPI / 2)
-			{
-				return tanf(angle);
-			}
-			else
-			{
-				tan = 1 + 0.31755f*angle*angle + 0.20330f*angle*angle*angle*angle;
-				tan *= angle;
-
-				return tan;
-			}
-		}
-
-		///Fast Tan function using taylor series, most accurate
-		static FORCEINLINE float FastTan1(float angle) noexcept
-		{
-			float tan = 0;
-
-
-			///if the angle is not on the accepted range
-			if (angle < 0 || angle > HALFPI)
-			{
-				return tanf(angle);
-			}
-			else
-			{
-				tan = 1 + 0.3333314036f*Pow(angle, 2) + 0.1333923995f*Pow(angle, 4) + 0.0533740603f*Pow(angle, 6)
-					+ 0.0245650893f*Pow(angle, 8) + 0.0029005250f*Pow(angle, 10)
-					+ 0.0095168091f*Pow(angle, 12);
-				tan *= angle;
-
-				return tan;
-			}
-
-		}
-
-		///Fast arcSin function using taylor series, fastest
-		static FORCEINLINE float FastASin0(float angle) noexcept
-		{
-			float asin = 0;
-
-			///if the angle is not on the accepted range
-			if (angle < 0 || angle > 1)
-			{
-				return asinf(angle);
-			}
-			else
-			{
-				asin = PI / 2 - Sqrt(1 - angle)*(1.5707288f - 0.2121144f*angle
-					+ 0.0742610f*Pow(angle, 2) - 0.0187293f*Pow(angle, 3));
-
-				return asin;
-			}
-		}
-
-		///Fast arcSin function using taylor series, most accurate
-		static FORCEINLINE float FastASin1(float angle) noexcept
-		{
-			float asin = 0;
-
-
-
-			///if the angle is not on the accepted range
-			if (angle < 0 || angle > 1)
-			{
-				return asinf(angle);
-			}
-			else
-			{
-				asin = HALFPI - Sqrt(1 - angle)*(1.5707963050f - 0.2145988016f*angle + 0.0889789874f* Pow(angle, 2)
-					- 0.0501743046f*Pow(angle, 3) + 0.0308918810f*Pow(angle, 4) - 0.01708812556f*Pow(angle, 5)
-					+ 0.0066700901f*Pow(angle, 6) - 0.0012624911f*Pow(angle, 7));
-
-				return asin;
-			}
-
-		}
-
-		///Fast aCos function using taylor series, fastest
-		static FORCEINLINE float FastACos0(float angle) noexcept
-		{
-			float acos = 0;
-
-
-			///if the angle is not on the accepted range
-			if (angle < 0 || angle > 1)
-			{
-				return acosf(angle);
-			}
-			else
-			{
-				acos = PI / 2 - FastASin0(angle);
-
-				return acos;
-			}
-
-		}
-
-		///Fast aCos function using taylor series, most accurate
-		static FORCEINLINE float FastACos1(float angle) noexcept
-		{
-			float acos = 0;
-
-
-			///if the angle is not on the accepted range
-			if (angle < 0 || angle > 1)
-			{
-				return acosf(angle);
-			}
-			else
-			{
-				acos = PI / 2 - FastASin1(angle);
-
-				return acos;
-			}
-
-		}
-
-		///Fast aTan function using taylor series, fastest 
-		static FORCEINLINE float FastATan0(float angle) noexcept
-		{
-			float atan = 0;
-
-
-
-			///if the angle is not on the accepted range
-			if (angle < -1 || angle > 1)
-			{
-				return atanf(angle);
-			}
-			else
-			{
-				atan = 0.9998660f*angle - 0.3302995f*Pow(angle, 3) + 0.1801410f* Pow(angle, 5) - 0.0851330f*Pow(angle, 7)
-					+ 0.0208351f*Pow(angle, 9);
-
-				return atan;
-			}
-
-		}
-
-		///Fast aTan function using taylor series, most accurate
-		static FORCEINLINE float FastATan1(float angle) noexcept
-		{ 
-			float atan = 0;
-
-
-
-			///if the angle is not on the accepted range
-			if (angle < -1 || angle > 1)
-			{
-				return atanf(angle);
-			}
-			else
-			{
-				atan = 1 - 0.3333314528f*Pow(angle, 2) + 0.1999355085f*Pow(angle, 4) - 0.1420889944f*Pow(angle, 6)
-					+ 0.1065626393f*Pow(angle, 8) - 0.0752896400f*Pow(angle, 10) + 0.0429096138f*Pow(angle, 12)
-					- 0.0161657367f*Pow(angle, 14) + 0.0028662257f*Pow(angle, 16);
-				atan *= angle;
-
-				return atan;
-			}
-
-		}
-
-		///Trig Atan2
-		static FORCEINLINE float aTan2(float Y, float X) noexcept { return atan2f(Y, X); };
+		static Vector4 Sign(Vector4 x) noexcept;
 
 		///Transforms the Degree to its 0-360° range equivalent
 		static float UnwindDegree(float f) noexcept;
@@ -467,6 +176,47 @@ namespace rczEngine
 		{
 			return (n1 - precision >= n2 && n1 + precision <= n2);
 		}
+	};
+
+	class RZ_EXP TrigFast
+	{
+	public:
+
+		///Fast Sin function using taylor series, fastest
+		static float FastSin0(float angle) noexcept;
+
+		///Fast Sin function using taylor series, most accurate
+		static float FastSin1(float angle) noexcept;
+
+		///Fast Cos function using taylor series, fastest
+		static float FastCos0(float angle) noexcept;
+
+		///Fast Sin function using taylor series, most accurate
+		static float FastCos1(float angle) noexcept;
+
+		///Fast Tan function using taylor series, fastest
+		static float FastTan0(float angle) noexcept;
+
+		///Fast Tan function using taylor series, most accurate
+		static float FastTan1(float angle) noexcept;
+
+		///Fast arcSin function using taylor series, fastest
+		static float FastASin0(float angle) noexcept;
+
+		///Fast arcSin function using taylor series, most accurate
+		static float FastASin1(float angle) noexcept;
+
+		///Fast aCos function using taylor series, fastest
+		static float FastACos0(float angle) noexcept;
+
+		///Fast aCos function using taylor series, most accurate
+		static float FastACos1(float angle) noexcept;
+
+		///Fast aTan function using taylor series, fastest 
+		static float FastATan0(float angle) noexcept;
+
+		///Fast aTan function using taylor series, most accurate
+		static float FastATan1(float angle) noexcept;
 	};
 };
 

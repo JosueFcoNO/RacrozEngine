@@ -22,7 +22,7 @@
     <ProjectGuid>{4132E2CB-E3A6-4D31-BFF4-A1789F54C52A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>RZCore</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <ProjectName>RZRenderer</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -95,7 +95,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZUtilityLib\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZEngine\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZComputeAPI/include;$(Assimp)\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(FBXSDK)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(GSL)/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZUtilityLib\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZEngine\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZComputeAPI/include;$(Assimp)\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(FBXSDK)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(GSL)/include;$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(FBXSDK)lib\$(Platform)\$(Configuration)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

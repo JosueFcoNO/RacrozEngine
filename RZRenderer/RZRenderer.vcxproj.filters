@@ -30,9 +30,6 @@
     <Filter Include="Archivos de encabezado\Passes\GBuffer">
       <UniqueIdentifier>{a852025a-ca3e-47e4-9e9d-d511cd9121f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de encabezado\Passes\Lightning">
-      <UniqueIdentifier>{61529068-415f-424b-b732-a32d477d9308}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de encabezado\Passes\SSAO">
       <UniqueIdentifier>{51de21f5-aba6-4eb1-9fda-58b142d670c9}</UniqueIdentifier>
     </Filter>
@@ -72,9 +69,6 @@
     <Filter Include="Archivos de código fuente\Passes\Motion Blur">
       <UniqueIdentifier>{0a37ba23-fc16-404c-8769-d58ae2e3d85e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de código fuente\Passes\Lightning">
-      <UniqueIdentifier>{54b7982d-818b-4f4f-8145-e4ef75f3e68e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de encabezado\Passes\Planet">
       <UniqueIdentifier>{a1ee1094-7a18-43a2-97e3-248eea14d47e}</UniqueIdentifier>
     </Filter>
@@ -102,6 +96,12 @@
     <Filter Include="Archivos de código fuente\Passes\GraphicDebugger">
       <UniqueIdentifier>{04882ade-74fe-4498-812b-87a391ee1a31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\Passes\Shading">
+      <UniqueIdentifier>{54b7982d-818b-4f4f-8145-e4ef75f3e68e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes\Shading">
+      <UniqueIdentifier>{61529068-415f-424b-b732-a32d477d9308}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZRacrozRenderer.h">
@@ -121,16 +121,16 @@
       <Filter>Archivos de encabezado\Passes\GBuffer</Filter>
     </ClInclude>
     <ClInclude Include="include\RZDisneyPBR.h">
-      <Filter>Archivos de encabezado\Passes\Lightning</Filter>
+      <Filter>Archivos de encabezado\Passes\Shading</Filter>
     </ClInclude>
     <ClInclude Include="include\RZPBR.h">
-      <Filter>Archivos de encabezado\Passes\Lightning</Filter>
+      <Filter>Archivos de encabezado\Passes\Shading</Filter>
     </ClInclude>
     <ClInclude Include="include\RZColorCorrection.h">
       <Filter>Archivos de encabezado\Passes\ColorCorrection</Filter>
     </ClInclude>
     <ClInclude Include="include\RZPBRForward.h">
-      <Filter>Archivos de encabezado\Passes\Lightning</Filter>
+      <Filter>Archivos de encabezado\Passes\Shading</Filter>
     </ClInclude>
     <ClInclude Include="include\RZTerrainGeometryPass.h">
       <Filter>Archivos de encabezado\Passes\GBuffer</Filter>
@@ -157,7 +157,7 @@
       <Filter>Archivos de encabezado\Passes\Motion Blur</Filter>
     </ClInclude>
     <ClInclude Include="include\RZPBRTransparent.h">
-      <Filter>Archivos de encabezado\Passes\Lightning</Filter>
+      <Filter>Archivos de encabezado\Passes\Shading</Filter>
     </ClInclude>
     <ClInclude Include="include\RZPlanetPass.h">
       <Filter>Archivos de encabezado\Passes\Planet</Filter>
@@ -204,7 +204,7 @@
       <Filter>Archivos de código fuente\Passes\SkyBox</Filter>
     </ClCompile>
     <ClCompile Include="src\RZPBR.cpp">
-      <Filter>Archivos de código fuente\Passes\Lightning</Filter>
+      <Filter>Archivos de código fuente\Passes\Shading</Filter>
     </ClCompile>
     <ClCompile Include="src\RZGeometryPass.cpp">
       <Filter>Archivos de código fuente\Passes\GBuffer</Filter>
@@ -213,7 +213,7 @@
       <Filter>Archivos de código fuente\Passes\ColorCorrection</Filter>
     </ClCompile>
     <ClCompile Include="src\RZPBRForward.cpp">
-      <Filter>Archivos de código fuente\Passes\Lightning</Filter>
+      <Filter>Archivos de código fuente\Passes\Shading</Filter>
     </ClCompile>
     <ClCompile Include="src\RZTerrainGeometryPass.cpp">
       <Filter>Archivos de código fuente\Passes\GBuffer</Filter>
@@ -240,7 +240,7 @@
       <Filter>Archivos de código fuente\Passes\Motion Blur</Filter>
     </ClCompile>
     <ClCompile Include="src\RZPBRTransparent.cpp">
-      <Filter>Archivos de código fuente\Passes\Lightning</Filter>
+      <Filter>Archivos de código fuente\Passes\Shading</Filter>
     </ClCompile>
     <ClCompile Include="src\RZPlanetPass.cpp">
       <Filter>Archivos de código fuente\Passes\Planet</Filter>

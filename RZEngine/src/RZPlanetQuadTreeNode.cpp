@@ -681,7 +681,7 @@ namespace rczEngine
 		auto vertexSize = m_CurrentVertices->size();
 
 		double halfSize = HalfSize;
-
+		
 #pragma omp parallel for
 		for (uint32 i = 0; i < vertexSize; ++i)
 		{
@@ -698,7 +698,7 @@ namespace rczEngine
 
 			TempVertex->VertexPosition = CalculateVertexPos(TempVertex->VertexPosition, TempVertex->Displacement);
 
-			//m_MeshAABB.AddPoint(TempVertex->VertexPosition);
+			//m_MesAABB.AddPoint(TempVertex->VertexPosition);
 
 			TempVertex->TextureCoordinates.m_x = float(y)  * distVertex * 10;
 			TempVertex->TextureCoordinates.m_y = float(x)  * distVertex * 10;

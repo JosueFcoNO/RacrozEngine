@@ -22,7 +22,7 @@
     <ProjectGuid>{AB388F04-FEFB-4455-BD57-F321B4AA9D15}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>RZCore</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <ProjectName>RZDirectInput</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

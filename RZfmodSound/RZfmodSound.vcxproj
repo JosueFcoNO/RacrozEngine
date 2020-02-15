@@ -22,7 +22,7 @@
     <ProjectGuid>{9323AE76-0F7F-4F5B-8083-58AF4C672B30}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>RZCore</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <ProjectName>RZfmodSound</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

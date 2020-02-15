@@ -1,6 +1,6 @@
 #pragma once
 #define PERMUTATION_TABLE_SIZE 256
-#define PATCH_NUMBER 256
+#define PATCH_NUMBER 1024
 
 namespace rczEngine
 {

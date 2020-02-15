@@ -99,9 +99,6 @@
     <Filter Include="Archivos de encabezado\Terrain">
       <UniqueIdentifier>{056d99e7-16f9-4414-b3ce-893ea71c8563}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de código fuente\Terrain">
-      <UniqueIdentifier>{8a0ef0b5-0e72-4b0a-a513-743f724a4fe1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de encabezado\SkyBox">
       <UniqueIdentifier>{9866bcd3-a16f-4cc9-904c-deb0e510ac8b}</UniqueIdentifier>
     </Filter>
@@ -137,6 +134,9 @@
     </Filter>
     <Filter Include="Archivos de código fuente\GUI">
       <UniqueIdentifier>{b31cf262-c794-4e3a-893c-8f22847bd06c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Terrain">
+      <UniqueIdentifier>{8a0ef0b5-0e72-4b0a-a513-743f724a4fe1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -46,11 +46,13 @@
 #include "RZRect2D.h"
 #include "RZRect2Di.h"
 #include "RZRect3D.h"
-#include "RZRay.h"
+#include "RZLine.h"
 #include "RZPlane.h"
 #include "RZSphere.h"
 #include "RZShapes3D.h"
 #include "RZTriangle.h"
+
+#include "CbnLine2D.h"
 
 #include "RZFrustum.h"
 #include "RZCamera.h"

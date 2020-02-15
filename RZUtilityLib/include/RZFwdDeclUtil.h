@@ -18,7 +18,7 @@ namespace rczEngine
 	class Matrix4;
 	class Plane;
 	class Quaternion;
-	class Ray;
+	class Line;
 	class Sphere;
 	class AABB;
 

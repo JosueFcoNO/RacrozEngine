@@ -6,7 +6,9 @@ namespace rczEngine
 	{
 	public:
 		void InitEditor();
+		void InitEngine();
 		void RunEditor();
+		void Math3DUnitTest();
 		void DestroyEditor();
 
 	private:

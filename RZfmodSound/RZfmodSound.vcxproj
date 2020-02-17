@@ -22,7 +22,7 @@
     <ProjectGuid>{9323AE76-0F7F-4F5B-8083-58AF4C672B30}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>RZCore</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <ProjectName>RZfmodSound</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -81,8 +81,8 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(SolutionDir)RZUtilityLib\include;$(IncludePath);$(SolutionDir)Plug-Ins\fmod\inc\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZfmodSound\include</IncludePath>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(SolutionDir)Plug-Ins/fmod/;</LibraryPath>
+    <IncludePath>$(GSL)\include;$(SolutionDir)CbnUtilities\include;$(IncludePath);$(fmod)\inc\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZfmodSound\include</IncludePath>
+    <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(fmod)lib\$(Platform)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -95,7 +95,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(SolutionDir)RZUtilityLib\include;$(IncludePath);$(fmod)\inc\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZfmodSound\include</IncludePath>
+    <IncludePath>$(GSL)\include;$(SolutionDir)CbnUtilities\include;$(IncludePath);$(fmod)\inc\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZfmodSound\include</IncludePath>
     <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(fmod)lib\$(Platform)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -133,7 +133,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProfileGuidedDatabase>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>fmod64_vc.lib; RZUtilityLib.lib; kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>fmod_vc.lib; CbnUtilities.lib; kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -179,7 +179,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProfileGuidedDatabase>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>fmod_vc.lib; RZUtilityLib.lib; kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>fmod_vc.lib; CbnUtilities.lib; kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

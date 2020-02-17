@@ -63,26 +63,10 @@ namespace rczEngine
 
 		void InitWindow()
 		{
-			ImGUIEditor::Pointer()->AddWindow("Renderer", this);
 		};
 
 		void RenderWindow()
 		{
-			ImGui::Begin("Renderer");
-			{
-
-				if (ImGui::Button("Previous Pass"))
-				{
-					CurrentPass = Math::Max(CurrentPass - 1, 0);
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Next Pass"))
-				{
-					CurrentPass = Math::Min(CurrentPass + 1, (int)deferred.m_PassesOrder.size() - 1);
-				}
-
-				if (m_Passes[deferred.m_PassesOrder[CurrentPass]]) m_Passes[deferred.m_PassesOrder[CurrentPass]]->RenderPassGUI();
-			}
 		};
 
 	public:
@@ -93,9 +77,10 @@ namespace rczEngine
 		///Inits the Renderer
 		void InitRenderer();
 		///Inits the variables, render targets and shaders for a specific rendering mode. Can be changed mid game.
-		void SetRenderingMode(RENDERING_MODE renderingMode);
+		void SetRenderingMode(eRenderingPipelines renderingMode);
 		///Renders the scene and Canvas
 		void Render(Scene* sceneGraph, ImGUIEditor * editor);
+		WeakPtr<RenderPipeline> GetCurrentPipeline();
 		///Destroys the renderer
 		void Destroy();
 
@@ -131,9 +116,11 @@ namespace rczEngine
 		///Does a blur render pass, with the texture passes
 		void DoBlurPass(StrPtr<Gfx::RenderTarget> outRenderTarget, StrPtr<Texture2D> inTexture, int width, int height);
 
-		StrPtr<Pass> CreatePass(const String& name, PASSES pass, RENDERING_MODE renderMode = DEFERRED);
+		StrPtr<Pass> CreatePass(const String& name, PASSES pass, eRenderingPipelines renderMode = eRenderingPipelines::Deferred);
 
 		void StartPostProcessing();
+
+		//StrPtr<Gfx::RenderTarget> GetRenderTarget(const String& name) { return m_RTs[name]; };
 
 		///Samplers
 		Gfx::SamplerState m_LinealWrapSampler;
@@ -149,7 +136,7 @@ namespace rczEngine
 
 		Map<String, StrPtr<Pass>> m_Passes;
 
-		PipelineDeferred deferred;
+		StrPtr<RenderPipeline> m_CurrentPipeline;
 
 	private:
 		///Private un-implemented Copy Constructor to prevent copying by accident.
@@ -159,10 +146,6 @@ namespace rczEngine
 
 		///The SkyBox currently set.
 		StrPtr<SkyBox> m_ActiveSkyBox;
-
-		void SetDeferred();
-		void SetForward();
-		void SetForwardPlus();
 
 		Gfx::VertexShader m_ScreenQuadVS;
 

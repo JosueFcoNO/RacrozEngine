@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void PerlinPlanetPass::SetRenderingMode(RENDERING_MODE mode)
+	void PerlinPlanetPass::SetRenderingMode(eRenderingPipelines mode)
 	{
 		///Load the skybox Cube
 		auto resMng = ResVault::Pointer();

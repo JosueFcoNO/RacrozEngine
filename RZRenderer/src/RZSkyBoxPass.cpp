@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void SkyBoxPass::SetRenderingMode(RENDERING_MODE mode)
+	void SkyBoxPass::SetRenderingMode(eRenderingPipelines mode)
 	{
 		///Load the skybox Cube
 		auto resMng = ResVault::Pointer();

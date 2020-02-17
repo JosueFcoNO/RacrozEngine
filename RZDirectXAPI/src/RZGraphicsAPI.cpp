@@ -39,7 +39,7 @@ namespace rczEngine
 			auto window = OSLayer::Pointer()->GetWindow();
 			auto getRect = window.GetRect();
 
-			CreateDevice(getRect.right, getRect.bottom, 2, 144, 1, 0, isWindowed);
+			CreateDevice(getRect.right + getRect.left, getRect.bottom + getRect.top, 2, 144, 1, 0, isWindowed);
 			GetBackBufferInterface();
 			SetRenderTargetViewAndDepthStencil();
 			SetViewPortDefault();
@@ -138,7 +138,7 @@ namespace rczEngine
 #endif
 
 			///Create the RenderTargetView from the backbufffer
-			m_Device->CreateRenderTargetView(m_BackBuffer, nullptr, &m_RenderTargetView[0]);
+			m_Device->CreateRenderTargetView(m_BackBuffer, nullptr, &m_BaseRenderTargetView);
 
 			///Copy the descriptor from the back buffer
 			D3D11_TEXTURE2D_DESC DepthStencilDesc;
@@ -160,7 +160,7 @@ namespace rczEngine
 			m_Device->CreateDepthStencilView(m_DepthStencil, &descDSV, &m_DepthStencilView);
 
 			///Set the render target and the depth stecil
-			m_DeviceContext->OMSetRenderTargets(1, &m_RenderTargetView[0], m_DepthStencilView);
+			m_DeviceContext->OMSetRenderTargets(1, &m_BaseRenderTargetView, m_DepthStencilView);
 
 			return true;
 		}
@@ -413,6 +413,13 @@ namespace rczEngine
 			return true;
 		}
 
+		bool GfxCore::SetDefaultRenderTarget()
+		{
+			m_DeviceContext->OMSetRenderTargets(1, &m_BaseRenderTargetView, NULL);
+
+			return true;
+		}
+
 		void GfxCore::UnbindRenderTargets()
 		{
 			ID3D11RenderTargetView *pSRV[1] = { nullptr };
@@ -467,6 +474,17 @@ namespace rczEngine
 #pragma endregion
 
 #pragma region =	| Draw Functions |
+
+		void GfxCore::ClearDefaultRenderTargetView(const float Red, const float Blue, const float Green, const float Alpha)
+		{
+			float Color[4];
+			Color[0] = Red;
+			Color[1] = Blue;
+			Color[2] = Green;
+			Color[3] = Alpha;
+
+			m_DeviceContext->ClearRenderTargetView(m_BaseRenderTargetView, Color);
+		}
 
 		void GfxCore::ClearRenderTargetView(int32 renderTargetSlot, const float Red, const float Blue, const float Green, const float Alpha)
 		{

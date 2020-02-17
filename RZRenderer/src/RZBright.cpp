@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void BrightPass::SetRenderingMode(RENDERING_MODE mode)
+	void BrightPass::SetRenderingMode(eRenderingPipelines mode)
 	{
 		m_PShaderPath = L"Shaders/HDRBloom/Bright.hlsl";
 		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());

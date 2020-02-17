@@ -6,6 +6,7 @@
 
 #include "RZRenderPipeline.h"
 #include "RZPipelineDeferred.h"
+#include "CbnPipelineDebug.h"
 
 #include "RZPass.h"
 

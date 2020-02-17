@@ -4,15 +4,26 @@ namespace rczEngine
 {
 	class RacrozRenderer;
 
-	class RZ_EXP RenderPipeline
+	///TODO: Move Passes here
+
+	class RenderPipeline
 	{
 	public:
-		virtual void InitRenderPipeline(const String& name, int32 width, int32 height, RacrozRenderer * renderer) = 0;
-		virtual void DoRender() = 0;
+		RZ_EXP virtual void InitRenderPipeline(const String& name, int32 width, int32 height, RacrozRenderer * renderer) = 0;
+		RZ_EXP virtual void DoRender() = 0;
 
-		void CreateRenderTarget(const String& name, int32 width, int32 height, Gfx::eFORMAT format, int32 mipmaps) ; 
+		RZ_EXP void CreateRenderTarget(const String& name, int32 width, int32 height, Gfx::eFORMAT format, int32 mipmaps) ;
 
-		Vector<String> m_PassesOrder;
+		RZ_EXP WeakPtr<Gfx::RenderTarget> GetFinalRenderTarget() 
+		{ 
+			//const auto index = m_PassesOrder.size() - 1;
+			//const auto rt = m_Passes[m_PassesOrder[index]];
+
+			return m_RTs["Debug"]; 
+		};
+		RZ_EXP WeakPtr<Gfx::RenderTarget> GetRenderTarget(const String& renderTarget) { return m_RTs[renderTarget]; };
+
+		RZ_EXP const Vector<String>& GetPassesOrder() { return m_PassesOrder; };
 
 	protected:
 		RacrozRenderer * m_Renderer;
@@ -23,6 +34,8 @@ namespace rczEngine
 		///A Map from the render targets.
 		Map<String, StrPtr<Gfx::RenderTarget>> m_RTs;
 
+		///The passes order.
+		Vector<String> m_PassesOrder;
 
 		///Base Width
 		int m_Width;

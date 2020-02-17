@@ -23,7 +23,7 @@ namespace rczEngine
 		delete _Instance();
 	}
 
-	void GraphicDebugger::Init()
+	void GraphicDebugger::InitGDebugger()
 	{
 		auto gfx = Gfx::GfxCore::Pointer();
 		m_Shader.CreatePixelShader(L"Shaders/DebuggerShader.hlsl", gfx);
@@ -33,23 +33,24 @@ namespace rczEngine
 		m_LinesRS.CreateRasterizerState(gfx);
 	}
 
-	void GraphicDebugger::Destroy()
+	void GraphicDebugger::DestroyGDebugger()
 	{
 		m_ColorCB.Destroy();
 	}
 
-	void GraphicDebugger::Render(Gfx::GfxCore * graphicsapi_instance)
+	void GraphicDebugger::RenderGDebugger(Gfx::GfxCore * graphicsapi_instance)
 	{
 		///Set the Graphic debugger's  pixel shader
-		m_Shader.SetThisPixelShader(graphicsapi_instance);
+		//m_Shader.SetThisPixelShader(graphicsapi_instance);
 
 		///Set the ColorBuffer in the pipeline
 		m_ColorCB.SetBufferInPS(0, graphicsapi_instance);
 
 		///Set the Rasterizer State
-		m_LinesRS.SetThisRasterizerState(graphicsapi_instance);
+		//m_LinesRS.SetThisRasterizerState(graphicsapi_instance);
 
 		///Change the Topology to linelist
+		//graphicsapi_instance->SetPrimitiveTopology(Gfx::TOPO_LINELIST);
 
 		///Iterate through the Static Objs and Draw Them
 		for (auto obj : m_Objects)
@@ -67,7 +68,7 @@ namespace rczEngine
 		graphicsapi_instance->SetPrimitiveTopology(Gfx::eTOPOLOGY::TOPO_TRIANGLELIST);
 	}
 
-	void GraphicDebugger::Update(float deltaTime)
+	void GraphicDebugger::UpdateGDebugger(float deltaTime)
 	{
 		///Iterate through the Static Objs and Draw Them
 		for (auto obj : m_Objects)

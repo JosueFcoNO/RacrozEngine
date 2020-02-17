@@ -35,7 +35,7 @@ namespace rczEngine
 		///SKYBOX PASS///
 		/////////////////
 
-		auto passSkyBox = m_Renderer->CreatePass(name + "SkyBox", PASSES::SKYBOX, RENDERING_MODE::DEFERRED);
+		auto passSkyBox = m_Renderer->CreatePass(name + "SkyBox", PASSES::SKYBOX, eRenderingPipelines::Deferred);
 
 		passSkyBox->AddRenderTarget(m_RTs["ColorAO"], 0);
 		passSkyBox->AddRasterizerState(&m_Renderer->m_RSSolidCullNone);
@@ -48,7 +48,7 @@ namespace rczEngine
 		///////////////////
 
 		///Create the geometry pass
-		auto passGeometry = m_Renderer->CreatePass(name + "Geometry", PASSES::GEOMETRY_PASS, RENDERING_MODE::DEFERRED);
+		auto passGeometry = m_Renderer->CreatePass(name + "Geometry", PASSES::GEOMETRY_PASS, eRenderingPipelines::Deferred);
 
 		passGeometry->AddRenderTarget(m_RTs["ColorAO"], 0);
 		passGeometry->AddRenderTarget(m_RTs["Position"], 1);
@@ -69,7 +69,7 @@ namespace rczEngine
 		////////////////////////
 		
 		///Create the geometry pass
-		auto passSSAO = m_Renderer->CreatePass(name + "SSAO", PASSES::SSAO, RENDERING_MODE::DEFERRED);
+		auto passSSAO = m_Renderer->CreatePass(name + "SSAO", PASSES::SSAO, eRenderingPipelines::Deferred);
 		
 		passSSAO->AddRenderTarget(m_RTs["SSAO"], 0);
 		passSSAO->AddDepthStencyl(&depth);
@@ -83,7 +83,7 @@ namespace rczEngine
 		/////////
 
 		///Create the PBR pass
-		auto passPBR = m_Renderer->CreatePass(name + "PBR", PASSES::PBR, RENDERING_MODE::DEFERRED);
+		auto passPBR = m_Renderer->CreatePass(name + "PBR", PASSES::PBR, eRenderingPipelines::Deferred);
 
 		passPBR->AddRenderTarget(m_RTs["PBR"], 0);
 		passPBR->AddDepthStencyl(&depth);
@@ -102,7 +102,7 @@ namespace rczEngine
 		//////////////////////
 
 		///Create the geometry pass
-		auto passTransparent = m_Renderer->CreatePass(name + "Transparent", PASSES::PBR_TRANSPARENT, RENDERING_MODE::DEFERRED);
+		auto passTransparent = m_Renderer->CreatePass(name + "Transparent", PASSES::PBR_TRANSPARENT, eRenderingPipelines::Deferred);
 
 		passTransparent->AddRenderTarget(m_RTs["PBR"], 0);
 		passTransparent->AddRenderTarget(m_RTs["Position"], 1);
@@ -116,7 +116,7 @@ namespace rczEngine
 		//////////////////////
 
 		///Create the geometry pass
-		auto passDebugger = m_Renderer->CreatePass(name + "Debugger", PASSES::GDEBUGGER, RENDERING_MODE::DEFERRED);
+		auto passDebugger = m_Renderer->CreatePass(name + "Debugger", PASSES::GDEBUGGER, eRenderingPipelines::Deferred);
 		
 		passDebugger->AddRenderTarget(m_RTs["PBR"], 0);
 		passDebugger->AddDepthStencyl(&depth);
@@ -127,7 +127,7 @@ namespace rczEngine
 		///PLANET PASS/////
 		///////////////////
 
-		auto passPlanet = m_Renderer->CreatePass(name + "Planet", PASSES::PLANET_PASS, RENDERING_MODE::DEFERRED);
+		auto passPlanet = m_Renderer->CreatePass(name + "Planet", PASSES::PLANET_PASS, eRenderingPipelines::Deferred);
 		
 		passPlanet->AddRenderTarget(m_RTs["PBR"], 0);
 		passPlanet->AddRenderTarget(m_RTs["Position"], 1);
@@ -140,7 +140,7 @@ namespace rczEngine
 		///SCATTER PASS/////
 		///////////////////
 
-		auto passAtmos = m_Renderer->CreatePass(name + "Atmos", PASSES::ATMOS_SCATTER_PASS, RENDERING_MODE::DEFERRED);
+		auto passAtmos = m_Renderer->CreatePass(name + "Atmos", PASSES::ATMOS_SCATTER_PASS, eRenderingPipelines::Deferred);
 		
 		passAtmos->AddRenderTarget(m_RTs["PBR"], 0);
 		passAtmos->AddDepthStencyl(&depth);
@@ -154,7 +154,7 @@ namespace rczEngine
 		/////////////////
 
 		///Create the PBR pass
-		auto passMotionBlur = m_Renderer->CreatePass(name + "MotionBlur", PASSES::MOTION_BLUR, RENDERING_MODE::DEFERRED);
+		auto passMotionBlur = m_Renderer->CreatePass(name + "MotionBlur", PASSES::MOTION_BLUR, eRenderingPipelines::Deferred);
 		
 		passMotionBlur->AddRenderTarget(m_RTs["MotionBlur"], 0);
 		passMotionBlur->AddDepthStencyl(&depth);
@@ -171,7 +171,7 @@ namespace rczEngine
 		//Receives the PBR pass and outputs a R16F luminance map.
 
 		//create the Luminance pass
-		auto passLuminance = m_Renderer->CreatePass(name + "Luminance", PASSES::LUMINANCE, RENDERING_MODE::DEFERRED);
+		auto passLuminance = m_Renderer->CreatePass(name + "Luminance", PASSES::LUMINANCE, eRenderingPipelines::Deferred);
 		
 		passLuminance->AddRenderTarget(m_RTs["Luminance"], 0);
 		passLuminance->AddTexture2D(m_Textures["MotionBlur"], 0);
@@ -186,7 +186,7 @@ namespace rczEngine
 		//Receives the Luminance pass and the Emmisive Map and outputs a RGB16F bright map to blur to get bloom and glow.
 
 		///Create the Bright pass
-		auto passBright = m_Renderer->CreatePass(name + "Bright", PASSES::BRIGHT, RENDERING_MODE::DEFERRED);
+		auto passBright = m_Renderer->CreatePass(name + "Bright", PASSES::BRIGHT, eRenderingPipelines::Deferred);
 		
 		passBright->AddRenderTarget(m_RTs["Bright"], 0);
 		passBright->AddDepthStencyl(&depth);
@@ -202,7 +202,7 @@ namespace rczEngine
 
 		//Receives the Bright pass and blurs it 4 times to generate bloom and glow.
 
-		StrPtr<BloomPass> passBloom = std::static_pointer_cast<BloomPass, Pass>(m_Renderer->CreatePass(name + "Bloom", PASSES::BLOOM, RENDERING_MODE::DEFERRED));
+		StrPtr<BloomPass> passBloom = std::static_pointer_cast<BloomPass, Pass>(m_Renderer->CreatePass(name + "Bloom", PASSES::BLOOM, eRenderingPipelines::Deferred));
 		
 		passBloom->AddRenderTarget(m_RTs["Bloom"], 0);
 		
@@ -223,7 +223,7 @@ namespace rczEngine
 
 		//Receives the Luminance pass and calculates the average luminance.
 
-		auto passAvgLuminance = m_Renderer->CreatePass(name + "AvgLuminance", PASSES::AVG_LUMINANCE, RENDERING_MODE::DEFERRED);
+		auto passAvgLuminance = m_Renderer->CreatePass(name + "AvgLuminance", PASSES::AVG_LUMINANCE, eRenderingPipelines::Deferred);
 		
 		passAvgLuminance->AddRenderTarget(m_RTs["AvgLuminance"], 0);
 		passAvgLuminance->AddDepthStencyl(&depth);
@@ -239,7 +239,7 @@ namespace rczEngine
 		//Receives the AvgLuminance, PBR and Bloom, does HDR and Bloom.
 
 		///Create the Bright pass
-		auto passHDRBloom = m_Renderer->CreatePass(name + "HDRBloom", PASSES::HDR_BLOOM, RENDERING_MODE::DEFERRED);
+		auto passHDRBloom = m_Renderer->CreatePass(name + "HDRBloom", PASSES::HDR_BLOOM, eRenderingPipelines::Deferred);
 		
 		passHDRBloom->AddRenderTarget(m_RTs["HDRBloom"], 0);
 		passHDRBloom->AddDepthStencyl(&depth);
@@ -255,7 +255,7 @@ namespace rczEngine
 		//////////////////////
 
 		///Create the PBR pass
-		auto passColorCorrection = m_Renderer->CreatePass(name + "ColorCorrection", PASSES::COLOR_CORRECTION, RENDERING_MODE::DEFERRED);
+		auto passColorCorrection = m_Renderer->CreatePass(name + "ColorCorrection", PASSES::COLOR_CORRECTION, eRenderingPipelines::Deferred);
 
 		passColorCorrection->AddRenderTarget(m_RTs["ColorCorrection"], 0);
 		passColorCorrection->AddTexture2D(m_Textures["HDRBloom"], 0);

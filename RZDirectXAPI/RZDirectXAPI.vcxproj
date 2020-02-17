@@ -22,7 +22,7 @@
     <ProjectGuid>{13831E5B-23BC-45C3-8EF1-6541328A1C38}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>RZDirectXAPI</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <ProjectName>RZDirectXAPI</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -81,8 +81,8 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(SolutionDir)Plug-Ins/assimp-master/include/;$(SolutionDir)RZUtilityLib\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(SolutionDir)Plug-Ins\assimp-master\$(Platform)\$(Configuration)\;$(SolutionDir)Plug-Ins\FW1FontWrapper\$(Platform)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(GSL)\include;$(Assimp)/include/;$(SolutionDir)CbnUtilities\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(Assimp)\lib\$(Platform)\$(Configuration);$(SolutionDir)Plug-Ins\FW1FontWrapper\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -95,8 +95,8 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(Assimp)/include/;$(SolutionDir)RZUtilityLib\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(Assimp)\lib\$(Platform)\$(Configuration);$(SolutionDir)Plug-Ins\FW1FontWrapper\$(Platform)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(GSL)\include;$(Assimp)/include/;$(SolutionDir)CbnUtilities\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(Assimp)\lib\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -133,7 +133,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProfileGuidedDatabase>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>FW1FontWrapper.lib; assimp-vc140-mt.lib; RZDirectInput.lib; RZCore.lib;RZUtilityLib.lib;dxgi.lib;d3d11.lib;d3dcompiler.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc141-mtd.lib; RZDirectInput.lib; RZCore.lib;CbnUtilities.lib;dxgi.lib;d3d11.lib;d3dcompiler.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -179,7 +179,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProfileGuidedDatabase>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>assimp-vc141-mt.lib; RZDirectInput.lib; RZCore.lib;RZUtilityLib.lib;dxgi.lib;d3d11.lib;d3dcompiler.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc141-mt.lib; RZDirectInput.lib; RZCore.lib;CbnUtilities.lib;dxgi.lib;d3d11.lib;d3dcompiler.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -12,16 +12,16 @@ namespace rczEngine {
 		static void ShutDown();
 
 	public:
-		~GraphicDebugger() { Destroy(); };
+		~GraphicDebugger() { DestroyGDebugger(); };
 
 		///Init the Graphic Debugger
-		void Init();
+		void InitGDebugger();
 		///Frees the buffers, shaders and vectors
-		void Destroy();
+		void DestroyGDebugger();
 		///Renders the objects
-		void Render(Gfx::GfxCore* gfx);
+		void RenderGDebugger(Gfx::GfxCore* gfx);
 		///Updates the objects
-		void Update(float deltaTime);
+		void UpdateGDebugger(float deltaTime);
 
 		WeakPtr<DebuggerLineList> AddLineList(const String& ID, const Vector<Vector3>& pointList, const Color& color, float time = -1.0f);
 		WeakPtr<DebuggerLineList> AddLineListIndex(const String & ID, const Vector<Vector3>& pointList, const Vector<uint32>& indices, const Color & color, float time);

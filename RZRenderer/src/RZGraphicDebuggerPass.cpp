@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void GraphicDebuggerPass::SetRenderingMode(RENDERING_MODE mode)
+	void GraphicDebuggerPass::SetRenderingMode(eRenderingPipelines mode)
 	{
 		m_PShaderPath = L"Shaders/DebuggerShader.hlsl";
 		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
@@ -15,15 +15,18 @@ namespace rczEngine
 
 	void GraphicDebuggerPass::PreRenderPass()
 	{
+		CameraManager::Pointer()->UpdateAndSetCameraBuffer(m_gfx, 5, 5);
+
 		m_PShader.SetThisPixelShader(m_gfx);
 		m_VShader.SetThisVertexShaderAndInputLayout(m_gfx);
 		
 		SetRenderTargetsInPipeline();
+		m_gfx->ClearRenderTargetView(0, 0.0f, 0,0,1);
 	}
 
 	void GraphicDebuggerPass::RenderPass()
 	{
-		GraphicDebugger::Pointer()->Render(m_gfx);
+		GraphicDebugger::Pointer()->RenderGDebugger(m_gfx);
 	}
 
 	void GraphicDebuggerPass::PostRenderPass()

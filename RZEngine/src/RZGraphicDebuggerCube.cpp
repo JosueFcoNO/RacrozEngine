@@ -25,10 +25,20 @@ namespace rczEngine
 		m_VertexBuffer.AddVertex(topFrontRight);
 		m_VertexBuffer.AddVertex(topFrontLeft);
 
+		m_VertexBuffer.AddVertex(topBackLeft);
+		m_VertexBuffer.AddVertex(bottomBackLeft);
+
+		m_VertexBuffer.AddVertex(bottomBackRight);
 		m_VertexBuffer.AddVertex(bottomFrontRight);
 		m_VertexBuffer.AddVertex(bottomFrontLeft);
 		m_VertexBuffer.AddVertex(bottomBackLeft);
-		m_VertexBuffer.AddVertex(bottomBackRight);
+
+		m_VertexBuffer.AddVertex(bottomFrontRight);
+		m_VertexBuffer.AddVertex(topFrontRight);
+
+		m_VertexBuffer.AddVertex(topBackLeft);
+
+
 
 		m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DYNAMIC, false, Gfx::GfxCore::Pointer());
 	}

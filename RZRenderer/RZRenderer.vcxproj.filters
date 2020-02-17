@@ -186,6 +186,9 @@
     <ClInclude Include="include\RZPipelineDeferred.h">
       <Filter>Archivos de encabezado\RacrozRenderer</Filter>
     </ClInclude>
+    <ClInclude Include="include\CbnPipelineDebug.h">
+      <Filter>Archivos de encabezado\RacrozRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZRendererPCH.cpp">
@@ -261,6 +264,9 @@
       <Filter>Archivos de código fuente\RacrozRenderer</Filter>
     </ClCompile>
     <ClCompile Include="src\RZRenderPipeline.cpp">
+      <Filter>Archivos de código fuente\RacrozRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnPipelineDebug.cpp">
       <Filter>Archivos de código fuente\RacrozRenderer</Filter>
     </ClCompile>
   </ItemGroup>

@@ -92,6 +92,9 @@ namespace rczEngine
 			///Sets the Render Targets added before to the pipeline.
 			bool SetRenderTargets(bool UseDepthStencyl = true, DepthStencyl * depth = nullptr);
 
+			///Sets the original render target that was bound to the back buffer.
+			bool SetDefaultRenderTarget();
+
 			///Removes the Render Targets from the pipeline
 			void UnbindRenderTargets();
 
@@ -123,6 +126,9 @@ namespace rczEngine
 #pragma endregion
 
 #pragma region =	| Draw Functions |
+
+			///Clears the deafult render target that was set to the Back Buffer.
+			void ClearDefaultRenderTargetView(const float Red, const float Blue, const float Green, const float Alpha);
 
 			///Clears the view with a color in 4 float array.
 			void ClearRenderTargetView(int32 renderTargetSlot, const float Red, const float Blue, const float Green, const float Alpha);
@@ -362,6 +368,9 @@ namespace rczEngine
 
 			///The RenderTargetVews.
 			ID3D11RenderTargetView* m_RenderTargetView[8];
+
+			///The default Render Target view linked to the BackBuffer.
+			ID3D11RenderTargetView* m_BaseRenderTargetView;
 
 			///The DepthStencilView
 			ID3D11DepthStencilView* m_DepthStencilView;

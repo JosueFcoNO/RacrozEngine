@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void AverageLuminancePass::SetRenderingMode(RENDERING_MODE mode)
+	void AverageLuminancePass::SetRenderingMode(eRenderingPipelines mode)
 	{
 		m_PShaderPath = L"Shaders/HDRBloom/AvgLuminance.hlsl";
 		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());

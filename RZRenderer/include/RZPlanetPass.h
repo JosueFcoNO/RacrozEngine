@@ -6,7 +6,7 @@ namespace rczEngine
 	{
 	public:
 		///Inits the pass with a name and a rendering mode.
-		virtual void SetRenderingMode(RENDERING_MODE mode);
+		virtual void SetRenderingMode(eRenderingPipelines mode);
 
 		///Sets the buffers, shaders, textures and render targets before rendering geomtry.
 		virtual void PreRenderPass();

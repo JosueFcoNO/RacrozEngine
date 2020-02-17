@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void PBR_Transparent_Pass::SetRenderingMode(RENDERING_MODE mode)
+	void PBR_Transparent_Pass::SetRenderingMode(eRenderingPipelines mode)
 	{
 		///Load the LUT.
 		m_LUT = m_res->GetResource<Texture2D>(m_res->LoadResource("RacrozEngineAssets/BRDF LUT.png", "LUT")).lock();

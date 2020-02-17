@@ -48,95 +48,42 @@ namespace rczEngine
 		m_ScreenQuadVS.ReflectLayout(1, m_gfx);
 
 		m_ActiveSkyBox = std::make_shared<SkyBox>();
-
-		SetRenderingMode(DEFERRED);
-
-		m_BlurPass.SetRenderingMode(DEFERRED);
-
-#ifndef PROFILING
-		Profiler::Pointer()->StartProfiler();
-#endif
-
-		InitWindow();
 	}
 
-	void RacrozRenderer::SetRenderingMode(RENDERING_MODE renderingMode)
+	void RacrozRenderer::SetRenderingMode(eRenderingPipelines renderingMode)
 	{
 		switch (renderingMode)
 		{
-		case rczEngine::FORWARD:
-			SetForward();
+		case eRenderingPipelines::Forward:
+			//SetForward();
 			break;
-		case rczEngine::DEFERRED:
-			SetDeferred();
+		case eRenderingPipelines::Deferred:
+			m_CurrentPipeline = std::make_shared<PipelineDeferred>();
+			m_CurrentPipeline->InitRenderPipeline("Deferred", m_Width, m_Height, this);
 			break;
-		case rczEngine::FORWARD_PLUS:
-			SetForwardPlus();
+		case eRenderingPipelines::ForwardPlus:
+			//SetForwardPlus();
 			break;
+		case eRenderingPipelines::Debug:
+			m_CurrentPipeline = std::make_shared<PipelineDebug>();
+			m_CurrentPipeline->InitRenderPipeline("Debug", m_Width, m_Height, this);
 		default:
 			break;
 		}
+
+		m_BlurPass.SetRenderingMode(renderingMode);
 	}
 
 	void RacrozRenderer::Render(Scene * sceneGraph, ImGUIEditor * editor)
 	{
 		PrepareRender(sceneGraph);
 
-		static bool StartingSpaceManager = false;
+		m_CurrentPipeline->DoRender();
+	}
 
-		deferred.DoRender();
-
-		if (StartingSpaceManager)
-		{
-			StartingSpaceManager = false;
-			SpaceManager::Start();
-			SpaceManager::Pointer()->InitSpaceManager();
-		}
-
-		//If there exists an editor, render it.
-		if (editor)
-		{
-			editor->RenderEditor(nullptr);
-
-			ImGui::Begin("Renderer");
-			{
-				if (ImGui::Button("SkyBox"))
-				{
-					StrPtr<SkyBox> Sky = std::make_shared<SkyBox>();
-					Sky->InitSkyBox(LoadFile("SkyBox", "Sky", ResVault::Pointer()), Gfx::GfxCore::Pointer(), ResVault::Pointer());
-					ChangeSkyBox(Sky);
-				}
-			};
-
-			ImGui::Begin("Space");
-			{
-				if (SpaceManager::Pointer())
-				{
-					ImGui::Text("Space Manager Active");
-				}
-				else
-				{
-					if (ImGui::Button("Start Space"))
-					{
-						StartingSpaceManager = true;
-
-						auto Light = LightManager::Pointer()->AddLight();
-						Light->InitDirectionalLight(Vector3(1.0f, -1.0f, 0).GetNormalized(), Vector4(1, 1, 1, 1), false);
-					}
-				}
-
-				if (ImGui::Button("Create Cubemap"))
-				{
-					static auto cubemap = CreateCubeMap("Cubemap", sceneGraph, deferred.m_PassesOrder, 1024, 1024);
-				}
-			};
-
-			ImGui::Render();
-			ImGUIEditor::Pointer()->PreRender(ImGui::GetDrawData());
-		}
-
-		m_gfx->Present();
-
+	WeakPtr<RenderPipeline> RacrozRenderer::GetCurrentPipeline()
+	{
+		return m_CurrentPipeline;
 	}
 
 	void RacrozRenderer::Destroy()
@@ -144,13 +91,8 @@ namespace rczEngine
 
 	}
 
-	void RacrozRenderer::SetDeferred()
-	{
-		deferred.InitRenderPipeline("Deferred", m_Width, m_Height, this);
-	}
-
-	void RacrozRenderer::SetForward()
-	{
+	//void RacrozRenderer::SetForward()
+	//{
 		/////Create Render targets and textures for Position,  Normals, Color, Metallic and Roughness, Tangents and Binormals.
 		/////This also inserts the render targets and the textures into the RenderTarget and Texture2D Maps.
 		//m_RTs["ColorCorrection"] = CreateRenderTargetAndTexture_XYScales("ColorCorrection", m_Textures["ColorCorrection"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
@@ -192,12 +134,7 @@ namespace rczEngine
 		//passColorCorrection->AddTexture2D(m_Textures["ColorPBR"], 0);
 		//
 		//m_PassesOrder.push_back("ColorCorrection");
-	}
-
-	void RacrozRenderer::SetForwardPlus()
-	{
-
-	}
+	//}
 
 	ResourceHandle RacrozRenderer::CreateCubeMap(const String& name, Scene * sceneGraph, Vector<String>& RenderPasses, int width, int height)
 	{
@@ -248,23 +185,25 @@ namespace rczEngine
 		camera->SetFarClip(100.0f);
 		camera->SetNearClip(0.01f);
 
+		auto passes = defCubeMap.GetPassesOrder();
+
 		for (int k = 0; k < 6; ++k)
 		{
 			camera->Reset({ 0,0,0 }, Targets[k], Ups[k]);
 
-			for (int32 i = 0; i < defCubeMap.m_PassesOrder.size(); ++i)
+			for (int32 i = 0; i < passes.size(); ++i)
 			{
-				if (defCubeMap.m_PassesOrder[i] == "PostProcess")
+				if (passes[i] == "PostProcess")
 				{
 					StartPostProcessing();
 					continue;
 				}
 
-				auto pass = m_Passes[defCubeMap.m_PassesOrder[i]];
+				auto pass = m_Passes[passes[i]];
 
 				pass->PreRenderPass();
 
-				if (defCubeMap.m_PassesOrder[i] == "cubeMapColorCorrection")
+				if (passes[i] == "cubeMapColorCorrection")
 				{
 					m_gfx->AddRenderTarget(*renderTargets[k], 0);
 					m_gfx->SetNumberOfRenderTargets(1);
@@ -312,6 +251,8 @@ namespace rczEngine
 
 	void RacrozRenderer::PrepareRender(Scene * sceneGraph)
 	{
+		return;
+
 		m_ObjectsToRender.clear();
 
 		auto CurrentCamera = CameraManager::Pointer()->GetActiveCamera().lock();
@@ -472,7 +413,7 @@ namespace rczEngine
 		return renderTarget;
 	}
 
-	StrPtr<Pass> RacrozRenderer::CreatePass(const String& name, PASSES pass, RENDERING_MODE renderMode)
+	StrPtr<Pass> RacrozRenderer::CreatePass(const String& name, PASSES pass, eRenderingPipelines renderMode)
 	{
 		StrPtr<Pass> returnPass;
 

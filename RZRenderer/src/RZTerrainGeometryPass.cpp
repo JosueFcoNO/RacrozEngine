@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void TerrainGeometryPass::SetRenderingMode(RENDERING_MODE mode)
+	void TerrainGeometryPass::SetRenderingMode(eRenderingPipelines mode)
 	{
 		///Geometry Vertex Shader
 		m_gfx->CompileAndCreateVertexShader(m_Vshader, L"Shaders/ProcGen/Terrain/TerrainGenVS.hlsl");

@@ -3,11 +3,12 @@
 namespace rczEngine
 {
 	///The Rendering Modes the engine can use.
-	enum RENDERING_MODE
+	enum class eRenderingPipelines
 	{
-		FORWARD,
-		DEFERRED,
-		FORWARD_PLUS
+		Forward,
+		Deferred,
+		ForwardPlus,
+		Debug
 	};
 
 	///A Base Class to derive into concrete Passes.
@@ -17,7 +18,7 @@ namespace rczEngine
 		virtual ~Pass() {};
 
 		///Sets the rendering mode for the pass.
-		virtual void SetRenderingMode(RENDERING_MODE mode) = 0;
+		virtual void SetRenderingMode(eRenderingPipelines mode) = 0;
 
 		///Sets the buffers, shaders, textures and render targets before rendering geomtry.
 		virtual void PreRenderPass() = 0;

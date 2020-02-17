@@ -1,0 +1,380 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de código fuente">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Prerequisites">
+      <UniqueIdentifier>{5fe82827-5b58-4c3c-9cc7-d66c9180f302}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Math">
+      <UniqueIdentifier>{9d315dc5-1d0f-4c82-8d67-7eeb5c2c9fee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Logger">
+      <UniqueIdentifier>{7cb9f6ae-a38f-4723-9646-d0ce0b46995a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\File Manager">
+      <UniqueIdentifier>{6858b6dc-7a30-461c-a70e-3c8448e3c5c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Math">
+      <UniqueIdentifier>{175239da-f4b5-42bc-a4bf-5738f4987695}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Logger">
+      <UniqueIdentifier>{dd8ef685-136b-4261-bbdb-804027abd635}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\File Manager">
+      <UniqueIdentifier>{35bf5206-edaf-4752-af36-cfe323af40d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Timer">
+      <UniqueIdentifier>{d7ad4a3b-8e09-44e9-997b-943d207e17e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Timer">
+      <UniqueIdentifier>{ce90d997-40f7-48ec-8b3e-4f39a16a566a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\TextTool">
+      <UniqueIdentifier>{80e91c0a-c7cf-48a4-81ee-d6d083844ef9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Random Generators">
+      <UniqueIdentifier>{ec28e31a-cc3e-4056-ada2-309f29acade0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Random Generators">
+      <UniqueIdentifier>{7b4559a9-e2d0-4c7f-9772-a8eba248b3bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Profiler">
+      <UniqueIdentifier>{1353dc7f-c4c5-42f7-bae3-49970e28cc7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Serializable">
+      <UniqueIdentifier>{bb4eac4e-dddd-43f3-9167-b247c847794f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Serializable">
+      <UniqueIdentifier>{db0bdd0e-04ed-4006-9876-45fbd2b43219}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Math\Vector">
+      <UniqueIdentifier>{b970615d-4fa7-4004-99aa-6dbf914c3c9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Math\Matrix">
+      <UniqueIdentifier>{a926f7f2-9e26-4e7d-8019-e9e41624ba40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Math\Rect">
+      <UniqueIdentifier>{e0e81940-5ffa-4640-b353-208a0779db00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Math\Rotation">
+      <UniqueIdentifier>{0ad5f9db-30f2-400f-971b-64de512310c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Math\Color">
+      <UniqueIdentifier>{8ae6d374-7c32-48d2-b56d-0fd58cad4237}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Math\Matrix">
+      <UniqueIdentifier>{1ebc0476-7540-4512-8a3e-3b2bdbac88b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Math\Vector">
+      <UniqueIdentifier>{cafd93d3-c4f9-436e-935f-fd13b3f5c121}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Math\Rect">
+      <UniqueIdentifier>{48624a6e-a792-465b-a4f0-7813665af97b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Math\Rotation">
+      <UniqueIdentifier>{68b60a73-037f-4b27-a3b8-991d1f8ceabc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Math\Color">
+      <UniqueIdentifier>{eff67c5c-ccbf-446e-a3f3-37e56c01eb35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Math\Rendering">
+      <UniqueIdentifier>{e66a9974-0add-41bb-b2b7-9410cf335957}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Math\Rendering">
+      <UniqueIdentifier>{4e530201-4460-4182-a685-140ec767e5c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Profilers">
+      <UniqueIdentifier>{45f967fc-7142-4a78-a52e-ae1faf96d598}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Memory">
+      <UniqueIdentifier>{8ebd9295-8009-42a3-8678-5a9ad59fa2cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Memory">
+      <UniqueIdentifier>{9b4f51d5-9853-4907-bc90-4e2f6422c2f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\OS Layer">
+      <UniqueIdentifier>{09dcc7a3-05a7-48b2-80eb-4ce12df8422d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\OS Layer">
+      <UniqueIdentifier>{56ce8673-af03-40af-af98-7d408d0b5eb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Math\Shapes3D">
+      <UniqueIdentifier>{82677cea-63fb-43b5-9d01-1d36d1f73d9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Math\Shapes3D">
+      <UniqueIdentifier>{7e2cf613-3dad-4720-886d-66b3268409a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\Math\Shapes2D">
+      <UniqueIdentifier>{c49310f9-f55e-4e57-a575-eeb5038985fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Math\Shapes2D">
+      <UniqueIdentifier>{24cd8995-96c4-4f6c-a403-69e430778615}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\RZPlatformDefines.h">
+      <Filter>Archivos de encabezado\Prerequisites</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZStdHeaders.h">
+      <Filter>Archivos de encabezado\Prerequisites</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZFwdDeclUtil.h">
+      <Filter>Archivos de encabezado\Prerequisites</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZMath.h">
+      <Filter>Archivos de encabezado\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZLogger.h">
+      <Filter>Archivos de encabezado\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZMacroUtil.h">
+      <Filter>Archivos de encabezado\Prerequisites</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZPlatformTypes.h">
+      <Filter>Archivos de encabezado\Prerequisites</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZFileCoder.h">
+      <Filter>Archivos de encabezado\File Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZMemoryAllocators.h">
+      <Filter>Archivos de encabezado\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZContainers.h">
+      <Filter>Archivos de encabezado\Prerequisites</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZTimer.h">
+      <Filter>Archivos de encabezado\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZRandomNumberGen.h">
+      <Filter>Archivos de encabezado\Random Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZRandomZiggurat.h">
+      <Filter>Archivos de encabezado\Random Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZTextTool.h">
+      <Filter>Archivos de encabezado\TextTool</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZBoxMuller.h">
+      <Filter>Archivos de encabezado\Random Generators</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZProfiler.h">
+      <Filter>Archivos de encabezado\Profilers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZProfilerEvent.h">
+      <Filter>Archivos de encabezado\Profilers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSerializable.h">
+      <Filter>Archivos de encabezado\Serializable</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSerializer.h">
+      <Filter>Archivos de encabezado\Serializable</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZPath.h">
+      <Filter>Archivos de encabezado\File Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZParser.h">
+      <Filter>Archivos de encabezado\File Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZSphere.h">
+      <Filter>Archivos de encabezado\Math\Shapes3D</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZTriangle.h">
+      <Filter>Archivos de encabezado\Math\Shapes3D</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZPlane.h">
+      <Filter>Archivos de encabezado\Math\Shapes3D</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZAABB.h">
+      <Filter>Archivos de encabezado\Math\Shapes3D</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZLogObject.h">
+      <Filter>Archivos de encabezado\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZProfilerObj.h">
+      <Filter>Archivos de encabezado\Profilers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZMatrix3D.h">
+      <Filter>Archivos de encabezado\Math\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZMatrix4D.h">
+      <Filter>Archivos de encabezado\Math\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZVector4D.h">
+      <Filter>Archivos de encabezado\Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZVector2D.h">
+      <Filter>Archivos de encabezado\Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZVector2Di.h">
+      <Filter>Archivos de encabezado\Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZVector3D.h">
+      <Filter>Archivos de encabezado\Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZRect3D.h">
+      <Filter>Archivos de encabezado\Math\Rect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZRect2Di.h">
+      <Filter>Archivos de encabezado\Math\Rect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZRect2D.h">
+      <Filter>Archivos de encabezado\Math\Rect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZQuaternion.h">
+      <Filter>Archivos de encabezado\Math\Rotation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZRadian.h">
+      <Filter>Archivos de encabezado\Math\Rotation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZDegree.h">
+      <Filter>Archivos de encabezado\Math\Rotation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZColor.h">
+      <Filter>Archivos de encabezado\Math\Color</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZFrustum.h">
+      <Filter>Archivos de encabezado\Math\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZCamera.h">
+      <Filter>Archivos de encabezado\Math\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZMemoryProfiler.h">
+      <Filter>Archivos de encabezado\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZMemoryProfilerEvent.h">
+      <Filter>Archivos de encabezado\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CbnWindow.h">
+      <Filter>Archivos de encabezado\OS Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CbnOSLayer.h">
+      <Filter>Archivos de encabezado\OS Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CbnOSDefs.h">
+      <Filter>Archivos de encabezado\OS Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RZLine.h">
+      <Filter>Archivos de encabezado\Math\Shapes3D</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CbnLine2D.h">
+      <Filter>Archivos de encabezado\Math\Shapes2D</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CbnUtilitiesPCH.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\RZMath.cpp">
+      <Filter>Archivos de código fuente\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZLogger.cpp">
+      <Filter>Archivos de código fuente\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZFileCoder.cpp">
+      <Filter>Archivos de código fuente\File Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZMemoryAllocators.cpp">
+      <Filter>Archivos de código fuente\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZTimer.cpp">
+      <Filter>Archivos de código fuente\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZRandomZiggurat.cpp">
+      <Filter>Archivos de código fuente\Random Generators</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZProfiler.cpp">
+      <Filter>Archivos de código fuente\Profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZProfilerEvent.cpp">
+      <Filter>Archivos de código fuente\Profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZSerializer.cpp">
+      <Filter>Archivos de código fuente\Serializable</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZPath.cpp">
+      <Filter>Archivos de código fuente\File Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZVector2D.cpp">
+      <Filter>Archivos de código fuente\Math\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZVector2Di.cpp">
+      <Filter>Archivos de código fuente\Math\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZVector3D.cpp">
+      <Filter>Archivos de código fuente\Math\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZVector4D.cpp">
+      <Filter>Archivos de código fuente\Math\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZMatrix3D.cpp">
+      <Filter>Archivos de código fuente\Math\Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZMatrix4D.cpp">
+      <Filter>Archivos de código fuente\Math\Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZPlane.cpp">
+      <Filter>Archivos de código fuente\Math\Shapes3D</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZAABB.cpp">
+      <Filter>Archivos de código fuente\Math\Shapes3D</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZSphere.cpp">
+      <Filter>Archivos de código fuente\Math\Shapes3D</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZRect2D.cpp">
+      <Filter>Archivos de código fuente\Math\Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZRect2Di.cpp">
+      <Filter>Archivos de código fuente\Math\Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZRect3D.cpp">
+      <Filter>Archivos de código fuente\Math\Rect</Filter>
+    </ClCompile>
+    <ClCompile Include="include\RZDegree.cpp">
+      <Filter>Archivos de código fuente\Math\Rotation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZQuaternion.cpp">
+      <Filter>Archivos de código fuente\Math\Rotation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZRadian.cpp">
+      <Filter>Archivos de código fuente\Math\Rotation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZColor.cpp">
+      <Filter>Archivos de código fuente\Math\Color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZCamera.cpp">
+      <Filter>Archivos de código fuente\Math\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="include\RZFrustum.cpp">
+      <Filter>Archivos de código fuente\Math\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZMemoryProfiler.cpp">
+      <Filter>Archivos de código fuente\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZMemoryProfilerEvent.cpp">
+      <Filter>Archivos de código fuente\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnWindow.cpp">
+      <Filter>Archivos de código fuente\OS Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnOSLayer.cpp">
+      <Filter>Archivos de código fuente\OS Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RZLine.cpp">
+      <Filter>Archivos de código fuente\Math\Shapes3D</Filter>
+    </ClCompile>
+    <ClCompile Include="include\CbnLine2D.cpp">
+      <Filter>Archivos de código fuente\Math\Shapes2D</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnUtilitiesPCH.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

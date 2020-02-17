@@ -6,7 +6,7 @@ namespace rczEngine
 	class RZ_EXP MotionBlurPass : public Pass
 	{
 	public:
-		virtual void SetRenderingMode(RENDERING_MODE mode);
+		virtual void SetRenderingMode(eRenderingPipelines mode);
 
 		///Do nothing on Blur Passes		
 		virtual void PreRenderPass();

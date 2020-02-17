@@ -53,7 +53,7 @@ namespace rczEngine
 	{
 		auto gfxCore = Gfx::GfxCore::Pointer();
 		auto dContext = gfxCore->GetDeviceContext();
-		dContext->OMSetRenderTargets(1, &gfxCore->m_RenderTargetView[0], NULL);
+		gfxCore->SetDefaultRenderTarget();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 		// Update and Render additional Platform Windows
@@ -135,13 +135,13 @@ namespace rczEngine
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 		//io.ConfigViewportsNoAutoMerge = true;
 		//io.ConfigViewportsNoTaskBarIcon = true;
 		//io.ConfigViewportsNoDefaultParent = true;
 		//io.ConfigDockingAlwaysTabBar = true;
 		//io.ConfigDockingTransparentPayload = true;
-#if 1
+#if 0
 		io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleFonts;     // FIXME-DPI: THIS CURRENTLY DOESN'T WORK AS EXPECTED. DON'T USE IN USER APP!
 		io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports; // FIXME-DPI
 #endif

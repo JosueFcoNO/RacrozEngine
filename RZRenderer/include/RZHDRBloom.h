@@ -5,7 +5,7 @@ namespace rczEngine
 	class RZ_EXP HDRBloomPass : public Pass
 	{
 	public:
-		virtual void SetRenderingMode(RENDERING_MODE mode);
+		virtual void SetRenderingMode(eRenderingPipelines mode);
 
 		///Sets the buffers, shaders, textures and render targets before rendering geomtry.
 		virtual void PreRenderPass();

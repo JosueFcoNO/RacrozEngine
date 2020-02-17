@@ -22,7 +22,7 @@
     <ProjectGuid>{35DF01A6-BF02-495C-AC45-A8BDEBD3DC35}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>RZCore</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
     <ProjectName>RZEditor</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -81,7 +81,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZUtilityLib\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZEngine\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZComputeAPI/include;$(SolutionDir)Plug-Ins/assimp-master\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)RZRenderer/include;$(FBXSDK)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(GSL)\include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZEngine\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZComputeAPI/include;$(Assimp)\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)RZRenderer/include;$(FBXSDK)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(GSL)/include;$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(FBXSDK)lib\$(Platform)\$(Configuration)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -95,7 +95,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZUtilityLib\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZEngine\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZComputeAPI/include;$(Assimp)\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)RZRenderer/include;$(FBXSDK)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(GSL)\include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZEngine\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZComputeAPI/include;$(Assimp)\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)RZRenderer/include;$(FBXSDK)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(GSL)/include;$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(FBXSDK)lib\$(Platform)\$(Configuration)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -133,7 +133,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProfileGuidedDatabase>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>libfbxsdk.lib;RZRenderer.lib;RZDirectXAPI.lib;RZComputeAPI.lib;RZEngine.lib;RZCore.lib;RZUtilityLib.lib;RZfmodSound.lib;RZDirectInput.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk.lib;RZRenderer.lib;RZDirectXAPI.lib;RZComputeAPI.lib;RZEngine.lib;RZCore.lib;CbnUtilities.lib;RZfmodSound.lib;RZDirectInput.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -179,7 +179,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProfileGuidedDatabase>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)lib\$(Configuration)\$(Platform)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>libfbxsdk.lib;RZRenderer.lib;RZDirectXAPI.lib;RZComputeAPI.lib;RZEngine.lib;RZCore.lib;RZUtilityLib.lib;RZfmodSound.lib;RZDirectInput.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk.lib;RZRenderer.lib;RZDirectXAPI.lib;RZComputeAPI.lib;RZEngine.lib;RZCore.lib;CbnUtilities.lib;RZfmodSound.lib;RZDirectInput.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

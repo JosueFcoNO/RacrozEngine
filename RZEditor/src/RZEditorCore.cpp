@@ -185,7 +185,9 @@ namespace rczEngine
 
 		gDebugger->AddLineListIndex("Grid", points, indices, Color(0.4f, 0.4f, 0.4f), -1.0f);
 
-		auto cube = gDebugger->AddCube("Cube", Vector3(0, 0, 0), Vector3(1, 1, 1), Color(1, 1, 0));
+		auto cube = gDebugger->AddCube("Cube", Vector3(10, 0, 0), Vector3(0.5f, 0.5f, 0.5f), Color(1, 0, 0));
+		auto cubepos = Vector3(10, 0, 0);
+		Quaternion q = Matrix3::Rotate3D(0, 5, 0).GetAsQuaternion();
 
 		bool editor = true;
 		while (editor)
@@ -195,6 +197,9 @@ namespace rczEngine
 			Input::Pointer()->UpdateInput();
 
 			m_scnManager->GetActiveScene()->Update(deltaTime);
+			
+			cubepos = q.RotateVector(cubepos, 1);
+			cube.lock()->SetCube(cubepos, Vector3(0.5f, 0.5f, 0.5f));
 
 			m_gfx->SetDefaultRenderTarget();
 			m_gfx->ClearDefaultRenderTargetView(0.1f, 0.1f, 0.1f, 1.0f);

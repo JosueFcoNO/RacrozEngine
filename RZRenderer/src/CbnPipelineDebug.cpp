@@ -17,10 +17,11 @@ namespace rczEngine
 		//////////////////////
 
 		///Create the geometry pass
-		auto passDebugger = CreatePass(name + "Debugger", ePasses::GraphicDebugger, eRenderingPipelines::Deferred);
+		auto passDebugger = std::static_pointer_cast<GraphicDebuggerPass, Pass>(CreatePass(name + "Debugger", ePasses::GraphicDebugger, eRenderingPipelines::Deferred));
 
 		passDebugger->AddRenderTarget(m_RTs["Debug"], 0);
 		passDebugger->AddDepthStencyl(&depth);
+		passDebugger->ClearBeforeRender = true;
 
 		m_PassesOrder.push_back(name + "Debugger");
 	}

@@ -7,7 +7,7 @@ namespace rczEngine
 	{
 	public:
 		///Sets the rendering mode for this Pass. Changes the shaders and buffers as needed.
-		virtual void SetRenderingMode(eRenderingPipelines mode);
+		virtual void CreatePipeline(eRenderingPipelines mode);
 		virtual void PreRenderPass();
 		virtual void RenderPass();
 		virtual void PostRenderPass();

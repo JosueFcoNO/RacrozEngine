@@ -48,9 +48,12 @@ namespace rczEngine
 		m_ScreenQuadVS.ReflectLayout(1, m_gfx);
 
 		m_ActiveSkyBox = std::make_shared<SkyBox>();
+
+		m_BlurPass.CreatePipeline(eRenderingPipelines::Deferred);
+
 	}
 
-	void RacrozRenderer::SetRenderingMode(eRenderingPipelines renderingMode)
+	void RacrozRenderer::CreatePipeline(const String& name, eRenderingPipelines renderingMode)
 	{
 		switch (renderingMode)
 		{
@@ -58,33 +61,31 @@ namespace rczEngine
 			//SetForward();
 			break;
 		case eRenderingPipelines::Deferred:
-			m_CurrentPipeline = std::make_shared<PipelineDeferred>();
-			m_CurrentPipeline->InitRenderPipeline("Deferred", m_Width, m_Height, this);
+			m_Pipelines[name] = std::make_shared<PipelineDeferred>();
+			m_Pipelines[name]->InitRenderPipeline("Deferred", m_Width, m_Height, this);
 			break;
 		case eRenderingPipelines::ForwardPlus:
 			//SetForwardPlus();
 			break;
 		case eRenderingPipelines::Debug:
-			m_CurrentPipeline = std::make_shared<PipelineDebug>();
-			m_CurrentPipeline->InitRenderPipeline("Debug", m_Width, m_Height, this);
+			m_Pipelines[name] = std::make_shared<PipelineDebug>();
+			m_Pipelines[name]->InitRenderPipeline("Debug", m_Width, m_Height, this);
 			break;
 		default:
 			break;
 		}
-
-		m_BlurPass.SetRenderingMode(renderingMode);
 	}
 
-	void RacrozRenderer::Render(Scene * sceneGraph, ImGUIEditor * editor)
+	void RacrozRenderer::Render(const String& name, Scene * sceneGraph, ImGUIEditor * editor)
 	{
 		PrepareRender(sceneGraph);
 
-		m_CurrentPipeline->DoRender();
+		m_Pipelines[name]->DoRender();
 	}
 
-	WeakPtr<RenderPipeline> RacrozRenderer::GetCurrentPipeline()
+	WeakPtr<RenderPipeline> RacrozRenderer::GetPipeline(const String& name)
 	{
-		return m_CurrentPipeline;
+		return m_Pipelines[name];
 	}
 
 	void RacrozRenderer::Destroy()

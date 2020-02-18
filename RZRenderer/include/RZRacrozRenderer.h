@@ -55,10 +55,13 @@ namespace rczEngine
 		///Inits the Renderer
 		void InitRenderer();
 		///Inits the variables, render targets and shaders for a specific rendering mode. Can be changed mid game.
-		void SetRenderingMode(eRenderingPipelines renderingMode);
+		void CreatePipeline(const String& name, eRenderingPipelines renderingMode);
+		
 		///Renders the scene and Canvas
-		void Render(Scene* sceneGraph, ImGUIEditor * editor);
-		WeakPtr<RenderPipeline> GetCurrentPipeline();
+		void Render(const String & name, Scene * sceneGraph, ImGUIEditor * editor);
+		
+		WeakPtr<RenderPipeline> GetPipeline(const String & name);
+
 		///Destroys the renderer
 		void Destroy();
 
@@ -110,7 +113,7 @@ namespace rczEngine
 		Gfx::RasterizerState m_RSSolid;
 		Gfx::RasterizerState m_RSSolidCullNone;
 
-		StrPtr<RenderPipeline> m_CurrentPipeline;
+		Map<String, StrPtr<RenderPipeline>> m_Pipelines;
 
 	private:
 		///Private un-implemented Copy Constructor to prevent copying by accident.

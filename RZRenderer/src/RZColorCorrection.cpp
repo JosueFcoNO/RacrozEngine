@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void ColorCorrectionPass::SetRenderingMode(eRenderingPipelines mode)
+	void ColorCorrectionPass::CreatePipeline(eRenderingPipelines mode)
 	{
 		m_PShaderPath = L"Shaders/ColorCorrection.hlsl";
 		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());

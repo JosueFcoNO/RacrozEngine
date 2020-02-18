@@ -19,7 +19,7 @@ namespace rczEngine
 			BLUR_V
 		};
 
-		virtual void SetRenderingMode(eRenderingPipelines mode);
+		virtual void CreatePipeline(eRenderingPipelines mode);
 		
 		void BlurPass(StrPtr<Gfx::RenderTarget> outRenderTarget, StrPtr<Texture2D> inTexture, int width, int height);
 

@@ -5,7 +5,7 @@ namespace rczEngine
 	class RZ_EXP AverageLuminancePass : public Pass
 	{
 	public:
-		virtual void SetRenderingMode(eRenderingPipelines mode);
+		virtual void CreatePipeline(eRenderingPipelines mode);
 
 		///Sets the buffers, shaders, textures and render targets before rendering geometry.
 		virtual void PreRenderPass();

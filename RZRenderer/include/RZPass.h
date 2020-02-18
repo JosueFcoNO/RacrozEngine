@@ -40,7 +40,7 @@ namespace rczEngine
 		virtual ~Pass() {};
 
 		///Sets the rendering mode for the pass.
-		virtual void SetRenderingMode(eRenderingPipelines mode) = 0;
+		virtual void CreatePipeline(eRenderingPipelines mode) = 0;
 
 		///Sets the buffers, shaders, textures and render targets before rendering geomtry.
 		virtual void PreRenderPass() = 0;

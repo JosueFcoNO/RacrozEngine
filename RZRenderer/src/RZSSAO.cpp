@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void SSAOPass::SetRenderingMode(eRenderingPipelines mode)
+	void SSAOPass::CreatePipeline(eRenderingPipelines mode)
 	{
 		m_PShaderPath = L"Shaders/SSAOPS.hlsl";
 		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());

@@ -6,7 +6,7 @@ namespace rczEngine
 	class RZ_EXP GraphicDebuggerPass : public Pass
 	{
 	public:
-		virtual void SetRenderingMode(eRenderingPipelines mode);
+		virtual void CreatePipeline(eRenderingPipelines mode);
 
 		///Sets the buffers, shaders, textures and render targets before rendering geomtry.
 		virtual void PreRenderPass();
@@ -16,6 +16,8 @@ namespace rczEngine
 
 		///Unbinds the render targets.
 		virtual void PostRenderPass();
+
+		bool ClearBeforeRender = false;
 
 	private:
 		Gfx::VertexShader m_VShader;

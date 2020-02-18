@@ -6,7 +6,7 @@ namespace rczEngine
 	class RZ_EXP PBR_Pass : public Pass
 	{
 	public:
-		virtual void SetRenderingMode(eRenderingPipelines mode);
+		virtual void CreatePipeline(eRenderingPipelines mode);
 
 		///Sets the buffers, shaders, textures and render targets before rendering geomtry.
 		virtual void PreRenderPass();

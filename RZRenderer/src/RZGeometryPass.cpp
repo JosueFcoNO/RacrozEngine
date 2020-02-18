@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void GeometryPass::SetRenderingMode(eRenderingPipelines mode)
+	void GeometryPass::CreatePipeline(eRenderingPipelines mode)
 	{
 		m_ActiveScene = SceneManager::Pointer()->GetActiveScene();
 

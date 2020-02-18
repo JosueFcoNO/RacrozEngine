@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void MotionBlurPass::SetRenderingMode(eRenderingPipelines mode)
+	void MotionBlurPass::CreatePipeline(eRenderingPipelines mode)
 	{
 		m_PShaderPath = L"Shaders/MotionBlur.hlsl";
 		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());

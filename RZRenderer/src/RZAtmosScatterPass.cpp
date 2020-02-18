@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void AtmosScatterPass::SetRenderingMode(eRenderingPipelines mode)
+	void AtmosScatterPass::CreatePipeline(eRenderingPipelines mode)
 	{
 		m_ActiveScene = SceneManager::Pointer()->GetActiveScene();
 

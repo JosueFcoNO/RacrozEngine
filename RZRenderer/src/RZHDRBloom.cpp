@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void HDRBloomPass::SetRenderingMode(eRenderingPipelines mode)
+	void HDRBloomPass::CreatePipeline(eRenderingPipelines mode)
 	{
 		m_PShaderPath = L"Shaders/HDRBloom/HDRBloom.hlsl";
 		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());

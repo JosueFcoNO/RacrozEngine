@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void PBR_Pass::SetRenderingMode(eRenderingPipelines mode)
+	void PBR_Pass::CreatePipeline(eRenderingPipelines mode)
 	{
 		///Load the LUT.
 		m_LUT = std::make_shared<Texture2D>();

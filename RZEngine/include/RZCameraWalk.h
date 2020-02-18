@@ -27,8 +27,8 @@ namespace rczEngine
 			else if (Input::GetKeyHold(KEY_S)) m_zAxis = -1.5f;
 			else m_zAxis = 0.0f;
 
-			if (Input::GetKeyHold(KEY_D)) m_xAxis = 1.5f;
-			else if (Input::GetKeyHold(KEY_A)) m_xAxis = -1.5f;
+			if (Input::GetKeyHold(KEY_D)) m_xAxis = -1.5f;
+			else if (Input::GetKeyHold(KEY_A)) m_xAxis = 1.5f;
 			else m_xAxis = 0.0f;
 
 			if (Input::GetKeyDown(KEY_SPACE))

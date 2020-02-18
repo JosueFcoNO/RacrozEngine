@@ -109,27 +109,27 @@ namespace rczEngine
 			}
 		}
 
-		while (Quit)
-		{
-			//Quit = Input::GetKeyDown(KEY_ESCAPE);
-			float deltaTime = (float)Time.GetFrameTime();
-			
-			Input::Pointer()->UpdateInput();
-			m_scnManager->GetActiveScene()->Update(deltaTime);
-
-			m_renderer->Render(m_scnManager->GetActiveScene().get(), ImGUIEditor::Pointer());
-
-			// Bucle principal de mensajes:
-			if (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-				//if (!TranslateAcceleratorW(msg.hwnd, hAccelTable, &msg))
-				//{
-				//
-				//}
-			}
-		}
+		//while (Quit)
+		//{
+		//	//Quit = Input::GetKeyDown(KEY_ESCAPE);
+		//	float deltaTime = (float)Time.GetFrameTime();
+		//	
+		//	Input::Pointer()->UpdateInput();
+		//	m_scnManager->GetActiveScene()->Update(deltaTime);
+		//
+		//	m_renderer->Render(m_scnManager->GetActiveScene().get(), ImGUIEditor::Pointer());
+		//
+		//	// Bucle principal de mensajes:
+		//	if (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
+		//	{
+		//		TranslateMessage(&msg);
+		//		DispatchMessage(&msg);
+		//		//if (!TranslateAcceleratorW(msg.hwnd, hAccelTable, &msg))
+		//		//{
+		//		//
+		//		//}
+		//	}
+		//}
 	}
 
 	void EditorCore::InitSceneGrid()
@@ -186,7 +186,8 @@ namespace rczEngine
 		m_gfx->ClearDefaultRenderTargetView(0.1f, 0.1f, 0.1f, 1.0f);
 		m_gfx->ClearDepthTargetView();
 
-		m_renderer->Render(nullptr, nullptr);
+		m_renderer->Render("Debug", nullptr, nullptr);
+		m_renderer->Render("Scene", nullptr, nullptr);
 
 		RenderGUI();
 
@@ -201,20 +202,13 @@ namespace rczEngine
 
 		SceneManager::Pointer()->GetActiveScene()->Update(deltaTime);
 
-		// Bucle principal de mensajes:
-		if (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			//if (!TranslateAcceleratorW(msg.hwnd, hAccelTable, &msg))
-			//{
-			//
-			//}
-		}
-
-		q = Quaternion::FromAxisAngle(Vector3(0, 10, 10).GetNormalized(), 180 * deltaTime);
-		cubepos = q.RotateVector(cubepos, 1);
-		cube.lock()->SetCube(cubepos, Vector3(0.5f, 0.5f, 0.5f));
+		//auto cubepos = Vector3(2, 2, 0);
+		//auto cubeSize = Vector3(0.5f, 0.5f, 0.5f);
+		//auto cube = gDebugger->AddCube("Cube", cubepos, cubeSize, Color(1, 0, 0));
+		//Quaternion q = Quaternion::FromAxisAngle(Vector3(0, 5, 5).GetNormalized(), 10);
+		//q = Quaternion::FromAxisAngle(Vector3(0, 10, 10).GetNormalized(), 180 * deltaTime);
+		//cubepos = q.RotateVector(cubepos, 1);
+		//cube.lock()->SetCube(cubepos, Vector3(0.5f, 0.5f, 0.5f));
 
 		// Bucle principal de mensajes:
 		if (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -232,19 +226,27 @@ namespace rczEngine
 	{
 		InitSceneGrid();
 
-		m_renderer->SetRenderingMode(eRenderingPipelines::Deferred);
+		m_renderer->CreatePipeline("Scene", eRenderingPipelines::Deferred);
+		m_renderer->CreatePipeline("Debug", eRenderingPipelines::Debug);
+
+		auto window = new PipelineWindow();
+
+		window->InitWindow("Scene");
+		m_EditorWindows["Scene"] = window;
+		window->SetRenderPipeline(m_renderer->GetPipeline("Scene").lock());
+
+		window = new PipelineWindow();
+
+		window->InitWindow("Debug");
+		m_EditorWindows["Debug"] = window;
+		window->SetRenderPipeline(m_renderer->GetPipeline("Debug").lock());
 
 		auto gDebugger = GraphicDebugger::Pointer();
 		
-		auto cubepos = Vector3(2, 2, 0);
-		auto cubeSize = Vector3(0.5f, 0.5f, 0.5f);
-		auto cube = gDebugger->AddCube("Cube", cubepos, cubeSize, Color(1, 0, 0));
-		Quaternion q = Quaternion::FromAxisAngle(Vector3(0, 5, 5).GetNormalized(), 10);
-
 		bool editor = true;
 		while (editor)
 		{
-
+			UpdateEditor();
 
 			RenderEditor();
 		}

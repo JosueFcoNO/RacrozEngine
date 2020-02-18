@@ -90,7 +90,7 @@ namespace rczEngine
 		}
 
 		returnPass->m_Name = name;
-		returnPass->SetRenderingMode(renderMode);
+		returnPass->CreatePipeline(renderMode);
 
 		return returnPass;
 	}

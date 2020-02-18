@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	void GaussPass::SetRenderingMode(eRenderingPipelines mode)
+	void GaussPass::CreatePipeline(eRenderingPipelines mode)
 	{
 		m_gfx->CompileAndCreatePixelShader(m_HorShader, L"Shaders/Blur/BlurH.hlsl");
 		m_gfx->CompileAndCreatePixelShader(m_VerShader, L"Shaders/Blur/BlurV.hlsl");

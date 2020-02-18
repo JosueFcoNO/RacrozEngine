@@ -27,6 +27,8 @@ namespace rczEngine
 		}
 
 	private:
+		WeakPtr<CubeMap> m_CubeMap;
+
 		///A cube model for sky box rendering.
 		WeakPtr<Model> m_Cube;
 

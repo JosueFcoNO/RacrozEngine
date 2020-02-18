@@ -2,28 +2,6 @@
 
 namespace rczEngine
 {
-	enum PASSES
-	{
-		SKYBOX,
-		GEOMETRY_PASS,
-		TERRAIN_GEOMETRY_PASS,
-		PBR,
-		PBR_FORWARD,
-		PBR_TRANSPARENT,
-		COLOR_CORRECTION,
-		LUMINANCE,
-		BRIGHT,
-		BLOOM,
-		AVG_LUMINANCE,
-		HDR_BLOOM,
-		MOTION_BLUR,
-		PLANET_PASS,
-		ATMOS_SCATTER_PASS,
-		PERLIN3D,
-		SSAO,
-		GDEBUGGER
-	};
-
 	enum TEXTURES_PASS
 	{
 		TP_POSITION_DEPTH,
@@ -95,7 +73,7 @@ namespace rczEngine
 			return m_ActiveSkyBox->GetCubeMap();
 		}
 
-		ResourceHandle CreateCubeMap(const String& name, Scene* sceneGraph, Vector<String>& RenderPasses, int width, int height);
+		ResourceHandle CreateCubeMap(const String & name, Scene * sceneGraph, RenderPipeline * renderPipeline, int width, int height);
 
 		///Draws the sceneGraph
 		void PrepareRender(Scene * sceneGraph);
@@ -116,8 +94,6 @@ namespace rczEngine
 		///Does a blur render pass, with the texture passes
 		void DoBlurPass(StrPtr<Gfx::RenderTarget> outRenderTarget, StrPtr<Texture2D> inTexture, int width, int height);
 
-		StrPtr<Pass> CreatePass(const String& name, PASSES pass, eRenderingPipelines renderMode = eRenderingPipelines::Deferred);
-
 		void StartPostProcessing();
 
 		//StrPtr<Gfx::RenderTarget> GetRenderTarget(const String& name) { return m_RTs[name]; };
@@ -134,8 +110,6 @@ namespace rczEngine
 		Gfx::RasterizerState m_RSSolid;
 		Gfx::RasterizerState m_RSSolidCullNone;
 
-		Map<String, StrPtr<Pass>> m_Passes;
-
 		StrPtr<RenderPipeline> m_CurrentPipeline;
 
 	private:
@@ -151,7 +125,6 @@ namespace rczEngine
 
 		void InitRasterizers();
 		void InitSamplerStates();
-
 
 		GaussPass m_BlurPass;
 

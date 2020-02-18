@@ -15,11 +15,26 @@
     <Filter Include="Archivos de encabezado\Project">
       <UniqueIdentifier>{578a4f61-6f62-4297-b91e-1c9b1b7ad43b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\UI\Windows">
+      <UniqueIdentifier>{9bf6b5c3-d99f-435c-a39b-5841a2f84528}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\UI">
+      <UniqueIdentifier>{5f4d54b6-1c13-4ca1-84ad-b31596da6358}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\UI\Windows">
+      <UniqueIdentifier>{adc4a02b-9508-4e1a-bb2b-93bf6a35b271}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZEditorPCH.h" />
     <ClInclude Include="include\RZEditorCore.h">
       <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CbnBaseWindow.h">
+      <Filter>Archivos de encabezado\UI\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CbnPipelineWindow.h">
+      <Filter>Archivos de encabezado\UI\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -27,6 +42,12 @@
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
     <ClCompile Include="src\RZEditorCore.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnBaseWindow.cpp">
+      <Filter>Archivos de código fuente\UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="include\CbnPipelineWindow.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
   </ItemGroup>

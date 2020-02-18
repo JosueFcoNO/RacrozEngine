@@ -20,6 +20,8 @@ namespace rczEngine
 		m_SkyBoxBuffer.CreateConstantBuffer(sizeof(Matrix4::m_elements), Gfx::USAGE_DEFAULT, m_gfx);
 
 		m_SkyMatrix.Identity();
+
+		m_CubeMap = ResVault::Pointer()->GetResource<CubeMap>(ResVault::Pointer()->m_CubeMapDefault);
 	}
 
 	void SkyBoxPass::PreRenderPass()
@@ -30,7 +32,7 @@ namespace rczEngine
 		m_PShader.SetThisPixelShader(m_gfx);
 
 		SetRenderTargetsInPipeline();
-		RacrozRenderer::Pointer()->GetSkyBox().lock()->SetThisTextureInPS(12, 1, m_gfx);
+		m_CubeMap.lock()->SetThisTextureInPS(12, 1, m_gfx);
 		SetRasterizerState();
 
 		m_gfx->ClearRenderTargetView(0, 0, 0, 0, 0);

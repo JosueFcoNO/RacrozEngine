@@ -61,8 +61,8 @@ namespace rczEngine
 
 			if (m_Mouse)
 			{
-				m_CameraCore.Rotate(Vector3(0.0f, -m.dx*0.15f, 0.0f));
-				m_CameraCore.Rotate(Vector3(m.dy*0.15f, 0.0f, 0.0f));
+				//
+				m_CameraCore.Rotate(Vector3(m.dy*0.15f, -m.dx*0.15f, 0.0f));
 			}
 
 			m_Owner.lock()->SetPosition(m_CameraCore.GetPosition());

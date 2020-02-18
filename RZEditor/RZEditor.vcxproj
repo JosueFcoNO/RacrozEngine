@@ -183,10 +183,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\CbnBaseWindow.h" />
+    <ClInclude Include="include\CbnPipelineWindow.h" />
     <ClInclude Include="include\RZEditorCore.h" />
     <ClInclude Include="include\RZEditorPCH.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\CbnPipelineWindow.cpp" />
+    <ClCompile Include="src\CbnBaseWindow.cpp" />
     <ClCompile Include="src\RZEditorCore.cpp" />
     <ClCompile Include="src\RZEditorPCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

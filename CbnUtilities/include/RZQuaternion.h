@@ -24,6 +24,7 @@ namespace rczEngine
 		Matrix4 GetAsMatrix4() noexcept;
 		Matrix3 GetAsMatrix3() noexcept;
 
+
 		Vector3 RotateVector(const Vector3 & rotateV, float scale) const noexcept;
 
 		float operator|(Quaternion rh) noexcept;
@@ -35,6 +36,7 @@ namespace rczEngine
 
 		static Quaternion GetDifference(Quaternion lh, Quaternion rh) noexcept;
 		static Quaternion Slerp(Quaternion q1, Quaternion q2, float t) noexcept;
+		static Quaternion FromAxisAngle(const Vector3& axis, float angle, bool radians = false) noexcept;
 
 		Vector3 m_v;
 		float m_w;

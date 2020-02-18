@@ -4,11 +4,11 @@
 
 #include "RZScreenQuad.h"
 
+#include "RZPass.h"
+
 #include "RZRenderPipeline.h"
 #include "RZPipelineDeferred.h"
 #include "CbnPipelineDebug.h"
-
-#include "RZPass.h"
 
 #include "RZSkyBoxPass.h"
 #include "RZGeometryPass.h"

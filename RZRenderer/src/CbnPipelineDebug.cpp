@@ -17,31 +17,11 @@ namespace rczEngine
 		//////////////////////
 
 		///Create the geometry pass
-		auto passDebugger = m_Renderer->CreatePass(name + "Debugger", PASSES::GDEBUGGER, eRenderingPipelines::Deferred);
+		auto passDebugger = CreatePass(name + "Debugger", ePasses::GraphicDebugger, eRenderingPipelines::Deferred);
 
 		passDebugger->AddRenderTarget(m_RTs["Debug"], 0);
 		passDebugger->AddDepthStencyl(&depth);
 
 		m_PassesOrder.push_back(name + "Debugger");
-	}
-
-	void PipelineDebug::DoRender()
-	{
-		int32 i = 0;
-
-		for (i = 0; i < m_PassesOrder.size(); ++i)
-		{
-			if (m_PassesOrder[i] == "PostProcess")
-			{
-				m_Renderer->StartPostProcessing();
-				continue;
-			}
-
-			auto pass = m_Renderer->m_Passes[m_PassesOrder[i]];
-
-			pass->PreRenderPass();
-			pass->RenderPass();
-			pass->PostRenderPass();
-		}
 	}
 }

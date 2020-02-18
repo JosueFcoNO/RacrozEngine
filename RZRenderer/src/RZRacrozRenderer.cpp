@@ -67,6 +67,7 @@ namespace rczEngine
 		case eRenderingPipelines::Debug:
 			m_CurrentPipeline = std::make_shared<PipelineDebug>();
 			m_CurrentPipeline->InitRenderPipeline("Debug", m_Width, m_Height, this);
+			break;
 		default:
 			break;
 		}
@@ -99,10 +100,10 @@ namespace rczEngine
 		//m_RTs["ColorPBR"] = CreateRenderTargetAndTexture_XYScales("ColorPBR", m_Textures["ColorPBR"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32B32A32_FLOAT);
 		//
 		///////////////////
-		/////SKYBOX PASS///
+		/////Skybox PASS///
 		///////////////////
 		//
-		//auto passSkyBox = CreatePass("SkyBox", PASSES::SKYBOX, m_CurrentRenderingMode);
+		//auto passSkyBox = CreatePass("SkyBox", ePasses::Skybox, m_CurrentRenderingMode);
 		//
 		//passSkyBox->AddRenderTarget(m_RTs["ColorPBR"], 0);
 		//passSkyBox->AddRasterizerState(&m_RSSolidCullNone);
@@ -114,7 +115,7 @@ namespace rczEngine
 		///////////
 		//
 		/////Create the PBR pass
-		//auto passPBR = CreatePass("PBR", PASSES::PBR_FORWARD, m_CurrentRenderingMode);
+		//auto passPBR = CreatePass("PBR", ePasses::PbrForward, m_CurrentRenderingMode);
 		//
 		//passPBR->AddRenderTarget(m_RTs["ColorPBR"], 0);
 		//
@@ -128,7 +129,7 @@ namespace rczEngine
 		////////////////////////
 		//
 		/////Create the PBR pass
-		//auto passColorCorrection = CreatePass("ColorCorrection", PASSES::COLOR_CORRECTION, m_CurrentRenderingMode);
+		//auto passColorCorrection = CreatePass("ColorCorrection", ePasses::GammaCorrection, m_CurrentRenderingMode);
 		//
 		//passColorCorrection->AddRenderTarget(m_RTs["ColorCorrection"], 0);
 		//passColorCorrection->AddTexture2D(m_Textures["ColorPBR"], 0);
@@ -136,117 +137,117 @@ namespace rczEngine
 		//m_PassesOrder.push_back("ColorCorrection");
 	//}
 
-	ResourceHandle RacrozRenderer::CreateCubeMap(const String& name, Scene * sceneGraph, Vector<String>& RenderPasses, int width, int height)
+	ResourceHandle RacrozRenderer::CreateCubeMap(const String& name, Scene * sceneGraph, RenderPipeline* renderPipeline, int width, int height)
 	{
-		PipelineDeferred defCubeMap;
-		defCubeMap.InitRenderPipeline("cubeMap", width, height, this);
+		///PipelineDeferred defCubeMap;
+		///defCubeMap.InitRenderPipeline("cubeMap", width, height, this);
+		///
+		///m_gfx->SetViewPort(width, height);
+		///
+		///const Vector3 Targets[6] =
+		///{
+		///	{ 0, 0, -1},
+		///	{ 0, 0, 1 },
+		///	{ 1, 0, 0 },
+		///	{ -1, 0, 0 },
+		///	{ 0, 1, 0 },
+		///	{ 0, -1, 0 }
+		///};
+		///
+		///Vector3 Ups[6];
+		///
+		///Ups[0].Set(0, 1, 0);
+		///Ups[1].Set(0, 1, 0);
+		///Ups[2].Set(0, 1, 0);
+		///Ups[3].Set(0, 1, 0);
+		///Ups[4].Set(0, 0, 1);
+		///Ups[5].Set(0, 0, -1);
+		///
+		///StrPtr<Gfx::RenderTarget> renderTargets[6];
+		///StrPtr<Texture2D> Textures[6];
+		///
+		///auto format = Gfx::FORMAT_R16G16B16A16_FLOAT;
+		///
+		///renderTargets[0] = CreateRenderTargetAndTexture_WidthHeight("0", Textures[0], 1, width, height, format);
+		///renderTargets[1] = CreateRenderTargetAndTexture_WidthHeight("1", Textures[1], 1, width, height, format);
+		///renderTargets[2] = CreateRenderTargetAndTexture_WidthHeight("2", Textures[2], 1, width, height, format);
+		///renderTargets[3] = CreateRenderTargetAndTexture_WidthHeight("3", Textures[3], 1, width, height, format);
+		///renderTargets[4] = CreateRenderTargetAndTexture_WidthHeight("4", Textures[4], 1, width, height, format);
+		///renderTargets[5] = CreateRenderTargetAndTexture_WidthHeight("5", Textures[5], 1, width, height, format);
+		///
+		///auto scene = sceneGraph;
+		///auto ptr = CameraManager::Pointer();
+		///auto cameraCmp = scene->FindActorsWithComponent(CMP_CAMERA_WALK)[0].lock()->GetComponent(CMP_CAMERA_WALK).lock();
+		/////ptr->SetActiveCamera(1, m_gfx);
+		///auto camera = &CastStaticPtr<CameraCmp>(cameraCmp)->m_CameraCore;
+		///camera->SetFov(90.0f);
+		///camera->SetAspectRatio(1.0f);
+		///camera->SetPosition({ 0, 0, 0 });
+		///camera->SetFarClip(100.0f);
+		///camera->SetNearClip(0.01f);
+		///
+		///auto passes = defCubeMap.GetPassesOrder();
+		///
+		///for (int k = 0; k < 6; ++k)
+		///{
+		///	camera->Reset({ 0,0,0 }, Targets[k], Ups[k]);
+		///
+		///	for (int32 i = 0; i < passes.size(); ++i)
+		///	{
+		///		if (passes[i] == "PostProcess")
+		///		{
+		///			StartPostProcessing();
+		///			continue;
+		///		}
+		///
+		///		auto pass = m_Passes[passes[i]];
+		///
+		///		pass->PreRenderPass();
+		///
+		///		if (passes[i] == "cubeMapColorCorrection")
+		///		{
+		///			m_gfx->AddRenderTarget(*renderTargets[k], 0);
+		///			m_gfx->SetNumberOfRenderTargets(1);
+		///			m_gfx->SetRenderTargets(false, &defCubeMap.depth);
+		///		}
+		///
+		///		pass->RenderPass();
+		///		pass->PostRenderPass();
+		///	}
+		///}
+		///
+		///StrPtr<CubeMap> cubemap = std::make_shared<CubeMap>();
+		///cubemap->SetFilePath(String("CubemapGenerated/") + name);
+		///cubemap->SetName(name);
+		///
+		///m_gfx->CreateCubeMapFrom6Tex2DCore(
+		///	Textures[0]->m_TextureCore,
+		///	Textures[1]->m_TextureCore,
+		///	Textures[2]->m_TextureCore,
+		///	Textures[3]->m_TextureCore,
+		///	Textures[4]->m_TextureCore,
+		///	Textures[5]->m_TextureCore,
+		///	cubemap->m_TextureCore,
+		///	format);
+		///
+		///ResourceHandle handle = m_res->InsertResource(cubemap);
+		///
+		///StrPtr<SkyBox> skyBox = std::make_shared<SkyBox>();
+		///skyBox->InitSkyBox(handle, m_gfx, m_res);
+		///
+		///CameraManager::Pointer()->SetActiveCamera(1, m_gfx);
+		///
+		///camera->SetFov(45.0f);
+		///camera->SetAspectRatio(1.0f);
+		///camera->SetFarClip(100.0f);
+		///camera->SetNearClip(0.01f);
+		///camera->Reset({ 0,0,5 }, { 0,0,0 }, { 0,1,0 });
+		///
+		///ChangeSkyBox(skyBox);
+		///
+		///m_gfx->SetViewPortDefault();
 
-		m_gfx->SetViewPort(width, height);
-
-		const Vector3 Targets[6] =
-		{
-			{ 0, 0, -1},
-			{ 0, 0, 1 },
-			{ 1, 0, 0 },
-			{ -1, 0, 0 },
-			{ 0, 1, 0 },
-			{ 0, -1, 0 }
-		};
-
-		Vector3 Ups[6];
-
-		Ups[0].Set(0, 1, 0);
-		Ups[1].Set(0, 1, 0);
-		Ups[2].Set(0, 1, 0);
-		Ups[3].Set(0, 1, 0);
-		Ups[4].Set(0, 0, 1);
-		Ups[5].Set(0, 0, -1);
-
-		StrPtr<Gfx::RenderTarget> renderTargets[6];
-		StrPtr<Texture2D> Textures[6];
-
-		auto format = Gfx::FORMAT_R16G16B16A16_FLOAT;
-
-		renderTargets[0] = CreateRenderTargetAndTexture_WidthHeight("0", Textures[0], 1, width, height, format);
-		renderTargets[1] = CreateRenderTargetAndTexture_WidthHeight("1", Textures[1], 1, width, height, format);
-		renderTargets[2] = CreateRenderTargetAndTexture_WidthHeight("2", Textures[2], 1, width, height, format);
-		renderTargets[3] = CreateRenderTargetAndTexture_WidthHeight("3", Textures[3], 1, width, height, format);
-		renderTargets[4] = CreateRenderTargetAndTexture_WidthHeight("4", Textures[4], 1, width, height, format);
-		renderTargets[5] = CreateRenderTargetAndTexture_WidthHeight("5", Textures[5], 1, width, height, format);
-
-		auto scene = sceneGraph;
-		auto ptr = CameraManager::Pointer();
-		auto cameraCmp = scene->FindActorsWithComponent(CMP_CAMERA_WALK)[0].lock()->GetComponent(CMP_CAMERA_WALK).lock();
-		//ptr->SetActiveCamera(1, m_gfx);
-		auto camera = &CastStaticPtr<CameraCmp>(cameraCmp)->m_CameraCore;
-		camera->SetFov(90.0f);
-		camera->SetAspectRatio(1.0f);
-		camera->SetPosition({ 0, 0, 0 });
-		camera->SetFarClip(100.0f);
-		camera->SetNearClip(0.01f);
-
-		auto passes = defCubeMap.GetPassesOrder();
-
-		for (int k = 0; k < 6; ++k)
-		{
-			camera->Reset({ 0,0,0 }, Targets[k], Ups[k]);
-
-			for (int32 i = 0; i < passes.size(); ++i)
-			{
-				if (passes[i] == "PostProcess")
-				{
-					StartPostProcessing();
-					continue;
-				}
-
-				auto pass = m_Passes[passes[i]];
-
-				pass->PreRenderPass();
-
-				if (passes[i] == "cubeMapColorCorrection")
-				{
-					m_gfx->AddRenderTarget(*renderTargets[k], 0);
-					m_gfx->SetNumberOfRenderTargets(1);
-					m_gfx->SetRenderTargets(false, &defCubeMap.depth);
-				}
-
-				pass->RenderPass();
-				pass->PostRenderPass();
-			}
-		}
-
-		StrPtr<CubeMap> cubemap = std::make_shared<CubeMap>();
-		cubemap->SetFilePath(String("CubemapGenerated/") + name);
-		cubemap->SetName(name);
-
-		m_gfx->CreateCubeMapFrom6Tex2DCore(
-			Textures[0]->m_TextureCore,
-			Textures[1]->m_TextureCore,
-			Textures[2]->m_TextureCore,
-			Textures[3]->m_TextureCore,
-			Textures[4]->m_TextureCore,
-			Textures[5]->m_TextureCore,
-			cubemap->m_TextureCore,
-			format);
-
-		ResourceHandle handle = m_res->InsertResource(cubemap);
-
-		StrPtr<SkyBox> skyBox = std::make_shared<SkyBox>();
-		skyBox->InitSkyBox(handle, m_gfx, m_res);
-
-		CameraManager::Pointer()->SetActiveCamera(1, m_gfx);
-
-		camera->SetFov(45.0f);
-		camera->SetAspectRatio(1.0f);
-		camera->SetFarClip(100.0f);
-		camera->SetNearClip(0.01f);
-		camera->Reset({ 0,0,5 }, { 0,0,0 }, { 0,1,0 });
-
-		ChangeSkyBox(skyBox);
-
-		m_gfx->SetViewPortDefault();
-
-		return handle;
+		return 0;
 	}
 
 	void RacrozRenderer::PrepareRender(Scene * sceneGraph)
@@ -388,18 +389,8 @@ namespace rczEngine
 		///Allocate a new RenderTarget Object
 		auto renderTarget = std::make_shared<Gfx::RenderTarget>();
 
-		///Save the Pointer on the RenderTarget Vector.
-		//m_RTs[name] = (renderTarget);
-
-		bool SetToFinal = false;
-
-		if (String(name) == "ColorCorrection")
-		{
-			SetToFinal = true;
-		}
-
 		///Create the RenderTarget.
-		m_gfx->CreateRenderTarget(*renderTarget, name, SetToFinal, mipMaps, width, height, format);
+		m_gfx->CreateRenderTarget(*renderTarget, name, false, mipMaps, width, height, format);
 
 		///Just in case the texture is already allocated. delete the texture. The pointers that referenced that texture will now reference this new one.
 		if (out_Texture)
@@ -411,73 +402,6 @@ namespace rczEngine
 		out_Texture->CreateFromRenderTarget(*renderTarget);
 
 		return renderTarget;
-	}
-
-	StrPtr<Pass> RacrozRenderer::CreatePass(const String& name, PASSES pass, eRenderingPipelines renderMode)
-	{
-		StrPtr<Pass> returnPass;
-
-		switch (pass)
-		{
-		case PASSES::SKYBOX:
-			returnPass = m_Passes[name] = std::make_shared<SkyBoxPass>();
-			break;
-		case PASSES::GEOMETRY_PASS:
-			returnPass = m_Passes[name] = std::make_shared<GeometryPass>();
-			break;
-		case PASSES::TERRAIN_GEOMETRY_PASS:
-			returnPass = m_Passes[name] = std::make_shared<TerrainGeometryPass>();
-			break;
-		case PASSES::PLANET_PASS:
-			returnPass = m_Passes[name] = std::make_shared<PlanetPass>();
-			break;
-		case PASSES::ATMOS_SCATTER_PASS:
-			returnPass = m_Passes[name] = std::make_shared<AtmosScatterPass>();
-			break;
-		case PASSES::PBR:
-			returnPass = m_Passes[name] = std::make_shared<PBR_Pass>();
-			break;
-		case PASSES::COLOR_CORRECTION:
-			returnPass = m_Passes[name] = std::make_shared<ColorCorrectionPass>();
-			break;
-		case PASSES::PBR_FORWARD:
-			returnPass = m_Passes[name] = std::make_shared<PBR_Forward_Pass>();
-			break;
-		case PASSES::PBR_TRANSPARENT:
-			returnPass = m_Passes[name] = std::make_shared<PBR_Transparent_Pass>();
-			break;
-		case PASSES::LUMINANCE:
-			returnPass = m_Passes[name] = std::make_shared<LuminancePass>();
-			break;
-		case PASSES::BRIGHT:
-			returnPass = m_Passes[name] = std::make_shared<BrightPass>();
-			break;
-		case PASSES::BLOOM:
-			returnPass = m_Passes[name] = std::make_shared<BloomPass>();
-			break;
-		case PASSES::AVG_LUMINANCE:
-			returnPass = m_Passes[name] = std::make_shared<AverageLuminancePass>();
-			break;
-		case PASSES::HDR_BLOOM:
-			returnPass = m_Passes[name] = std::make_shared<HDRBloomPass>();
-			break;
-		case PASSES::MOTION_BLUR:
-			returnPass = m_Passes[name] = std::make_shared<MotionBlurPass>();
-			break;
-		case PASSES::PERLIN3D:
-			returnPass = m_Passes[name] = std::make_shared<PerlinPlanetPass>();
-			break;
-		case PASSES::SSAO:
-			returnPass = m_Passes[name] = std::make_shared<SSAOPass>();
-			break;
-		case PASSES::GDEBUGGER:
-			returnPass = m_Passes[name] = std::make_shared<GraphicDebuggerPass>();
-			break;
-		}
-
-		returnPass->m_Name = name;
-		returnPass->SetRenderingMode(renderMode);
-		return returnPass;
 	}
 
 	void RacrozRenderer::InitRasterizers()

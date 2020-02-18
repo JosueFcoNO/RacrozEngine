@@ -24,6 +24,8 @@ namespace rczEngine
 					ClearVertexList();
 				}
 
+				m_CreatedResource = true;
+
 				return b;
 			};
 
@@ -84,11 +86,15 @@ namespace rczEngine
 				gfx->UpdateSubResource(this, &m_VertexList[0], 0, 0, sizeof(t) * m_VertexList.size());
 			};
 
+			RZ_EXP FORCEINLINE bool IsResourceCreated() const noexcept { return m_CreatedResource; };
+
 		private:
 			///The vertex list
 			Vector<t> m_VertexList;
 			///The number of vertices
 			uint32 m_VertexNumber;
+			///If it is currently created
+			bool m_CreatedResource = false;
 		};
 	}
 };

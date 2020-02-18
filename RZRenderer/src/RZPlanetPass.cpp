@@ -19,7 +19,7 @@ namespace rczEngine
 		SetTexturesInPipeline();
 		SetRasterizerState();
 
-		RacrozRenderer::Pointer()->GetSkyBox().lock()->SetThisTextureInPS(12, 1, m_gfx);
+		//RacrozRenderer::Pointer()->GetSkyBox().lock()->SetThisTextureInPS(12, 1, m_gfx);
 
 		UseDepth = true;
 

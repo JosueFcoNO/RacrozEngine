@@ -158,7 +158,10 @@ namespace rczEngine
 	{
 		const auto rotateQ = Quaternion(rotateV, 0);
 
-		const auto thisQ = ((*this) * scale);
+		auto thisQ = (*this);
+
+		thisQ.m_w *= scale;
+
 		const auto thisQInverse = thisQ.GetInverse();
 
 		const auto result = (thisQInverse * rotateQ) * thisQ;
@@ -247,6 +250,23 @@ namespace rczEngine
 		Q.m_v.m_y = q1.m_v.m_y*k0 + q2.m_v.m_y*k1;
 		Q.m_v.m_z = q1.m_v.m_z*k0 + q2.m_v.m_z*k1;
 		return Q;
+	}
+
+	Quaternion Quaternion::FromAxisAngle(const Vector3 & axis, float angle, bool radians) noexcept
+	{
+		auto q = Quaternion(eInit::None);
+
+		const auto angleRads = (radians) ? angle : Math::DegreesToRad(angle);
+
+		q.m_w = Math::Cos(angleRads / 2.0f);
+
+		q.m_v.m_x = axis.m_x * Math::Sin(angleRads / 2.0f);
+		q.m_v.m_y = axis.m_y * Math::Sin(angleRads / 2.0f);
+		q.m_v.m_z = axis.m_z * Math::Sin(angleRads / 2.0f);
+
+		q.Normalize();
+
+		return q;
 	}
 
 }

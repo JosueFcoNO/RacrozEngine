@@ -63,28 +63,29 @@ namespace rczEngine
 
 	void Camera::Rotate(const Vector3& vector) noexcept
 	{
-		const Vector3 NewVec = (m_Target - m_Position).GetNormalized();
-		const Vector3 NewVec2 = m_Up.GetNormalized();
-		const Vector3 NewVec3 = (NewVec^NewVec2).GetNormalized();
+		const Vector3 newForward = (m_Target - m_Position).GetNormalized();
+		const Vector3 newUp = m_Up.GetNormalized();
+		const Vector3 newRight = (newForward^newUp).GetNormalized();
 
-		auto v = vector;
-		v /= 100;
+		auto input = vector;
+		//input /= 100;
 
-		Quaternion AVerQue2(NewVec2, v.m_y);
-		Quaternion AVerQue3(NewVec3, v.m_x);
+		Quaternion horRotationQuat = Quaternion::FromAxisAngle(newUp, input.m_y);
+		Quaternion vertRotationQuat = Quaternion::FromAxisAngle(newRight, input.m_x);
 
 		m_Target -= m_Position;
-		AVerQue3.Normalize();
-		AVerQue2.Normalize();
 
-		const Matrix3 temp = AVerQue3.GetAsMatrix3()*AVerQue2.GetAsMatrix3();
-		m_Target = temp*m_Target;
+		auto temp = horRotationQuat * vertRotationQuat;
+		temp.Normalize();
+		m_Target = temp.RotateVector(m_Target, 1);
+		//m_Up = temp.RotateVector(m_Up, 1);
+		//m_Up.Normalize();
 
 		m_Target += m_Position;
 
 		m_CachedViewMatrix = false;
 
-		CalculateUp();
+		//CalculateUp();
 	}
 
 	void Camera::RotateComplete(const Vector3& vector)  noexcept

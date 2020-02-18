@@ -38,16 +38,6 @@ namespace rczEngine
 		CameraManager::Start();
 		CameraManager::Pointer()->Init(Gfx::GfxCore::Pointer());
 
-		Time.StartTimer();
-
-		m_gfx = Gfx::GfxCore::Pointer();
-
-		//FbxLoader loader;
-		//loader.LoadModel();
-	}
-
-	void EditorCore::InitEngine()
-	{
 		LightManager::Start();
 		LightManager::Pointer()->InitLightManager();
 
@@ -61,10 +51,9 @@ namespace rczEngine
 		RacrozRenderer::Pointer()->InitRenderer();
 		m_renderer = RacrozRenderer::Pointer();
 
-		StrPtr<SkyBox> Sky = std::make_shared<SkyBox>();
-		Sky->InitSkyBox("CubeMaps/Restaurant.dds", "Env", Gfx::GfxCore::Pointer(), ResVault::Pointer());
-		RacrozRenderer::Pointer()->ChangeSkyBox(Sky);
+		Time.StartTimer();
 
+		m_gfx = Gfx::GfxCore::Pointer();
 	}
 
 	void EditorCore::RunEditor()
@@ -143,22 +132,10 @@ namespace rczEngine
 		}
 	}
 
-	void EditorCore::Math3DUnitTest()
+	void EditorCore::InitSceneGrid()
 	{
-		ActorComponentFactory::Start();
-
-		SceneManager::Start();
-		SceneManager::Pointer()->CreateDefaultScene("Default");
-		m_scnManager = SceneManager::Pointer();
-
-		RacrozRenderer::Start();
-		RacrozRenderer::Pointer()->InitRenderer();
-		m_renderer = RacrozRenderer::Pointer();
-
-		m_renderer->SetRenderingMode(eRenderingPipelines::Debug);
-
 		auto gDebugger = GraphicDebugger::Pointer();
-		
+
 		Vector<Vector3> points;
 
 		for (int i = 0; i < 100; ++i)
@@ -177,67 +154,99 @@ namespace rczEngine
 
 		Vector<uint32> indices;
 
-		for (int i = 0; i < 400; i+=2)
+		for (int i = 0; i < 400; i += 2)
 		{
 			indices.push_back(i);
 			indices.push_back(i + 1);
 		}
 
 		gDebugger->AddLineListIndex("Grid", points, indices, Color(0.4f, 0.4f, 0.4f), -1.0f);
+	};
 
-		auto cube = gDebugger->AddCube("Cube", Vector3(10, 0, 0), Vector3(0.5f, 0.5f, 0.5f), Color(1, 0, 0));
-		auto cubepos = Vector3(10, 0, 0);
-		Quaternion q = Matrix3::Rotate3D(0, 5, 0).GetAsQuaternion();
+	void EditorCore::RenderGUI()
+	{
+		// Start the Dear ImGui frame
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+
+		for (auto& window : m_EditorWindows)
+		{
+			window.second->RenderWindow();
+		}
+
+		ImGui::EndFrame();
+		ImGui::Render();
+		ImGUIEditor::Pointer()->PreRender(ImGui::GetDrawData());
+	}
+
+	void EditorCore::RenderEditor()
+	{
+		m_gfx->SetDefaultRenderTarget();
+		m_gfx->ClearDefaultRenderTargetView(0.1f, 0.1f, 0.1f, 1.0f);
+		m_gfx->ClearDepthTargetView();
+
+		m_renderer->Render(nullptr, nullptr);
+
+		RenderGUI();
+
+		m_gfx->Present();
+	}
+
+	void EditorCore::UpdateEditor()
+	{
+		float deltaTime = (float)Time.GetFrameTime();
+
+		Input::Pointer()->UpdateInput();
+
+		SceneManager::Pointer()->GetActiveScene()->Update(deltaTime);
+
+		// Bucle principal de mensajes:
+		if (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			//if (!TranslateAcceleratorW(msg.hwnd, hAccelTable, &msg))
+			//{
+			//
+			//}
+		}
+
+		q = Quaternion::FromAxisAngle(Vector3(0, 10, 10).GetNormalized(), 180 * deltaTime);
+		cubepos = q.RotateVector(cubepos, 1);
+		cube.lock()->SetCube(cubepos, Vector3(0.5f, 0.5f, 0.5f));
+
+		// Bucle principal de mensajes:
+		if (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			//if (!TranslateAcceleratorW(msg.hwnd, hAccelTable, &msg))
+			//{
+			//
+			//}
+		}
+	}
+
+	void EditorCore::Math3DUnitTest()
+	{
+		InitSceneGrid();
+
+		m_renderer->SetRenderingMode(eRenderingPipelines::Deferred);
+
+		auto gDebugger = GraphicDebugger::Pointer();
+		
+		auto cubepos = Vector3(2, 2, 0);
+		auto cubeSize = Vector3(0.5f, 0.5f, 0.5f);
+		auto cube = gDebugger->AddCube("Cube", cubepos, cubeSize, Color(1, 0, 0));
+		Quaternion q = Quaternion::FromAxisAngle(Vector3(0, 5, 5).GetNormalized(), 10);
 
 		bool editor = true;
 		while (editor)
 		{
-			float deltaTime = (float)Time.GetFrameTime();
 
-			Input::Pointer()->UpdateInput();
 
-			m_scnManager->GetActiveScene()->Update(deltaTime);
-			
-			cubepos = q.RotateVector(cubepos, 1);
-			cube.lock()->SetCube(cubepos, Vector3(0.5f, 0.5f, 0.5f));
-
-			m_gfx->SetDefaultRenderTarget();
-			m_gfx->ClearDefaultRenderTargetView(0.1f, 0.1f, 0.1f, 1.0f);
-			m_gfx->ClearDepthTargetView();
-			m_renderer->Render(nullptr, nullptr);
-
-			// Start the Dear ImGui frame
-			ImGui_ImplDX11_NewFrame();
-			ImGui_ImplWin32_NewFrame();
-			ImGui::NewFrame();
-
-			ImGui::SetNextWindowSize(ImVec2(1920, 1080));
-			ImGui::SetNextWindowPos(ImVec2(0, 0));
-			ImGui::Begin("Editor",0, ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse || ImGuiWindowFlags_::ImGuiWindowFlags_NoMove || ImGuiWindowFlags_::ImGuiWindowFlags_NoResize);
-			ImGui::End();
-
-			ImGui::SetNextWindowSize(ImVec2(960, 560));
-			ImGui::Begin("Scene");
-			ImGui::Image(m_renderer->GetCurrentPipeline().lock()->GetFinalRenderTarget().lock()->GetTextureCore()->m_ShaderResource, ImVec2(960, 540));
-			ImGui::End();
-
-			ImGui::EndFrame();
-
-			ImGui::Render();
-			ImGUIEditor::Pointer()->PreRender(ImGui::GetDrawData());
-
-			m_gfx->Present();
-
-			// Bucle principal de mensajes:
-			if (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-				//if (!TranslateAcceleratorW(msg.hwnd, hAccelTable, &msg))
-				//{
-				//
-				//}
-			}
+			RenderEditor();
 		}
 	}
 

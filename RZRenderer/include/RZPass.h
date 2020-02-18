@@ -11,6 +11,28 @@ namespace rczEngine
 		Debug
 	};
 
+	enum class ePasses
+	{
+		Skybox,
+		GeoBuffer,
+		TerrainGeoBuffer,
+		PBR,
+		PbrForward,
+		PbrTransparent,
+		GammaCorrection,
+		Luminance,
+		Bright,
+		Bloom,
+		AverageLuminance,
+		BloomApply,
+		MotionBlur,
+		PlanetSurface,
+		PlanetAtmosphere,
+		Perlin3D,
+		SSAO,
+		GraphicDebugger
+	};
+
 	///A Base Class to derive into concrete Passes.
 	class RZ_EXP Pass
 	{
@@ -42,6 +64,8 @@ namespace rczEngine
 		void AddBlendState(Gfx::BlendState* blendState, int32 slot);
 
 		void AddDepthStencyl(Gfx::DepthStencyl* depthStencyl);
+
+		StrPtr<Gfx::RenderTarget> GetRenderTarget(uint32 index = 0) { return m_RenderTargets[index]; };
 
 		bool UseDefaultRenderTarget = true;
 

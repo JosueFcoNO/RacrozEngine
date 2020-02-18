@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	void DebuggerCube::SetCube(const Vector3 & center, const Vector3 & scale)
 	{
-		m_VertexBuffer.Destroy();
+		m_VertexBuffer.ClearVertexList();
 
 		const auto xScale = scale.m_x / 2.0f;
 		const auto yScale = scale.m_y / 2.0f;
@@ -36,10 +36,18 @@ namespace rczEngine
 		m_VertexBuffer.AddVertex(bottomFrontRight);
 		m_VertexBuffer.AddVertex(topFrontRight);
 
-		m_VertexBuffer.AddVertex(topBackLeft);
+		m_VertexBuffer.AddVertex(topBackRight);
+		m_VertexBuffer.AddVertex(bottomBackRight);
 
+		m_VertexBuffer.AddVertex(topFrontRight);
+		m_VertexBuffer.AddVertex(bottomFrontRight);
 
+		m_VertexBuffer.AddVertex(topFrontLeft);
+		m_VertexBuffer.AddVertex(bottomFrontLeft);
 
-		m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DYNAMIC, false, Gfx::GfxCore::Pointer());
+		if (!m_VertexBuffer.IsResourceCreated())
+			m_VertexBuffer.CreateVertexBuffer(Gfx::USAGE_DYNAMIC, false, Gfx::GfxCore::Pointer());
+		else
+			m_VertexBuffer.UpdateVertexBuffer(Gfx::GfxCore::Pointer());
 	}
 };

@@ -6,11 +6,8 @@ namespace rczEngine
 	{
 	public:
 		void InitRenderPipeline(const String& name, int32 width, int32 height, RacrozRenderer * renderer);
-		void DoRender();
-
 
 		Gfx::DepthStencyl depth;
-
 	private:
 	};
 }

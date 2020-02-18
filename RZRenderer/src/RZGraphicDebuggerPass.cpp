@@ -21,7 +21,6 @@ namespace rczEngine
 		m_VShader.SetThisVertexShaderAndInputLayout(m_gfx);
 		
 		SetRenderTargetsInPipeline();
-		m_gfx->ClearRenderTargetView(0, 0.0f, 0,0,1);
 	}
 
 	void GraphicDebuggerPass::RenderPass()

@@ -252,7 +252,6 @@
     <ClInclude Include="include\RZPlanetQuadTreeNode.h" />
     <ClInclude Include="include\RZResource.h" />
     <ClInclude Include="include\RZResourcesGUI.h" />
-    <ClInclude Include="include\RZSceneGraphGUI.h" />
     <ClInclude Include="include\RZSceneManager.h" />
     <ClInclude Include="include\RZSkinnedBoneComponent.h" />
     <ClInclude Include="include\RZSpaceComponent.h" />
@@ -324,7 +323,6 @@
     <ClCompile Include="src\RZPlanetQuadTreeNode.cpp" />
     <ClCompile Include="src\RZResourceManager.cpp" />
     <ClCompile Include="src\RZScene.cpp" />
-    <ClCompile Include="src\RZSceneGraphGUI.cpp" />
     <ClCompile Include="src\RZSceneManager.cpp" />
     <ClCompile Include="src\RZSkeleton.cpp" />
     <ClCompile Include="src\RZSkinnedMesh.cpp" />

@@ -341,9 +341,6 @@
     <ClInclude Include="include\RZResourcesGUI.h">
       <Filter>Archivos de encabezado\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="include\RZSceneGraphGUI.h">
-      <Filter>Archivos de encabezado\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="include\imgui_impl_dx11.h">
       <Filter>Archivos de encabezado\Imgui</Filter>
     </ClInclude>
@@ -521,9 +518,6 @@
       <Filter>Archivos de código fuente\GUI</Filter>
     </ClCompile>
     <ClCompile Include="src\RZGameObjectGUI.cpp">
-      <Filter>Archivos de código fuente\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RZSceneGraphGUI.cpp">
       <Filter>Archivos de código fuente\GUI</Filter>
     </ClCompile>
     <ClCompile Include="src\imgui_demo.cpp">

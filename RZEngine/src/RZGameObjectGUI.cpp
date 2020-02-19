@@ -19,17 +19,17 @@ namespace rczEngine
 			if (m_ActiveObject)
 			{
 
-				if (ImGui::InputFloat3("Position", (float*)&m_ActiveObject->m_Position))
+				if (ImGui::DragFloat3("Position", (float*)&m_ActiveObject->m_Position))
 				{
 					m_ActiveObject->m_DirtyLocalMatrix = true;
 				}
 
-				if (ImGui::InputFloat3("Orientation", (float*)&m_ActiveObject->m_Orientation))
+				if (ImGui::DragFloat3("Orientation", (float*)&m_ActiveObject->m_Orientation))
 				{
 					m_ActiveObject->m_DirtyLocalMatrix = true;
 				}
 
-				if (ImGui::InputFloat3("Scale", (float*)&m_ActiveObject->m_Scale))
+				if (ImGui::DragFloat3("Scale", (float*)&m_ActiveObject->m_Scale))
 				{
 					m_ActiveObject->m_DirtyLocalMatrix = true;
 				}

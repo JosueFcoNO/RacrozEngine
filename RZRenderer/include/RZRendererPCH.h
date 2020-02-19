@@ -7,7 +7,9 @@
 #include "RZPass.h"
 
 #include "RZRenderPipeline.h"
+
 #include "RZPipelineDeferred.h"
+#include "CbnPipelineForward.h"
 #include "CbnPipelineDebug.h"
 
 #include "RZSkyBoxPass.h"

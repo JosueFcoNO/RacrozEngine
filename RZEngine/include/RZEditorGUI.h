@@ -81,7 +81,6 @@ namespace rczEngine
 		Gfx::BlendState m_NormalBlendState;
 		Gfx::BlendState m_TextBlendState;
 
-		GUISceneGraph m_SceneGraphGUI;
 		GUIGameObject m_GameObjectGUI;
 		GUIResources m_ResourcesGUI;
 		GUIConsole m_ConsoleGUI;

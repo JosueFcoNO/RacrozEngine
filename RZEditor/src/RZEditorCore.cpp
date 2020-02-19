@@ -2,6 +2,28 @@
 
 namespace rczEngine
 {
+	EditorCore*& EditorCore::_Instance()
+	{
+		static EditorCore* instance = nullptr;
+		return instance;
+	}
+
+	void EditorCore::Start()
+	{
+		(_Instance()) = new EditorCore;
+	}
+
+	EditorCore* EditorCore::Pointer()
+	{
+		return _Instance();
+	}
+
+	void EditorCore::ShutDown()
+	{
+		delete _Instance();
+	}
+
+
 	void EditorCore::InitEditor()
 	{
 		OSLayer::Start();
@@ -226,7 +248,7 @@ namespace rczEngine
 	{
 		InitSceneGrid();
 
-		m_renderer->CreatePipeline("Scene", eRenderingPipelines::Deferred);
+		m_renderer->CreatePipeline("Scene", eRenderingPipelines::Forward);
 		m_renderer->CreatePipeline("Debug", eRenderingPipelines::Debug);
 
 		auto window = new PipelineWindow();
@@ -240,6 +262,11 @@ namespace rczEngine
 		window->InitWindow("Debug");
 		m_EditorWindows["Debug"] = window;
 		window->SetRenderPipeline(m_renderer->GetPipeline("Debug").lock());
+
+		auto sceneWindow = new ScenesWindow();
+
+		window->InitWindow("Scenes");
+		m_EditorWindows["Scenes"] = sceneWindow;
 
 		auto gDebugger = GraphicDebugger::Pointer();
 		

@@ -58,7 +58,8 @@ namespace rczEngine
 		switch (renderingMode)
 		{
 		case eRenderingPipelines::Forward:
-			//SetForward();
+			m_Pipelines[name] = std::make_shared<PipelineForward>();
+			m_Pipelines[name]->InitRenderPipeline("Forward", m_Width, m_Height, this);
 			break;
 		case eRenderingPipelines::Deferred:
 			m_Pipelines[name] = std::make_shared<PipelineDeferred>();
@@ -92,51 +93,6 @@ namespace rczEngine
 	{
 
 	}
-
-	//void RacrozRenderer::SetForward()
-	//{
-		/////Create Render targets and textures for Position,  Normals, Color, Metallic and Roughness, Tangents and Binormals.
-		/////This also inserts the render targets and the textures into the RenderTarget and Texture2D Maps.
-		//m_RTs["ColorCorrection"] = CreateRenderTargetAndTexture_XYScales("ColorCorrection", m_Textures["ColorCorrection"], 1, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R8G8B8A8_UNORM);
-		//m_RTs["ColorPBR"] = CreateRenderTargetAndTexture_XYScales("ColorPBR", m_Textures["ColorPBR"], 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R32G32B32A32_FLOAT);
-		//
-		///////////////////
-		/////Skybox PASS///
-		///////////////////
-		//
-		//auto passSkyBox = CreatePass("SkyBox", ePasses::Skybox, m_CurrentRenderingMode);
-		//
-		//passSkyBox->AddRenderTarget(m_RTs["ColorPBR"], 0);
-		//passSkyBox->AddRasterizerState(&m_RSSolidCullNone);
-		//
-		//m_PassesOrder.push_back("SkyBox");
-		//
-		///////////
-		/////PBR///
-		///////////
-		//
-		/////Create the PBR pass
-		//auto passPBR = CreatePass("PBR", ePasses::PbrForward, m_CurrentRenderingMode);
-		//
-		//passPBR->AddRenderTarget(m_RTs["ColorPBR"], 0);
-		//
-		//m_PassesOrder.push_back("PBR");
-		//
-		/////Start the post processing.
-		//m_PassesOrder.push_back("PostProcess");
-		//
-		////////////////////////
-		/////COLOR CORRECTION///
-		////////////////////////
-		//
-		/////Create the PBR pass
-		//auto passColorCorrection = CreatePass("ColorCorrection", ePasses::GammaCorrection, m_CurrentRenderingMode);
-		//
-		//passColorCorrection->AddRenderTarget(m_RTs["ColorCorrection"], 0);
-		//passColorCorrection->AddTexture2D(m_Textures["ColorPBR"], 0);
-		//
-		//m_PassesOrder.push_back("ColorCorrection");
-	//}
 
 	ResourceHandle RacrozRenderer::CreateCubeMap(const String& name, Scene * sceneGraph, RenderPipeline* renderPipeline, int width, int height)
 	{

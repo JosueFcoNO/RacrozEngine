@@ -5,5 +5,7 @@
 
 #include "CbnBaseWindow.h"
 #include "CbnPipelineWindow.h"
+#include "CbnScenesWindow.h"
+#include "CbnGameObjectWindow.h"
 
 #include "RZEditorCore.h"

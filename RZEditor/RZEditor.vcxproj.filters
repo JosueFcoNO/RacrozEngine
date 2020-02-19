@@ -36,6 +36,12 @@
     <ClInclude Include="include\CbnPipelineWindow.h">
       <Filter>Archivos de encabezado\UI\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="include\CbnScenesWindow.h">
+      <Filter>Archivos de encabezado\UI\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CbnGameObjectWindow.h">
+      <Filter>Archivos de encabezado\UI\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZEditorPCH.cpp">
@@ -48,7 +54,13 @@
       <Filter>Archivos de código fuente\UI\Windows</Filter>
     </ClCompile>
     <ClCompile Include="include\CbnPipelineWindow.cpp">
-      <Filter>Archivos de código fuente</Filter>
+      <Filter>Archivos de código fuente\UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnScenesWindow.cpp">
+      <Filter>Archivos de código fuente\UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnGameObjectWindow.cpp">
+      <Filter>Archivos de código fuente\UI\Windows</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

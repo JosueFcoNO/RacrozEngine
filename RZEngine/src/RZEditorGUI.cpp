@@ -44,8 +44,6 @@ namespace rczEngine
 
 		InitImgui();
 
-		m_SceneGraphGUI.InitSceneGraphGUI();
-
 		return;
 	}
 
@@ -112,9 +110,6 @@ namespace rczEngine
 			}
 		}
 
-		m_SceneGraphGUI.RenderSceneGraphGUI();
-		if (m_SceneGraphGUI.m_ActiveGameObject)
-			m_GameObjectGUI.SetNewGameObject(m_SceneGraphGUI.m_ActiveGameObject);
 		m_GameObjectGUI.RenderWindow();
 		m_ResourcesGUI.RenderResources();
 		m_ConsoleGUI.RenderWindow();

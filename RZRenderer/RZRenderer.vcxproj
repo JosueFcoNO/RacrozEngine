@@ -184,6 +184,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\CbnPipelineDebug.h" />
+    <ClInclude Include="include\CbnPipelineForward.h" />
     <ClInclude Include="include\RZAtmosScatterPass.h" />
     <ClInclude Include="include\RZAvgLuminance.h" />
     <ClInclude Include="include\RZBloom.h" />
@@ -215,6 +216,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CbnPipelineDebug.cpp" />
+    <ClCompile Include="src\CbnPipelineForward.cpp" />
     <ClCompile Include="src\RZAtmosScatterPass.cpp" />
     <ClCompile Include="src\RZAvgLuminance.cpp" />
     <ClCompile Include="src\RZBloom.cpp" />

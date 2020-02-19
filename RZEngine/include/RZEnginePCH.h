@@ -63,7 +63,6 @@
 #include "RZAssimpLoader.h"
 
 #include "RZBaseWindowGUI.h"
-#include "RZSceneGraphGUI.h"
 #include "RZGameObjectGUI.h"
 #include "RZResourcesGUI.h"
 #include "RZConsoleGUI.h"

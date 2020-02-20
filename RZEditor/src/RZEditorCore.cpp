@@ -194,12 +194,25 @@ namespace rczEngine
 
 		for (auto& window : m_EditorWindows)
 		{
-			window.second->RenderWindow();
+			if (window.second->IsOpen())
+				window.second->RenderWindow();
 		}
 
 		ImGui::EndFrame();
 		ImGui::Render();
 		ImGUIEditor::Pointer()->PreRender(ImGui::GetDrawData());
+	}
+
+	void EditorCore::UpdateWindows(float deltaTime)
+	{
+		for (auto& window : m_EditorWindows)
+		{
+			if (!window.second->IsOpen())
+			{
+				m_EditorWindows.erase(window.first);
+				return;
+			}
+		}
 	}
 
 	void EditorCore::RenderEditor()
@@ -208,8 +221,10 @@ namespace rczEngine
 		m_gfx->ClearDefaultRenderTargetView(0.1f, 0.1f, 0.1f, 1.0f);
 		m_gfx->ClearDepthTargetView();
 
-		m_renderer->Render("Debug", nullptr, nullptr);
-		m_renderer->Render("Scene", nullptr, nullptr);
+		auto scene = SceneManager::Pointer()->GetActiveScene();
+
+		m_renderer->Render("Debug", scene, nullptr);
+		m_renderer->Render("Scene", scene, nullptr);
 
 		RenderGUI();
 
@@ -219,6 +234,8 @@ namespace rczEngine
 	void EditorCore::UpdateEditor()
 	{
 		float deltaTime = (float)Time.GetFrameTime();
+
+		UpdateWindows(deltaTime);
 
 		Input::Pointer()->UpdateInput();
 
@@ -248,7 +265,7 @@ namespace rczEngine
 	{
 		InitSceneGrid();
 
-		m_renderer->CreatePipeline("Scene", eRenderingPipelines::Forward);
+		m_renderer->CreatePipeline("Scene", eRenderingPipelines::Deferred);
 		m_renderer->CreatePipeline("Debug", eRenderingPipelines::Debug);
 
 		auto window = new PipelineWindow();
@@ -264,9 +281,20 @@ namespace rczEngine
 		window->SetRenderPipeline(m_renderer->GetPipeline("Debug").lock());
 
 		auto sceneWindow = new ScenesWindow();
-
-		window->InitWindow("Scenes");
+		sceneWindow->InitWindow("Scenes");
 		m_EditorWindows["Scenes"] = sceneWindow;
+
+		auto sceneGameObj = new GameObjectWindow();
+		sceneGameObj->InitWindow("GameObject");
+		m_EditorWindows["GameObject"] = sceneGameObj;
+
+		auto sceneConsole = new ConsoleWindow();
+		sceneConsole->InitWindow("Console");
+		m_EditorWindows["Console"] = sceneConsole;
+
+		auto sceneResourceList = new ResourceListWindow();
+		sceneResourceList->InitWindow("Resource List");
+		m_EditorWindows["Resource List"] = sceneResourceList;
 
 		auto gDebugger = GraphicDebugger::Pointer();
 		
@@ -305,5 +333,20 @@ namespace rczEngine
 		Logger::ShutDown();
 
 		Gfx::GfxCore::ShutDown();
+	}
+
+	void EditorCore::CreateActiveResourceWindow(WeakPtr<Resource> resource)
+	{
+		if (resource.expired())
+		{
+			Logger::Pointer()->Log("Tried to create resource window with invalid ptr.", eLogMsgType::Warning);
+			return;
+		}
+
+		auto window = new ResourceWindow();
+		const auto windowName = "Resource " + resource.lock()->GetName();
+		window->InitWindow(windowName.c_str(), 200, 400);
+		window->SetResource(resource);
+		m_EditorWindows[windowName] = window;
 	}
 }

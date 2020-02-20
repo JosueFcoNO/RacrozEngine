@@ -14,21 +14,25 @@ namespace rczEngine
 
 		auto m_ActiveObject = gameObject.lock();
 
+		m_Position = m_ActiveObject->GetPosition();
+		m_Orientation = m_ActiveObject->GetOrientation();
+		m_Scale = m_ActiveObject->GetScale();
+
 		auto windowSize = ImVec2(ImGui::GetWindowSize());
 
-		if (ImGui::DragFloat3("Position", (float*)&m_ActiveObject->m_Position))
+		if (ImGui::DragFloat3("Position", (float*)&m_Position, 0.1f))
 		{
-			m_ActiveObject->m_DirtyLocalMatrix = true;
+			m_ActiveObject->SetPosition(m_Position);
 		}
 
-		if (ImGui::DragFloat3("Orientation", (float*)&m_ActiveObject->m_Orientation))
+		if (ImGui::DragFloat3("Orientation", (float*)&m_Orientation, 0.1f))
 		{
-			m_ActiveObject->m_DirtyLocalMatrix = true;
+			m_ActiveObject->SetOrientation(m_Orientation);
 		}
 
-		if (ImGui::DragFloat3("Scale", (float*)&m_ActiveObject->m_Scale))
+		if (ImGui::DragFloat3("Scale", (float*)&m_Scale, 0.1f))
 		{
-			m_ActiveObject->m_DirtyLocalMatrix = true;
+			m_ActiveObject->SetScale(m_Scale);
 		}
 
 		static int comboint = 0;
@@ -49,9 +53,11 @@ namespace rczEngine
 				{
 					SceneManager::Pointer()->GetActiveScene()->CreateComponent((eComponentID)componentIds[comboint], m_ActiveObject->GetID());
 					AddComponentMenu = false;
+					ImGui::End();
 					return;
 				}
 			}
+			ImGui::End();
 		}
 
 		m_ActiveObject->RenderComponents();

@@ -81,10 +81,6 @@ namespace rczEngine
 		Gfx::BlendState m_NormalBlendState;
 		Gfx::BlendState m_TextBlendState;
 
-		GUIGameObject m_GameObjectGUI;
-		GUIResources m_ResourcesGUI;
-		GUIConsole m_ConsoleGUI;
-
 		Map<String, GUIBaseWindow*> m_Windows;
 
 		StrGameObjectPtr m_LastActiveObject;

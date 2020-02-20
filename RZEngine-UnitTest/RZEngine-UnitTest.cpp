@@ -29,10 +29,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	MyRegisterClass(hInstance);
 
-	EditorCore editor;
-	editor.InitEditor();
-	editor.RunEditor();
-	editor.DestroyEditor();
+	EditorCore::Start();
+	auto editor = EditorCore::Pointer();
+
+	editor->InitEditor();
+	editor->RunEditor();
+	editor->DestroyEditor();
+
+	EditorCore::ShutDown();
 
 	PostQuitMessage(0);
 

@@ -133,7 +133,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;RZ_UTILITY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>RZEnginePCH.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>./include/</AdditionalIncludeDirectories>
@@ -219,14 +219,12 @@
     <ClInclude Include="include\RZComponentIDs.h" />
     <ClInclude Include="include\RZCameraComponent.h" />
     <ClInclude Include="include\RZComponent.h" />
-    <ClInclude Include="include\RZConsoleGUI.h" />
     <ClInclude Include="include\RZCubeMap.h" />
     <ClInclude Include="include\RZEditorGUI.h" />
     <ClInclude Include="include\RZEngineFwdDcl.h" />
     <ClInclude Include="include\RZEnginePCH.h" />
     <ClInclude Include="include\RZFbxLoader.h" />
     <ClInclude Include="include\RZGameManager.h" />
-    <ClInclude Include="include\RZGameObjectGUI.h" />
     <ClInclude Include="include\RZGeometryNode.h" />
     <ClInclude Include="include\RZGraphicDebugger.h" />
     <ClInclude Include="include\RZGraphicDebuggerCube.h" />
@@ -251,7 +249,6 @@
     <ClInclude Include="include\RZPlanet.h" />
     <ClInclude Include="include\RZPlanetQuadTreeNode.h" />
     <ClInclude Include="include\RZResource.h" />
-    <ClInclude Include="include\RZResourcesGUI.h" />
     <ClInclude Include="include\RZSceneManager.h" />
     <ClInclude Include="include\RZSkinnedBoneComponent.h" />
     <ClInclude Include="include\RZSpaceComponent.h" />
@@ -284,7 +281,6 @@
     <ClCompile Include="src\RZAnimation.cpp" />
     <ClCompile Include="src\RZAssimpLoader.cpp" />
     <ClCompile Include="src\RZBone.cpp" />
-    <ClCompile Include="src\RZConsoleGUI.cpp" />
     <ClCompile Include="src\RZOctree.cpp" />
     <ClCompile Include="src\RZSkinnedBoneComponent.cpp" />
     <ClCompile Include="src\RZCameraComponent.cpp" />
@@ -300,7 +296,6 @@
     </ClCompile>
     <ClCompile Include="src\RZFbxLoader.cpp" />
     <ClCompile Include="src\RZGameManager.cpp" />
-    <ClCompile Include="src\RZGameObjectGUI.cpp" />
     <ClCompile Include="src\RZGraphicDebugger.cpp" />
     <ClCompile Include="src\RZGraphicDebuggerCube.cpp" />
     <ClCompile Include="src\RZGraphicDebuggerElement.cpp" />

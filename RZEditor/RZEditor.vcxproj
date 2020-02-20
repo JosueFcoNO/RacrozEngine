@@ -123,7 +123,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;RZ_UTILITY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>RZEditorPCH.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>./include/</AdditionalIncludeDirectories>
@@ -184,8 +184,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\CbnBaseWindow.h" />
+    <ClInclude Include="include\CbnConsoleWindow.h" />
     <ClInclude Include="include\CbnGameObjectWindow.h" />
     <ClInclude Include="include\CbnPipelineWindow.h" />
+    <ClInclude Include="include\CbnResourceListWindow.h" />
+    <ClInclude Include="include\CbnResourceWindow.h" />
     <ClInclude Include="include\CbnScenesWindow.h" />
     <ClInclude Include="include\RZEditorCore.h" />
     <ClInclude Include="include\RZEditorPCH.h" />
@@ -193,7 +196,10 @@
   <ItemGroup>
     <ClCompile Include="include\CbnPipelineWindow.cpp" />
     <ClCompile Include="src\CbnBaseWindow.cpp" />
+    <ClCompile Include="src\CbnConsoleWindow.cpp" />
     <ClCompile Include="src\CbnGameObjectWindow.cpp" />
+    <ClCompile Include="src\CbnResourceListWindow.cpp" />
+    <ClCompile Include="src\CbnResourceWindow.cpp" />
     <ClCompile Include="src\CbnScenesWindow.cpp" />
     <ClCompile Include="src\RZEditorCore.cpp" />
     <ClCompile Include="src\RZEditorPCH.cpp">

@@ -42,6 +42,15 @@
     <ClInclude Include="include\CbnGameObjectWindow.h">
       <Filter>Archivos de encabezado\UI\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="include\CbnConsoleWindow.h">
+      <Filter>Archivos de encabezado\UI\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CbnResourceListWindow.h">
+      <Filter>Archivos de encabezado\UI\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CbnResourceWindow.h">
+      <Filter>Archivos de encabezado\UI\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZEditorPCH.cpp">
@@ -60,6 +69,15 @@
       <Filter>Archivos de código fuente\UI\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\CbnGameObjectWindow.cpp">
+      <Filter>Archivos de código fuente\UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnConsoleWindow.cpp">
+      <Filter>Archivos de código fuente\UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnResourceListWindow.cpp">
+      <Filter>Archivos de código fuente\UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnResourceWindow.cpp">
       <Filter>Archivos de código fuente\UI\Windows</Filter>
     </ClCompile>
   </ItemGroup>

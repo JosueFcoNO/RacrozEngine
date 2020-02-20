@@ -77,7 +77,7 @@ namespace rczEngine
 		}
 	}
 
-	void RacrozRenderer::Render(const String& name, Scene * sceneGraph, ImGUIEditor * editor)
+	void RacrozRenderer::Render(const String& name, StrPtr<Scene> sceneGraph, ImGUIEditor * editor)
 	{
 		PrepareRender(sceneGraph);
 
@@ -207,10 +207,8 @@ namespace rczEngine
 		return 0;
 	}
 
-	void RacrozRenderer::PrepareRender(Scene * sceneGraph)
+	void RacrozRenderer::PrepareRender(StrPtr<Scene> sceneGraph)
 	{
-		return;
-
 		m_ObjectsToRender.clear();
 
 		auto CurrentCamera = CameraManager::Pointer()->GetActiveCamera().lock();

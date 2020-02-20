@@ -2,8 +2,10 @@
 
 namespace rczEngine
 {
-	void BaseWindow::InitWindow(const String && name)
+	void BaseWindow::InitWindow(const String && name, int width, int height)
 	{
+		m_Width = 0;
+		m_Height = 0;
 		m_Name = std::move(name);
 	}
 
@@ -26,7 +28,13 @@ namespace rczEngine
 
 	void BaseWindow::BeginRender()
 	{
-		ImGui::Begin(m_Name.c_str());
+		if (m_Width != 0 && m_Height != 0 && m_FirstOpen)
+		{
+			m_FirstOpen = false;
+			ImGui::SetNextWindowSize(ImVec2(m_Width, m_Height));
+		}
+
+		ImGui::Begin(m_Name.c_str(), &m_Open);
 	}
 
 	void BaseWindow::EndRender()

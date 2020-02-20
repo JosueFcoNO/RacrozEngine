@@ -56,10 +56,11 @@ namespace rczEngine
 		void InitRenderer();
 		///Inits the variables, render targets and shaders for a specific rendering mode. Can be changed mid game.
 		void CreatePipeline(const String& name, eRenderingPipelines renderingMode);
+
 		
 		///Renders the scene and Canvas
-		void Render(const String & name, Scene * sceneGraph, ImGUIEditor * editor);
-		
+		void Render(const String & name, StrPtr<Scene> sceneGraph, ImGUIEditor * editor);
+
 		WeakPtr<RenderPipeline> GetPipeline(const String & name);
 
 		///Destroys the renderer
@@ -78,8 +79,9 @@ namespace rczEngine
 
 		ResourceHandle CreateCubeMap(const String & name, Scene * sceneGraph, RenderPipeline * renderPipeline, int width, int height);
 
+
 		///Draws the sceneGraph
-		void PrepareRender(Scene * sceneGraph);
+		void PrepareRender(StrPtr<Scene> sceneGraph);
 
 		UoMap<int, MMap<float, WeakGameObjPtr>> m_ObjectsToRender;
 

@@ -329,16 +329,7 @@
     <ClInclude Include="include\RZBaseWindowGUI.h">
       <Filter>Archivos de encabezado\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="include\RZConsoleGUI.h">
-      <Filter>Archivos de encabezado\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="include\RZEditorGUI.h">
-      <Filter>Archivos de encabezado\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RZGameObjectGUI.h">
-      <Filter>Archivos de encabezado\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RZResourcesGUI.h">
       <Filter>Archivos de encabezado\GUI</Filter>
     </ClInclude>
     <ClInclude Include="include\imgui_impl_dx11.h">
@@ -511,13 +502,7 @@
     <ClCompile Include="src\RZOctree.cpp">
       <Filter>Archivos de código fuente\Octree</Filter>
     </ClCompile>
-    <ClCompile Include="src\RZConsoleGUI.cpp">
-      <Filter>Archivos de código fuente\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="src\RZEditorGUI.cpp">
-      <Filter>Archivos de código fuente\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RZGameObjectGUI.cpp">
       <Filter>Archivos de código fuente\GUI</Filter>
     </ClCompile>
     <ClCompile Include="src\imgui_demo.cpp">

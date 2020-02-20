@@ -110,10 +110,6 @@ namespace rczEngine
 			}
 		}
 
-		m_GameObjectGUI.RenderWindow();
-		m_ResourcesGUI.RenderResources();
-		m_ConsoleGUI.RenderWindow();
-
 		for (auto it = m_Windows.begin(); it != m_Windows.end(); ++it)
 		{
 			it->second->RenderWindow();

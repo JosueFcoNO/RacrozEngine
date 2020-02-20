@@ -17,10 +17,13 @@ namespace rczEngine
 		void RunEditor();
 		void InitSceneGrid();
 		void RenderGUI();
+		void UpdateWindows(float deltaTime);
 		void RenderEditor();
 		void UpdateEditor();
 		void Math3DUnitTest();
 		void DestroyEditor();
+
+		void CreateActiveResourceWindow(WeakPtr<Resource> resource);
 
 		void SetActiveGameObject(WeakGameObjPtr activeGameObject) {
 			m_ActiveGameObject = activeGameObject;

@@ -1,14 +1,13 @@
-#include <RZEnginePCH.h>
+#pragma once
 
 namespace rczEngine
 {
-	void GUIConsole::InitWindow()
+	class RZ_EXP ConsoleWindow : public BaseWindow
 	{
-	}
+	public:
 
-	void GUIConsole::RenderWindow()
-	{
-		ImGui::Begin("Console");
+	protected:
+		virtual void Render() override
 		{
 			auto& ptr = Logger::Pointer()->GetLoggedStrings();
 
@@ -16,6 +15,6 @@ namespace rczEngine
 			{
 				ImGui::Text("%s", ptr[i].GetString().c_str());
 			}
-		}
-	}
+		};
+	};
 }

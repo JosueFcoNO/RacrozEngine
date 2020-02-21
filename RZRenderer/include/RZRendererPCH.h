@@ -43,4 +43,6 @@
 
 #include "RZSpaceMngWindow.h"
 
+#include "CbnVXGIImplement.h"
+
 #include "RZRacrozRenderer.h"

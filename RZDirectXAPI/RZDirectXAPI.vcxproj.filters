@@ -75,6 +75,12 @@
     <Filter Include="Archivos de encabezado\Shader Resource">
       <UniqueIdentifier>{2339b929-9025-4991-9ef6-320aab0155a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\NVRHI">
+      <UniqueIdentifier>{ee4a2222-51d4-4b1f-8262-8af21c4a2d9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\NVRHI">
+      <UniqueIdentifier>{e6820c32-a063-49e6-83ef-507ce0146c7f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZBuffer.h">
@@ -155,6 +161,9 @@
     <ClInclude Include="include\RZShaderResource.h">
       <Filter>Archivos de encabezado\Shader Resource</Filter>
     </ClInclude>
+    <ClInclude Include="..\Plug-Ins\VXGI\examplecode\GFSDK_NVRHI_D3D11.h">
+      <Filter>Archivos de encabezado\NVRHI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZDirectXPCH.cpp">
@@ -222,6 +231,9 @@
     </ClCompile>
     <ClCompile Include="src\RZGeometryShader.cpp">
       <Filter>Archivos de código fuente\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plug-Ins\VXGI\examplecode\GFSDK_NVRHI_D3D11.cpp">
+      <Filter>Archivos de código fuente\NVRHI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

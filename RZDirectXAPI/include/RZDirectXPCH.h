@@ -4,6 +4,10 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 
+#include <GFSDK_VXGI.h>
+#include <GFSDK_VXGI_MathTypes.h>
+#include <GFSDK_NVRHI.h>
+
 #include <RZCorePCH.h>
 #include <RZResource.h>
 

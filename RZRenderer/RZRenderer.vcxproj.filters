@@ -102,6 +102,9 @@
     <Filter Include="Archivos de encabezado\Passes\Shading">
       <UniqueIdentifier>{61529068-415f-424b-b732-a32d477d9308}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\VXGI">
+      <UniqueIdentifier>{9928fa25-0361-4568-a71f-d6fe3ad53a4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZRacrozRenderer.h">
@@ -191,6 +194,9 @@
     </ClInclude>
     <ClInclude Include="include\CbnPipelineForward.h">
       <Filter>Archivos de encabezado\RacrozRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CbnVXGIImplement.h">
+      <Filter>Archivos de encabezado\VXGI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

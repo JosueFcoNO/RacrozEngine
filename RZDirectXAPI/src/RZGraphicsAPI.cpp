@@ -1,4 +1,4 @@
-#include <RZUtilityPCH.h>
+#include <CbnUtilitiesPCH.h>
 #include "RZDirectXPCH.h"
 #include "..\include\rzgraphicsapi.h"
 #define STB_IMAGE_IMPLEMENTATION 1
@@ -158,6 +158,9 @@ namespace rczEngine
 
 			///Create the Depth Stencil View and save it int m_DepthStencilView
 			m_Device->CreateDepthStencilView(m_DepthStencil, &descDSV, &m_DepthStencilView);
+			
+			m_DepthStencyl.GetTexture()->m_Texture = m_DepthStencil;
+			m_DepthStencyl.GetDepthStencylView()->m_DepthStencylView = m_DepthStencilView;
 
 			///Set the render target and the depth stecil
 			m_DeviceContext->OMSetRenderTargets(1, &m_BaseRenderTargetView, m_DepthStencilView);
@@ -500,6 +503,11 @@ namespace rczEngine
 		void GfxCore::ClearDepthTargetView()
 		{
 			m_DeviceContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 255);
+		}
+
+		DepthStencyl* GfxCore::GetDefaultDepthStencyl()
+		{
+			return &m_DepthStencyl;
 		}
 
 		void GfxCore::Present()

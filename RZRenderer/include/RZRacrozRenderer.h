@@ -52,12 +52,14 @@ namespace rczEngine
 		///Destructor, calls Destroy().
 		~RacrozRenderer() noexcept { Destroy(); };
 
+		VXGIImplement m_VXGI;
+		
 		///Inits the Renderer
 		void InitRenderer();
 		///Inits the variables, render targets and shaders for a specific rendering mode. Can be changed mid game.
 		void CreatePipeline(const String& name, eRenderingPipelines renderingMode);
 
-		
+
 		///Renders the scene and Canvas
 		void Render(const String & name, StrPtr<Scene> sceneGraph, ImGUIEditor * editor);
 
@@ -126,10 +128,35 @@ namespace rczEngine
 		///The SkyBox currently set.
 		StrPtr<SkyBox> m_ActiveSkyBox;
 
-		Gfx::VertexShader m_ScreenQuadVS;
-
 		void InitRasterizers();
 		void InitSamplerStates();
+
+		/////////////////////////////////////
+		///// Geometry Shaders
+		/////////////////////////////////////
+	public:
+		///Passthrough shader for screen quad.
+		Gfx::VertexShader m_ScreenQuadVS;
+
+		///The default WVP output shader.
+		Gfx::VertexShader m_DefaultVertexShader;
+
+		///The skinned vertex shader for animated models.
+		Gfx::VertexShader m_SkinnedVertexShader;
+
+		///The geometry shaders for tesselated models.
+		Gfx::HullShader m_TessHullShader;
+		Gfx::DomainShader m_TessDomainShader;
+		Gfx::VertexShader m_TessVertexShader;
+	
+
+		StrPtr<Gfx::RenderTarget> m_Normals;
+
+	private:
+		///Inits all geometry shaders for the models. These get auto bound on RenderObjects.
+		void InitGeometryShaders();
+
+		/////////////////////////////////////
 
 		GaussPass m_BlurPass;
 
@@ -137,6 +164,7 @@ namespace rczEngine
 		int m_Width;
 		///Screen Height
 		int m_Height;
+
 
 		///Pointer to the gfx gfx instance
 		Gfx::GfxCore* m_gfx = NULL;

@@ -44,6 +44,7 @@ namespace rczEngine
 		FORCEINLINE const void SetUp(const Vector3& up) noexcept { m_Up = up; m_CachedViewMatrix = false; };
 
 		FORCEINLINE const Vector3 GetViewDir() const noexcept { return (m_Target - m_Position).GetNormalized(); }
+		FORCEINLINE const Vector3 GetForward() const noexcept { return GetViewDir(); }
 		FORCEINLINE const Vector3 GetTarget() const noexcept { return m_Target; }
 		FORCEINLINE const Vector3 GetPosition() const noexcept { return m_Position; }
 		FORCEINLINE const Vector3 GetUp() const noexcept { return m_Up; }

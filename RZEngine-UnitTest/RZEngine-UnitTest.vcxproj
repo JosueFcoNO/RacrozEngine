@@ -75,8 +75,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(GSL)\include;$(VC_IncludePath);$(SolutionDir)Plug-Ins/fmod/inc/;$(Assimp)/include/;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZComputeAPI/include;$(WindowsSDK_IncludePath);$(SolutionDir)CbnUtilities/include/;$(SolutionDir)RZCore/include/;$(SolutionDir)RZDirectXAPI/include/;$(SolutionDir)RZEngine/include/;$(SolutionDir)/RZfmodSound/include/;$(SolutionDir)/RZDirectInput/include/;$(SolutionDir)/RZRenderer/include/;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)/RZEditor/include/;$(FBXSDK)include</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)/lib/$(Configuration)/$(Platform);$(SolutionDir)\Plug-Ins\assimp-master\$(Platform)\$(Configuration)\;$(FBXSDK)lib\$(Platform)\$(Configuration)</LibraryPath>
+    <IncludePath>$(GSL)\include;$(VC_IncludePath);$(SolutionDir)Plug-Ins/fmod/inc/;$(Assimp)/include/;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZComputeAPI/include;$(WindowsSDK_IncludePath);$(SolutionDir)CbnUtilities/include/;$(SolutionDir)RZCore/include/;$(SolutionDir)RZDirectXAPI/include/;$(SolutionDir)RZEngine/include/;$(SolutionDir)/RZfmodSound/include/;$(SolutionDir)/RZDirectInput/include/;$(SolutionDir)/RZRenderer/include/;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)/RZEditor/include/;$(FBXSDK)include;$(SolutionDir)Plug-Ins\VXGI\include;$(SolutionDir)Plug-Ins\nvapi-public</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)/lib/$(Configuration)/$(Platform);$(SolutionDir)\Plug-Ins\assimp-master\$(Platform)\$(Configuration)\;$(FBXSDK)lib\$(Platform)\$(Configuration);$(SolutionDir)Plug-Ins\VXGI\lib</LibraryPath>
     <OutDir>$(SolutionDir)/bin/$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)/intermediate/$(ProjectName)/$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)</TargetName>
@@ -87,8 +87,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(GSL)\include;$(VC_IncludePath);$(SolutionDir)Plug-Ins/fmod/inc/;$(Assimp)/include/;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZComputeAPI/include;$(WindowsSDK_IncludePath);$(SolutionDir)CbnUtilities/include/;$(SolutionDir)RZCore/include/;$(SolutionDir)RZDirectXAPI/include/;$(SolutionDir)RZEngine/include/;$(SolutionDir)/RZfmodSound/include/;$(SolutionDir)/RZDirectInput/include/;$(SolutionDir)/RZRenderer/include/;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)/RZEditor/include/;$(FBXSDK)include</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)/lib/$(Configuration)/$(Platform);$(Assimp)\lib\$(Platform)\$(Configuration);$(FBXSDK)lib\$(Platform)\$(Configuration)</LibraryPath>
+    <IncludePath>$(GSL)\include;$(VC_IncludePath);$(SolutionDir)Plug-Ins/fmod/inc/;$(Assimp)/include/;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZComputeAPI/include;$(WindowsSDK_IncludePath);$(SolutionDir)CbnUtilities/include/;$(SolutionDir)RZCore/include/;$(SolutionDir)RZDirectXAPI/include/;$(SolutionDir)RZEngine/include/;$(SolutionDir)/RZfmodSound/include/;$(SolutionDir)/RZDirectInput/include/;$(SolutionDir)/RZRenderer/include/;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)/RZEditor/include/;$(FBXSDK)include;$(SolutionDir)Plug-Ins\VXGI\include;$(SolutionDir)Plug-Ins\nvapi-public</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)/lib/$(Configuration)/$(Platform);$(Assimp)\lib\$(Platform)\$(Configuration);$(FBXSDK)lib\$(Platform)\$(Configuration);$(SolutionDir)Plug-Ins\VXGI\lib</LibraryPath>
     <OutDir>$(SolutionDir)/bin/$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)/intermediate/$(ProjectName)/$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>

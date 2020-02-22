@@ -10,9 +10,6 @@ namespace rczEngine
 		m_PShaderPath = L"Shaders/PBR_Forward.hlsl";
 		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
 
-		m_gfx->CompileAndCreateVertexShader(m_GeometryPBRShader, L"Shaders/GeometryPass.hlsl");
-		m_GeometryPBRShader.ReflectLayout(0, m_gfx);
-
 		AddTexture2D(m_LUT, 7);
 
 		config.AmbientLightIntensity = 1.0f;
@@ -62,7 +59,6 @@ namespace rczEngine
 
 	void PBR_Transparent_Pass::RenderPass()
 	{
-		m_GeometryPBRShader.SetThisVertexShaderAndInputLayout(m_gfx);
 		UseDepth = true;
 
 		//SetRenderTargetsInPipeline();

@@ -17,6 +17,8 @@ namespace rczEngine
 		CreateRenderTarget("Velocity", width, height, Gfx::FORMAT_R32G32_FLOAT, 1);
 		CreateRenderTarget("Specular", width, height, Gfx::FORMAT_R8G8B8A8_UNORM, 1);
 
+		RacrozRenderer::Pointer()->m_Normals = m_RTs["NormalsMR"];
+
 		CreateRenderTarget("ColorCorrection", width, height, Gfx::FORMAT_R8G8B8A8_UNORM, 1);
 
 		CreateRenderTarget("PBR", width, height, Gfx::FORMAT_R32G32B32A32_FLOAT, 2);

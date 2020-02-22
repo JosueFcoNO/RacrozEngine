@@ -2,7 +2,7 @@
 
 namespace rczEngine
 {
-	class RZ_EXP GeometryPass : public Pass
+	class RZ_EXP VoxelizePass : public Pass
 	{
 	public:
 		///Inits the pass with a name and a rendering mode.
@@ -18,11 +18,16 @@ namespace rczEngine
 		virtual void PostRenderPass();
 
 	private:
-		Gfx::PixelShader m_SmoothPS;
-		Gfx::PixelShader m_SmoothSpecAlphaPS;
+		WeakPtr<Scene> m_ActiveScene;
+		
+		RendererConfig config;
 
-		StrPtr<Scene> m_ActiveScene;
+		StrPtr<Texture2D> m_LUT;
 
+		Gfx::VertexShader m_GeometryPBRShader;
+		Gfx::VertexShader m_SkinnedGeometryPBRShader;
+
+		Gfx::ConstantBuffer UserDisney;
 	};
 
 }

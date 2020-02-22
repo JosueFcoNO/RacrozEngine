@@ -81,7 +81,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(Assimp)/include/;$(SolutionDir)CbnUtilities\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)RZDirectXAPI/include;$(OpenCL)\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(GSL)\include;$(Assimp)/include/;$(SolutionDir)CbnUtilities\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)RZDirectXAPI/include;$(OpenCL)\include;$(SolutionDir)Plug-Ins\nvapi-public;$(SolutionDir)Plug-Ins\VXGI\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(Assimp)\lib\$(Platform)\$(Configuration);$(SolutionDir)Plug-Ins\FW1FontWrapper\$(Platform)\;$(OpenCL)\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -95,7 +95,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(Assimp)/include/;$(SolutionDir)CbnUtilities\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)RZDirectXAPI/include;$(OpenCL)\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(GSL)\include;$(Assimp)/include/;$(SolutionDir)CbnUtilities\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)RZDirectXAPI/include;$(OpenCL)\include;$(SolutionDir)Plug-Ins\nvapi-public;$(SolutionDir)Plug-Ins\VXGI\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(Assimp)\lib\$(Platform)\$(Configuration);$(SolutionDir)Plug-Ins\FW1FontWrapper\$(Platform)\;$(OpenCL)\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

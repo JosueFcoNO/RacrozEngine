@@ -40,7 +40,7 @@ namespace NVRHI
 
   struct ShaderResourceLimits;
 
-  class RendererInterfaceD3D11 : public IRendererInterface
+  class RZ_EXP RendererInterfaceD3D11 : public IRendererInterface
   {
   public:
     //The user-visible API

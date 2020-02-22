@@ -105,6 +105,12 @@
     <Filter Include="Archivos de encabezado\VXGI">
       <UniqueIdentifier>{9928fa25-0361-4568-a71f-d6fe3ad53a4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\Passes\VXGI">
+      <UniqueIdentifier>{11764679-6762-44f5-901b-a47d90652200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes\VXGI">
+      <UniqueIdentifier>{5d3b7b41-70eb-426b-ad1c-8b01cad87998}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZRacrozRenderer.h">
@@ -198,6 +204,9 @@
     <ClInclude Include="include\CbnVXGIImplement.h">
       <Filter>Archivos de encabezado\VXGI</Filter>
     </ClInclude>
+    <ClInclude Include="include\CbnVoxelizePass.h">
+      <Filter>Archivos de encabezado\Passes\VXGI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZRendererPCH.cpp">
@@ -280,6 +289,12 @@
     </ClCompile>
     <ClCompile Include="src\CbnPipelineForward.cpp">
       <Filter>Archivos de código fuente\RacrozRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnVoxelizePass.cpp">
+      <Filter>Archivos de código fuente\Passes\VXGI</Filter>
+    </ClCompile>
+    <ClCompile Include="include\CbnVXGIImplement.cpp">
+      <Filter>Archivos de código fuente</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

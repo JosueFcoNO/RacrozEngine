@@ -51,6 +51,7 @@ namespace rczEngine
 
 		m_BlurPass.CreatePipeline(eRenderingPipelines::Deferred);
 
+		m_VXGI.InitVXGI();
 	}
 
 	void RacrozRenderer::CreatePipeline(const String& name, eRenderingPipelines renderingMode)
@@ -82,6 +83,10 @@ namespace rczEngine
 		PrepareRender(sceneGraph);
 
 		m_Pipelines[name]->DoRender();
+
+		m_VXGI.VoxelizeScene();
+
+		m_VXGI.RenderChannels();
 	}
 
 	WeakPtr<RenderPipeline> RacrozRenderer::GetPipeline(const String& name)
@@ -298,6 +303,34 @@ namespace rczEngine
 		auto renderHash = MaterialRenderInfo::CalculateRenderHash(componentID, matType, shading, blendType, Tesselated, TwoSided, blendedMaterial, wireframe);
 		auto scene = SceneManager::Pointer()->GetActiveScene();
 
+		if (componentID == eComponentID::CMP_MODEL_RENDERER)
+		{
+			if (!Tesselated)
+			{
+				m_DefaultVertexShader.SetThisVertexShaderAndInputLayout(m_gfx);
+			}
+			else if (Tesselated)
+			{
+				m_TessVertexShader.SetThisVertexShaderAndInputLayout(m_gfx);
+				m_TessHullShader.SetThisHullShader(m_gfx);
+				m_TessDomainShader.SetThisDomainShader(m_gfx);
+			}
+		} 
+		else if (componentID == eComponentID::CMP_SKINNED_MODEL_RENDERER)
+		{
+			if (!Tesselated)
+			{
+				m_SkinnedVertexShader.SetThisVertexShaderAndInputLayout(m_gfx);
+			}
+			else if (Tesselated)
+			{
+				///TODO: Tesselated skinned vertex.
+				///m_TessVertexShader.SetThisVertexShaderAndInputLayout(m_gfx);
+				///m_TessHullShader.SetThisHullShader(m_gfx);
+				///m_TessDomainShader.SetThisDomainShader(m_gfx);
+			}
+		}
+
 		if (forward)
 		{
 			for (auto it = m_ObjectsToRender[renderHash].begin(); it != m_ObjectsToRender[renderHash].end(); ++it)
@@ -315,6 +348,11 @@ namespace rczEngine
 			}
 		}
 
+		if (Tesselated) ///Clear the hull and domain to deactivate tesselation.
+		{
+			m_gfx->RemoveDomainShader();
+			m_gfx->RemoveHullShader();
+		}
 	}
 
 	void RacrozRenderer::RenderScreenAlignedQuad()
@@ -398,6 +436,24 @@ namespace rczEngine
 		m_PointWrapSampler.Init(Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::COMPARISON_NEVER, Gfx::FILTER_MIN_MAG_MIP_POINT, Vector4(1, 1, 1, 1), 16);
 		m_PointWrapSampler.CreateSamplerState(m_gfx);
 		m_PointWrapSampler.PSSetThisSamplerState(4, 1, m_gfx);
+
+	}
+
+	void RacrozRenderer::InitGeometryShaders()
+	{
+		///Geometry Vertex Shader
+		m_gfx->CompileAndCreateVertexShader(m_DefaultVertexShader, L"Shaders/GPassMetRough.hlsl");
+		m_DefaultVertexShader.ReflectLayout(0, m_gfx);
+
+		///Geometry Skinned Vertex Shader
+		m_gfx->CompileAndCreateVertexShader(m_SkinnedVertexShader, L"Shaders/SkinnedVertexShader.hlsl");
+		m_SkinnedVertexShader.ReflectLayout(0, m_gfx);
+
+		///Geometry Tesselated Shader
+		m_gfx->CompileAndCreateDomainShader(m_TessDomainShader, L"Shaders/Tess/TessDS.hlsl");
+		m_gfx->CompileAndCreateHullShader(m_TessHullShader, L"Shaders/Tess/TessHS.hlsl");
+		m_gfx->CompileAndCreateVertexShader(m_TessVertexShader, L"Shaders/Tess/TessVS.hlsl");
+		m_TessVertexShader.ReflectLayout(0, m_gfx);
 
 	}
 };

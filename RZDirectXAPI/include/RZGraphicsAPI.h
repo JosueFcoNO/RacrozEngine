@@ -136,6 +136,8 @@ namespace rczEngine
 			///Clears the depth stencyl view
 			void ClearDepthTargetView();
 
+			DepthStencyl* GetDefaultDepthStencyl();
+
 			///Moves the backbuffer to the frontbuffer.
 			void Present();
 
@@ -383,6 +385,8 @@ namespace rczEngine
 
 			///The Depth Stencil as a Texture2D 
 			ID3D11Texture2D* m_DepthStencil;
+
+			DepthStencyl m_DepthStencyl;
 
 			///A Blend State
 			ID3D11BlendState* m_BlendState;

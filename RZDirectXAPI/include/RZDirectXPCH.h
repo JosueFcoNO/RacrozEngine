@@ -8,6 +8,8 @@
 #include <GFSDK_VXGI_MathTypes.h>
 #include <GFSDK_NVRHI.h>
 
+#include "GFSDK_NVRHI_D3D11.h"
+
 #include <RZCorePCH.h>
 #include <RZResource.h>
 

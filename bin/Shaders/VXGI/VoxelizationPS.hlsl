@@ -19,53 +19,82 @@ struct PSInput
     VxgiVoxelizationPSInputData vxgiData;
 };
 
-cbuffer GlobalConstants : register(b0)
+sampler Sampler_ : register(s0);
+
+cbuffer cbChangeEveryFrame : register(b2)
 {
-    float4x4 g_WorldMatrix;
-    float4x4 g_ViewProjMatrix;
-    float4x4 g_ViewProjMatrixInv;
-    float4x4 g_LightViewProjMatrix;
-    float4 g_CameraPos;
-    float4 g_LightDirection;
-    float4 g_DiffuseColor;
-    float4 g_LightColor;
-    float4 g_AmbientColor;
-    float g_rShadowMapSize;
-    uint g_EnableIndirectDiffuse;
-    uint g_EnableIndirectSpecular;
-    float g_TransparentRoughness;
-    float g_TransparentReflectance;
+	matrix worldMatrix;
+	matrix previousWorldMatrix;
 };
 
-Texture2D<float4> t_DiffuseColor    : register(t0);
-Texture2D t_ShadowMap               : register(t1);
-SamplerState g_SamplerLinearWrap    : register(s0);
-SamplerComparisonState g_SamplerComparison : register(s1);
+struct Light
+{
+	float4 LightColor;
+	float4 LightPosition;
+	float4 LightDirection;
+	float4 Props;
+};
+
+cbuffer cbLights : register(b3)
+{
+	int g_LightNumber;
+	int3 paddding;
+	Light g_Lights[8];
+};
+
+cbuffer cbMaterial : register(b4)
+{
+	float3 g_Albedo;
+	float OverrideAlbedo;
+
+	float3 g_Specular;
+	float OverrideMetallicSpecular;
+
+	float3 g_Emmisive;
+	float OverriveEmmisive;
+
+	float g_RoughGloss;
+	float g_Metallic;
+	float g_Opacity;
+	float g_TesselationFactor;
+
+	float OverrideOpacity;
+	float AOStrength;
+	float tileX;
+	float tileY;
+
+	float OverrideNormal;
+	float OverrideRoughGloss;
+	float g_TesselationScale = 1.0f;
+	float padd;
+
+	float pad3 = 0.0f;
+	float pad4 = 0.0f;
+	float pad5 = 0.0f;
+	float pad6 = 0.0f;
+
+	float pad7 = 0.0f;
+	float padding[3];
+};
+
+cbuffer cbCamera : register(b5)
+{
+	float4 ViewPosition;
+	float4 ViewDirection;
+	float4 NearPlane;
+	float4 FarPlane;
+	matrix ViewMatrix;
+	matrix ProjectionMatrix;
+	matrix PreviousViewMatrix;
+	matrix PreviousProjectionMatrix;
+};
 
 static const float PI = 3.14159265;
-
-float GetShadowFast(float3 fragmentPos)
-{
-    float4 clipPos = mul(float4(fragmentPos, 1.0f), g_LightViewProjMatrix);
-
-    // Early out
-    if (abs(clipPos.x) > clipPos.w || abs(clipPos.y) > clipPos.w || clipPos.z <= 0)
-    {
-        return 0;
-    }
-
-    clipPos.xyz /= clipPos.w;
-    clipPos.x = clipPos.x * 0.5f + 0.5f;
-    clipPos.y = 0.5f - clipPos.y * 0.5f;
-
-    return t_ShadowMap.SampleCmpLevelZero(g_SamplerComparison, clipPos.xy, clipPos.z);
-}
 
 void main(PSInput IN)
 {
     float3 worldPos = IN.positionWS.xyz;
     float3 normal = normalize(IN.normal.xyz);
-
 
     float3 albedo = g_DiffuseColor.rgb;
 
@@ -78,7 +107,7 @@ void main(PSInput IN)
 
     if(NdotL > 0)
     {
-        float shadow = GetShadowFast(worldPos);
+        float shadow = 1;
 
         radiosity += albedo.rgb * g_LightColor.rgb * (NdotL * shadow);
     }

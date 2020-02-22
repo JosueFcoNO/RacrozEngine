@@ -83,7 +83,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(Assimp)\include;$(FBXSDK)include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZComputeAPI\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)RZDirectInput\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(GSL)/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(Assimp)\include;$(FBXSDK)include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZComputeAPI\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)Plug-Ins\VXGI\include;$(SolutionDir)Plug-Ins\nvapi-public;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(Assimp)\lib\$(Platform)\$(Configuration);$(SolutionDir)Plug-Ins/fmod/;$(FBXSDK)lib\$(Platform)\$(Configuration)</LibraryPath>
     <CodeAnalysisRuleSet>..\RuleSet.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
@@ -101,7 +101,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(Assimp)\include;$(FBXSDK)include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZComputeAPI\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)RZDirectInput\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(GSL)/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(Assimp)\include;$(FBXSDK)include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZComputeAPI\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)Plug-Ins\VXGI\include;$(SolutionDir)Plug-Ins\nvapi-public;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(Assimp)\lib\$(Platform)\$(Configuration);$(SolutionDir)Plug-Ins/fmod/;$(FBXSDK)lib\$(Platform)\$(Configuration)</LibraryPath>
     <CodeAnalysisRuleSet>CppCoreCheckRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>

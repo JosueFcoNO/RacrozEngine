@@ -11,7 +11,6 @@
 #pragma once
 #include <RZDirectXPCH.h>
 
-#include "GFSDK_NVRHI_D3D11.h"
 #include <assert.h>
 #include <algorithm>
 

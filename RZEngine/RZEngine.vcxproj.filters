@@ -299,9 +299,6 @@
     <ClInclude Include="include\RZModelLoader.h">
       <Filter>Archivos de encabezado\Model</Filter>
     </ClInclude>
-    <ClInclude Include="include\RZFbxLoader.h">
-      <Filter>Archivos de encabezado\Model</Filter>
-    </ClInclude>
     <ClInclude Include="include\RZAssimpLoader.h">
       <Filter>Archivos de encabezado\Model</Filter>
     </ClInclude>
@@ -477,9 +474,6 @@
     </ClCompile>
     <ClCompile Include="src\RZSceneManager.cpp">
       <Filter>Archivos de código fuente\Scene Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RZFbxLoader.cpp">
-      <Filter>Archivos de código fuente\Model</Filter>
     </ClCompile>
     <ClCompile Include="src\RZAssimpLoader.cpp">
       <Filter>Archivos de código fuente\Model</Filter>

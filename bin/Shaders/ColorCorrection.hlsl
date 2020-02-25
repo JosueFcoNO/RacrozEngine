@@ -152,7 +152,6 @@ PS_Output PS_Main(PS_Input Input)
 		psout.ColorCorrection.xyz = Uncharted2(FinalColor.xyz, Exposure);
     }
 
-	psout.ColorCorrection.xyz = FinalColor.xyz;
 	psout.ColorCorrection.a = 1.0f;
 
     return psout;

@@ -443,7 +443,7 @@ float3 PBR_rm(float3 _position, float3 _albedoColor, float3 _normal, float _roug
 		float3 spec = 0.0f.xxx;
 		float3 diffuse = 0.0f.xxx;
 
-		if (SpotFactor > g_Lights[i].Props.w)
+		if (SpotFactor > g_Lights[i].Props.w && (Distance < g_Lights[i].Props.z || g_Lights[i].Props.x != 0))
 		{
 			Light1 += ComputeLight(_albedoColor.xyz, specularColor.xyz, _normal, _roughness, g_Lights[i].LightPosition.xyz, g_Lights[i].LightColor.xyz, lightDir, viewDir, _metallic);
 		}
@@ -469,5 +469,89 @@ float3 PBR_rm(float3 _position, float3 _albedoColor, float3 _normal, float _roug
 		(Enviroment * (envFresnel * envBRDF.xxx + envBRDF.yyy) * g_ReflectionIntensity) +
 		(Light1 * (1.0f - _metallic) * g_LightIntensity);
 
+	return FinalColor.xyz;
+}
+
+
+//, float3 _tangent, float3 _binormal
+float3 PBR_rm_VXGI(float3 _position, float3 _albedoColor, float3 _normal, float _roughness, float _metallic, float3 _specular, float3 diffuseGI, float3 specularGI, float AOGI)
+{
+	//Calculate the Specular Color from the metallic.
+	float3 specularColor = _specular;
+
+	//Calculate the viewDir.
+	double3 viewDir = normalize(double3(ViewPosition.xyz) - double3(_position.xyz));
+	float3 lightDir = float3(0, 1, 0);
+
+	//////////////////////////////
+	///ENVIROMENT FRESNEL OR F0///
+	//////////////////////////////
+	float3 envFresnel = Specular_F_Roughness(specularColor.xyz, _roughness * _roughness, _normal, viewDir).xyz;
+	float3 Kd = 1.0f - envFresnel;
+	Kd *= 1.0f - _metallic;
+
+	///Bidirectional Reflection Distribution Function
+	float3 Light1 = float3(0, 0, 0);
+
+	for (int i = 0; i < g_LightNumber; ++i)
+	{
+		float Distance = length(_position - g_Lights[i].LightPosition);
+		float Attenuation = 0.1f + 0.01f * Distance + 0.001f * Distance * Distance;
+		float SpotFactor = 100.0f;
+		float SpotLightDist = 1.0f;
+
+		switch ((int)g_Lights[i].Props.x)
+		{
+		case 0: //PointLight
+			lightDir = normalize(g_Lights[i].LightPosition - _position);
+			break;
+		case 2: //SpotLight
+			lightDir = -normalize(g_Lights[i].LightDirection);
+
+			float3 LightToPixel = normalize(_position - g_Lights[i].LightPosition);
+			SpotFactor = dot(LightToPixel, g_Lights[i].LightDirection.xyz);
+
+			SpotLightDist = (1.0 - (1.0 - SpotFactor) * 1.0 / (1.0 - g_Lights[i].Props.w));
+			break;
+		case 1: //Directional Light
+			lightDir = normalize(-g_Lights[i].LightDirection);
+			break;
+		}
+
+#ifndef DISNEY_BRDF
+		//Light1 += DisneyBRDF(_albedoColor.xyz, specularColor.xyz, _normal, _roughness, lightDir, viewDir, _tangent, _binormal, diffuse, g_Lights[i].LightColor.xyz);
+#else
+		float3 spec = 0.0f.xxx;
+		float3 diffuse = 0.0f.xxx;
+
+		if (SpotFactor > g_Lights[i].Props.w)
+		{
+			Light1 += ComputeLight(_albedoColor.xyz, specularColor.xyz, _normal, _roughness, g_Lights[i].LightPosition.xyz, g_Lights[i].LightColor.xyz, lightDir, viewDir, _metallic);
+		}
+#endif
+
+	}
+
+	float mipIndex = _roughness * PBR_ENV_MIP_MAPS;
+	double3 reflectVector = reflect(-viewDir, double3(_normal.xyz));
+
+	float4 envVector = (float4(reflectVector.xyz, mipIndex));
+
+	float3 Enviroment = EnviromentCube.SampleLevel(LinearWrapSampler, envVector.xyz, mipIndex).xyz;
+	Enviroment = pow(Enviroment, 2.2f);
+
+	float3 Irradiance = saturate(EnviromentCube.SampleLevel(LinearWrapSampler, _normal.xyz, 7.0f).xyz);
+	Irradiance = pow(Irradiance, 2.2f);
+
+	float2 envBRDF = BRDFLUT.SampleLevel(LinearClampSampler, float2(saturate(dot(_normal, viewDir)), clamp(_roughness, 0.05f, 0.95f)), 0.0f).xy;
+
+	float3 specResult = pow(specularGI, 1);
+	float3 diffResult = pow(diffuseGI, 1);
+
+	float3 FinalColor =
+		(_albedoColor.xyz *  diffResult * Kd) +
+		(specResult * (envFresnel * envBRDF.xxx + envBRDF.yyy)) +
+		(Light1 * (1.0f - _metallic));
+		
 	return FinalColor.xyz;
 }

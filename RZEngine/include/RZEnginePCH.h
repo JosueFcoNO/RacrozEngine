@@ -59,7 +59,6 @@
 #include "RZGraphicDebugger.h"
 
 #include "RZModelLoader.h"
-#include "RZFbxLoader.h"
 #include "RZAssimpLoader.h"
 
 #include "RZBaseWindowGUI.h"

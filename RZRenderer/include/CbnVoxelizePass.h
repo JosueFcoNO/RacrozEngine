@@ -17,7 +17,12 @@ namespace rczEngine
 		///Unbinds the render targets.
 		virtual void PostRenderPass();
 
+		Matrix4 VoxelizeViewMatrix;
+		Matrix4 VoxelizeProjMatrix;
+
 	private:
+		
+
 		WeakPtr<Scene> m_ActiveScene;
 		
 		RendererConfig config;

@@ -65,6 +65,8 @@ namespace rczEngine
 
 		void AddDepthStencyl(Gfx::DepthStencyl* depthStencyl);
 
+		int GetRenderTargetCount() { for (int i = 0; i < 8; i++) { if (m_RenderTargets[i] == nullptr) return i; }; };
+
 		StrPtr<Gfx::RenderTarget> GetRenderTarget(uint32 index = 0) { return m_RenderTargets[index]; };
 
 		bool UseDefaultRenderTarget = true;

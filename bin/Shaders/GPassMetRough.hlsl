@@ -86,15 +86,14 @@ struct VS_Input
 
 struct PS_Input
 {
-	float4 pos : SV_POSITION;
-	float2 tex0 : TEXCOORD0;
+	float4 pos : SV_Position;
+	float2 tex0 : TEXCOORD;
 	float3 normal : NORMAL;
 	float3x3 TBN : TEXCOORD1;
-	float3 wpos : POSITION1;
+	float3 wpos : WSPOSITION;
     float depth : TEXCOORD5;
 	float4 prevPos : TEXCOORD4;
 	float4 newPos  : TEXCOORD6;
-
 };
 
 struct PS_OUTPUT
@@ -178,8 +177,7 @@ PS_OUTPUT PS_Main(PS_Input frag) : SV_TARGET
 		g_Albedo * OverrideAlbedo;
 
 	output.Color.xyz = albedo.xyz;
-    output.Color.a = AOTexture.Sample(Sampler_, tex).x * AOStrength +
-		(1.0f - AOStrength);
+	output.Color.a = 1;//AOTexture.Sample(Sampler_, tex).x * AOStrength + (1.0f - AOStrength);
 
     ///Set the normals to the second output color
     float3 NormalFinal;
@@ -195,9 +193,10 @@ PS_OUTPUT PS_Main(PS_Input frag) : SV_TARGET
 	float metallic = MetallicTexture.Sample(Sampler_, tex).x * (1.0f - OverrideMetallicSpecular) +
 		g_Metallic * OverrideMetallicSpecular;
 
-    output.Normal = float4(Encode(NormalFinal), metallic, rough);
+	//output.Normal = float4(Encode(NormalFinal), metallic, rough);
+	output.Normal = float4(NormalFinal, rough);
 
-    output.Position = float4(frag.wpos, frag.depth);
+	output.Position = float4(frag.wpos, frag.depth);
 
     output.Emmisive.xyz = EMTexture.Sample(Sampler_, tex).xyz * (1.0f - OverriveEmmisive) +
 		g_Emmisive * OverriveEmmisive;
@@ -207,7 +206,7 @@ PS_OUTPUT PS_Main(PS_Input frag) : SV_TARGET
 	output.Velocity.xy = (a - b);
 	output.Velocity.zw = float2(0.0f, 1.0f);
 
-	output.Specular = float4(lerp(0.04f, albedo, metallic), 1.0f);
+	output.Specular = float4(lerp(0.04f, albedo, metallic), metallic);
 
 	return output;
 }

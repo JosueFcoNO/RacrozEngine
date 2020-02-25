@@ -13,5 +13,7 @@ namespace rczEngine
 
 		WeakPtr<RenderPipeline> m_LinkedRenderPipeline;
 
+		int m_CurrentPass = 0;
+		int m_CurrentRT = 0;
 	};
 }

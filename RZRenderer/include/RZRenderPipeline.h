@@ -25,6 +25,17 @@ namespace rczEngine
 
 		RZ_EXP const Vector<String>& GetPassesOrder() { return m_PassesOrder; };
 
+		RZ_EXP const StrPtr<Pass> GetPass(int index) 
+		{ 
+			if (m_PassesOrder[index] == "PostProcess")
+			{
+				return nullptr;
+			}
+			{
+				return m_Passes[m_PassesOrder[index]];
+			}
+		};
+
 		RZ_EXP StrPtr<Pass> CreatePass(const String& name, ePasses pass, eRenderingPipelines renderMode);
 
 	protected:

@@ -22,7 +22,32 @@ void rczEngine::PipelineWindow::Render()
 	imagePos.x *= 0.5f;
 	imagePos.y *= 0.5f;
 
+	imagePos.y += 40;
+
+	auto pass = m_LinkedRenderPipeline.lock()->GetPass(m_CurrentPass);
+
+	if (ImGui::Button("Next Pass"))
+	{
+		m_CurrentPass++;
+		m_CurrentRT = 0;
+	}
+	
+	ImGui::SameLine();
+
+	if (!pass) return;
+
+	int size = pass->GetRenderTargetCount();
+
+	if (ImGui::Button("Next RT"))
+	{
+		m_CurrentRT = (m_CurrentRT + 1) % size;
+	}
+
 	ImGui::SetCursorPos(imagePos);
-	ImGui::Image(m_LinkedRenderPipeline.lock()->GetFinalRenderTarget().lock()->GetTextureCore()->m_ShaderResource, windowSize);
+
+	auto getRT = pass->GetRenderTarget(m_CurrentRT);
+
+	ImGui::SetNextWindowBgAlpha(1);
+	ImGui::Image(getRT->GetTextureCore()->m_ShaderResource, windowSize);
 
 }

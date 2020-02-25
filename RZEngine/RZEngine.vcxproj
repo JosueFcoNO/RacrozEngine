@@ -132,7 +132,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;RZ_UTILITY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NVRHI_WITH_WRL;_DEBUG;_WINDOWS;_USRDLL;RZ_UTILITY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>RZEnginePCH.h</PrecompiledHeaderFile>
@@ -180,7 +180,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;RZ_UTILITY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NVRHI_WITH_WRL;NDEBUG;_WINDOWS;_USRDLL;RZ_UTILITY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>RZEnginePCH.h</PrecompiledHeaderFile>
@@ -223,7 +223,6 @@
     <ClInclude Include="include\RZEditorGUI.h" />
     <ClInclude Include="include\RZEngineFwdDcl.h" />
     <ClInclude Include="include\RZEnginePCH.h" />
-    <ClInclude Include="include\RZFbxLoader.h" />
     <ClInclude Include="include\RZGameManager.h" />
     <ClInclude Include="include\RZGeometryNode.h" />
     <ClInclude Include="include\RZGraphicDebugger.h" />
@@ -294,7 +293,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\RZFbxLoader.cpp" />
     <ClCompile Include="src\RZGameManager.cpp" />
     <ClCompile Include="src\RZGraphicDebugger.cpp" />
     <ClCompile Include="src\RZGraphicDebuggerCube.cpp" />

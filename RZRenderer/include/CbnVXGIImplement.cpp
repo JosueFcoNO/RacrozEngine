@@ -15,9 +15,39 @@ namespace rczEngine
 
 		g_bInitialized = true;
 
-		m_TargetDepth = m_RendererInterface->getHandleForTexture(Gfx::GfxCore::Pointer()->GetDefaultDepthStencyl()->GetTexture()->m_Texture);
-		m_TargetNormal = m_RendererInterface->getHandleForTexture(RacrozRenderer::Pointer()->m_Normals->GetTextureCore()->m_Texture);
-		return S_OK;
+		m_TargetDepth = g_pRendererInterface->getHandleForTexture(Gfx::GfxCore::Pointer()->GetDefaultDepthStencyl()->GetTexture()->m_Texture);
+		m_TargetNormal = g_pRendererInterface->getHandleForTexture(RacrozRenderer::Pointer()->m_Normals->GetTextureCore()->m_Texture);
+
+
+		int w, h;
+		Gfx::GfxCore::Pointer()->GetScreenSize(w, h);
+		rTarget = RacrozRenderer::Pointer()->CreateRenderTargetAndTexture_WidthHeight("Main", texture, 1, w, h);
+		m_Width = w;
+		m_Height = h;
+
+		auto racrozRenderer = RacrozRenderer::Pointer();
+		m_gfx = Gfx::GfxCore::Pointer();
+
+		SpecularResult = racrozRenderer->CreateRenderTargetAndTexture_WidthHeight("Specular Result", SpecularResultTex, 1, m_Width, m_Height, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
+		DiffuseResult = racrozRenderer->CreateRenderTargetAndTexture_WidthHeight("Diffuse Result", DiffuseResultTex, 1, m_Width, m_Height, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
+		SSAOResult = racrozRenderer->CreateRenderTargetAndTexture_WidthHeight("SSAO Result", SSAOResultTex, 1, m_Width, m_Height, Gfx::eFORMAT::FORMAT_R8_UNORM);
+
+		ResVault::Pointer()->InsertResource(SpecularResultTex);
+		ResVault::Pointer()->InsertResource(DiffuseResultTex);
+		ResVault::Pointer()->InsertResource(SSAOResultTex);
+
+		OldDepth = std::make_shared<Gfx::DepthStencyl>();
+
+		OldNormal = racrozRenderer->CreateRenderTargetAndTexture_WidthHeight("Prev Normal", OldNormalTex, 1, m_Width, m_Height, Gfx::FORMAT_R32G32B32A32_FLOAT);
+		m_gfx->CreateDepthStencyl(*OldDepth, m_Width, m_Height);
+
+		DebugResult = RacrozRenderer::Pointer()->CreateRenderTargetAndTexture_WidthHeight("-------------------------", DebugResultTex, 1, m_Width, m_Height, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
+		ResVault::Pointer()->InsertResource(DebugResultTex);
+
+		m_Albedo = g_pRendererInterface->getHandleForTexture(DebugResultTex->GetTextureCore()->m_Texture);
+
+
+		return S_OK;		
 	}
 
 	void VXGIImplement::DestroyVXGI()
@@ -41,6 +71,9 @@ namespace rczEngine
 		auto activeCamera = CameraManager::Pointer()->GetActiveCamera();
 		auto centerPoint = CalculateVoxelCenterPoint(activeCamera);
 
+		auto view = activeCamera.lock()->GetViewMatrix();
+		auto proj = activeCamera.lock()->GetProjMatrix();
+
 		VXGI::UpdateVoxelizationParameters params;
 		params.clipmapAnchor = VXGI::float3(centerPoint.m_elements);
 		params.finestVoxelSize = g_fVoxelSize;
@@ -61,11 +94,14 @@ namespace rczEngine
 			VXGI::VoxelizationViewParameters viewParams;
 			g_pGI->getVoxelizationViewParameters(viewParams);
 			VXGI::float4x4 voxelizationMatrix = viewParams.viewMatrix * viewParams.projectionMatrix;
+		
+			memcpy(&pass.VoxelizeViewMatrix, &viewParams.viewMatrix, sizeof(Matrix4));
+			memcpy(&pass.VoxelizeProjMatrix, &viewParams.projectionMatrix, sizeof(Matrix4));
 
 			const uint32_t maxRegions = 128;
 			uint32_t numRegions = 0;
 			VXGI::Box3f regions[maxRegions];
-
+		
 			if (VXGI_SUCCEEDED(g_pGI->getInvalidatedRegions(regions, maxRegions, numRegions)))
 			{
 				DrawSceneForVoxelization();
@@ -91,7 +127,7 @@ namespace rczEngine
 
 	void rczEngine::VXGIImplement::DrawSceneForVoxelization()
 	{
-		m_RendererInterface->beginRenderingPass();
+		g_pRendererInterface->beginRenderingPass();
 
 		g_pGI->beginVoxelizationDrawCallGroup();
 
@@ -104,10 +140,16 @@ namespace rczEngine
 		if (VXGI_FAILED(g_pGI->getVoxelizationState(materialInfo, true, state)))
 			__debugbreak();
 
+		state.renderState.rasterState.frontCounterClockwise = false;
+		state.renderState.clearDepthTarget = false;
+		state.renderState.clearColorTarget = false;
+
+		g_pRendererInterface->clearState();
+		g_pRendererInterface->applyState(state);
+		
 		pass.PreRenderPass();
 		pass.RenderPass();
-		pass.PostRenderPass();
-
+		
 		///Iterate through all meshes, for each mesh:
 			///Maybe builds drawcalls?
 			///Check bounds to see if it is contained.
@@ -120,10 +162,18 @@ namespace rczEngine
 			///Bind diffuse texture to PS
 			///Add draw call for this mesh.
 			///Draw all the real drawcalls.
+		
+		g_pRendererInterface->clearState();
 
 		g_pGI->endVoxelizationDrawCallGroup();
 
-		m_RendererInterface->endRenderingPass();
+		g_pRendererInterface->endRenderingPass();
+
+
+		m_gfx->SetDefaultRenderTarget();
+		m_gfx->SetViewPortDefault();
+		m_gfx->SetBlendStateDefault();
+		//m_gfx->SetDefaulDepthStencylState();
 	}
 
 	Vector3 rczEngine::VXGIImplement::CalculateVoxelCenterPoint(WeakPtr<CameraCmp> activeCamera)
@@ -134,18 +184,28 @@ namespace rczEngine
 
 	void rczEngine::VXGIImplement::ComputeIndirectChannels()
 	{
+		m_gfx->UnbindPSShaderResource(8);
+		m_gfx->UnbindPSShaderResource(9);
+
 		auto activeCamera = CameraManager::Pointer()->GetActiveCamera();
 
 		VXGI::IBasicViewTracer::InputBuffers inputBuffers;
 		inputBuffers.gbufferViewport = NVRHI::Viewport(float(m_Width), float(m_Height));
 		inputBuffers.gbufferDepth = m_TargetDepth;
 		inputBuffers.gbufferNormal = m_TargetNormal;
+
+		int32 w, h;
+		Gfx::GfxCore::Pointer()->GetScreenSize(w, h);
+
+		inputBuffers.gbufferViewport = NVRHI::Viewport(float(w), float(h));
+
 		memcpy(&inputBuffers.viewMatrix, &activeCamera.lock()->GetViewMatrix(), sizeof(Matrix4));
 		memcpy(&inputBuffers.projMatrix, &activeCamera.lock()->GetProjMatrix(), sizeof(Matrix4));
 
 		NVRHI::TextureHandle indirectDiffuse = NULL;
 		NVRHI::TextureHandle indirectSpecular = NULL;
 		NVRHI::TextureHandle indirectConfidence = NULL;
+		NVRHI::TextureHandle ssao = NULL;
 
 		g_pGITracer->beginFrame();
 
@@ -156,6 +216,12 @@ namespace rczEngine
 		diffuseParams.quality = g_fQuality;
 		diffuseParams.directionalSamplingRate = g_fSamplingRate;
 		diffuseParams.irradianceScale = g_fDiffuseScale;
+
+		///AO
+		diffuseParams.ambientRange = g_fVxaoRange;
+		diffuseParams.interpolationWeightThreshold = 0.1f;
+		diffuseParams.ambientScale = g_fVxaoScale;
+		
 		specularParams.irradianceScale = g_fSpecularScale;
 		specularParams.filter = g_bTemporalFiltering ? VXGI::SpecularTracingParameters::FILTER_TEMPORAL : VXGI::SpecularTracingParameters::FILTER_SIMPLE;
 		specularParams.enableTemporalJitter = g_bTemporalFiltering;
@@ -163,51 +229,84 @@ namespace rczEngine
 
 		if (g_bEnableGI)
 		{
-			if (g_fDiffuseScale > 0)
-				g_pGITracer->computeDiffuseChannelBasic(diffuseParams, inputBuffers, g_InputBuffersPrevValid ? &g_InputBuffersPrev : nullptr, indirectDiffuse, indirectConfidence);
-
-			if (g_fSpecularScale > 0)
-				g_pGITracer->computeSpecularChannelBasic(specularParams, inputBuffers, g_InputBuffersPrevValid ? &g_InputBuffersPrev : nullptr, indirectSpecular);
+			g_pGITracer->computeDiffuseChannelBasic(diffuseParams, inputBuffers, g_InputBuffersPrevValid ? &g_InputBuffersPrev : nullptr, indirectDiffuse, indirectConfidence);
+			g_pGITracer->computeSpecularChannelBasic(specularParams, inputBuffers, g_InputBuffersPrevValid ? &g_InputBuffersPrev : nullptr, indirectSpecular);
 		}
 
+		///SSAO
+		VXGI::SsaoParamaters ssaoParams;
+		ssaoParams.radiusWorld = g_ssaoRadius;
+
+		g_pGITracer->computeSsaoChannelBasic(ssaoParams, inputBuffers, ssao);
+
 		g_InputBuffersPrev = inputBuffers;
-		g_InputBuffersPrevValid = false;
+		g_InputBuffersPrevValid = true;
+
+		auto resource = g_pRendererInterface->getResourceForTexture(indirectSpecular);
+		Gfx::GfxCore::Pointer()->GetDeviceContext()->CopyResource(SpecularResultTex->m_TextureCore.m_Texture, resource);
+		
+		auto resource2 = g_pRendererInterface->getResourceForTexture(indirectDiffuse);
+		Gfx::GfxCore::Pointer()->GetDeviceContext()->CopyResource(DiffuseResultTex->m_TextureCore.m_Texture, resource2);
+
+		auto resourceSSAO = g_pRendererInterface->getResourceForTexture(ssao);
+		Gfx::GfxCore::Pointer()->GetDeviceContext()->CopyResource(SSAOResultTex->m_TextureCore.m_Texture, resourceSSAO);
+
+		auto resourceDepth = g_pRendererInterface->getResourceForTexture(m_TargetDepth);
+		Gfx::GfxCore::Pointer()->GetDeviceContext()->CopyResource(OldDepth->GetTexture()->m_Texture, resourceDepth);
+
+		auto resourceNormal = g_pRendererInterface->getResourceForTexture(m_TargetNormal);
+		Gfx::GfxCore::Pointer()->GetDeviceContext()->CopyResource(OldNormal->GetTextureCore()->m_Texture, resourceNormal);
+
+		g_InputBuffersPrev.gbufferNormal = g_pRendererInterface->getHandleForTexture(OldNormal->GetTextureCore()->m_Texture);
+		g_InputBuffersPrev.gbufferDepth = g_pRendererInterface->getHandleForTexture(OldDepth->GetTexture()->m_Texture);
+
+		g_pRendererInterface->clearState();
+
+		m_gfx->SetBlendStateDefault();
+		m_gfx->SetDefaulDepthStencylState();
+
 	};
 
 	void rczEngine::VXGIImplement::RenderDebugChannels()
 	{
-		//auto activeCamera = CameraManager::Pointer()->GetActiveCamera();
-		//
-		//VXGI::IBasicViewTracer::InputBuffers inputBuffers;
-		//inputBuffers.gbufferViewport = NVRHI::Viewport(float(m_Width), float(m_Height));
-		//inputBuffers.gbufferDepth = m_TargetDepth;
-		//inputBuffers.gbufferNormal = m_TargetNormal;
-		//memcpy(&inputBuffers.viewMatrix, &activeCamera.lock()->GetViewMatrix(), sizeof(Matrix4));
-		//memcpy(&inputBuffers.projMatrix, &activeCamera.lock()->GetProjMatrix(), sizeof(Matrix4));
+		auto activeCamera = CameraManager::Pointer()->GetActiveCamera();
 
-		// Voxel texture visualization is rendered over the albedo channel, no GI
-		///Get my albedo render target.
+		VXGI::IBasicViewTracer::InputBuffers inputBuffers;
+		inputBuffers.gbufferDepth = m_TargetDepth;
+		inputBuffers.gbufferNormal = m_TargetNormal;
 
-		//VXGI::DebugRenderParameters params;
-		//if (g_RenderingMode == RenderingMode::OPACITY_VOXELS)
-		//	params.debugMode = VXGI::DebugRenderMode::OPACITY_TEXTURE;
-		//else if (g_RenderingMode == RenderingMode::EMITTANCE_VOXELS)
-		//	params.debugMode = VXGI::DebugRenderMode::EMITTANCE_TEXTURE;
-		//else
-		//	params.debugMode = VXGI::DebugRenderMode::INDIRECT_IRRADIANCE_TEXTURE;
-		//
-		//params.viewMatrix = *(VXGI::float4x4*)&viewMatrix;
-		//params.projMatrix = *(VXGI::float4x4*)&projMatrix;
-		//params.viewport = inputBuffers.gbufferViewport;
-		//params.destinationTexture = gbufferAlbedo;
-		//params.destinationDepth = inputBuffers.gbufferDepth;
-		//params.level = -1;
-		//params.blendState.blendEnable[0] = true;
-		//params.blendState.srcBlend[0] = NVRHI::BlendState::BLEND_SRC_ALPHA;
-		//params.blendState.destBlend[0] = NVRHI::BlendState::BLEND_INV_SRC_ALPHA;
-		//g_pGI->renderDebug(params);				
-		//bool convertToLdr = g_RenderingMode != RenderingMode::OPACITY_VOXELS;
-		//g_pSceneRenderer->Blit(gbufferAlbedo, mainRenderTarget, convertToLdr);
+		inputBuffers.preViewTranslation = VXGI::float3(activeCamera.lock()->GetPosition().m_elements);
+
+		int32 w, h;
+		Gfx::GfxCore::Pointer()->GetScreenSize(w, h);
+
+		inputBuffers.gbufferViewport = NVRHI::Viewport(float(w), float(h));
+		auto view = activeCamera.lock()->GetViewMatrix();
+		auto proj = activeCamera.lock()->GetProjMatrix();
+
+		memcpy(&inputBuffers.viewMatrix, &view, sizeof(Matrix4));
+		memcpy(&inputBuffers.projMatrix, &proj, sizeof(Matrix4));
+
+		VXGI::DebugRenderParameters params;
+		if (g_RenderingMode == RenderingMode::OPACITY_VOXELS)
+			params.debugMode = VXGI::DebugRenderMode::OPACITY_TEXTURE;
+		else if (g_RenderingMode == RenderingMode::EMITTANCE_VOXELS)
+			params.debugMode = VXGI::DebugRenderMode::EMITTANCE_TEXTURE;
+		else
+			params.debugMode = VXGI::DebugRenderMode::INDIRECT_IRRADIANCE_TEXTURE;
+		
+		params.viewMatrix = *(VXGI::float4x4*)&view;
+		params.projMatrix = *(VXGI::float4x4*)&proj;
+		params.viewport = inputBuffers.gbufferViewport;
+		params.destinationTexture = m_Albedo;
+		params.level = -1;
+		params.blendState.blendEnable[0] = false;
+		params.blendState.srcBlend[0] = NVRHI::BlendState::BLEND_SRC_ALPHA;
+		params.blendState.destBlend[0] = NVRHI::BlendState::BLEND_INV_SRC_ALPHA;
+		g_pGI->renderDebug(params);				
+		bool convertToLdr = g_RenderingMode != RenderingMode::OPACITY_VOXELS;
+
+		Gfx::GfxCore::Pointer()->SetBlendStateDefault();
 	}
 
 	HRESULT rczEngine::VXGIImplement::CreateVXGIObject()
@@ -236,6 +335,7 @@ namespace rczEngine
 		{
 			Logger::Pointer()->Log("Failed to create shader compiler.");
 			return E_FAIL;
+
 		}
 
 		if (VXGI_FAILED(CreateVoxelizationGS(g_pGICompiler, g_pGI)))
@@ -244,8 +344,8 @@ namespace rczEngine
 		if (VXGI_FAILED(CreateVoxelizationPS(g_pGICompiler, g_pGI)))
 			return E_FAIL;
 
-		if (VXGI_FAILED(CreateTransparentGeometryPS(g_pGICompiler, g_pGI)))
-			return E_FAIL;
+		//if (VXGI_FAILED(CreateTransparentGeometryPS(g_pGICompiler, g_pGI)))
+		//	return E_FAIL;
 
 		if (VXGI_FAILED(SetVoxelizationParameters()))
 		{
@@ -266,10 +366,14 @@ namespace rczEngine
 
 	HRESULT rczEngine::VXGIImplement::CreateVoxelizationGS(VXGI::IShaderCompiler * pCompiler, VXGI::IGlobalIllumination * pGI)
 	{
+		NVRHI::ShaderRef m_pDefaultVS;
+
 		auto blobVertex = RacrozRenderer::Pointer()->m_DefaultVertexShader.m_ShaderBlob;
 
-		VXGI::IBlob* blob = nullptr;
+		m_pDefaultVS = g_pRendererInterface->createShader(NVRHI::ShaderDesc(NVRHI::ShaderType::SHADER_VERTEX), blobVertex->GetBufferPointer(), blobVertex->GetBufferSize());
 
+		VXGI::IBlob* blob = nullptr;
+		
 		if (VXGI_FAILED(pCompiler->compileVoxelizationGeometryShaderFromVS(&blob, blobVertex->GetBufferPointer(), blobVertex->GetBufferSize())))
 			return E_FAIL;
 
@@ -292,21 +396,43 @@ namespace rczEngine
 		f.close();
 
 		String data = buffer.str();
-		uint32_t size = sizeof(data.size());
+		uint32_t size = data.length();
 
 		// Enumerate resource slots (constant buffers, textures, samplers, potentially UAVs)
 		// that are used by the user part of the voxelization pixel shader
 		VXGI::ShaderResources resources;
-		resources.constantBufferCount = 1;
-		resources.constantBufferSlots[0] = 0;
-		resources.textureCount = 2;
-		resources.textureSlots[0] = 0;
-		resources.textureSlots[1] = 1;
-		resources.samplerCount = 2;
-		resources.samplerSlots[0] = 0;
-		resources.samplerSlots[1] = 1;
+		resources.unorderedAccessViewCount = 1;
+		resources.unorderedAccessViewSlots[0] = 0;
+
+		resources.constantBufferCount = 7;
+		resources.constantBufferSlots[0] = 0; ///Sometimes
+		resources.constantBufferSlots[1] = 1; ///OnResize
+		resources.constantBufferSlots[2] = 2; ///EveryFrame
+		resources.constantBufferSlots[3] = 3; ///Lights
+		resources.constantBufferSlots[4] = 4; ///Material
+		resources.constantBufferSlots[5] = 5; ///Camera
+		resources.constantBufferSlots[6] = 6; ///Renderer Config
+
+		resources.textureCount = 8;
+		resources.textureSlots[0] = 0; //Albedo
+		resources.textureSlots[1] = 1; //Normal
+		resources.textureSlots[2] = 2; //Metallic
+		resources.textureSlots[3] = 3; //Roughness
+		resources.textureSlots[4] = 4; //AO
+		resources.textureSlots[5] = 12; //Environment
+		resources.textureSlots[6] = 6; //Opacity
+		resources.textureSlots[7] = 7; //LUT
+
+		resources.samplerCount = 4;
+		resources.samplerSlots[0] = 0; //Linear Wrap
+		resources.samplerSlots[1] = 1; //Aniso Wrap
+		resources.samplerSlots[2] = 2; //Linear Clamp
+		resources.samplerSlots[3] = 3; //Aniso Clamp
 
 		VXGI::IBlob* blob = nullptr;
+
+		//if (VXGI_FAILED(pCompiler->compileVoxelizationDefaultPixelShader(&blob)))
+		//	return E_FAIL;
 
 		if (VXGI_FAILED(pCompiler->compileVoxelizationPixelShader(&blob, (char*)data.c_str(), size, "PS_Main", resources)))
 			return E_FAIL;
@@ -322,7 +448,7 @@ namespace rczEngine
 	HRESULT rczEngine::VXGIImplement::CreateTransparentGeometryPS(VXGI::IShaderCompiler * pCompiler, VXGI::IGlobalIllumination * pGI)
 	{
 		FileStream f;
-		f.open("./Shaders/VXGI/TransparentGeometryPS.hlsl");
+		f.open("./Shaders/PBR_Voxelize.hlsl");
 
 		std::stringstream buffer;
 		buffer << f.rdbuf();
@@ -330,17 +456,42 @@ namespace rczEngine
 		f.close();
 
 		String data = buffer.str();
-		uint32_t size = sizeof(data.size());
+		uint32_t size = data.length();
 
 		// Enumerate resource slots (constant buffers, textures, samplers, potentially UAVs)
 		// that are used by the user part of the voxelization pixel shader
 		VXGI::ShaderResources resources;
-		resources.constantBufferCount = 1;
-		resources.constantBufferSlots[0] = 0;
+		resources.unorderedAccessViewCount = 1;
+		resources.unorderedAccessViewSlots[0] = 0;
+
+		resources.constantBufferCount = 7;
+		resources.constantBufferSlots[0] = 0; ///Sometimes
+		resources.constantBufferSlots[1] = 1; ///OnResize
+		resources.constantBufferSlots[2] = 2; ///EveryFrame
+		resources.constantBufferSlots[3] = 3; ///Lights
+		resources.constantBufferSlots[4] = 4; ///Material
+		resources.constantBufferSlots[5] = 5; ///Camera
+		resources.constantBufferSlots[6] = 6; ///Renderer Config
+
+		resources.textureCount = 8;
+		resources.textureSlots[0] = 0; //Albedo
+		resources.textureSlots[1] = 1; //Normal
+		resources.textureSlots[2] = 2; //Metallic
+		resources.textureSlots[3] = 3; //Roughness
+		resources.textureSlots[4] = 4; //AO
+		resources.textureSlots[5] = 12; //Environment
+		resources.textureSlots[6] = 6; //Opacity
+		resources.textureSlots[7] = 7; //LUT
+
+		resources.samplerCount = 4;
+		resources.samplerSlots[0] = 0; //Linear Wrap
+		resources.samplerSlots[1] = 1; //Aniso Wrap
+		resources.samplerSlots[2] = 2; //Linear Clamp
+		resources.samplerSlots[3] = 3; //Aniso Clamp
 
 		VXGI::IBlob* blob = nullptr;
 
-		if (VXGI_FAILED(pCompiler->compileConeTracingPixelShader(&blob, (char*)data.c_str(), size, "main", resources)))
+		if (VXGI_FAILED(pCompiler->compileConeTracingPixelShader(&blob, (char*)data.c_str(), size, "PS_Main", resources)))
 			return E_FAIL;
 
 		if (VXGI_FAILED(pGI->loadUserDefinedShaderSet(&m_pTransparentGeometryPS, blob->getData(), blob->getSize())))

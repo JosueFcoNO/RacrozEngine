@@ -43,6 +43,7 @@ namespace rczEngine
 			GetBackBufferInterface();
 			SetRenderTargetViewAndDepthStencil();
 			SetViewPortDefault();
+			CreateDefaulDepthStencylState();
 		}
 
 		void GfxCore::Destroy()
@@ -53,7 +54,6 @@ namespace rczEngine
 			//Log->CloseLog("Gfx");
 #endif
 
-			if (m_DepthStencil) m_DepthStencil->Release();
 			if (m_BackBuffer) m_BackBuffer->Release();
 			if (m_SwapChain) m_SwapChain->Release();
 			if (m_DeviceContext) m_DeviceContext->Release();
@@ -140,30 +140,10 @@ namespace rczEngine
 			///Create the RenderTargetView from the backbufffer
 			m_Device->CreateRenderTargetView(m_BackBuffer, nullptr, &m_BaseRenderTargetView);
 
-			///Copy the descriptor from the back buffer
-			D3D11_TEXTURE2D_DESC DepthStencilDesc;
-			m_BackBuffer->GetDesc(&DepthStencilDesc);
-			///Make it a Depth Stencil
-			DepthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-			///Change the format
-			DepthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-			///Create the resource and save it in m_DepthStencil
-			m_Device->CreateTexture2D(&DepthStencilDesc, nullptr, &m_DepthStencil);
-
-			D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-			ZeroMemory(&descDSV, sizeof(descDSV));
-			descDSV.Format = DepthStencilDesc.Format;
-			descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-
-			///Create the Depth Stencil View and save it int m_DepthStencilView
-			m_Device->CreateDepthStencilView(m_DepthStencil, &descDSV, &m_DepthStencilView);
-			
-			m_DepthStencyl.GetTexture()->m_Texture = m_DepthStencil;
-			m_DepthStencyl.GetDepthStencylView()->m_DepthStencylView = m_DepthStencilView;
+			CreateDepthStencyl(m_DepthStencyl);
 
 			///Set the render target and the depth stecil
-			m_DeviceContext->OMSetRenderTargets(1, &m_BaseRenderTargetView, m_DepthStencilView);
+			m_DeviceContext->OMSetRenderTargets(1, &m_BaseRenderTargetView, m_DepthStencyl.GetDepthStencylView()->m_DepthStencylView);
 
 			return true;
 		}
@@ -224,15 +204,12 @@ namespace rczEngine
 				m_ScreenHeight = Height;
 				m_ScreenWidth = Width;
 
-				if (m_DepthStencil) { m_DepthStencil->Release(); }
-				if (m_DepthStencilView) { m_DepthStencilView->Release(); }
 				if (m_RenderTargetView[0]) { m_RenderTargetView[0]->Release(); }
 
 				m_DeviceContext->ClearState();
 				m_SwapChain->ResizeBuffers(2, Width, Height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 				///Get the BackBuffer from the swapchain and into the Texture
 				GetBackBufferInterface();
-				//m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_BackBuffer);
 				SetRenderTargetViewAndDepthStencil();
 				SetViewPortDefault();
 
@@ -285,20 +262,66 @@ namespace rczEngine
 			TexDesc.MiscFlags = 0;
 			TexDesc.SampleDesc.Count = sample_count;
 			TexDesc.SampleDesc.Quality = sample_quality;
-			TexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-			TexDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+			TexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+			TexDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+
+			D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+			ZeroMemory(&descDSV, sizeof(descDSV));
+			descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+			descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+
+			D3D11_SHADER_RESOURCE_VIEW_DESC  descSR;
+			ZeroMemory(&descSR, sizeof(descSR));
+			descSR.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+			descSR.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+			descSR.Texture2D.MostDetailedMip = 0;
+			descSR.Texture2D.MipLevels = -1;
 
 			///Create the resource and save it in m_DepthStencil
 			m_Device->CreateTexture2D(&TexDesc, nullptr, &out_depthStencyl.GetTexture()->m_Texture);
 
-			D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-			ZeroMemory(&descDSV, sizeof(descDSV));
-			descDSV.Format = TexDesc.Format;
-			descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-
 			///Create the Depth Stencil View and save it int m_DepthStencilView
 			m_Device->CreateDepthStencilView(out_depthStencyl.GetTexture()->m_Texture, &descDSV, &out_depthStencyl.GetDepthStencylView()->m_DepthStencylView);
+			
+			///Create a Shader Resource View to bind this Depth Texture to a shader stage.
+			m_Device->CreateShaderResourceView(out_depthStencyl.GetTexture()->m_Texture, &descSR, &out_depthStencyl.GetShaderResouceView()->m_ShaderResource);
+
 			return true;
+		}
+
+		void GfxCore::CreateDefaulDepthStencylState()
+		{
+			D3D11_DEPTH_STENCIL_DESC dsDesc;
+
+			// Depth test parameters
+			dsDesc.DepthEnable = true;
+			dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+			dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+			// Stencil test parameters
+			dsDesc.StencilEnable = true;
+			dsDesc.StencilReadMask = 0xFF;
+			dsDesc.StencilWriteMask = 0xFF;
+
+			// Stencil operations if pixel is front-facing
+			dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+			dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+			dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+			dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+			// Stencil operations if pixel is back-facing
+			dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+			dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+			dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+			dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+			// Create depth stencil state
+			m_Device->CreateDepthStencilState(&dsDesc, &m_DepthStencylState);
+		}
+
+		void GfxCore::SetDefaulDepthStencylState()
+		{
+			m_DeviceContext->OMSetDepthStencilState(m_DepthStencylState, 0);
 		}
 
 		void GfxCore::SetPrimitiveTopology(eTOPOLOGY usedTopology)
@@ -407,7 +430,7 @@ namespace rczEngine
 
 			///Set the render target and the depth stecil
 			if (UseDepthStencyl)
-				m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, m_DepthStencilView);
+				m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, m_DepthStencyl.GetDepthStencylView()->m_DepthStencylView);
 			//else if (depth != nullptr && UseDepthStencyl)
 				//m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, depth->GetDepthStencylView()->m_DepthStencylView);
 			else
@@ -418,7 +441,7 @@ namespace rczEngine
 
 		bool GfxCore::SetDefaultRenderTarget()
 		{
-			m_DeviceContext->OMSetRenderTargets(1, &m_BaseRenderTargetView, NULL);
+			m_DeviceContext->OMSetRenderTargets(1, &m_BaseRenderTargetView, m_DepthStencyl.GetDepthStencylView()->m_DepthStencylView);
 
 			return true;
 		}
@@ -502,7 +525,7 @@ namespace rczEngine
 
 		void GfxCore::ClearDepthTargetView()
 		{
-			m_DeviceContext->ClearDepthStencilView(m_DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 255);
+			m_DeviceContext->ClearDepthStencilView(m_DepthStencyl.GetDepthStencylView()->m_DepthStencylView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 255);
 		}
 
 		DepthStencyl* GfxCore::GetDefaultDepthStencyl()
@@ -1278,6 +1301,49 @@ namespace rczEngine
 			return (S_OK(result));
 		}
 
+		bool GfxCore::CreateEmptyTexture(TextureCore2D & out_Texture, int width, int height, eBIND_FLAGS bind_flags, eFORMAT format, eFORMAT SRVformat, int MipLevels, eBUFFER_USAGE usage, eCPU_ACCESS_FLAGS cpu_access_flags)
+		{
+			DXGI_SAMPLE_DESC SamplerDesc;
+			ZeroMemory(&SamplerDesc, sizeof(SamplerDesc));
+			SamplerDesc.Count = 1;
+			SamplerDesc.Quality = 0;
+
+			D3D11_TEXTURE2D_DESC Descriptor;
+			ZeroMemory(&Descriptor, sizeof(Descriptor));
+			Descriptor.ArraySize = 1;
+			Descriptor.BindFlags = bind_flags | D3D11_BIND_RENDER_TARGET;
+			Descriptor.CPUAccessFlags = cpu_access_flags;
+			Descriptor.Format = (DXGI_FORMAT)format;
+			Descriptor.Height = height;
+			Descriptor.Width = width;
+			Descriptor.MipLevels = MipLevels;
+			Descriptor.Usage = (D3D11_USAGE)usage;
+			Descriptor.SampleDesc = SamplerDesc;
+			Descriptor.MiscFlags = (usage != USAGE_STAGING) ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0;
+
+			out_Texture.m_TextureBytePitch = 0;
+			out_Texture.m_TextureBytes = 1*height;
+			out_Texture.m_Format = format;
+			out_Texture.m_Height = height;
+			out_Texture.m_Width = width;
+			out_Texture.m_BindFlags = (Gfx::eBIND_FLAGS)Descriptor.BindFlags;
+			out_Texture.m_AccessFlags = cpu_access_flags;
+
+			HRESULT result = m_Device->CreateTexture2D(&Descriptor, nullptr, &out_Texture.m_Texture);
+			D3D11_SHADER_RESOURCE_VIEW_DESC SRV;
+			ZeroMemory(&SRV, sizeof(SRV));
+			SRV.Format = (DXGI_FORMAT)SRVformat;
+			SRV.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+			SRV.Texture2D.MipLevels = MipLevels;
+
+			result = m_Device->CreateShaderResourceView(out_Texture.m_Texture, nullptr, &out_Texture.m_ShaderResource);
+
+			if (MipLevels != 1)
+				GenerateMipMaps(&out_Texture);
+
+			return (S_OK(result));
+		}
+
 		bool GfxCore::CreateTexture(void* memory, int32 pitch, int32 slice, TextureCore2D & out_Texture, int width, int height, eBIND_FLAGS bind_flags, eFORMAT format, int MipLevels, eBUFFER_USAGE usage, eCPU_ACCESS_FLAGS cpu_access_flags)
 		{
 			D3D11_SUBRESOURCE_DATA SubData;
@@ -1299,7 +1365,7 @@ namespace rczEngine
 			Descriptor.Format = (DXGI_FORMAT)format;
 			Descriptor.Height = height;
 			Descriptor.Width = width;
-			Descriptor.MipLevels = 0;
+			Descriptor.MipLevels = MipLevels;
 			Descriptor.Usage = (D3D11_USAGE)usage;
 			Descriptor.SampleDesc = SamplerDesc;
 			Descriptor.MiscFlags = (usage != USAGE_STAGING) ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0;
@@ -1322,20 +1388,23 @@ namespace rczEngine
 			box.front = 0;
 			box.back = 1;
 
-			m_DeviceContext->UpdateSubresource(
-				out_Texture.m_Texture,
-				0,
-				&box,
-				memory,
-				width * 4,
-				0
-			);
+			if (memory)
+			{
+				m_DeviceContext->UpdateSubresource(
+					out_Texture.m_Texture,
+					0,
+					&box,
+					memory,
+					width * 4,
+					0
+				);
+			}
 
 			D3D11_SHADER_RESOURCE_VIEW_DESC SRV;
 			ZeroMemory(&SRV, sizeof(SRV));
 			SRV.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 			SRV.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-			SRV.Texture2D.MipLevels = 0;
+			SRV.Texture2D.MipLevels = MipLevels;
 
 			result = m_Device->CreateShaderResourceView(out_Texture.m_Texture, nullptr, &out_Texture.m_ShaderResource);
 			GenerateMipMaps(&out_Texture);

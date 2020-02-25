@@ -66,5 +66,7 @@ namespace rczEngine
 
 		if (m_BlendState)
 			m_gfx->SetBlendStateDefault();
+
+		RacrozRenderer::Pointer()->m_VXGI.RenderChannels();
 	}
 };

@@ -47,7 +47,7 @@ namespace rczEngine
 
 			ImGui::DragFloat("FOV", &m_Fov, 1.0f, 10.0f, 180.0f);
 			ImGui::DragFloat("Aspect Ratio", &m_AspectRatio, 0.05f);
-			ImGui::DragFloat("Far Clip", &m_FarClip, 10.0f, 1.0f, 1000.0f);
+			ImGui::DragFloat("Far Clip", &m_FarClip, 10.0f, 1.0f, 10000.0f);
 			ImGui::DragFloat("Near Clip", &m_NearClip, 0.0005f, 0.0005f, 1000.0f);
 
 			m_CameraCore.SetFov(m_Fov);

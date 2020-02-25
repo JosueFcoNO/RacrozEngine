@@ -59,6 +59,8 @@ namespace rczEngine
 		///Inits the variables, render targets and shaders for a specific rendering mode. Can be changed mid game.
 		void CreatePipeline(const String& name, eRenderingPipelines renderingMode);
 
+		void PrepareGI(bool prepareScene = false);
+
 
 		///Renders the scene and Canvas
 		void Render(const String & name, StrPtr<Scene> sceneGraph, ImGUIEditor * editor);
@@ -119,6 +121,8 @@ namespace rczEngine
 
 		Map<String, StrPtr<RenderPipeline>> m_Pipelines;
 
+		void SetSamplerStates();
+
 	private:
 		///Private un-implemented Copy Constructor to prevent copying by accident.
 		RacrozRenderer(const RacrozRenderer&);
@@ -130,6 +134,9 @@ namespace rczEngine
 
 		void InitRasterizers();
 		void InitSamplerStates();
+
+		bool m_GIPrepared = false;
+
 
 		/////////////////////////////////////
 		///// Geometry Shaders
@@ -150,7 +157,8 @@ namespace rczEngine
 		Gfx::VertexShader m_TessVertexShader;
 	
 
-		StrPtr<Gfx::RenderTarget> m_Normals;
+		StrPtr<Texture2D> m_Normals;
+		StrPtr<Texture2D> m_Albedo;
 
 	private:
 		///Inits all geometry shaders for the models. These get auto bound on RenderObjects.

@@ -51,6 +51,9 @@
     <ClInclude Include="include\CbnResourceWindow.h">
       <Filter>Archivos de encabezado\UI\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="include\CbnVXGIWindow.h">
+      <Filter>Archivos de encabezado\UI\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZEditorPCH.cpp">
@@ -78,6 +81,9 @@
       <Filter>Archivos de código fuente\UI\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\CbnResourceWindow.cpp">
+      <Filter>Archivos de código fuente\UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnVXGIWindow.cpp">
       <Filter>Archivos de código fuente\UI\Windows</Filter>
     </ClCompile>
   </ItemGroup>

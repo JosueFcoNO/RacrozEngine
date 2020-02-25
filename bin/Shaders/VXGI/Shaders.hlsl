@@ -75,7 +75,7 @@ struct VS_Input
     float3 binormal : BINORMAL;
 };
 
-PS_Input DefaultVS(VS_Input input)
+PS_Input VS_Main(VS_Input input)
 {
     PS_Input output;
 

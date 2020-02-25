@@ -24,20 +24,24 @@ namespace rczEngine
 	void VoxelizePass::PreRenderPass()
 	{
 		LightManager::Pointer()->SetLightsBuffers();
+		CameraManager::Pointer()->OverrideAndSetCameraBuffer(m_gfx, VoxelizeViewMatrix, VoxelizeProjMatrix, 5, 5);
 
+		ResVault::Pointer()->GetResource<CubeMap>(ResVault::Pointer()->m_CubeMapDefault).lock()->SetThisTextureInPS(12, 1, m_gfx);
+		
 		UserDisney.UpdateConstantBuffer(&config, m_gfx);
 		UserDisney.SetBufferInPS(6, m_gfx);
 
-		m_gfx->ClearDepthTargetView();
+		//m_gfx->ClearDepthTargetView();
 
-		SetRenderTargetsInPipeline();
+		//SetRenderTargetsInPipeline();
 		SetTexturesInPipeline();
-		SetRasterizerState();
+		//SetRasterizerState();
 	}
 
 	void VoxelizePass::RenderPass()
 	{
-		RacrozRenderer::Pointer()->RenderObjs(true, eComponentID::CMP_MODEL_RENDERER, eMaterialType::AnyMaterial, eShadingType::PBR, eBlendType::Opaque, false, false, false, false);
+		RacrozRenderer::Pointer()->PrepareRender(SceneManager::Pointer()->GetActiveScene());
+		RacrozRenderer::Pointer()->RenderObjs(true, eComponentID::CMP_MODEL_RENDERER, eMaterialType::PBR_MetRough, eShadingType::PBR, eBlendType::Opaque, false, false, false, false);
 	}
 
 	void VoxelizePass::PostRenderPass()

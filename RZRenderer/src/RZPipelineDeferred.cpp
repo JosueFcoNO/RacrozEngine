@@ -4,7 +4,7 @@ namespace rczEngine
 {
 	void PipelineDeferred::InitRenderPipeline(const String & name, int32 width, int32 height, RacrozRenderer * renderer)
 	{
-		Gfx::GfxCore::Pointer()->CreateDepthStencyl(depth, width, height);
+		depth = Gfx::GfxCore::Pointer()->GetDefaultDepthStencyl();
 
 		m_Renderer = renderer;
 
@@ -15,9 +15,10 @@ namespace rczEngine
 		CreateRenderTarget("NormalsMR", width, height, Gfx::FORMAT_R32G32B32A32_FLOAT, 1);
 		CreateRenderTarget("Emmisive", width, height, Gfx::FORMAT_R8G8B8A8_UNORM, 1);
 		CreateRenderTarget("Velocity", width, height, Gfx::FORMAT_R32G32_FLOAT, 1);
-		CreateRenderTarget("Specular", width, height, Gfx::FORMAT_R8G8B8A8_UNORM, 1);
+		CreateRenderTarget("Specular", width, height, Gfx::FORMAT_R16G16B16A16_FLOAT, 1);
 
-		RacrozRenderer::Pointer()->m_Normals = m_RTs["NormalsMR"];
+		RacrozRenderer::Pointer()->m_Normals = m_Textures["NormalsMR"];
+		RacrozRenderer::Pointer()->m_Albedo = m_Textures["ColorAO"];
 
 		CreateRenderTarget("ColorCorrection", width, height, Gfx::FORMAT_R8G8B8A8_UNORM, 1);
 
@@ -31,8 +32,6 @@ namespace rczEngine
 		CreateRenderTarget("AvgLuminance", width, height, Gfx::FORMAT_R16G16B16A16_FLOAT, 1);
 		CreateRenderTarget("HDRBloom", width, height, Gfx::FORMAT_R16G16B16A16_FLOAT, 1);
 		
-		CreateRenderTarget("SSAO", width, height, Gfx::FORMAT_R32_FLOAT, 2);
-
 		/////////////////
 		///Skybox PASS///
 		/////////////////
@@ -41,7 +40,7 @@ namespace rczEngine
 
 		passSkyBox->AddRenderTarget(m_RTs["ColorAO"], 0);
 		passSkyBox->AddRasterizerState(&m_Renderer->m_RSSolidCullNone);
-		passSkyBox->AddDepthStencyl(&depth);
+		passSkyBox->AddDepthStencyl(depth);
 
 		m_PassesOrder.push_back(name + "SkyBox");
 
@@ -58,27 +57,13 @@ namespace rczEngine
 		passGeometry->AddRenderTarget(m_RTs["Emmisive"], 3);
 		passGeometry->AddRenderTarget(m_RTs["Velocity"], 4);
 		passGeometry->AddRenderTarget(m_RTs["Specular"], 5);
-		passGeometry->AddDepthStencyl(&depth);
+		passGeometry->AddDepthStencyl(depth);
 
 		m_PassesOrder.push_back(name + "Geometry");
 
 		/////Start the post processing.
 
 		m_PassesOrder.push_back("PostProcess");
-
-		////////////////////////
-		/////SS Ambient Occlusion PASS
-		////////////////////////
-		
-		///Create the geometry pass
-		auto passSSAO = CreatePass(name + "SSAO", ePasses::SSAO, eRenderingPipelines::Deferred);
-		
-		passSSAO->AddRenderTarget(m_RTs["SSAO"], 0);
-		passSSAO->AddDepthStencyl(&depth);
-		
-		passSSAO->AddTexture2D(m_Textures["Position"], 0);
-		passSSAO->AddTexture2D(m_Textures["NormalsMR"], 1);
-		m_PassesOrder.push_back(name + "SSAO");
 
 		/////////
 		///PBR///
@@ -88,13 +73,12 @@ namespace rczEngine
 		auto passPBR = CreatePass(name + "PBR", ePasses::PBR, eRenderingPipelines::Deferred);
 
 		passPBR->AddRenderTarget(m_RTs["PBR"], 0);
-		passPBR->AddDepthStencyl(&depth);
+		passPBR->AddDepthStencyl(depth);
 
 		passPBR->AddTexture2D(m_Textures["ColorAO"], 0);
 		passPBR->AddTexture2D(m_Textures["NormalsMR"], 1);
 		passPBR->AddTexture2D(m_Textures["Position"], 2);
 		passPBR->AddTexture2D(m_Textures["Specular"], 3);
-		passPBR->AddTexture2D(m_Textures["SSAO"], 5); //Final SSAO Blur
 		//passPBRLight.AddTexture2D(ShadowFinalTex, 6);
 
 		m_PassesOrder.push_back(name + "PBR");
@@ -109,7 +93,7 @@ namespace rczEngine
 		passTransparent->AddRenderTarget(m_RTs["PBR"], 0);
 		passTransparent->AddRenderTarget(m_RTs["Position"], 1);
 		passTransparent->AddRenderTarget(m_RTs["NormalsMR"], 2);
-		passTransparent->AddDepthStencyl(&depth);
+		passTransparent->AddDepthStencyl(depth);
 
 		m_PassesOrder.push_back(name + "Transparent");
 
@@ -121,7 +105,7 @@ namespace rczEngine
 		auto passDebugger = CreatePass(name + "Debugger", ePasses::GraphicDebugger, eRenderingPipelines::Deferred);
 		
 		passDebugger->AddRenderTarget(m_RTs["PBR"], 0);
-		passDebugger->AddDepthStencyl(&depth);
+		passDebugger->AddDepthStencyl(depth);
 		
 		m_PassesOrder.push_back(name + "Debugger");
 
@@ -134,7 +118,7 @@ namespace rczEngine
 		passPlanet->AddRenderTarget(m_RTs["PBR"], 0);
 		passPlanet->AddRenderTarget(m_RTs["Position"], 1);
 		passPlanet->AddRenderTarget(m_RTs["NormalsMR"], 2);
-		//passPlanet->AddDepthStencyl(&depth);
+		//passPlanet->AddDepthStencyl(depth);
 		
 		m_PassesOrder.push_back(name + "Planet");
 
@@ -145,7 +129,7 @@ namespace rczEngine
 		auto passAtmos = CreatePass(name + "Atmos", ePasses::PlanetAtmosphere, eRenderingPipelines::Deferred);
 		
 		passAtmos->AddRenderTarget(m_RTs["PBR"], 0);
-		passAtmos->AddDepthStencyl(&depth);
+		passAtmos->AddDepthStencyl(depth);
 		
 		m_PassesOrder.push_back(name + "Atmos");
 		
@@ -159,7 +143,7 @@ namespace rczEngine
 		auto passMotionBlur = CreatePass(name + "MotionBlur", ePasses::MotionBlur, eRenderingPipelines::Deferred);
 		
 		passMotionBlur->AddRenderTarget(m_RTs["MotionBlur"], 0);
-		passMotionBlur->AddDepthStencyl(&depth);
+		passMotionBlur->AddDepthStencyl(depth);
 		
 		passMotionBlur->AddTexture2D(m_Textures["PBR"], 0);
 		passMotionBlur->AddTexture2D(m_Textures["Velocity"], 1);
@@ -177,7 +161,7 @@ namespace rczEngine
 		
 		passLuminance->AddRenderTarget(m_RTs["Luminance"], 0);
 		passLuminance->AddTexture2D(m_Textures["MotionBlur"], 0);
-		passLuminance->AddDepthStencyl(&depth);
+		passLuminance->AddDepthStencyl(depth);
 		
 		m_PassesOrder.push_back(name + "Luminance");
 
@@ -191,7 +175,7 @@ namespace rczEngine
 		auto passBright = CreatePass(name + "Bright", ePasses::Bright, eRenderingPipelines::Deferred);
 		
 		passBright->AddRenderTarget(m_RTs["Bright"], 0);
-		passBright->AddDepthStencyl(&depth);
+		passBright->AddDepthStencyl(depth);
 		
 		passBright->AddTexture2D(m_Textures["Luminance"], 0);
 		passBright->AddTexture2D(m_Textures["Emmisive"], 1);
@@ -209,7 +193,7 @@ namespace rczEngine
 		passBloom->AddRenderTarget(m_RTs["Bloom"], 0);
 		
 		passBloom->AddTexture2D(m_Textures["Bright"], 0);
-		passBloom->AddDepthStencyl(&depth);
+		passBloom->AddDepthStencyl(depth);
 		
 		passBloom->SetOriginalBloom(m_Textures["Bright"]);
 		passBloom->SetLastBloomResult(m_Textures["Bloom"]);
@@ -228,7 +212,7 @@ namespace rczEngine
 		auto passAvgLuminance = CreatePass(name + "AvgLuminance", ePasses::AverageLuminance, eRenderingPipelines::Deferred);
 		
 		passAvgLuminance->AddRenderTarget(m_RTs["AvgLuminance"], 0);
-		passAvgLuminance->AddDepthStencyl(&depth);
+		passAvgLuminance->AddDepthStencyl(depth);
 		
 		passAvgLuminance->AddTexture2D(m_Textures["Luminance"], 0);
 		
@@ -244,7 +228,7 @@ namespace rczEngine
 		auto passHDRBloom = CreatePass(name + "HDRBloom", ePasses::BloomApply, eRenderingPipelines::Deferred);
 		
 		passHDRBloom->AddRenderTarget(m_RTs["HDRBloom"], 0);
-		passHDRBloom->AddDepthStencyl(&depth);
+		passHDRBloom->AddDepthStencyl(depth);
 		
 		passHDRBloom->AddTexture2D(m_Textures["MotionBlur"], 0);
 		passHDRBloom->AddTexture2D(m_Textures["Bloom"], 1);
@@ -261,7 +245,7 @@ namespace rczEngine
 
 		passColorCorrection->AddRenderTarget(m_RTs["ColorCorrection"], 0);
 		passColorCorrection->AddTexture2D(m_Textures["HDRBloom"], 0);
-		passColorCorrection->AddDepthStencyl(&depth);
+		passColorCorrection->AddDepthStencyl(depth);
 
 		m_PassesOrder.push_back(name + "ColorCorrection");
 	}

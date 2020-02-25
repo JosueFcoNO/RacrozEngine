@@ -1,6 +1,8 @@
 #pragma once
 #include <GFSDK_NVRHI_D3D11.h>
-
+#include <nvapi.h>
+#include <GFSDK_VXGI.h>
+#include <GFSDK_NVRHI.h>
 
 #define API_STRING "D3D11"
 	
@@ -68,8 +70,51 @@ namespace rczEngine
 		void VoxelizeScene();
 
 		virtual void RenderChannels();
+		RenderingMode g_RenderingMode = RenderingMode::NORMAL;
+
+		StrPtr<Texture2D> SpecularResultTex;
+		StrPtr<Texture2D> DiffuseResultTex;
+		StrPtr<Texture2D> SSAOResultTex;
+
+		StrPtr<Gfx::RenderTarget> DiffuseResult;
+		StrPtr<Gfx::RenderTarget> SpecularResult;
+		StrPtr<Gfx::RenderTarget> SSAOResult;
+
+		StrPtr<Gfx::RenderTarget> OldNormal;
+		StrPtr<Texture2D> OldNormalTex;
+
+		StrPtr<Gfx::DepthStencyl> OldDepth;
+		StrPtr<Texture2D> OldDepthTex;
+
+		StrPtr<Gfx::RenderTarget> DebugResult;
+		StrPtr<Texture2D> DebugResultTex;
+
+		float g_fCameraClipNear = 1.0f;
+		float g_fCameraClipFar = 10000.0f;
+		float g_fVoxelSize = 8.0f;
+		float g_fDiffuseScale = 1.0f;
+		float g_fSpecularScale = 1.0f;
+		bool g_bEnableMultiBounce = true;
+		float g_fMultiBounceScale = 1.0f;
+		float g_fLightSize = 250.0f;
+		bool g_bEnableGI = true;
+		bool g_bInitialized = false;
+		float g_fSamplingRate = 1.0f;
+		float g_fQuality = 0.1f;
+		int g_nMapSize = 128;
+		bool g_bDrawTransparent = false;
+		float g_TransparentRoughness = 0.1f;
+		float g_TransparentReflectance = 0.1f;
+		bool g_bTemporalFiltering = true;
+
+		float g_fVxaoRange = 512.0f;
+		float g_fVxaoScale = 2.0f;
+
+		float g_ssaoRadius = 50.f;
 
 	private:
+
+		Gfx::GfxCore* m_gfx;
 
 		void DrawSceneForVoxelization();
 
@@ -93,7 +138,6 @@ namespace rczEngine
 
 		VXGI::Status::Enum SetVoxelizationParameters();
 
-		RenderingMode g_RenderingMode = RenderingMode::NORMAL;
 
 		VXGI::IUserDefinedShaderSet* m_pVoxelizationGS;
 		VXGI::IUserDefinedShaderSet* m_pVoxelizationPS;
@@ -108,35 +152,16 @@ namespace rczEngine
 		VXGI::IBasicViewTracer::InputBuffers g_InputBuffersPrev;
 		bool g_InputBuffersPrevValid = false;
 
-		float g_fCameraClipNear = 1.0f;
-		float g_fCameraClipFar = 10000.0f;
-		float g_fVoxelSize = 8.0f;
-		float g_fAmbientScale = 0.0f;
-		float g_fDiffuseScale = 1.0f;
-		float g_fSpecularScale = 1.0f;
-		bool g_bEnableMultiBounce = true;
-		float g_fMultiBounceScale = 1.0f;
-		float g_fLightSize = 250.0f;
-		bool g_bEnableGI = true;
-		bool g_bRenderHUD = true;
-		bool g_bInitialized = false;
-		float g_fSamplingRate = 1.0f;
-		float g_fQuality = 0.1f;
-		int g_nMapSize = 128;
-		bool g_bDrawTransparent = false;
-		float g_TransparentRoughness = 0.1f;
-		float g_TransparentReflectance = 0.1f;
-		bool g_bTemporalFiltering = true;
-
+		StrPtr<Gfx::RenderTarget> rTarget;
+		StrPtr<Texture2D> texture;
 
 		///////// Scene Renderer
-
-		NVRHI::IRendererInterface* m_RendererInterface;
 
 		UINT                    m_Width;
 		UINT                    m_Height;
 		UINT                    m_SampleCount;
-
+		NVRHI::TextureRef       m_Albedo;
+		NVRHI::TextureHandle	alb;
 		NVRHI::TextureRef       m_TargetNormal;
 		NVRHI::TextureRef       m_TargetDepth;
 	};

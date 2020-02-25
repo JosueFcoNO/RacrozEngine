@@ -223,7 +223,6 @@ namespace rczEngine
 
 		auto scene = SceneManager::Pointer()->GetActiveScene();
 
-		m_renderer->Render("Debug", scene, nullptr);
 		m_renderer->Render("Scene", scene, nullptr);
 
 		RenderGUI();
@@ -266,7 +265,6 @@ namespace rczEngine
 		InitSceneGrid();
 
 		m_renderer->CreatePipeline("Scene", eRenderingPipelines::Deferred);
-		m_renderer->CreatePipeline("Debug", eRenderingPipelines::Debug);
 
 		auto window = new PipelineWindow();
 
@@ -274,11 +272,6 @@ namespace rczEngine
 		m_EditorWindows["Scene"] = window;
 		window->SetRenderPipeline(m_renderer->GetPipeline("Scene").lock());
 
-		window = new PipelineWindow();
-
-		window->InitWindow("Debug");
-		m_EditorWindows["Debug"] = window;
-		window->SetRenderPipeline(m_renderer->GetPipeline("Debug").lock());
 
 		auto sceneWindow = new ScenesWindow();
 		sceneWindow->InitWindow("Scenes");
@@ -295,6 +288,10 @@ namespace rczEngine
 		auto sceneResourceList = new ResourceListWindow();
 		sceneResourceList->InitWindow("Resource List");
 		m_EditorWindows["Resource List"] = sceneResourceList;
+
+		auto VXGI = new VXGIWindow();
+		VXGI->InitWindow("VXGI");
+		m_EditorWindows["VXGI"] = VXGI;
 
 		auto gDebugger = GraphicDebugger::Pointer();
 		

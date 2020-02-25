@@ -274,6 +274,13 @@ void MatrixUnitText()
 	/////////////////////////////////////////////////
 	//////////////////Matrix 3D
 	////////////////////////////////////////////////
+	using namespace rczEngine;
+
+	auto test = rczEngine::Matrix4::LookAtMatrix(
+		Vector3(230, 175, -40),
+		Vector3(0, 1, 0),
+		Vector3(229, 175, -40)
+		);
 
 	rczEngine::Matrix3 Matrix3Alpha(rczEngine::Vector3(1, 2, 3), rczEngine::Vector3(0, 4, 5), rczEngine::Vector3(1, 0, 6));
 	rczEngine::Matrix3 Matrix3Beta = Matrix3Alpha;

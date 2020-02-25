@@ -9,7 +9,7 @@ namespace rczEngine
 		void DoRender();
 
 
-		Gfx::DepthStencyl depth;
+		Gfx::DepthStencyl* depth;
 
 	private:
 	};

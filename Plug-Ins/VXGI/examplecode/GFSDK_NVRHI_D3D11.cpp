@@ -1245,7 +1245,7 @@ namespace NVRHI
     {
         Texture* texture = static_cast<Texture*>(_texture);
 
-        if (format == DXGI_FORMAT_UNKNOWN)
+        if (format == DXGI_FORMAT_UNKNOWN || format == DXGI_FORMAT_D24_UNORM_S8_UINT)
 		{
 			format = GetFormatMapping(texture->desc.format).srvFormat;
 		}
@@ -1340,7 +1340,14 @@ namespace NVRHI
                     }
                 }
             }
-            CHECK_ERROR(SUCCEEDED(device->CreateShaderResourceView(texture->resource.Get(), &desc11, &srvPtr)), "Creating the view failed");
+			if (device->CreateShaderResourceView(texture->resource.Get(), &desc11, &srvPtr) > 0)
+			{
+				return nullptr;
+			}
+			else
+			{
+				return nullptr;
+			}
         }
         return srvPtr.Get();
     }
@@ -1407,7 +1414,7 @@ namespace NVRHI
                     desc11.Texture2D.MipSlice = mipLevel;
                 }
             }
-            CHECK_ERROR(SUCCEEDED(device->CreateRenderTargetView(texture->resource.Get(), &desc11, &rtvPtr)), "Creating the view failed");
+            CHECK_ERROR(SUCCEEDED(device->CreateRenderTargetView(texture->resource.Get(), &desc11, &rtvPtr)), "Creating the RT view failed");
         }
         return rtvPtr.Get();
     }
@@ -1472,7 +1479,7 @@ namespace NVRHI
                     desc11.Texture2D.MipSlice = mipLevel;
                 }
             }
-            CHECK_ERROR(SUCCEEDED(device->CreateDepthStencilView(texture->resource.Get(), &desc11, &dsvPtr)), "Creating the view failed");
+            CHECK_ERROR(SUCCEEDED(device->CreateDepthStencilView(texture->resource.Get(), &desc11, &dsvPtr)), "Creating the DS view failed");
         }
         return dsvPtr.Get();
     }
@@ -1515,7 +1522,7 @@ namespace NVRHI
 				desc11.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2D;
 				desc11.Texture2D.MipSlice = (UINT)mipLevel;
 			}
-            CHECK_ERROR(SUCCEEDED(device->CreateUnorderedAccessView(texture->resource.Get(), &desc11, &uavPtr)), "Creating the view failed");
+            CHECK_ERROR(SUCCEEDED(device->CreateUnorderedAccessView(texture->resource.Get(), &desc11, &uavPtr)), "Creating the UAV view failed");
         }
         return uavPtr.Get();
     }

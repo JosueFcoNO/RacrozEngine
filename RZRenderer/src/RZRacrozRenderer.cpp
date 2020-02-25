@@ -40,6 +40,9 @@ namespace rczEngine
 		///Create the sampler States
 		InitSamplerStates();
 
+		///Init Shaders
+		InitGeometryShaders();
+
 		///Init the screen quad
 		m_ScreenQuad.InitScreenQuad(m_gfx);
 
@@ -50,8 +53,6 @@ namespace rczEngine
 		m_ActiveSkyBox = std::make_shared<SkyBox>();
 
 		m_BlurPass.CreatePipeline(eRenderingPipelines::Deferred);
-
-		m_VXGI.InitVXGI();
 	}
 
 	void RacrozRenderer::CreatePipeline(const String& name, eRenderingPipelines renderingMode)
@@ -76,17 +77,39 @@ namespace rczEngine
 		default:
 			break;
 		}
+
+		if (renderingMode == eRenderingPipelines::Deferred)
+		{
+			m_VXGI.InitVXGI();
+
+			auto pass = m_Pipelines[name]->GetPass(3);
+			pass->AddTexture2D(m_VXGI.SSAOResultTex, 5);
+			pass->AddTexture2D(m_VXGI.DiffuseResultTex, 8);
+			pass->AddTexture2D(m_VXGI.SpecularResultTex, 9);
+		}
 	}
+
+	void RacrozRenderer::PrepareGI(bool prepareScene)
+	{
+		m_GIPrepared = true;
+
+		if (prepareScene)
+			PrepareRender(SceneManager::Pointer()->GetActiveScene());
+		
+		m_VXGI.VoxelizeScene();
+	};
 
 	void RacrozRenderer::Render(const String& name, StrPtr<Scene> sceneGraph, ImGUIEditor * editor)
 	{
 		PrepareRender(sceneGraph);
 
+		if (!m_GIPrepared)
+		{
+			PrepareGI();
+		}
+
+		RacrozRenderer::Pointer()->SetSamplerStates();
 		m_Pipelines[name]->DoRender();
-
-		m_VXGI.VoxelizeScene();
-
-		m_VXGI.RenderChannels();
 	}
 
 	WeakPtr<RenderPipeline> RacrozRenderer::GetPipeline(const String& name)
@@ -214,6 +237,9 @@ namespace rczEngine
 
 	void RacrozRenderer::PrepareRender(StrPtr<Scene> sceneGraph)
 	{
+		///m_gfx->SetRSStateDefault();
+		///m_gfx->SetBlendStateDefault();
+	
 		m_ObjectsToRender.clear();
 
 		auto CurrentCamera = CameraManager::Pointer()->GetActiveCamera().lock();
@@ -435,6 +461,16 @@ namespace rczEngine
 		///Create a AnisotropicWrapSampler and set it on slot 3
 		m_PointWrapSampler.Init(Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::COMPARISON_NEVER, Gfx::FILTER_MIN_MAG_MIP_POINT, Vector4(1, 1, 1, 1), 16);
 		m_PointWrapSampler.CreateSamplerState(m_gfx);
+		m_PointWrapSampler.PSSetThisSamplerState(4, 1, m_gfx);
+
+	}
+
+	void RacrozRenderer::SetSamplerStates()
+	{
+		m_LinealWrapSampler.PSSetThisSamplerState(0, 1, m_gfx);
+		m_AnisotropicWrapSampler.PSSetThisSamplerState(1, 1, m_gfx);
+		m_LinealClampSampler.PSSetThisSamplerState(2, 1, m_gfx);
+		m_AnisotropicClampSampler.PSSetThisSamplerState(3, 1, m_gfx);
 		m_PointWrapSampler.PSSetThisSamplerState(4, 1, m_gfx);
 
 	}

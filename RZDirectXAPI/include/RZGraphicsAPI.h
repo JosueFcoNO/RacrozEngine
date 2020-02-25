@@ -77,6 +77,10 @@ namespace rczEngine
 			///Creates a DepthStencyl and Depth Stencyl View
 			bool CreateDepthStencyl(DepthStencyl & out_depthStencyl, int32 width = -1, int32 height = -1, eBUFFER_USAGE usage = USAGE_DEFAULT, eCPU_ACCESS_FLAGS cpu_access = CPU_DEFAULT, int32 sample_count = 1, int32 sample_quality = 0);
 
+			void CreateDefaulDepthStencylState();
+
+			void SetDefaulDepthStencylState();
+
 			///Sets the primitive topology to the device context.
 			void SetPrimitiveTopology(eTOPOLOGY usedTopology);
 
@@ -327,8 +331,10 @@ namespace rczEngine
 			bool CreateTextureFromMemory(bool bCompressed, int width, int height, void* memory, TextureCore2D& out_Texture, eBUFFER_USAGE usage, eBIND_FLAGS bind_flags,
 				eCPU_ACCESS_FLAGS cpu_access_flags);
 
+			bool CreateEmptyTexture(TextureCore2D & out_Texture, int width, int height, eBIND_FLAGS bind_flags, eFORMAT format, eFORMAT SRVformat, int MipLevels = 0, eBUFFER_USAGE usage = USAGE_DEFAULT, eCPU_ACCESS_FLAGS cpu_access_flags = eCPU_ACCESS_FLAGS::CPU_DEFAULT);
+
 			///Create a Texture void
-			bool CreateTexture(void* memory, int32 pitch, int32 slice, TextureCore2D & out_Texture, int width, int height, eBIND_FLAGS bind_flags, eFORMAT format, int MipLevels = 1, eBUFFER_USAGE usage = USAGE_DEFAULT, eCPU_ACCESS_FLAGS cpu_access_flags = eCPU_ACCESS_FLAGS::CPU_DEFAULT);
+			bool CreateTexture(void* memory, int32 pitch, int32 slice, TextureCore2D & out_Texture, int width, int height, eBIND_FLAGS bind_flags, eFORMAT format, int MipLevels = 0, eBUFFER_USAGE usage = USAGE_DEFAULT, eCPU_ACCESS_FLAGS cpu_access_flags = eCPU_ACCESS_FLAGS::CPU_DEFAULT);
 
 			///Create a 3D void Texture
 			bool CreateTexture3D(void* memory, int32 pitch, int32 slice, TextureCore3D & out_Texture, int width, int height, eBIND_FLAGS bind_flags, eFORMAT format, int MipLevels = 1, eBUFFER_USAGE usage = USAGE_DEFAULT, eCPU_ACCESS_FLAGS cpu_access_flags = eCPU_ACCESS_FLAGS::CPU_DEFAULT);
@@ -374,19 +380,15 @@ namespace rczEngine
 			///The default Render Target view linked to the BackBuffer.
 			ID3D11RenderTargetView* m_BaseRenderTargetView;
 
-			///The DepthStencilView
-			ID3D11DepthStencilView* m_DepthStencilView;
-
 			///The number of RenderTargets Bound to the pipeline
 			byte m_RenderTargetNumber = 1;
 
 			///The Back Buffer as a Texture2D 
 			ID3D11Texture2D* m_BackBuffer;
 
-			///The Depth Stencil as a Texture2D 
-			ID3D11Texture2D* m_DepthStencil;
-
 			DepthStencyl m_DepthStencyl;
+
+			ID3D11DepthStencilState * m_DepthStencylState;
 
 			///A Blend State
 			ID3D11BlendState* m_BlendState;

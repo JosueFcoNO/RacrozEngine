@@ -37,11 +37,30 @@ namespace rczEngine
 		virtual void RenderResourceGUI()
 		{
 			ImGui::Text("Texture Resource");
-			ImVec2 size = ImGui::GetWindowSize();
-			size.x -= 30;
-			size.y -= 30;
 
-			ImGui::Image(m_TextureCore.m_ShaderResource, size);
+			auto windowSize = ImVec2(ImGui::GetWindowSize());
+
+			const auto width = m_TextureCore.m_Width;
+			const auto height = m_TextureCore.m_Height;
+
+			const auto targetY = windowSize.x * height / width;
+			const auto targetX = windowSize.y * width / height;
+
+			if (windowSize.y > targetY)
+				windowSize.y = targetY;
+
+			if (windowSize.x > targetX)
+				windowSize.x = targetX;
+
+			ImVec2 imagePos = ImGui::GetWindowSize();
+			imagePos.x -= windowSize.x;
+			imagePos.y -= windowSize.y;
+
+			imagePos.x *= 0.5f;
+			imagePos.y *= 0.5f;
+
+			ImGui::SetCursorPos(imagePos);
+			ImGui::Image(m_TextureCore.m_ShaderResource, windowSize);
 		}
 #endif
 

@@ -28,6 +28,8 @@ namespace rczEngine
 
 	void PBR_Pass::PreRenderPass()
 	{
+		CameraManager::Pointer()->UpdateAndSetCameraBuffer(m_gfx, 5, 5);
+
 		LightManager::Pointer()->SetLightsBuffers();
 
 		m_PShader.SetThisPixelShader(m_gfx);

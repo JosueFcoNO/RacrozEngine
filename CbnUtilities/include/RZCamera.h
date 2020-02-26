@@ -20,7 +20,7 @@ namespace rczEngine
 
 			m_CachedProjectionMatrix(false),
 			m_CachedViewMatrix(false),
-			m_IsPerspective(false)
+			m_IsPerspective(true)
 		{};
 
 		void Init(const Vector3& position, const Vector3& target, float nearClip, float farClip, float aspectRatio) noexcept;
@@ -54,11 +54,19 @@ namespace rczEngine
 		FORCEINLINE void SetFarClip(float farClip) noexcept { m_FarClip = farClip; m_CachedProjectionMatrix = false; }
 		FORCEINLINE void SetAspectRatio(float aspect) noexcept { m_AspectRatio = aspect; m_CachedProjectionMatrix = false; };
 		FORCEINLINE void SetFov(float fov) noexcept { m_Fov = fov; m_CachedProjectionMatrix = false; };
+		FORCEINLINE void SetPerspective(bool perspective) noexcept { m_IsPerspective = perspective; m_CachedProjectionMatrix = false; };
+
+		FORCEINLINE void SetWidth(float width) noexcept { m_Width = width; m_CachedProjectionMatrix = false; };
+		FORCEINLINE void SetHeight(float height) noexcept { m_Height = height; m_CachedProjectionMatrix = false; };
+
 
 		FORCEINLINE float GetNearClip() const noexcept { return m_NearClip; };
 		FORCEINLINE float GetFarClip() const noexcept { return m_FarClip; };
 		FORCEINLINE float GetAspectRatio() const noexcept { return m_AspectRatio; };
 		FORCEINLINE float GetFov() const noexcept { return m_Fov; };
+
+		FORCEINLINE float GetWidth() const noexcept { return m_Width; };
+		FORCEINLINE float GetHeight() const noexcept { return m_Height; };
 
 		FORCEINLINE const Frustum& GetFrustum() const noexcept { return m_Frustum; };
 
@@ -67,7 +75,7 @@ namespace rczEngine
 
 		bool m_CachedViewMatrix;
 		bool m_CachedProjectionMatrix;
-		bool m_IsPerspective;
+		bool m_IsPerspective = true;
 
 		Vector3 m_Position;
 		Vector3 m_Target;
@@ -77,6 +85,9 @@ namespace rczEngine
 		float m_FarClip;
 		float m_AspectRatio;
 		float m_Fov;
+
+		float m_Height = 200;
+		float m_Width = 200;
 
 		Matrix4 m_MatrixView;
 		Matrix4 m_MatrixProjection;

@@ -322,7 +322,7 @@ namespace rczEngine
 		Temp.m_matrix[0][0] = 2.0f / width;
 		Temp.m_matrix[1][1] = 2.0f / height;
 		Temp.m_matrix[2][2] = fRange;
-		Temp.m_matrix[2][3] = -fRange * ZNear;
+		Temp.m_matrix[3][2] = -fRange * ZNear;
 
 		return Temp;
 	}

@@ -82,7 +82,7 @@ namespace rczEngine
 		m_ModelPlane = LoadResource("RacrozEngineAssets/Plane.fbx", "assetPlane");
 		m_ModelSphere = LoadResource("RacrozEngineAssets/Showcase.fbx", "assetSphere");
 
-		m_CubeMapDefault = LoadResource("CubeMaps/Restaurant.dds", "assetCubeMap");
+		m_CubeMapDefault = LoadResource("CubeMaps/Lynchwood.dds", "assetCubeMap");
 
 		Logger::Pointer()->StartLog("Material");
 	};

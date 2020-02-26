@@ -465,7 +465,10 @@ float3 PBR_rm(float3 _position, float3 _albedoColor, float3 _normal, float _roug
 
 	}
 
-	float3 FinalColor = (Light1 * (1.0f - _metallic) * g_LightIntensity);
+	float3 Irradiance = saturate(EnviromentCube.SampleLevel(LinearWrapSampler, _normal.xyz, 7.0f).xyz);
+	Irradiance = pow(Irradiance, 2.2f);
+
+	float3 FinalColor = (Light1 * (1.0f - _metallic) * g_LightIntensity) + _albedoColor.xyz * Irradiance;
 
 	return FinalColor.xyz;
 }

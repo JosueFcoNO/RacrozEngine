@@ -114,7 +114,7 @@ PS_Output PS_Main(PS_Input Input)
 	psout.PBR.xyz = PBR_rm_VXGI(pos, albedoColor.xyz, normal, roughness, metallic, specular.xyz, diffuseResultColor, specularResultColor, diffuseResultColor.a);
 
     float SSAO = SSAOTex.Sample(LinearWrapSampler, Input.Texcoord).r;
-    SSAO = pow(SSAO, 4.0f);
+    //SSAO = pow(SSAO, 4.0f);
 
 	psout.PBR.xyz *= SSAO;
     //FinalColor *= ShadowMapTex.Sample(LinearSampler, Input.Texcoord).r;

@@ -170,7 +170,14 @@ namespace rczEngine
 	{
 		if (!m_CachedProjectionMatrix)
 		{
-			m_MatrixProjection = Matrix4::PerpsProjectedSpace(Math::DegreesToRad(m_Fov), m_AspectRatio, m_NearClip, m_FarClip);
+			if (m_IsPerspective)
+			{
+				m_MatrixProjection = Matrix4::PerpsProjectedSpace(Math::DegreesToRad(m_Fov), m_AspectRatio, m_NearClip, m_FarClip);
+			}
+			else
+			{
+				m_MatrixProjection = Matrix4::OrthoProjectedSpace(m_Width, m_Height, m_NearClip, m_FarClip);
+			}
 			m_CachedProjectionMatrix = true;
 
 			m_Frustum.CalculateFrustum(*this);

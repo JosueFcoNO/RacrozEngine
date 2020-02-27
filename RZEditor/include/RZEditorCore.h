@@ -33,6 +33,8 @@ namespace rczEngine
 			return m_ActiveGameObject;
 		};
 
+		EditorSettings m_EditorSettings;
+
 	private:
 		bool Quit = false;
 		Timer Time;

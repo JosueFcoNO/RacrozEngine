@@ -1,5 +1,9 @@
 #include <RZEditorPCH.h>
 
+#pragma once
+#include <ShObjIdl.h>
+#include <ShObjIdl_core.h>
+
 namespace rczEngine
 {
 	EditorCore*& EditorCore::_Instance()
@@ -78,8 +82,73 @@ namespace rczEngine
 		m_gfx = Gfx::GfxCore::Pointer();
 	}
 
+	String LoadFile(const String& instruction, const String& name)
+	{
+		ANSICHAR filename[MAX_PATH];
+
+		OPENFILENAME ofn;
+		ZeroMemory(filename, sizeof(filename));
+		ZeroMemory(&ofn, sizeof(OPENFILENAME));
+		ofn.lStructSize = sizeof(OPENFILENAME);
+		ofn.hwndOwner = NULL;  // If you have a window to center over, put its HANDLE here
+		ofn.lpstrFilter = "Any File\0*.*\0";
+		ofn.lpstrFile = filename;
+		ofn.nMaxFile = MAX_PATH;
+		ofn.lpstrTitle = instruction.c_str();
+		ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+
+		if (GetOpenFileNameA(&ofn))
+		{
+		}
+		else
+		{
+		}
+
+		return "";
+	};
+
+	BasicString<wchar_t> PickFolder()
+	{
+		BasicString<WCHAR> path;
+
+		CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+
+		LPWSTR* string = (LPWSTR*)malloc(sizeof(WCHAR) * 512);
+
+		IFileDialog *pfd;
+		if (SUCCEEDED(CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pfd))))
+		{
+			DWORD dwOptions;
+			if (SUCCEEDED(pfd->GetOptions(&dwOptions)))
+			{
+				pfd->SetOptions(dwOptions | FOS_FORCEFILESYSTEM  | FOS_PICKFOLDERS);
+			}
+			if (SUCCEEDED(pfd->Show(NULL)))
+			{
+				IShellItem *psi;
+				if (SUCCEEDED(pfd->GetResult(&psi)))
+				{
+					if (!SUCCEEDED(psi->GetDisplayName(SIGDN_DESKTOPABSOLUTEPARSING, string)))
+					{
+						MessageBox(NULL, "GetIDListName() failed", NULL, NULL);
+					}
+					psi->Release();
+				}
+			}
+			pfd->Release();
+		}
+
+
+		path.append(*string);
+		delete string;
+
+		return path;
+	}
+
 	void EditorCore::RunEditor()
 	{
+		m_EditorSettings.InitEditorSettings();
+
 		bool editor = true;
 		while (editor)
 		{
@@ -94,7 +163,22 @@ namespace rczEngine
 
 			ImGui::Begin("Carbon Engine");
 
+			static BasicString<wchar_t> str;
+
+			if (ImGui::Button("New Project"))
+			{
+				str = PickFolder();
+				m_EditorSettings.m_ProjectFilesPaths.push_back(TextTool::UniToAnsi(str.c_str()));
+				m_EditorSettings.SaveEditorSettings();
+			}
+
 			ImGui::Text("Projects");
+
+			for (auto project : m_EditorSettings.m_ProjectFilesPaths)
+			{
+				ImGui::Button(project.c_str());
+			}
+
 			ImGui::Separator();
 			ImGui::Text("Unit Testing");
 			
@@ -262,7 +346,7 @@ namespace rczEngine
 
 	void EditorCore::Math3DUnitTest()
 	{
-		InitSceneGrid();
+		//InitSceneGrid();
 
 		m_renderer->CreatePipeline("Scene", eRenderingPipelines::Deferred);
 

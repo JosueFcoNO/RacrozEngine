@@ -6,16 +6,38 @@ namespace rczEngine
 	{
 		m_ProjectFilesPaths.clear();
 
-		LoadEditorSettings();
+		if (!Path::FileExists(m_SettingsFile))
+		{
+			SaveEditorSettings();
+		}
+		else
+		{
+			LoadEditorSettings();
+		}
 	}
 
 	void EditorSettings::LoadEditorSettings()
 	{
-		nlohmann::json json;
-		json["Test"]["Possible"] = 1444;
+		std::ifstream i("EditorSettings.cbn");
+		nlohmann::json inJson;
+		i >> inJson;
 
-		FileStream o("EditorSettings.cbn", FileStream::in);
-		o << std::setw(4) << json << std::endl;
+		if (inJson.contains("ProjectsKnown"))
+		for (auto element : inJson["ProjectsKnown"])
+		{
+			m_ProjectFilesPaths.push_back(element);
+		}
 
+	}
+
+	void EditorSettings::SaveEditorSettings()
+	{
+		FileStream o("EditorSettings.cbn", FileStream::out);
+
+		nlohmann::json outJson;
+
+		outJson["ProjectsKnown"] = m_ProjectFilesPaths;
+
+		o << outJson;
 	}
 };

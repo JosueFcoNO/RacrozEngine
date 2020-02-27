@@ -11,8 +11,10 @@ namespace rczEngine
 		
 		void SaveEditorSettings();
 
-	private:
 		Vector<String> m_ProjectFilesPaths;
+
+
+		String m_SettingsFile = "EditorSettings.cbn";
 
 	};
 };

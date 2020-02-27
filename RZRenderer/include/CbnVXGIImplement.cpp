@@ -113,8 +113,6 @@ namespace rczEngine
 
 	void VXGIImplement::RenderChannels()
 	{
-		return;
-
 		if (g_RenderingMode == RenderingMode::OPACITY_VOXELS ||
 			g_RenderingMode == RenderingMode::EMITTANCE_VOXELS ||
 			g_RenderingMode == RenderingMode::IRRADIANCE_VOXELS)

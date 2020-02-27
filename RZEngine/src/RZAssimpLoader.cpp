@@ -402,7 +402,6 @@ namespace rczEngine
 			else
 			{
 				Temp->m_core.OverrideMetallicSpecular = 1.0f;
-				Temp->m_core.OverrideRoughGloss = 1.0f;
 				Temp->m_core.g_RoughGloss = 0.5f;
 			}
 

@@ -1,7 +1,6 @@
 ﻿#include <cmath>
 #include <cassert>
 #include "../RZCore/include/RZCorePCH.h"
-#include <RZUtilityPCH.h>
 #include <Windows.h>
 
 ///Unit Test - Math Library

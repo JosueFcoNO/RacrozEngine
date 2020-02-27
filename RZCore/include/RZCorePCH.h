@@ -2,6 +2,8 @@
 #include <CbnUtilitiesPCH.h>
 #include <RZInputPCH.h>
 
+#include "json.hpp"
+
 #include "RZEvent.h"
 
 #include "RZObject.h"

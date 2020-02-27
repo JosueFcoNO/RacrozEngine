@@ -24,6 +24,9 @@
     <Filter Include="Archivos de código fuente\UI\Windows">
       <UniqueIdentifier>{adc4a02b-9508-4e1a-bb2b-93bf6a35b271}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\Project">
+      <UniqueIdentifier>{08b5beb4-6716-4068-923d-6d449122696e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZEditorPCH.h" />
@@ -53,6 +56,12 @@
     </ClInclude>
     <ClInclude Include="include\CbnVXGIWindow.h">
       <Filter>Archivos de encabezado\UI\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CbnProject.h">
+      <Filter>Archivos de encabezado\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CbnEditorSettings.h">
+      <Filter>Archivos de encabezado\Project</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +94,12 @@
     </ClCompile>
     <ClCompile Include="src\CbnVXGIWindow.cpp">
       <Filter>Archivos de código fuente\UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnProject.cpp">
+      <Filter>Archivos de código fuente\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnEditorSettings.cpp">
+      <Filter>Archivos de código fuente\Project</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -5,6 +5,9 @@
 #include <RZEnginePCH.h>
 #include <RZRendererPCH.h>
 
+#include "CbnProject.h"
+#include "CbnEditorSettings.h"
+
 #include "CbnBaseWindow.h"
 #include "CbnPipelineWindow.h"
 #include "CbnScenesWindow.h"

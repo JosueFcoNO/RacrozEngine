@@ -80,7 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)RZUtilityLib\include\;$(SolutionDir)RZCore\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(GSL)/include;$(SolutionDir)CbnUtilities\include\;$(SolutionDir)RZCore\include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(LibraryPath)</LibraryPath>
     <TargetName>CoreUnitTest</TargetName>
     <OutDir>$(SolutionDir)\bin\$(Configuration)\$(Platform)\</OutDir>
@@ -96,7 +96,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)RZUtilityLib\include\;$(SolutionDir)RZCore\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(GSL)/include;$(SolutionDir)CbnUtilities\include\;$(SolutionDir)RZCore\include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(LibraryPath)</LibraryPath>
     <TargetName>CoreUnitTest</TargetName>
     <OutDir>$(SolutionDir)\bin\$(Configuration)\$(Platform)\</OutDir>

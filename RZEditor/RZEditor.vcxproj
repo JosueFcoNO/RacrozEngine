@@ -185,8 +185,10 @@
   <ItemGroup>
     <ClInclude Include="include\CbnBaseWindow.h" />
     <ClInclude Include="include\CbnConsoleWindow.h" />
+    <ClInclude Include="include\CbnEditorSettings.h" />
     <ClInclude Include="include\CbnGameObjectWindow.h" />
     <ClInclude Include="include\CbnPipelineWindow.h" />
+    <ClInclude Include="include\CbnProject.h" />
     <ClInclude Include="include\CbnResourceListWindow.h" />
     <ClInclude Include="include\CbnResourceWindow.h" />
     <ClInclude Include="include\CbnScenesWindow.h" />
@@ -198,7 +200,9 @@
     <ClCompile Include="include\CbnPipelineWindow.cpp" />
     <ClCompile Include="src\CbnBaseWindow.cpp" />
     <ClCompile Include="src\CbnConsoleWindow.cpp" />
+    <ClCompile Include="src\CbnEditorSettings.cpp" />
     <ClCompile Include="src\CbnGameObjectWindow.cpp" />
+    <ClCompile Include="src\CbnProject.cpp" />
     <ClCompile Include="src\CbnResourceListWindow.cpp" />
     <ClCompile Include="src\CbnResourceWindow.cpp" />
     <ClCompile Include="src\CbnScenesWindow.cpp" />

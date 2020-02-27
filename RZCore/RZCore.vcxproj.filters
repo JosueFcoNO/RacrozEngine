@@ -33,6 +33,9 @@
     <Filter Include="Archivos de código fuente\App">
       <UniqueIdentifier>{4af22318-4bee-48b8-b9a8-2615ed77eb18}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\Json Parser">
+      <UniqueIdentifier>{9b19cbdc-eda0-4edb-bb36-7584984cd7a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZEventManager.h">
@@ -64,6 +67,9 @@
     </ClInclude>
     <ClInclude Include="include\RZCorePCH.h">
       <Filter>Archivos de encabezado\Text Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json.hpp">
+      <Filter>Archivos de encabezado\Json Parser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

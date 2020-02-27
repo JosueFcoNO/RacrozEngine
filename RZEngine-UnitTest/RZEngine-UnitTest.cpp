@@ -32,6 +32,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	EditorCore::Start();
 	auto editor = EditorCore::Pointer();
 
+	nlohmann::json json;
+	json["Test"]["Possible"] = 1444;
+
+	std::ofstream o("pretty.json");
+	o << std::setw(4) << json << std::endl;
+
 	editor->InitEditor();
 	editor->RunEditor();
 	editor->DestroyEditor();

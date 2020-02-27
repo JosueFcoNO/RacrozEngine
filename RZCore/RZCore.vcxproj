@@ -195,6 +195,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\json.hpp" />
     <ClInclude Include="include\RZApp.h" />
     <ClInclude Include="include\RZAppAndroid.h" />
     <ClInclude Include="include\RZAppVita.h" />

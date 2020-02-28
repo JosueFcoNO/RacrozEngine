@@ -18,9 +18,6 @@ namespace rczEngine
 
 		WeakPtr<Scene> GetScene(String sceneName);
 
-		RZ_EXP StrPtr<Scene> LoadScene(const String&filePath);
-		RZ_EXP void SaveScene(const String& filePath);
-
 	private:
 		StrPtr<Resource> getNewResource(SERIALS serials);
 

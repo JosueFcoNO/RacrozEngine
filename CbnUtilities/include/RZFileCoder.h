@@ -39,6 +39,18 @@ namespace rczEngine
 		///Closes the file
 		RZ_EXP void CloseFile();
 
+		template <typename T>
+		void operator<<(T other) 
+		{
+			(*m_File) << other;
+		};
+
+		template <typename T>
+		void operator>>(T& other)
+		{
+			(*m_File) >> other;
+		};
+
 	private:
 		UniquePtr<String> m_strFileName;
 		UniquePtr<FileStream> m_File;

@@ -556,6 +556,18 @@ int main(void)
 	MatrixUnitText();
 	QuaternionUnitTest();
 
+	rczEngine::FileManager file;
+
+	file.OpenBinaryFile("Perro", FileStream::binary | FileStream::out);
+	file << 245;
+	file.CloseFile();
+
+	int i245;
+
+	file.OpenBinaryFile("Perro", FileStream::binary | FileStream::in);
+	file >> i245;
+	file.CloseFile();
+
 	std::cin.get();
 
 	Profiler::Pointer()->AddTime("Utilities");

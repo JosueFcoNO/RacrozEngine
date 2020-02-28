@@ -17,6 +17,9 @@ namespace rczEngine
 		void Update(float deltaTime);
 		void Destroy();
 
+		void SaveScene();
+		void LoadScene();
+
 		WeakGameObjPtr CreateActor(const String&& name = "GameObj", GameObject* parent = NULL, Vector3 position = { 0,0,0 }, Vector3 orientation = { 0,0,0 }, Vector3 scale = { 1,1,1 });
 		StrCmpPtr CreateComponent(eComponentID type, GameObjectID owner);
 		StrCmpPtr CreateComponent(eComponentID type, StrGameObjectPtr owner);
@@ -43,6 +46,14 @@ namespace rczEngine
 
 	private:
 		String m_Name;
+
+		//Scenes Json .cbnScene
+		//Textures Compressed Binary .cbnTexture
+		//Audios Compressed Binary .cbnAudio
+		//Fonts Font Binary .cbnFont
+		//Prefabs/Blueprints Json .cbnPrefab
+		//Materials Json .cbnMaterial
+
 		
 		Vector<StrPtr<GameObject>> m_GameObjectsToDelete;
 	};

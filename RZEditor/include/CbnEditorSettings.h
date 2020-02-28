@@ -2,6 +2,17 @@
 
 namespace rczEngine
 {
+	class ProjectRecord
+	{
+	public:
+		ProjectRecord() {};
+
+		ProjectRecord(const String& name, const StringW& path) { Name = name; Path = path; };
+
+		String Name;
+		StringW Path;
+	};
+
 	class RZ_EXP EditorSettings
 	{
 	public:
@@ -11,8 +22,7 @@ namespace rczEngine
 		
 		void SaveEditorSettings();
 
-		Vector<String> m_ProjectFilesPaths;
-
+		Map<String, ProjectRecord> m_ProjectFilesScores;
 
 		String m_SettingsFile = "EditorSettings.cbn";
 

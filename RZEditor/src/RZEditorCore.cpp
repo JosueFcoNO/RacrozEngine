@@ -145,6 +145,104 @@ namespace rczEngine
 		return path;
 	}
 
+	void EditorCore::StartUIRender()
+	{
+		m_gfx->SetDefaultRenderTarget();
+		m_gfx->ClearDefaultRenderTargetView(0.1f, 0.1f, 0.1f, 1.0f);
+
+		// Start the Dear ImGui frame
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+		ImGui::Begin("Carbon Engine");
+	}
+
+	void EditorCore::EndUIRender()
+	{
+		ImGui::End();
+		ImGui::EndFrame();
+		ImGui::Render();
+		ImGUIEditor::Pointer()->PreRender(ImGui::GetDrawData());
+	}
+
+	void EditorCore::NewProjectWindow()
+	{
+		static BasicString<wchar_t> pathProject;
+		static String nameProject("--------------------------------");
+
+		static char PathStringBuffer[1024];
+
+		ImGui::InputText("Project Name: ", &nameProject[0], 32);
+
+		ImGui::InputText("Project Folder: ", PathStringBuffer, 1024);
+		ImGui::SameLine();
+		if (ImGui::Button("Browse Project Folder"))
+		{
+			pathProject = PickFolder();
+			strcpy(PathStringBuffer, TextTool::UniToAnsi(pathProject.c_str()).c_str());
+		}
+
+		if (ImGui::Button("Cancel"))
+		{
+			m_State = eEditorStates::Main;
+		}
+
+		if (ImGui::Button("Create"))
+		{
+			CreateProject(nameProject, pathProject, RendererSettings());
+			m_EditorSettings.m_ProjectFilesScores[nameProject]  = ProjectRecord(nameProject, pathProject);
+			m_EditorSettings.SaveEditorSettings();
+		}
+	}
+
+
+	void EditorCore::CreateProject(const String& name, const StringW& path, RendererSettings renderer)
+	{
+		m_Projects[name];
+
+		m_Projects[name].SetName(name);
+		m_Projects[name].SetPath(path);
+
+		m_Projects[name].SaveCbn();
+	}
+
+	void EditorCore::MainWindow()
+	{
+		static BasicString<wchar_t> str;
+		static String strProject;
+
+		if (ImGui::Button("New Project"))
+		{
+			m_State = eEditorStates::CreateProject;
+			Input::Pointer()->ReleaseDevices();
+		}
+
+		if (ImGui::Button("Open Project"))
+		{
+			strProject = GetFilePath("Choose Project");
+		}
+
+		ImGui::Separator();
+		ImGui::Text("Projects");
+		ImGui::Separator();
+
+		for (auto projectRecord : m_EditorSettings.m_ProjectFilesScores)
+		{
+			ImGui::Button(projectRecord.first.c_str());
+
+			ImGui::SameLine();
+
+			ImGui::Text(TextTool::UniToAnsi(projectRecord.second.Path.c_str()).c_str());
+		}
+
+		//if (ImGui::Button("3D Math Unit Test"))
+		//{
+		//	Math3DUnitTest();
+		//
+		//	return;
+		//}
+	}
+
 	void EditorCore::RunEditor()
 	{
 		m_EditorSettings.InitEditorSettings();
@@ -152,54 +250,23 @@ namespace rczEngine
 		bool editor = true;
 		while (editor)
 		{
-			m_gfx->SetDefaultRenderTarget();
+			StartUIRender();
 
-			m_gfx->ClearDefaultRenderTargetView(0.1f, 0.1f, 0.1f, 1.0f);
-
-			// Start the Dear ImGui frame
-			ImGui_ImplDX11_NewFrame();
-			ImGui_ImplWin32_NewFrame();
-			ImGui::NewFrame();
-
-			ImGui::Begin("Carbon Engine");
-
-			static BasicString<wchar_t> str;
-
-			if (ImGui::Button("New Project"))
+			switch (m_State)
 			{
-				str = PickFolder();
-				m_EditorSettings.m_ProjectFilesPaths.push_back(TextTool::UniToAnsi(str.c_str()));
-				m_EditorSettings.SaveEditorSettings();
+			case rczEngine::eEditorStates::Main:
+				MainWindow();
+				break;
+			case rczEngine::eEditorStates::CreateProject:
+				NewProjectWindow();
+				break;
+			case rczEngine::eEditorStates::Project:
+				break;
+			default:
+				break;
 			}
 
-			ImGui::Text("Projects");
-
-			for (auto project : m_EditorSettings.m_ProjectFilesPaths)
-			{
-				ImGui::Button(project.c_str());
-			}
-
-			ImGui::Separator();
-			ImGui::Text("Unit Testing");
-			
-			if (ImGui::Button("3D Math Unit Test"))
-			{
-				ImGui::End();
-				ImGui::EndFrame();
-				ImGui::Render();
-				ImGUIEditor::Pointer()->PreRender(ImGui::GetDrawData());
-
-				Math3DUnitTest();
-
-				return;
-			}
-
-			ImGui::End();
-
-			ImGui::EndFrame();
-
-			ImGui::Render();
-			ImGUIEditor::Pointer()->PreRender(ImGui::GetDrawData());
+			EndUIRender();
 
 			m_gfx->Present();
 
@@ -208,10 +275,6 @@ namespace rczEngine
 			{
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
-				//if (!TranslateAcceleratorW(msg.hwnd, hAccelTable, &msg))
-				//{
-				//
-				//}
 			}
 		}
 

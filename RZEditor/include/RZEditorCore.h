@@ -2,6 +2,13 @@
 
 namespace rczEngine
 {
+	enum class eEditorStates
+	{
+		Main,
+		CreateProject,
+		Project
+	};
+
 	class RZ_EXP EditorCore
 	{
 	private:
@@ -14,6 +21,11 @@ namespace rczEngine
 
 	public:
 		void InitEditor();
+		void StartUIRender();
+		void EndUIRender();
+		void NewProjectWindow();
+		void CreateProject(const String & name, const StringW & path, RendererSettings renderer);
+		void MainWindow();
 		void RunEditor();
 		void InitSceneGrid();
 		void RenderGUI();
@@ -46,7 +58,11 @@ namespace rczEngine
 		Map<String, BaseWindow*> m_EditorWindows;
 
 		WeakGameObjPtr m_ActiveGameObject;
-		
+	
+		eEditorStates m_State = eEditorStates::Main;
+
+		Map<String, Project> m_Projects;
+
 #if RZ_PLATFORM == RZ_PLATFORM_WINDOWS
 		HACCEL hAccelTable;
 		MSG msg;

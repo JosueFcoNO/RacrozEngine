@@ -195,6 +195,10 @@ namespace rczEngine
 		}
 	}
 
+	void EditorCore::StartProject(const FString& name)
+	{
+		
+	}
 
 	void EditorCore::CreateProject(const String& name, const StringW& path, RendererSettings renderer)
 	{

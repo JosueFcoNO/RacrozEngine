@@ -10,29 +10,28 @@ namespace rczEngine
 
 		static String UniToAnsi(const UNICHAR* text)
 		{
-			const size_t origsize = wcslen(text) + 1;
-			const size_t newsize = origsize * 2;
-			size_t convertedChars = 0;
+			const StringW str(text);
 
-			auto nstring = Vector<char>(newsize);
+			return String(str.begin(), str.end());
+		};
 
-			wcstombs_s(&convertedChars, nstring.data(), newsize, text, _TRUNCATE);
-
-			return String(&nstring[0]);
+		static String UniToAnsi(const StringW& text)
+		{
+			return String(text.begin(), text.end());
 		};
 
 		////UNICHAR////
 		
 		static StringW AnsiToUni(const ANSICHAR* text)
 		{
-			const size_t newsize = strlen(text) + 1;
-			size_t convertedChars = 0;
+			const String str(text);
 
-			auto wcstring = Vector<wchar_t>(newsize);
+			return StringW(str.begin(), str.end());
+		};
 
-			mbstowcs_s(&convertedChars, wcstring.data(), newsize, text, _TRUNCATE);
-
-			return StringW(wcstring.data());
+		static StringW AnsiToUni(const String& text)
+		{
+			return StringW(text.begin(), text.end());
 		};
 	};
 };

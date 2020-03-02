@@ -568,6 +568,12 @@ int main(void)
 	file >> i245;
 	file.CloseFile();
 
+	StringW perro = L"Nuñez";
+	String perro2 = "Josue";
+
+	StringW result = TextTool::AnsiToUni(perro2);
+	String result2 = TextTool::UniToAnsi(perro);
+
 	std::cin.get();
 
 	Profiler::Pointer()->AddTime("Utilities");

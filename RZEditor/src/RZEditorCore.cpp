@@ -192,10 +192,12 @@ namespace rczEngine
 			CreateProject(nameProject, pathProject, RendererSettings());
 			m_EditorSettings.m_ProjectFilesScores[nameProject]  = ProjectRecord(nameProject, pathProject);
 			m_EditorSettings.SaveEditorSettings();
+
+			m_State = eEditorStates::Project;
 		}
 	}
 
-	void EditorCore::StartProject(const FString& name)
+	void EditorCore::StartProject(const String& name)
 	{
 		
 	}

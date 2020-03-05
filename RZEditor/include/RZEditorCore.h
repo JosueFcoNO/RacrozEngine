@@ -24,6 +24,7 @@ namespace rczEngine
 		void StartUIRender();
 		void EndUIRender();
 		void NewProjectWindow();
+		void StartProject(const String & name);
 		void CreateProject(const String & name, const StringW & path, RendererSettings renderer);
 		void MainWindow();
 		void RunEditor();

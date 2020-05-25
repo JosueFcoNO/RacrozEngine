@@ -25,12 +25,10 @@ namespace rczEngine
 
 	void CameraManager::Init(Gfx::GfxCore* gfx)
 	{
-		m_CameraBuffer.CreateConstantBuffer(sizeof(CameraData), Gfx::USAGE_DEFAULT, gfx);
 	}
 
 	void CameraManager::Destroy()
 	{
-		m_CameraBuffer.Destroy();
 		m_ActiveCamera = nullptr;
 		m_Cameras.clear();
 	}
@@ -75,47 +73,4 @@ namespace rczEngine
 		}
 	}
 
-	void CameraManager::OverrideAndSetCameraBuffer(Gfx::GfxCore * gfx, const Matrix4& viewMatrix, const Matrix4& projMatrix, int32 vertexShaderSlot, int32 PixelShaderSlot)
-	{
-		CameraData overrideCamData;
-
-		overrideCamData.FarPlane.m_x = 0;
-		overrideCamData.NearPlane.m_x = 0;
-
-		overrideCamData.ProjectionMatrix = overrideCamData.PreviousProjectionMatrix = projMatrix.GetTransposed();
-		overrideCamData.ViewMatrix = overrideCamData.PreviousViewMatrix = viewMatrix.GetTransposed();
-
-		m_CameraBuffer.UpdateConstantBuffer(&overrideCamData, gfx);
-		m_CameraBuffer.SetBufferInPS(PixelShaderSlot, gfx);
-		m_CameraBuffer.SetBufferInVS(vertexShaderSlot, gfx);
-		m_CameraBuffer.SetBufferInDS(vertexShaderSlot, gfx);
-		m_CameraBuffer.SetBufferInHS(vertexShaderSlot, gfx);
-	}
-
-	void CameraManager::UpdateAndSetCameraBuffer(Gfx::GfxCore * gfx, int32 vertexShaderSlot, int32 PixelShaderSlot)
-	{
-		if (m_ActiveCamera)
-		{
-			m_ActiveCameraData.FarPlane.m_x = m_ActiveCamera->GetFarPlane();
-			m_ActiveCameraData.NearPlane.m_x = m_ActiveCamera->GetNearPlane();
-
-			m_ActiveCameraData.PreviousProjectionMatrix = m_ActiveCameraData.ProjectionMatrix;
-			m_ActiveCameraData.ProjectionMatrix = m_ActiveCamera->GetProjMatrix().GetTransposed();
-
-			m_ActiveCameraData.PreviousViewMatrix = m_ActiveCameraData.ViewMatrix;
-			m_ActiveCameraData.ViewMatrix = m_ActiveCamera->GetViewMatrix().GetTransposed();
-
-			m_ActiveCameraData.ViewPosition = m_ActiveCamera->GetPosition();
-			m_ActiveCameraData.ViewDirection = m_ActiveCamera->GetViewDir();
-
-
-			m_CameraBuffer.UpdateConstantBuffer(&m_ActiveCameraData, gfx);
-			m_CameraBuffer.SetBufferInPS(PixelShaderSlot, gfx);
-			m_CameraBuffer.SetBufferInVS(vertexShaderSlot, gfx);
-			m_CameraBuffer.SetBufferInDS(vertexShaderSlot, gfx);
-			m_CameraBuffer.SetBufferInHS(vertexShaderSlot, gfx);
-		}
-
-	}
-	
 }

@@ -26,7 +26,8 @@ namespace rczEngine
 
 	void SkyBoxPass::PreRenderPass()
 	{
-		CameraManager::Pointer()->UpdateAndSetCameraBuffer(m_gfx, 5, 5);
+		RacrozRenderer::Pointer()->UpdateCameraBuffersActiveCamera();
+		RacrozRenderer::Pointer()->SetCameraBuffersInPipeline(5, 5);
 
 		m_VShader.SetThisVertexShaderAndInputLayout(m_gfx);
 		m_PShader.SetThisPixelShader(m_gfx);

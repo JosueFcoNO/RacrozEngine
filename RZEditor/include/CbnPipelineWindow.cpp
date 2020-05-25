@@ -24,11 +24,17 @@ void rczEngine::PipelineWindow::Render()
 
 	imagePos.y += 40;
 
-	auto pass = m_LinkedRenderPipeline.lock()->GetPass(m_CurrentPass);
+	const auto pipeline = m_LinkedRenderPipeline.lock();
+	auto pass = pipeline->GetPass(m_CurrentPass);
+	const auto passNum = pipeline->GetPassesNum();
+	const auto& passID = pass->m_Name;
 
 	if (ImGui::Button("Next Pass"))
 	{
 		m_CurrentPass++;
+
+		m_CurrentPass %= passNum;
+
 		m_CurrentRT = 0;
 	}
 	
@@ -43,9 +49,18 @@ void rczEngine::PipelineWindow::Render()
 		m_CurrentRT = (m_CurrentRT + 1) % size;
 	}
 
-	ImGui::SetCursorPos(imagePos);
+	if (ImGui::Button("Final Pass"))
+	{
+		m_CurrentPass = passNum - 1;
+		m_CurrentRT = 0;
+	}
 
 	auto getRT = pass->GetRenderTarget(m_CurrentRT);
+
+	ImGui::Text(passID.c_str());
+	ImGui::Text(getRT->m_Name.c_str());
+
+	ImGui::SetCursorPos(imagePos);
 
 	ImGui::SetNextWindowBgAlpha(1);
 	ImGui::Image(getRT->GetTextureCore()->m_ShaderResource, windowSize);

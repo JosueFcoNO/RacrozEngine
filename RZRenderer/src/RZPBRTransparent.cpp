@@ -63,12 +63,12 @@ namespace rczEngine
 
 		//SetRenderTargetsInPipeline();
 		//CullFront.SetThisRasterizerState(m_gfx);
-		//RacrozRenderer::PrepareRender(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_MetRough_Trans, false);
+		//RacrozRenderer::PrepareDrawableObjects(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_MetRough_Trans, false);
 		////m_gfx->UnbindRenderTargets();
 		//
 		////SetRenderTargetsInPipeline();
 		//CullBack.SetThisRasterizerState(m_gfx);
-		//RacrozRenderer::PrepareRender(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_MetRough_Trans, false);
+		//RacrozRenderer::PrepareDrawableObjects(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_MetRough_Trans, false);
 
 		m_gfx->SetRSStateDefault();
 		

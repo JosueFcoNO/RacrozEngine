@@ -2,20 +2,31 @@
 
 namespace rczEngine
 {
-	void LightComponent::InitLightInManager(LightManager * lManager, Gfx::GfxCore* gfx, eLIGHT_TYPE lightType, Vector3 pos, Vector3 dir, Vector4 color, bool castsShadows, float pointRadius, float spotFactor)
+	void LightComponent::Update(float deltaTime)
+	{
+		const auto& position = m_Owner.lock()->GetAccumulatedPosition();
+		const auto& rotation = m_Owner.lock()->GetOrientation();
+
+		GraphicDebugger::Pointer()->AddPoint("Light", position, 10.0f, Color(1, 1, 1, 1), 0.1f);
+		GraphicDebugger::Pointer()->AddLineList("LightList", { position, position + rotation }, Color(1, 1, 1, 1), 0.1f);
+
+		m_Light->UpdateLight(position, rotation, m_Color, m_Intensity);
+	};
+
+	void LightComponent::InitLightInManager(LightManager * lManager, Gfx::GfxCore* gfx, eLightType lightType, Vector3 pos, Vector3 dir, Vector4 color, bool castsShadows, float pointRadius, float spotFactor)
 	{
 		m_Light = lManager->AddLight();
 
 		switch (lightType)
 		{
 		default:
-		case LIGHT_POINT:
+		case eLightType::Point:
 			m_Light->InitPointLight(pointRadius, pos, color, castsShadows);
 			break;
-		case LIGHT_SPOT:
+		case eLightType::Spot:
 			m_Light->InitSpotLight(spotFactor, pos, dir, color, castsShadows);
 			break;
-		case LIGHT_DIR:
+		case eLightType::Directional:
 			m_Light->InitDirectionalLight(dir, color, castsShadows);
 			break;
 		}
@@ -24,12 +35,6 @@ namespace rczEngine
 
 		auto view = m_Light->GetLightViewProjMatrix();
 		m_LightViewBuffer.UpdateConstantBuffer(&view, gfx);
-	}
-
-	void LightComponent::UpdateLight(Vector3 pos, Vector3 dir)
-	{
-		m_Light->m_LightPosition = Matrix4::Translate3D(pos.m_x, pos.m_y, pos.m_z)*m_Light->m_LightPosition;
-		m_Light->m_LightDirection = Matrix4::Rotate3D(dir.m_x, dir.m_y, dir.m_z)*m_Light->m_LightDirection;
 	}
 
 	void LightComponent::SetLightViewMatrix(Gfx::GfxCore * gfx)

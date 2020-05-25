@@ -33,7 +33,7 @@ namespace rczEngine
 
 	void ColorCorrectionPass::RenderPass()
 	{
-		RacrozRenderer::RenderScreenAlignedQuad();
+		RacrozRenderer::Pointer()->DrawScreenQuad();
 	}
 
 	void ColorCorrectionPass::PostRenderPass()

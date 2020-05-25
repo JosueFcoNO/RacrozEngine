@@ -183,6 +183,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\CbnLightDepthPass.h" />
     <ClInclude Include="include\CbnPipelineDebug.h" />
     <ClInclude Include="include\CbnPipelineForward.h" />
     <ClInclude Include="include\CbnVoxelizePass.h" />
@@ -218,6 +219,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\CbnVXGIImplement.cpp" />
+    <ClCompile Include="src\CbnLightDepthPass.cpp" />
     <ClCompile Include="src\CbnPipelineDebug.cpp" />
     <ClCompile Include="src\CbnPipelineForward.cpp" />
     <ClCompile Include="src\CbnVoxelizePass.cpp" />

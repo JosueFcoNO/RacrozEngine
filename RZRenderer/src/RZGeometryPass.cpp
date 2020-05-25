@@ -28,6 +28,10 @@ namespace rczEngine
 
 		///Set the rasterizer state.
 		m_gfx->SetRSStateDefault();
+
+		RacrozRenderer::Pointer()->UpdateCameraBuffersActiveCamera();
+		RacrozRenderer::Pointer()->SetCameraBuffersInPipeline(5, 5);
+
 	}
 
 	void GeometryPass::RenderPass()
@@ -38,21 +42,21 @@ namespace rczEngine
 		///Normal Geometry
 
 		m_PShader.SetThisPixelShader(m_gfx);
-		renderer->RenderObjs(true, CMP_MODEL_RENDERER, eMaterialType::PBR_MetRough, eShadingType::PBR, eBlendType::Opaque, false, false, false, false);
+		renderer->DrawObjectsByProperties(true, CMP_MODEL_RENDERER, eMaterialType::PBR_MetRough, eShadingType::PBR, eBlendType::Opaque, false, false, false, false);
 
 		m_SmoothPS.SetThisPixelShader(m_gfx);
-		renderer->RenderObjs(true, CMP_MODEL_RENDERER, eMaterialType::PBR_SpecSmooth, eShadingType::PBR, eBlendType::Opaque, false, false, false, false);
+		renderer->DrawObjectsByProperties(true, CMP_MODEL_RENDERER, eMaterialType::PBR_SpecSmooth, eShadingType::PBR, eBlendType::Opaque, false, false, false, false);
 
 		///Tesselated Geometry
 
 		m_PShader.SetThisPixelShader(m_gfx);
-		renderer->RenderObjs(true, CMP_MODEL_RENDERER, eMaterialType::PBR_MetRough, eShadingType::PBR, eBlendType::Opaque, true, false, false, false);
+		renderer->DrawObjectsByProperties(true, CMP_MODEL_RENDERER, eMaterialType::PBR_MetRough, eShadingType::PBR, eBlendType::Opaque, true, false, false, false);
 		
 		m_SmoothPS.SetThisPixelShader(m_gfx);
-		renderer->RenderObjs(true, CMP_MODEL_RENDERER, eMaterialType::PBR_SpecSmooth, eShadingType::PBR, eBlendType::Opaque, true, false, false, false);
+		renderer->DrawObjectsByProperties(true, CMP_MODEL_RENDERER, eMaterialType::PBR_SpecSmooth, eShadingType::PBR, eBlendType::Opaque, true, false, false, false);
 
 		//m_SkinnedVshader.SetThisVertexShaderAndInputLayout(m_gfx);
-		//RacrozRenderer::PrepareRender(SceneManager::Pointer()->GetActiveScene().get(), CMP_SKINNED_MODEL_RENDERER, PBR_MetRough, true);
+		//RacrozRenderer::PrepareDrawableObjects(SceneManager::Pointer()->GetActiveScene().get(), CMP_SKINNED_MODEL_RENDERER, PBR_MetRough, true);
 	}
 
 	void GeometryPass::PostRenderPass()

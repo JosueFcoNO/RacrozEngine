@@ -28,7 +28,8 @@ namespace rczEngine
 
 	void PBR_Pass::PreRenderPass()
 	{
-		CameraManager::Pointer()->UpdateAndSetCameraBuffer(m_gfx, 5, 5);
+		RacrozRenderer::Pointer()->UpdateCameraBuffersActiveCamera();
+		RacrozRenderer::Pointer()->SetCameraBuffersInPipeline(5, 5);
 
 		LightManager::Pointer()->SetLightsBuffers();
 
@@ -46,7 +47,7 @@ namespace rczEngine
 	
 	void PBR_Pass::RenderPass()
 	{
-		RacrozRenderer::RenderScreenAlignedQuad();
+		RacrozRenderer::Pointer()->DrawScreenQuad();
 	}
 
 	void PBR_Pass::PostRenderPass()

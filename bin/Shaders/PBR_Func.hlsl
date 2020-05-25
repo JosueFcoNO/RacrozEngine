@@ -445,7 +445,7 @@ float3 PBR_rm(float3 _position, float3 _albedoColor, float3 _normal, float _roug
 
 		if (SpotFactor > g_Lights[i].Props.w && (Distance < g_Lights[i].Props.z || g_Lights[i].Props.x != 0))
 		{
-			Light1 += ComputeLight(_albedoColor.xyz, specularColor.xyz, _normal, _roughness, g_Lights[i].LightPosition.xyz, g_Lights[i].LightColor.xyz, lightDir, viewDir, _metallic);
+			Light1 += ComputeLight(_albedoColor.xyz, specularColor.xyz, _normal, _roughness, g_Lights[i].LightPosition.xyz, g_Lights[i].LightColor.xyz, lightDir, viewDir, _metallic) * g_Lights[i].LightColor.w;
 		}
 #endif
 
@@ -493,7 +493,7 @@ float3 PBR_rm_VXGI(float3 _position, float3 _albedoColor, float3 _normal, float 
 	///Bidirectional Reflection Distribution Function
 	float3 Light1 = float3(0, 0, 0);
 
-	for (int i = 0; i < g_LightNumber; ++i)
+	for (int i = 0; i < 8; ++i)
 	{
 		float Distance = length(_position - g_Lights[i].LightPosition);
 		float Attenuation = 0.1f + 0.01f * Distance + 0.001f * Distance * Distance;
@@ -526,7 +526,7 @@ float3 PBR_rm_VXGI(float3 _position, float3 _albedoColor, float3 _normal, float 
 
 		if (SpotFactor > g_Lights[i].Props.w)
 		{
-			Light1 += ComputeLight(_albedoColor.xyz, specularColor.xyz, _normal, _roughness, g_Lights[i].LightPosition.xyz, g_Lights[i].LightColor.xyz, lightDir, viewDir, _metallic);
+			Light1 += ComputeLight(_albedoColor.xyz, specularColor.xyz, _normal, _roughness, g_Lights[i].LightPosition.xyz, g_Lights[i].LightColor.xyz, lightDir, viewDir, _metallic) * g_Lights[i].LightColor.w;
 		}
 #endif
 

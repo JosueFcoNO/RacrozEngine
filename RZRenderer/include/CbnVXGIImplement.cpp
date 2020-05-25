@@ -21,16 +21,16 @@ namespace rczEngine
 
 		int w, h;
 		Gfx::GfxCore::Pointer()->GetScreenSize(w, h);
-		rTarget = RacrozRenderer::Pointer()->CreateRenderTargetAndTexture_WidthHeight("Main", texture, 1, w, h);
+		rTarget = RacrozRenderer::Pointer()->CreateRenderTexture("Main", texture, 1, w, h);
 		m_Width = w;
 		m_Height = h;
 
 		auto racrozRenderer = RacrozRenderer::Pointer();
 		m_gfx = Gfx::GfxCore::Pointer();
 
-		SpecularResult = racrozRenderer->CreateRenderTargetAndTexture_WidthHeight("Specular Result", SpecularResultTex, 1, m_Width, m_Height, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
-		DiffuseResult = racrozRenderer->CreateRenderTargetAndTexture_WidthHeight("Diffuse Result", DiffuseResultTex, 1, m_Width, m_Height, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
-		SSAOResult = racrozRenderer->CreateRenderTargetAndTexture_WidthHeight("SSAO Result", SSAOResultTex, 1, m_Width, m_Height, Gfx::eFORMAT::FORMAT_R8_UNORM);
+		SpecularResult = racrozRenderer->CreateRenderTexture("Specular Result", SpecularResultTex, 1, m_Width, m_Height, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
+		DiffuseResult = racrozRenderer->CreateRenderTexture("Diffuse Result", DiffuseResultTex, 1, m_Width, m_Height, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
+		SSAOResult = racrozRenderer->CreateRenderTexture("SSAO Result", SSAOResultTex, 1, m_Width, m_Height, Gfx::eFORMAT::FORMAT_R8_UNORM);
 
 		ResVault::Pointer()->InsertResource(SpecularResultTex);
 		ResVault::Pointer()->InsertResource(DiffuseResultTex);
@@ -38,10 +38,10 @@ namespace rczEngine
 
 		OldDepth = std::make_shared<Gfx::DepthStencyl>();
 
-		OldNormal = racrozRenderer->CreateRenderTargetAndTexture_WidthHeight("Prev Normal", OldNormalTex, 1, m_Width, m_Height, Gfx::FORMAT_R32G32B32A32_FLOAT);
+		OldNormal = racrozRenderer->CreateRenderTexture("Prev Normal", OldNormalTex, 1, m_Width, m_Height, Gfx::FORMAT_R32G32B32A32_FLOAT);
 		m_gfx->CreateDepthStencyl(*OldDepth, m_Width, m_Height);
 
-		DebugResult = RacrozRenderer::Pointer()->CreateRenderTargetAndTexture_WidthHeight("-------------------------", DebugResultTex, 1, m_Width, m_Height, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
+		DebugResult = RacrozRenderer::Pointer()->CreateRenderTexture("-------------------------", DebugResultTex, 1, m_Width, m_Height, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
 		ResVault::Pointer()->InsertResource(DebugResultTex);
 
 		m_Albedo = g_pRendererInterface->getHandleForTexture(DebugResultTex->GetTextureCore()->m_Texture);
@@ -168,7 +168,6 @@ namespace rczEngine
 		g_pGI->endVoxelizationDrawCallGroup();
 
 		g_pRendererInterface->endRenderingPass();
-
 
 		m_gfx->SetDefaultRenderTarget();
 		m_gfx->SetViewPortDefault();

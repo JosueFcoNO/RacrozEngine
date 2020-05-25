@@ -5,7 +5,7 @@ namespace rczEngine
 	struct LightBufferStruct
 	{
 		int m_LightNumber[4];
-		Light m_Lights[8];
+		LightCore m_Lights[8];
 	};
 
 	class RZ_EXP LightManager
@@ -24,11 +24,13 @@ namespace rczEngine
 		Light* AddLight();
 		void SetLightsBuffers();
 		void SetSingleLightBuffer(uint32 lightSlot);
-		Light* GetLight(uint32 slot) { return &m_LightStruct.m_Lights[slot]; };
+		Light* GetLight(uint32 slot) { return &m_Lights[slot]; };
 		uint32 GetLightNumber() { return m_LightStruct.m_LightNumber[0]; };
 
 	private:
 		LightBufferStruct m_LightStruct;
+
+		Vector<Light> m_Lights;
 
 		Gfx::ConstantBuffer m_LightBuffer;
 		Gfx::ConstantBuffer m_SingleLightBuffer;

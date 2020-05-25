@@ -24,7 +24,8 @@ namespace rczEngine
 	void VoxelizePass::PreRenderPass()
 	{
 		LightManager::Pointer()->SetLightsBuffers();
-		CameraManager::Pointer()->OverrideAndSetCameraBuffer(m_gfx, VoxelizeViewMatrix, VoxelizeProjMatrix, 5, 5);
+		RacrozRenderer::Pointer()->UpdateCameraBuffersMatrices(VoxelizeViewMatrix, VoxelizeProjMatrix);
+		RacrozRenderer::Pointer()->SetCameraBuffersInPipeline(5, 5);
 
 		ResVault::Pointer()->GetResource<CubeMap>(ResVault::Pointer()->m_CubeMapDefault).lock()->SetThisTextureInPS(12, 1, m_gfx);
 		
@@ -40,8 +41,8 @@ namespace rczEngine
 
 	void VoxelizePass::RenderPass()
 	{
-		RacrozRenderer::Pointer()->PrepareRender(SceneManager::Pointer()->GetActiveScene());
-		RacrozRenderer::Pointer()->RenderObjs(true, eComponentID::CMP_MODEL_RENDERER, eMaterialType::PBR_MetRough, eShadingType::PBR, eBlendType::Opaque, false, false, false, false);
+		RacrozRenderer::Pointer()->PrepareDrawableObjects(SceneManager::Pointer()->GetActiveScene());
+		RacrozRenderer::Pointer()->DrawObjectsByProperties(true, eComponentID::CMP_MODEL_RENDERER, eMaterialType::PBR_MetRough, eShadingType::PBR, eBlendType::Opaque, false, false, false, false);
 	}
 
 	void VoxelizePass::PostRenderPass()

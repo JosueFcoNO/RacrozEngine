@@ -27,7 +27,7 @@ namespace rczEngine
 
 	void SSAOPass::RenderPass()
 	{
-		RacrozRenderer::RenderScreenAlignedQuad();
+		RacrozRenderer::Pointer()->DrawScreenQuad();
 	}
 
 	void SSAOPass::PostRenderPass()

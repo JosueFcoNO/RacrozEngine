@@ -22,7 +22,7 @@ namespace rczEngine
 
 	void HDRBloomPass::RenderPass()
 	{
-		RacrozRenderer::RenderScreenAlignedQuad();
+		RacrozRenderer::Pointer()->DrawScreenQuad();
 	}
 
 	void HDRBloomPass::PostRenderPass()

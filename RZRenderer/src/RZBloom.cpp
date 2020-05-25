@@ -7,7 +7,7 @@ namespace rczEngine
 		m_PShaderPath = L"Shaders/HDRBloom/Bloom.hlsl";
 		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
 
-		m_BlurredBloomRT = RacrozRenderer::Pointer()->CreateRenderTargetAndTexture_XYScales("BlurredBloom", m_BlurredBloom, 2, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
+		m_BlurredBloomRT = RacrozRenderer::Pointer()->CreateRenderTexture("BlurredBloom", m_BlurredBloom, 2, m_gfx->GetWidth(), m_gfx->GetHeight(), Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
 		AddTexture2D(m_BlurredBloom, 1);
 
 		m_BloomPasses = 0;
@@ -36,7 +36,7 @@ namespace rczEngine
 
 	void BloomPass::RenderPass()
 	{
-		RacrozRenderer::RenderScreenAlignedQuad();
+		RacrozRenderer::Pointer()->DrawScreenQuad();
 	}
 
 	void BloomPass::PostRenderPass()

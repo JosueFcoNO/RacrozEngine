@@ -8,12 +8,6 @@ namespace rczEngine
 
 		for (i = 0; i < m_PassesOrder.size(); ++i)
 		{
-			if (m_PassesOrder[i] == "PostProcess")
-			{
-				m_Renderer->StartPostProcessing();
-				continue;
-			}
-
 			auto pass = m_Passes[m_PassesOrder[i]];
 
 			pass->PreRenderPass();
@@ -24,7 +18,7 @@ namespace rczEngine
 
 	void RenderPipeline::CreateRenderTarget(const String & name, int32 width, int32 height, Gfx::eFORMAT format, int32 mipmaps)
 	{
-		m_RTs[name.c_str()] = m_Renderer->CreateRenderTargetAndTexture_WidthHeight(name, m_Textures[name], mipmaps, width, height, format);
+		m_RTs[name.c_str()] = m_Renderer->CreateRenderTexture(name, m_Textures[name], mipmaps, width, height, format);
 	}
 
 	StrPtr<Pass> RenderPipeline::CreatePass(const String & name, ePasses pass, eRenderingPipelines renderMode)

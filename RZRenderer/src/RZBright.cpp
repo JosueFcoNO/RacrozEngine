@@ -24,7 +24,7 @@ namespace rczEngine
 
 	void BrightPass::RenderPass()
 	{
-		RacrozRenderer::RenderScreenAlignedQuad();
+		RacrozRenderer::Pointer()->DrawScreenQuad();
 	}
 
 	void BrightPass::PostRenderPass()

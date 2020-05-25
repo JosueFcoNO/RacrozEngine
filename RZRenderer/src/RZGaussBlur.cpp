@@ -12,7 +12,7 @@ namespace rczEngine
 		m_BlurInfoCB.UpdateConstantBuffer(&m_BlurInfo, m_gfx);
 
 		m_Blur = RacrozRenderer::Pointer()->
-			CreateRenderTargetAndTexture_XYScales("BlurMid", m_BlurTex, 9, 1.0f, 1.0f, Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
+			CreateRenderTexture("BlurMid", m_BlurTex, 9, m_gfx->GetWidth(), m_gfx->GetHeight(), Gfx::eFORMAT::FORMAT_R16G16B16A16_FLOAT);
 	}
 
 	void GaussPass::BlurPass(StrPtr<Gfx::RenderTarget> outRenderTarget, StrPtr<Texture2D> inTexture, int width, int height)
@@ -56,7 +56,7 @@ namespace rczEngine
 		m_gfx->ClearDepthTargetView();
 		
 		//Render the screen quad.
-		RacrozRenderer::RenderScreenAlignedQuad();
+		RacrozRenderer::Pointer()->DrawScreenQuad();
 
 		//unbind the texture.
 		m_gfx->UnbindPSShaderResource(0);

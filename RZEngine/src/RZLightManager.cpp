@@ -32,17 +32,26 @@ namespace rczEngine
 
 		m_LightStruct.m_LightNumber[0] = 0;
 
-		m_SingleLightBuffer.CreateConstantBuffer(sizeof(Light), Gfx::USAGE_DEFAULT, m_gfx);
+		m_SingleLightBuffer.CreateConstantBuffer(sizeof(LightCore), Gfx::USAGE_DEFAULT, m_gfx);
 	}
 
 	Light * LightManager::AddLight()
 	{
-		Light* ptr = &m_LightStruct.m_Lights[m_LightStruct.m_LightNumber[0]++];
-		return ptr;
+		m_Lights.push_back(Light());
+
+		m_LightStruct.m_LightNumber[0]++;
+
+		return &m_Lights[m_Lights.size()-1];
 	}
 
 	void LightManager::SetLightsBuffers()
 	{
+		auto i = 0;
+		for (auto i= 0; i < m_LightStruct.m_LightNumber[0]; ++i)
+		{
+			m_LightStruct.m_Lights[i] = m_Lights[i].m_Core;
+		}
+
 		m_LightBuffer.UpdateConstantBuffer(&m_LightStruct, m_gfx);
 		m_LightBuffer.SetBufferInPS(3, m_gfx);
 		m_LightBuffer.SetBufferInVS(3, m_gfx);

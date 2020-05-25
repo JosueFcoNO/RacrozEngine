@@ -34,7 +34,6 @@ namespace rczEngine
 				ImGui::PushID(i);
 				if (ImGui::Selectable(m.first.c_str()))
 				{
-					ImGui::TreeAdvanceToLabelPos();
 					EditorCore::Pointer()->CreateActiveResourceWindow(m.second);
 				}
 				ImGui::PopID();

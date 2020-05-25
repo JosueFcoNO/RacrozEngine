@@ -111,6 +111,12 @@
     <Filter Include="Archivos de encabezado\Passes\VXGI">
       <UniqueIdentifier>{5d3b7b41-70eb-426b-ad1c-8b01cad87998}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\Passes\Shadows">
+      <UniqueIdentifier>{85e12e2a-2a9b-43e1-9910-21668508c514}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Passes\Shadows">
+      <UniqueIdentifier>{ce8012b3-2350-4993-931a-bde10c825a42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RZRacrozRenderer.h">
@@ -207,6 +213,9 @@
     <ClInclude Include="include\CbnVoxelizePass.h">
       <Filter>Archivos de encabezado\Passes\VXGI</Filter>
     </ClInclude>
+    <ClInclude Include="include\CbnLightDepthPass.h">
+      <Filter>Archivos de encabezado\Passes\Shadows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZRendererPCH.cpp">
@@ -295,6 +304,9 @@
     </ClCompile>
     <ClCompile Include="include\CbnVXGIImplement.cpp">
       <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnLightDepthPass.cpp">
+      <Filter>Archivos de código fuente\Passes\Shadows</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

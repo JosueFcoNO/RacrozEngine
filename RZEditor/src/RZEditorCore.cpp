@@ -149,17 +149,16 @@ namespace rczEngine
 	{
 		m_gfx->SetDefaultRenderTarget();
 		m_gfx->ClearDefaultRenderTargetView(0.1f, 0.1f, 0.1f, 1.0f);
+		m_gfx->ClearDepthTargetView();
 
 		// Start the Dear ImGui frame
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
-		ImGui::Begin("Carbon Engine");
 	}
 
 	void EditorCore::EndUIRender()
 	{
-		ImGui::End();
 		ImGui::EndFrame();
 		ImGui::Render();
 		ImGUIEditor::Pointer()->PreRender(ImGui::GetDrawData());
@@ -168,7 +167,7 @@ namespace rczEngine
 	void EditorCore::NewProjectWindow()
 	{
 		static BasicString<wchar_t> pathProject;
-		static String nameProject("--------------------------------");
+		static String nameProject("");
 
 		static char PathStringBuffer[1024];
 
@@ -192,14 +191,14 @@ namespace rczEngine
 			CreateProject(nameProject, pathProject, RendererSettings());
 			m_EditorSettings.m_ProjectFilesScores[nameProject]  = ProjectRecord(nameProject, pathProject);
 			m_EditorSettings.SaveEditorSettings();
-
-			m_State = eEditorStates::Project;
 		}
 	}
 
 	void EditorCore::StartProject(const String& name)
 	{
-		
+		m_State = eEditorStates::Project;
+
+		Math3DUnitTest();
 	}
 
 	void EditorCore::CreateProject(const String& name, const StringW& path, RendererSettings renderer)
@@ -234,19 +233,16 @@ namespace rczEngine
 
 		for (auto projectRecord : m_EditorSettings.m_ProjectFilesScores)
 		{
-			ImGui::Button(projectRecord.first.c_str());
+			if (ImGui::Button(projectRecord.first.c_str()))
+			{
+				StartProject(projectRecord.first.c_str());
+				return;
+			}
 
 			ImGui::SameLine();
 
 			ImGui::Text(TextTool::UniToAnsi(projectRecord.second.Path.c_str()).c_str());
 		}
-
-		//if (ImGui::Button("3D Math Unit Test"))
-		//{
-		//	Math3DUnitTest();
-		//
-		//	return;
-		//}
 	}
 
 	void EditorCore::RunEditor()
@@ -261,12 +257,19 @@ namespace rczEngine
 			switch (m_State)
 			{
 			case rczEngine::eEditorStates::Main:
+				ImGui::Begin("Carbon Engine");
 				MainWindow();
+				ImGui::End();
 				break;
 			case rczEngine::eEditorStates::CreateProject:
+				ImGui::Begin("Carbon Engine");
 				NewProjectWindow();
+				ImGui::End();
 				break;
 			case rczEngine::eEditorStates::Project:
+				UpdateEditor();
+
+				RenderEditor();
 				break;
 			default:
 				break;
@@ -283,28 +286,6 @@ namespace rczEngine
 				DispatchMessage(&msg);
 			}
 		}
-
-		//while (Quit)
-		//{
-		//	//Quit = Input::GetKeyDown(KEY_ESCAPE);
-		//	float deltaTime = (float)Time.GetFrameTime();
-		//	
-		//	Input::Pointer()->UpdateInput();
-		//	m_scnManager->GetActiveScene()->Update(deltaTime);
-		//
-		//	m_renderer->Render(m_scnManager->GetActiveScene().get(), ImGUIEditor::Pointer());
-		//
-		//	// Bucle principal de mensajes:
-		//	if (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
-		//	{
-		//		TranslateMessage(&msg);
-		//		DispatchMessage(&msg);
-		//		//if (!TranslateAcceleratorW(msg.hwnd, hAccelTable, &msg))
-		//		//{
-		//		//
-		//		//}
-		//	}
-		//}
 	}
 
 	void EditorCore::InitSceneGrid()
@@ -340,20 +321,11 @@ namespace rczEngine
 
 	void EditorCore::RenderGUI()
 	{
-		// Start the Dear ImGui frame
-		ImGui_ImplDX11_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
-
 		for (auto& window : m_EditorWindows)
 		{
 			if (window.second->IsOpen())
 				window.second->RenderWindow();
 		}
-
-		ImGui::EndFrame();
-		ImGui::Render();
-		ImGUIEditor::Pointer()->PreRender(ImGui::GetDrawData());
 	}
 
 	void EditorCore::UpdateWindows(float deltaTime)
@@ -370,17 +342,11 @@ namespace rczEngine
 
 	void EditorCore::RenderEditor()
 	{
-		m_gfx->SetDefaultRenderTarget();
-		m_gfx->ClearDefaultRenderTargetView(0.1f, 0.1f, 0.1f, 1.0f);
-		m_gfx->ClearDepthTargetView();
-
 		auto scene = SceneManager::Pointer()->GetActiveScene();
 
-		m_renderer->Render("Scene", scene, nullptr);
+		m_renderer->Render("Scene", scene);
 
 		RenderGUI();
-
-		m_gfx->Present();
 	}
 
 	void EditorCore::UpdateEditor()
@@ -400,17 +366,6 @@ namespace rczEngine
 		//q = Quaternion::FromAxisAngle(Vector3(0, 10, 10).GetNormalized(), 180 * deltaTime);
 		//cubepos = q.RotateVector(cubepos, 1);
 		//cube.lock()->SetCube(cubepos, Vector3(0.5f, 0.5f, 0.5f));
-
-		// Bucle principal de mensajes:
-		if (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			//if (!TranslateAcceleratorW(msg.hwnd, hAccelTable, &msg))
-			//{
-			//
-			//}
-		}
 	}
 
 	void EditorCore::Math3DUnitTest()
@@ -424,7 +379,6 @@ namespace rczEngine
 		window->InitWindow("Scene");
 		m_EditorWindows["Scene"] = window;
 		window->SetRenderPipeline(m_renderer->GetPipeline("Scene").lock());
-
 
 		auto sceneWindow = new ScenesWindow();
 		sceneWindow->InitWindow("Scenes");
@@ -445,16 +399,6 @@ namespace rczEngine
 		auto VXGI = new VXGIWindow();
 		VXGI->InitWindow("VXGI");
 		m_EditorWindows["VXGI"] = VXGI;
-
-		auto gDebugger = GraphicDebugger::Pointer();
-		
-		bool editor = true;
-		while (editor)
-		{
-			UpdateEditor();
-
-			RenderEditor();
-		}
 	}
 
 	void EditorCore::DestroyEditor()

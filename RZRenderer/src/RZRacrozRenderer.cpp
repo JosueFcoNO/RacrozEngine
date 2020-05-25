@@ -46,11 +46,9 @@ namespace rczEngine
 		///Init the screen quad
 		m_ScreenQuad.InitScreenQuad(m_gfx);
 
-		///Compile, create and reflect the ScreenQuad Vertex Shader.
-		m_gfx->CompileAndCreateVertexShader(m_ScreenQuadVS, L"Shaders/PassVShader.hlsl");
-		m_ScreenQuadVS.ReflectLayout(1, m_gfx);
-
 		m_ActiveSkyBox = std::make_shared<SkyBox>();
+
+		m_CameraBuffer.CreateConstantBuffer(sizeof(CameraData), Gfx::USAGE_DEFAULT, m_gfx);
 
 		m_BlurPass.CreatePipeline(eRenderingPipelines::Deferred);
 	}
@@ -82,7 +80,7 @@ namespace rczEngine
 		{
 			m_VXGI.InitVXGI();
 
-			auto pass = m_Pipelines[name]->GetPass(3);
+			auto pass = m_Pipelines[name]->GetPass(2);
 			pass->AddTexture2D(m_VXGI.SSAOResultTex, 5);
 			pass->AddTexture2D(m_VXGI.DiffuseResultTex, 8);
 			pass->AddTexture2D(m_VXGI.SpecularResultTex, 9);
@@ -94,21 +92,21 @@ namespace rczEngine
 		m_GIPrepared = true;
 
 		if (prepareScene)
-			PrepareRender(SceneManager::Pointer()->GetActiveScene());
+			PrepareDrawableObjects(SceneManager::Pointer()->GetActiveScene());
 		
 		m_VXGI.VoxelizeScene();
 	};
 
-	void RacrozRenderer::Render(const String& name, StrPtr<Scene> sceneGraph, ImGUIEditor * editor)
+	void RacrozRenderer::Render(const String& name, StrPtr<Scene> sceneGraph)
 	{
-		PrepareRender(sceneGraph);
+		PrepareDrawableObjects(sceneGraph);
 
 		if (!m_GIPrepared)
 		{
 			PrepareGI();
 		}
 
-		RacrozRenderer::Pointer()->SetSamplerStates();
+		SetSamplerStates();
 		m_Pipelines[name]->DoRender();
 	}
 
@@ -119,7 +117,7 @@ namespace rczEngine
 
 	void RacrozRenderer::Destroy()
 	{
-
+		m_CameraBuffer.Destroy();
 	}
 
 	ResourceHandle RacrozRenderer::CreateCubeMap(const String& name, Scene * sceneGraph, RenderPipeline* renderPipeline, int width, int height)
@@ -153,12 +151,12 @@ namespace rczEngine
 		///
 		///auto format = Gfx::FORMAT_R16G16B16A16_FLOAT;
 		///
-		///renderTargets[0] = CreateRenderTargetAndTexture_WidthHeight("0", Textures[0], 1, width, height, format);
-		///renderTargets[1] = CreateRenderTargetAndTexture_WidthHeight("1", Textures[1], 1, width, height, format);
-		///renderTargets[2] = CreateRenderTargetAndTexture_WidthHeight("2", Textures[2], 1, width, height, format);
-		///renderTargets[3] = CreateRenderTargetAndTexture_WidthHeight("3", Textures[3], 1, width, height, format);
-		///renderTargets[4] = CreateRenderTargetAndTexture_WidthHeight("4", Textures[4], 1, width, height, format);
-		///renderTargets[5] = CreateRenderTargetAndTexture_WidthHeight("5", Textures[5], 1, width, height, format);
+		///renderTargets[0] = CreateRenderTexture("0", Textures[0], 1, width, height, format);
+		///renderTargets[1] = CreateRenderTexture("1", Textures[1], 1, width, height, format);
+		///renderTargets[2] = CreateRenderTexture("2", Textures[2], 1, width, height, format);
+		///renderTargets[3] = CreateRenderTexture("3", Textures[3], 1, width, height, format);
+		///renderTargets[4] = CreateRenderTexture("4", Textures[4], 1, width, height, format);
+		///renderTargets[5] = CreateRenderTexture("5", Textures[5], 1, width, height, format);
 		///
 		///auto scene = sceneGraph;
 		///auto ptr = CameraManager::Pointer();
@@ -235,12 +233,12 @@ namespace rczEngine
 		return 0;
 	}
 
-	void RacrozRenderer::PrepareRender(StrPtr<Scene> sceneGraph)
+	void RacrozRenderer::PrepareDrawableObjects(StrPtr<Scene> sceneGraph)
 	{
 		///m_gfx->SetRSStateDefault();
 		///m_gfx->SetBlendStateDefault();
 	
-		m_ObjectsToRender.clear();
+		m_ObjectsToDraw.clear();
 
 		auto CurrentCamera = CameraManager::Pointer()->GetActiveCamera().lock();
 		auto pos = CurrentCamera->GetPosition();
@@ -283,12 +281,12 @@ namespace rczEngine
 						auto VectorToObj = (gameObj->GetAccumulatedPosition() - pos);
 						float Magnitude = VectorToObj.Magnitude();
 
-						if (m_ObjectsToRender.find(hashRender) == m_ObjectsToRender.end())
+						if (m_ObjectsToDraw.find(hashRender) == m_ObjectsToDraw.end())
 						{
-							m_ObjectsToRender[hashRender] = MMap<float, WeakGameObjPtr>();
+							m_ObjectsToDraw[hashRender] = MMap<float, WeakGameObjPtr>();
 						}
 						
-						m_ObjectsToRender[hashRender].insert(Pair<float, WeakGameObjPtr>(Magnitude, gameObj));
+						m_ObjectsToDraw[hashRender].insert(Pair<float, WeakGameObjPtr>(Magnitude, gameObj));
 					}
 					break;
 				}
@@ -306,7 +304,7 @@ namespace rczEngine
 					//
 					//	auto hash = CalculateRenderHash(renderInfo);
 					//
-					//	m_ObjectsToRender[hash].insert(gameObj);
+					//	m_ObjectsToDraw[hash].insert(gameObj);
 					//}
 					break;
 				}
@@ -324,7 +322,7 @@ namespace rczEngine
 		//}
 	}
 
-	void RacrozRenderer::RenderObjs(bool forward, eComponentID componentID, eMaterialType matType, eShadingType shading, eBlendType blendType, bool Tesselated = false, bool TwoSided = false, bool blendedMaterial = false, bool wireframe = false)
+	void RacrozRenderer::DrawObjectsByProperties(bool forward, eComponentID componentID, eMaterialType matType, eShadingType shading, eBlendType blendType, bool Tesselated = false, bool TwoSided = false, bool blendedMaterial = false, bool wireframe = false)
 	{
 		auto renderHash = MaterialRenderInfo::CalculateRenderHash(componentID, matType, shading, blendType, Tesselated, TwoSided, blendedMaterial, wireframe);
 		auto scene = SceneManager::Pointer()->GetActiveScene();
@@ -359,7 +357,7 @@ namespace rczEngine
 
 		if (forward)
 		{
-			for (auto it = m_ObjectsToRender[renderHash].begin(); it != m_ObjectsToRender[renderHash].end(); ++it)
+			for (auto it = m_ObjectsToDraw[renderHash].begin(); it != m_ObjectsToDraw[renderHash].end(); ++it)
 			{
 				it->second.lock()->PreRender();
 				it->second.lock()->Render(componentID, renderHash);
@@ -367,7 +365,7 @@ namespace rczEngine
 		}
 		else
 		{
-			for (auto it = m_ObjectsToRender[renderHash].rbegin(); it != m_ObjectsToRender[renderHash].rend(); ++it)
+			for (auto it = m_ObjectsToDraw[renderHash].rbegin(); it != m_ObjectsToDraw[renderHash].rend(); ++it)
 			{
 				it->second.lock()->PreRender();
 				it->second.lock()->Render(componentID, renderHash);
@@ -381,9 +379,11 @@ namespace rczEngine
 		}
 	}
 
-	void RacrozRenderer::RenderScreenAlignedQuad()
+	void RacrozRenderer::DrawScreenQuad()
 	{
-		Gfx::GfxCore::Pointer()->DrawIndexed(6, 0, 0);
+		m_ScreenQuad.SetScreenQuadBuffers(m_gfx);
+		m_ScreenQuadVS.SetThisVertexShaderAndInputLayout(m_gfx);
+		m_gfx->DrawIndexed(6, 0, 0);
 	}
 
 	void RacrozRenderer::DoBlurPass(StrPtr<Gfx::RenderTarget> outRenderTarget, StrPtr<Texture2D> inTexture, int width, int height)
@@ -391,19 +391,7 @@ namespace rczEngine
 		m_BlurPass.BlurPass(outRenderTarget, inTexture, width, height);
 	}
 
-	void RacrozRenderer::StartPostProcessing()
-	{
-		m_ScreenQuad.SetScreenQuadBuffers(m_gfx);
-		m_ScreenQuadVS.SetThisVertexShaderAndInputLayout(m_gfx);
-		//m_gfx->ClearDepthTargetView();
-	}
-
-	StrPtr<Gfx::RenderTarget> RacrozRenderer::CreateRenderTargetAndTexture_XYScales(const String& name, StrPtr<Texture2D>& out_Texture, int mipMaps, float screenWidthScale, float screenHeightScale, Gfx::eFORMAT format)
-	{
-		return CreateRenderTargetAndTexture_WidthHeight(name, out_Texture, mipMaps, Math::Truncate(m_Width*screenWidthScale), Math::Truncate(m_Height*screenHeightScale), format);
-	}
-
-	StrPtr<Gfx::RenderTarget> RacrozRenderer::CreateRenderTargetAndTexture_WidthHeight(const String& name, StrPtr<Texture2D>& out_Texture, int mipMaps, int32 width, int32 height, Gfx::eFORMAT format)
+	StrPtr<Gfx::RenderTarget> RacrozRenderer::CreateRenderTexture(const String& name, StrPtr<Texture2D>& out_Texture, int mipMaps, int32 width, int32 height, Gfx::eFORMAT format)
 	{
 		///Allocate a new RenderTarget Object
 		auto renderTarget = std::make_shared<Gfx::RenderTarget>();
@@ -441,28 +429,22 @@ namespace rczEngine
 		///Create a LinearWrapSampler and set it on slot 0
 		m_LinealWrapSampler.Init(Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::COMPARISON_NEVER);
 		m_LinealWrapSampler.CreateSamplerState(m_gfx);
-		m_LinealWrapSampler.PSSetThisSamplerState(0, 1, m_gfx);
 
 		///Create a AnisotropicWrapSampler and set it on slot 1
 		m_AnisotropicWrapSampler.Init(Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::COMPARISON_NEVER, Gfx::FILTER_ANISOTROPIC, Vector4(1, 1, 1, 1), 16);
 		m_AnisotropicWrapSampler.CreateSamplerState(m_gfx);
-		m_AnisotropicWrapSampler.PSSetThisSamplerState(1, 1, m_gfx);
 
 		///Create a LinearWrapSampler and set it on slot 2
 		m_LinealClampSampler.Init(Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_CLAMP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_CLAMP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_CLAMP, Gfx::COMPARISON_NEVER);
 		m_LinealClampSampler.CreateSamplerState(m_gfx);
-		m_LinealClampSampler.PSSetThisSamplerState(2, 1, m_gfx);
 
 		///Create a AnisotropicWrapSampler and set it on slot 3
 		m_AnisotropicClampSampler.Init(Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::COMPARISON_NEVER, Gfx::FILTER_ANISOTROPIC, Vector4(1, 1, 1, 1), 16);
 		m_AnisotropicClampSampler.CreateSamplerState(m_gfx);
-		m_AnisotropicClampSampler.PSSetThisSamplerState(3, 1, m_gfx);
 
 		///Create a AnisotropicWrapSampler and set it on slot 3
 		m_PointWrapSampler.Init(Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::eTEXTURE_ADDRESS::TEXTURE_ADDRESS_WRAP, Gfx::COMPARISON_NEVER, Gfx::FILTER_MIN_MAG_MIP_POINT, Vector4(1, 1, 1, 1), 16);
 		m_PointWrapSampler.CreateSamplerState(m_gfx);
-		m_PointWrapSampler.PSSetThisSamplerState(4, 1, m_gfx);
-
 	}
 
 	void RacrozRenderer::SetSamplerStates()
@@ -472,7 +454,6 @@ namespace rczEngine
 		m_LinealClampSampler.PSSetThisSamplerState(2, 1, m_gfx);
 		m_AnisotropicClampSampler.PSSetThisSamplerState(3, 1, m_gfx);
 		m_PointWrapSampler.PSSetThisSamplerState(4, 1, m_gfx);
-
 	}
 
 	void RacrozRenderer::InitGeometryShaders()
@@ -480,6 +461,10 @@ namespace rczEngine
 		///Geometry Vertex Shader
 		m_gfx->CompileAndCreateVertexShader(m_DefaultVertexShader, L"Shaders/GPassMetRough.hlsl");
 		m_DefaultVertexShader.ReflectLayout(0, m_gfx);
+
+		m_gfx->CompileAndCreateVertexShader(m_SimpleTransformVertexShader, L"Shaders/GPassLightDepth.hlsl");
+		m_SimpleTransformVertexShader.ReflectLayout(0, m_gfx);
+
 
 		///Geometry Skinned Vertex Shader
 		m_gfx->CompileAndCreateVertexShader(m_SkinnedVertexShader, L"Shaders/SkinnedVertexShader.hlsl");
@@ -491,5 +476,91 @@ namespace rczEngine
 		m_gfx->CompileAndCreateVertexShader(m_TessVertexShader, L"Shaders/Tess/TessVS.hlsl");
 		m_TessVertexShader.ReflectLayout(0, m_gfx);
 
+		///Compile, create and reflect the ScreenQuad Vertex Shader.
+		m_gfx->CompileAndCreateVertexShader(m_ScreenQuadVS, L"Shaders/PassVShader.hlsl");
+		m_ScreenQuadVS.ReflectLayout(1, m_gfx);
+	};
+
+	////////////////////////////
+	/// Camera | Viewport
+	////////////////////////////
+
+	void RacrozRenderer::ResetViewport()
+	{
+		m_gfx->SetViewPortDefault();
+	}
+
+	void RacrozRenderer::SetViewport(int width, int height)
+	{
+		m_gfx->SetViewPort(width, height);
+	}
+
+	void RacrozRenderer::UpdateCameraBuffersActiveCamera()
+	{
+		const auto camera = CameraManager::Pointer()->GetActiveCamera();
+
+		if (!camera.expired())
+		{
+			const auto cameraLock = camera.lock();
+
+			m_TempCameraData.FarPlane.m_x = cameraLock->GetFarPlane();
+			m_TempCameraData.NearPlane.m_x = cameraLock->GetNearPlane();
+
+			m_TempCameraData.PreviousProjectionMatrix = m_TempCameraData.ProjectionMatrix;
+			m_TempCameraData.ProjectionMatrix = cameraLock->GetProjMatrix().GetTransposed();
+
+			m_TempCameraData.PreviousViewMatrix = m_TempCameraData.ViewMatrix;
+			m_TempCameraData.ViewMatrix = cameraLock->GetViewMatrix().GetTransposed();
+
+			m_TempCameraData.ViewPosition = cameraLock->GetPosition();
+			m_TempCameraData.ViewDirection = cameraLock->GetViewDir();
+		}
+	}
+
+	void RacrozRenderer::UpdateCameraBuffers(const CameraData & cameraData)
+	{
+		m_TempCameraData = cameraData;
+	}
+
+	void RacrozRenderer::UpdateCameraBuffersPerspective(const Vector3 & position, const Vector3 & target, float fov, float nearPlane, float farPlane)
+	{
+		m_TempCameraData.FarPlane.m_x = farPlane;
+		m_TempCameraData.NearPlane.m_x = nearPlane;
+
+		m_TempCameraData.ViewDirection = (target - position).GetNormalized();
+		m_TempCameraData.ViewPosition = position;
+
+		m_TempCameraData.ViewMatrix = m_TempCameraData.PreviousViewMatrix = Matrix4::LookAtMatrix(position, Vector3(0, 1, 0), target).GetTransposed();
+	
+		m_TempCameraData.ProjectionMatrix = m_TempCameraData.PreviousProjectionMatrix = Matrix4::PerpsProjectedSpace(Math::DegreesToRad(fov), m_Width / m_Height, nearPlane, farPlane).GetTransposed();
+	}
+
+	void RacrozRenderer::UpdateCameraBuffersOrtographic(const Vector3 & position, const Vector3 & target, float width, float height, float nearPlane, float farPlane)
+	{
+		m_TempCameraData.FarPlane.m_x = width;
+		m_TempCameraData.NearPlane.m_x = height;
+
+		m_TempCameraData.ViewDirection = (target - position).GetNormalized();
+		m_TempCameraData.ViewPosition = position;
+
+		m_TempCameraData.ViewMatrix = m_TempCameraData.PreviousViewMatrix = Matrix4::LookAtMatrix(position, Vector3(0, 1, 0), target).GetTransposed();
+
+		m_TempCameraData.ProjectionMatrix = m_TempCameraData.PreviousProjectionMatrix = Matrix4::OrthoProjectedSpace(width, height, nearPlane, farPlane).GetTransposed();
+	}
+
+	void RacrozRenderer::UpdateCameraBuffersMatrices(const Matrix4 & viewMatrix, const Matrix4 & projMatrix)
+	{
+		m_TempCameraData.ViewMatrix = m_TempCameraData.PreviousViewMatrix = viewMatrix.GetTransposed();
+
+		m_TempCameraData.ProjectionMatrix = m_TempCameraData.PreviousProjectionMatrix = projMatrix.GetTransposed();
+	}
+
+	void RacrozRenderer::SetCameraBuffersInPipeline(int pixelShaderSlot, int vertexShaderSlot)
+	{
+		m_CameraBuffer.UpdateConstantBuffer(&m_TempCameraData, m_gfx);
+		m_CameraBuffer.SetBufferInPS(pixelShaderSlot, m_gfx);
+		m_CameraBuffer.SetBufferInVS(vertexShaderSlot, m_gfx);
+		m_CameraBuffer.SetBufferInDS(vertexShaderSlot, m_gfx);
+		m_CameraBuffer.SetBufferInHS(vertexShaderSlot, m_gfx);
 	}
 };

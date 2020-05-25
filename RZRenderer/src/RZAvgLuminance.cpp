@@ -22,7 +22,7 @@ namespace rczEngine
 
 	void AverageLuminancePass::RenderPass()
 	{
-		RacrozRenderer::RenderScreenAlignedQuad();
+		RacrozRenderer::Pointer()->DrawScreenQuad();
 	}
 
 	void AverageLuminancePass::PostRenderPass()

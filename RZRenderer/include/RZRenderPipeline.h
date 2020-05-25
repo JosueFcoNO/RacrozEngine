@@ -25,6 +25,8 @@ namespace rczEngine
 
 		RZ_EXP const Vector<String>& GetPassesOrder() { return m_PassesOrder; };
 
+		RZ_EXP int GetPassesNum() { return m_PassesOrder.size(); };
+
 		RZ_EXP const StrPtr<Pass> GetPass(int index) 
 		{ 
 			if (m_PassesOrder[index] == "PostProcess")

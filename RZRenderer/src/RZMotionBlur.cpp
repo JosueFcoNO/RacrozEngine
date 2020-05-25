@@ -27,7 +27,7 @@ namespace rczEngine
 
 	void MotionBlurPass::RenderPass()
 	{
-		RacrozRenderer::RenderScreenAlignedQuad();
+		RacrozRenderer::Pointer()->DrawScreenQuad();
 	}
 
 	void MotionBlurPass::PostRenderPass()

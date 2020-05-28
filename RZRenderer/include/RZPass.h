@@ -30,7 +30,9 @@ namespace rczEngine
 		PlanetAtmosphere,
 		Perlin3D,
 		SSAO,
-		GraphicDebugger
+		GraphicDebugger,
+		LightDepth,
+		ShadowMap
 	};
 
 	///A Base Class to derive into concrete Passes.

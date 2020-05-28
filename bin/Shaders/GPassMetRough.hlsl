@@ -134,7 +134,7 @@ PS_Input VS_Main(VS_Input vertex)
 
 	vsOut.wpos = mul(float4(vertex.pos,1), worldMatrix);
 
-    vsOut.depth = vsOut.pos.z / 10.0f;
+    vsOut.depth = vsOut.pos.z;
 
 	return vsOut;
 }
@@ -177,7 +177,7 @@ PS_OUTPUT PS_Main(PS_Input frag) : SV_TARGET
 		g_Albedo * OverrideAlbedo;
 
 	output.Color.xyz = albedo.xyz;
-	output.Color.a = 1;//AOTexture.Sample(Sampler_, tex).x * AOStrength + (1.0f - AOStrength);
+	output.Color.a = AOTexture.Sample(Sampler_, tex).x * AOStrength + (1.0f - AOStrength);
 
     ///Set the normals to the second output color
     float3 NormalFinal;

@@ -33,8 +33,8 @@ namespace rczEngine
 
 		m_LightViewBuffer.CreateConstantBuffer(sizeof(Matrix4::m_elements), Gfx::USAGE_DEFAULT, gfx);
 
-		auto view = m_Light->GetLightViewProjMatrix();
-		m_LightViewBuffer.UpdateConstantBuffer(&view, gfx);
+		//auto view = m_Light->GetLightViewProjMatrix();
+		//m_LightViewBuffer.UpdateConstantBuffer(&view, gfx);
 	}
 
 	void LightComponent::SetLightViewMatrix(Gfx::GfxCore * gfx)

@@ -67,7 +67,7 @@ namespace rczEngine
 		void UpdateLight(const Vector3& pos, const Vector3& direction, const Vector3& color, float intensity);
 
 		///Get the light view projection matrix.
-		Matrix4 GetLightViewProjMatrix();
+		void GetLightViewProjMatrix(Matrix4& view, Matrix4& proj);
 
 		///The light core.
 		LightCore m_Core;

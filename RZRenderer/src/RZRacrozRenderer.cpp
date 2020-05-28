@@ -51,6 +51,8 @@ namespace rczEngine
 		m_CameraBuffer.CreateConstantBuffer(sizeof(CameraData), Gfx::USAGE_DEFAULT, m_gfx);
 
 		m_BlurPass.CreatePipeline(eRenderingPipelines::Deferred);
+
+		lightDepth.CreatePipeline(eRenderingPipelines::Deferred);
 	}
 
 	void RacrozRenderer::CreatePipeline(const String& name, eRenderingPipelines renderingMode)
@@ -80,7 +82,7 @@ namespace rczEngine
 		{
 			m_VXGI.InitVXGI();
 
-			auto pass = m_Pipelines[name]->GetPass(2);
+			auto pass = m_Pipelines[name]->GetPass(4);
 			pass->AddTexture2D(m_VXGI.SSAOResultTex, 5);
 			pass->AddTexture2D(m_VXGI.DiffuseResultTex, 8);
 			pass->AddTexture2D(m_VXGI.SpecularResultTex, 9);

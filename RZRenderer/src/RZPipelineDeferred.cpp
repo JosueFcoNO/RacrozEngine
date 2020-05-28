@@ -24,6 +24,9 @@ namespace rczEngine
 
 		CreateRenderTarget("PBR", width, height, Gfx::FORMAT_R32G32B32A32_FLOAT, 2);
 
+		CreateRenderTarget("ShadowMap", width, height, Gfx::FORMAT_R32G32B32A32_FLOAT, 1);
+		CreateRenderTarget("LightDepth", 1024, 1024, Gfx::FORMAT_R32_FLOAT, 1);
+
 		CreateRenderTarget("MotionBlur", width, height, Gfx::FORMAT_R32G32B32A32_FLOAT, 2);
 
 		CreateRenderTarget("Luminance", width, height, Gfx::FORMAT_R16G16B16A16_FLOAT, 9);
@@ -32,6 +35,19 @@ namespace rczEngine
 		CreateRenderTarget("AvgLuminance", width, height, Gfx::FORMAT_R16G16B16A16_FLOAT, 1);
 		CreateRenderTarget("HDRBloom", width, height, Gfx::FORMAT_R16G16B16A16_FLOAT, 1);
 		
+		/////////
+		///Light Depth///
+		/////////
+
+		///Create the PBR pass
+		auto passLightDepth = CreatePass(name + "LightDepth", ePasses::LightDepth, eRenderingPipelines::Deferred);
+
+		passLightDepth->AddRenderTarget(m_RTs["LightDepth"], 0);
+
+		ResVault::Pointer()->InsertResource(m_Textures["LightDepth"]);
+
+		m_PassesOrder.push_back(name + "LightDepth");
+
 		/////////////////
 		///Skybox PASS///
 		/////////////////
@@ -62,6 +78,21 @@ namespace rczEngine
 		m_PassesOrder.push_back(name + "Geometry");
 
 		/////////
+		///Shadow Map///
+		/////////
+
+		///Create the PBR pass
+		auto passShadow = CreatePass(name + "ShadowMap", ePasses::ShadowMap, eRenderingPipelines::Deferred);
+
+		passShadow->AddRenderTarget(m_RTs["ShadowMap"], 0);
+		passShadow->AddDepthStencyl(depth);
+
+		passShadow->AddTexture2D(m_Textures["LightDepth"], 0);
+		passShadow->AddTexture2D(m_Textures["Position"], 1);
+
+		m_PassesOrder.push_back(name + "ShadowMap");
+
+		/////////
 		///PBR///
 		/////////
 
@@ -75,7 +106,7 @@ namespace rczEngine
 		passPBR->AddTexture2D(m_Textures["NormalsMR"], 1);
 		passPBR->AddTexture2D(m_Textures["Position"], 2);
 		passPBR->AddTexture2D(m_Textures["Specular"], 3);
-		//passPBRLight.AddTexture2D(ShadowFinalTex, 6);
+		passPBR->AddTexture2D(m_Textures["ShadowMap"], 6);
 
 		m_PassesOrder.push_back(name + "PBR");
 

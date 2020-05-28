@@ -38,11 +38,13 @@ namespace rczEngine
 		UserDisney.UpdateConstantBuffer(&config, m_gfx);
 		UserDisney.SetBufferInPS(6, m_gfx);
 
-		//m_gfx->ClearDepthTargetView();
 
 		SetRenderTargetsInPipeline();
 		SetTexturesInPipeline();
 		SetRasterizerState();
+
+		m_gfx->ClearDepthTargetView();
+
 	}
 	
 	void PBR_Pass::RenderPass()

@@ -12,7 +12,7 @@ namespace rczEngine
 		TP_BLURH,
 		TP_BLURV,
 		//TP_SHADOWMAP1,
-		//TP_SHADOW_FINAL,
+		TP_SHADOW_FINAL,
 		TP_PBR,
 		TP_LUMINANCE,
 		TP_BRIGHT,
@@ -214,6 +214,9 @@ namespace rczEngine
 		int m_Width;
 		///Screen Height
 		int m_Height;
+
+
+		LightDepthPass lightDepth;
 
 		///Pointer to the gfx gfx instance
 		Gfx::GfxCore* m_gfx = NULL;

@@ -14,7 +14,7 @@ Texture2D NormalMRTexture : register(t1);
 Texture2D PositionTexture : register(t2);
 Texture2D SpecularTexture : register(t3);
 Texture2D SSAOTex : register(t5);
-//Texture2D ShadowMapTex : register(t6);
+Texture2D ShadowMapTex : register(t6);
 TextureCube EnviromentCube : register(t12);
 
 Texture2D DiffuseResult : register(t8);
@@ -81,12 +81,11 @@ PS_Output PS_Main(PS_Input Input)
     //Sample the albedoColor from the texture
     float4 albedoColor = AlbedoTexture.Sample(LinearWrapSampler, Input.Texcoord);
 
-	//If the AO value is 0, then discard the pixel.
-    //if (albedoColor.w == 0.0f)
-    //{
-	//	psout.PBR.xyz = albedoColor.xyz;
-	//	return psout;
-    //}
+    if (albedoColor.w == 0.0f)
+    {
+		psout.PBR.xyz = albedoColor.xyz;
+		return psout;
+    }
 
 	float4 specular = SpecularTexture.Sample(LinearWrapSampler, Input.Texcoord);
 
@@ -111,12 +110,11 @@ PS_Output PS_Main(PS_Input Input)
 	float3 specularResultColor = SpecularResult.Sample(LinearWrapSampler, Input.Texcoord).xyz;
 
 	//Calculate the PBR result
-	psout.PBR.xyz = PBR_rm_VXGI(pos, albedoColor.xyz, normal, roughness, metallic, specular.xyz, diffuseResultColor, specularResultColor, diffuseResultColor.a);
+	psout.PBR.xyz = PBR_rm_VXGI(pos, albedoColor.xyz, normal, roughness, metallic, specular.xyz, diffuseResultColor, specularResultColor, ShadowMapTex.Sample(LinearWrapSampler, Input.Texcoord).r);
 
     float SSAO = SSAOTex.Sample(LinearWrapSampler, Input.Texcoord).r;
 	psout.PBR.xyz *= SSAO;
 
-	//FinalColor *= ShadowMapTex.Sample(LinearSampler, Input.Texcoord).r;
-    return psout;
+	return psout;
 }
 

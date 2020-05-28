@@ -56,8 +56,8 @@ namespace rczEngine
 			{
 				m_Width = m_CameraCore.GetWidth();
 				m_Height = m_CameraCore.GetHeight();
-				ImGui::DragFloat("Width", &m_Width, 10.0f, 10.0f, 2000.0f);
-				ImGui::DragFloat("Height", &m_Height, 10.0f, 10.0f, 2000.0f);
+				ImGui::DragFloat("Width", &m_Width, 10.0f, 10.0f, 5000.0f);
+				ImGui::DragFloat("Height", &m_Height, 10.0f, 10.0f, 5000.0f);
 				m_CameraCore.SetHeight(m_Height);
 				m_CameraCore.SetWidth(m_Width);
 			}

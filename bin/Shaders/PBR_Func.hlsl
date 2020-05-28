@@ -551,7 +551,7 @@ float3 PBR_rm_VXGI(float3 _position, float3 _albedoColor, float3 _normal, float 
 	float3 FinalColor =
 		(_albedoColor.xyz *  diffResult * Kd) +
 		(specResult * (envFresnel * envBRDF.xxx + envBRDF.yyy)) +
-		(Light1 * (1.0f - _metallic));
+		(Light1 * (1.0f - _metallic) * AOGI);
 		
 	return FinalColor.xyz;
 }

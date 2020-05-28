@@ -26,6 +26,7 @@
 #include "RZGaussBlur.h"
 
 #include "CbnLightDepthPass.h"
+#include "CbnShadowPass.h"
 
 #include "RZLuminance.h"
 #include "RZBright.h"

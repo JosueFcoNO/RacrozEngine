@@ -63,7 +63,7 @@ namespace rczEngine
 		bool GfxCore::CreateDevice(int32 width, int32 height, int BufferCount = 1, int RefreshRate = 60, int SampleCount = 1, int Quality = 0, bool IsWindowed = true)
 		{
 #ifdef LOGGING
-			Logger::Pointer()->LogMessageToFileLog("Gfx",  "Creating Device, Context and Swapchain. DirectX11.");
+			Logger::Pointer()->LogMessageToFileLog("Gfx", "Creating Device, Context and Swapchain. DirectX11.");
 #endif
 
 			///Set the Swap Chain Descriptor
@@ -88,14 +88,14 @@ namespace rczEngine
 			SwapChainDesc.Flags = 0;
 
 			///Create the device and context. If succeful return true, else return false.
-			return D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_DEBUG, 
+			return D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_DEBUG,
 				nullptr, 0, D3D11_SDK_VERSION, &SwapChainDesc, &m_SwapChain, &m_Device, nullptr, &m_DeviceContext) == S_OK;
 		}
 
 		bool GfxCore::CreateDeviceContext()
 		{
 #ifdef LOGGING
-			Logger::Pointer()->LogMessageToFileLog("Gfx",  "Creating Device Context.");
+			Logger::Pointer()->LogMessageToFileLog("Gfx", "Creating Device Context.");
 #endif
 
 			///Creates the DeviceContext
@@ -134,7 +134,7 @@ namespace rczEngine
 		bool GfxCore::SetRenderTargetViewAndDepthStencil()
 		{
 #ifdef LOGGING
-			Logger::Pointer()->LogMessageToFileLog("Gfx",  "Setting Render Target View and Depth Stencil.");
+			Logger::Pointer()->LogMessageToFileLog("Gfx", "Setting Render Target View and Depth Stencil.");
 #endif
 
 			///Create the RenderTargetView from the backbufffer
@@ -151,7 +151,7 @@ namespace rczEngine
 		bool GfxCore::SetViewPortDefault()
 		{
 #ifdef LOGGING
-			Logger::Pointer()->LogMessageToFileLog("Gfx",  "Setting View Port.");
+			Logger::Pointer()->LogMessageToFileLog("Gfx", "Setting View Port.");
 #endif
 
 			///Create the viewport
@@ -196,7 +196,7 @@ namespace rczEngine
 		void GfxCore::Resize(uint32 Width, uint32 Height)
 		{
 #ifdef LOGGING
-			Logger::Pointer()->LogMessageToFileLog("Gfx",  "Resize.");
+			Logger::Pointer()->LogMessageToFileLog("Gfx", "Resize.");
 #endif
 
 			if (m_SwapChain)
@@ -231,7 +231,7 @@ namespace rczEngine
 		bool GfxCore::CreateDepthStencyl(DepthStencyl & out_depthStencyl, int32 width, int32 height, eBUFFER_USAGE usage, eCPU_ACCESS_FLAGS cpu_access, int32 sample_count, int32 sample_quality)
 		{
 #ifdef LOGGING
-			Logger::Pointer()->LogMessageToFileLog("Gfx",  "Creating Depth Stencyl.");
+			Logger::Pointer()->LogMessageToFileLog("Gfx", "Creating Depth Stencyl.");
 #endif
 
 			///Configure the Texture2D Descriptor
@@ -282,7 +282,7 @@ namespace rczEngine
 
 			///Create the Depth Stencil View and save it int m_DepthStencilView
 			m_Device->CreateDepthStencilView(out_depthStencyl.GetTexture()->m_Texture, &descDSV, &out_depthStencyl.GetDepthStencylView()->m_DepthStencylView);
-			
+
 			///Create a Shader Resource View to bind this Depth Texture to a shader stage.
 			m_Device->CreateShaderResourceView(out_depthStencyl.GetTexture()->m_Texture, &descSR, &out_depthStencyl.GetShaderResouceView()->m_ShaderResource);
 
@@ -337,7 +337,7 @@ namespace rczEngine
 		bool GfxCore::CreateRenderTarget(RenderTarget & out_renderTarget, const String& name, bool drawToBackBuffer, int mipMaps, int32 width, int32 height, eFORMAT format, eBUFFER_USAGE usage, eCPU_ACCESS_FLAGS cpu_access, int32 sample_count, int32 sample_quality)
 		{
 #ifdef LOGGING
-			Logger::Pointer()->LogMessageToFileLog("Gfx", String( "Creating Render Target.") + name);
+			Logger::Pointer()->LogMessageToFileLog("Gfx", String("Creating Render Target.") + name);
 #endif
 
 			///Configure the Texture2D Descriptor
@@ -429,10 +429,10 @@ namespace rczEngine
 
 
 			///Set the render target and the depth stecil
-			if (UseDepthStencyl)
+			if (UseDepthStencyl && depth == nullptr)
 				m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, m_DepthStencyl.GetDepthStencylView()->m_DepthStencylView);
-			//else if (depth != nullptr && UseDepthStencyl)
-				//m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, depth->GetDepthStencylView()->m_DepthStencylView);
+			else if (depth != nullptr && UseDepthStencyl)
+				m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, depth->GetDepthStencylView()->m_DepthStencylView);
 			else
 				m_DeviceContext->OMSetRenderTargets(m_RenderTargetNumber, m_RenderTargetView, NULL);
 
@@ -523,9 +523,12 @@ namespace rczEngine
 			m_DeviceContext->ClearRenderTargetView(m_RenderTargetView[renderTargetSlot], Color);
 		}
 
-		void GfxCore::ClearDepthTargetView()
+		void GfxCore::ClearDepthTargetView(DepthStencyl* depthStencyl)
 		{
-			m_DeviceContext->ClearDepthStencilView(m_DepthStencyl.GetDepthStencylView()->m_DepthStencylView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 255);
+			if (depthStencyl)
+				m_DeviceContext->ClearDepthStencilView(depthStencyl->GetDepthStencylView()->m_DepthStencylView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 255);
+			else
+				m_DeviceContext->ClearDepthStencilView(m_DepthStencyl.GetDepthStencylView()->m_DepthStencylView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 255);
 		}
 
 		DepthStencyl* GfxCore::GetDefaultDepthStencyl()
@@ -557,7 +560,7 @@ namespace rczEngine
 		bool GfxCore::CompileAndCreateVertexShader(VertexShader & out_VertexShader, const UNICHAR * pszShaderFile)
 		{
 #ifdef LOGGING
-			Logger::Pointer()->LogMessageToFileLog("Gfx", String( "Creating Vertex Shader: ") + TextTool::UniToAnsi(pszShaderFile));
+			Logger::Pointer()->LogMessageToFileLog("Gfx", String("Creating Vertex Shader: ") + TextTool::UniToAnsi(pszShaderFile));
 #endif
 			CompileShader(out_VertexShader, pszShaderFile, "vs_5_0", "VS_Main");
 
@@ -602,7 +605,7 @@ namespace rczEngine
 		bool GfxCore::CompileAndCreatePixelShader(PixelShader & out_PixelShader, const UNICHAR * pszShaderFile)
 		{
 #ifdef LOGGING
-			Logger::Pointer()->LogMessageToFileLog("Gfx", String( " ||| Creating Pixel Shader: ") + TextTool::UniToAnsi(pszShaderFile));
+			Logger::Pointer()->LogMessageToFileLog("Gfx", String(" ||| Creating Pixel Shader: ") + TextTool::UniToAnsi(pszShaderFile));
 #endif
 
 			CompileShader(out_PixelShader, pszShaderFile, "ps_5_0", "PS_Main");
@@ -659,7 +662,7 @@ namespace rczEngine
 		bool GfxCore::CompileAndCreateHullShader(HullShader & out_HullShader, const UNICHAR * pszShaderFile)
 		{
 #ifdef LOGGING
-			Logger::Pointer()->LogMessageToFileLog("Gfx", String( "Creating Hull Shader: ") + TextTool::UniToAnsi(pszShaderFile));
+			Logger::Pointer()->LogMessageToFileLog("Gfx", String("Creating Hull Shader: ") + TextTool::UniToAnsi(pszShaderFile));
 #endif
 
 			CompileShader(out_HullShader, pszShaderFile, "hs_5_0", "HS_Main");
@@ -728,7 +731,7 @@ namespace rczEngine
 		bool GfxCore::CompileAndCreateDomainShader(DomainShader & out_DomainShader, const UNICHAR * pszShaderFile)
 		{
 #ifdef LOGGING
-			Logger::Pointer()->LogMessageToFileLog("Gfx", String( "Creating Domain Shader: ") + TextTool::UniToAnsi(pszShaderFile));
+			Logger::Pointer()->LogMessageToFileLog("Gfx", String("Creating Domain Shader: ") + TextTool::UniToAnsi(pszShaderFile));
 #endif
 
 			CompileShader(out_DomainShader, pszShaderFile, "ds_5_0", "DS_Main");
@@ -791,7 +794,7 @@ namespace rczEngine
 		bool GfxCore::CompileAndCreateGeometryShader(GeometryShader & out_GeometryShader, const UNICHAR * pszShaderFile)
 		{
 #ifdef LOGGING
-			Logger::Pointer()->LogMessageToFileLog("Gfx", String( "Geometry Vertex Shader: ") + TextTool::UniToAnsi(pszShaderFile));
+			Logger::Pointer()->LogMessageToFileLog("Gfx", String("Geometry Vertex Shader: ") + TextTool::UniToAnsi(pszShaderFile));
 #endif
 
 			CompileShader(out_GeometryShader, pszShaderFile, "gs_5_0", "GS_Main");
@@ -840,7 +843,7 @@ namespace rczEngine
 		bool GfxCore::CreateRasterizerState(RasterizerState & out_rasterizerState)
 		{
 #ifdef LOGGING
-			Logger::Pointer()->LogMessageToFileLog("Gfx", String( "Creating Rasterizer State: "));
+			Logger::Pointer()->LogMessageToFileLog("Gfx", String("Creating Rasterizer State: "));
 #endif
 
 			D3D11_RASTERIZER_DESC RasterDesc;
@@ -1013,7 +1016,7 @@ namespace rczEngine
 			ZeroMemory(&BufferDesc, sizeof(BufferDesc));
 			BufferDesc.Usage = (D3D11_USAGE)usage;
 			BufferDesc.BindFlags = bindflags;
-			BufferDesc.ByteWidth = sizeOfElement*numOfElements;
+			BufferDesc.ByteWidth = sizeOfElement * numOfElements;
 
 			if (usage == USAGE_DYNAMIC)
 			{
@@ -1092,7 +1095,7 @@ namespace rczEngine
 		{
 			//Create the new Staging buffer.
 			Gfx::BasicBuffer tempBuffer;
-			tempBuffer.Create(buffer.m_SizeOfElement, buffer.m_NumOfElements, nullptr, 
+			tempBuffer.Create(buffer.m_SizeOfElement, buffer.m_NumOfElements, nullptr,
 				buffer.m_ElementsPitch, buffer.m_ElementSlice, USAGE_STAGING, (eBIND_FLAGS)0, this);
 
 			//Copy the resource.
@@ -1322,7 +1325,7 @@ namespace rczEngine
 			Descriptor.MiscFlags = (usage != USAGE_STAGING) ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0;
 
 			out_Texture.m_TextureBytePitch = 0;
-			out_Texture.m_TextureBytes = 1*height;
+			out_Texture.m_TextureBytes = 1 * height;
 			out_Texture.m_Format = format;
 			out_Texture.m_Height = height;
 			out_Texture.m_Width = width;
@@ -1454,7 +1457,7 @@ namespace rczEngine
 
 			UCHAR* Data = (UCHAR*)malloc(Width*Height * 4 * 4);
 
-			int32 Slice = Width*Height * 4;
+			int32 Slice = Width * Height * 4;
 
 			memcpy_s(Data, Slice, Data1, Slice);
 			memcpy_s(Data + Slice, Slice, Data2, Slice);

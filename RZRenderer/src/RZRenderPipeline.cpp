@@ -81,6 +81,12 @@ namespace rczEngine
 		case ePasses::GraphicDebugger:
 			returnPass = m_Passes[name] = std::make_shared<GraphicDebuggerPass>();
 			break;
+		case ePasses::LightDepth:
+			returnPass = m_Passes[name] = std::make_shared<LightDepthPass>();
+			break;
+		case ePasses::ShadowMap:
+			returnPass = m_Passes[name] = std::make_shared<ShadowPass>();
+			break;
 		}
 
 		returnPass->m_Name = name;

@@ -118,7 +118,7 @@ namespace rczEngine
 		{
 			CameraCmp::RenderComponent();
 
-			ImGui::DragFloat("Speed", &Speed, 0.1f, 0.01f, 100.0f);
+			ImGui::DragFloat("Speed", &Speed, 0.1f, 0.01f, 1000.0f);
 
 			if (ImGui::Button("Set Active"))
 			{

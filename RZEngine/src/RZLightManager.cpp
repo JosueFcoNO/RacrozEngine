@@ -33,6 +33,7 @@ namespace rczEngine
 		m_LightStruct.m_LightNumber[0] = 0;
 
 		m_SingleLightBuffer.CreateConstantBuffer(sizeof(LightCore), Gfx::USAGE_DEFAULT, m_gfx);
+		m_ShadowBuffer.CreateConstantBuffer(sizeof(LightShadowStruct), Gfx::USAGE_DEFAULT, m_gfx);
 	}
 
 	Light * LightManager::AddLight()
@@ -64,4 +65,18 @@ namespace rczEngine
 		m_SingleLightBuffer.SetBufferInVS(3, m_gfx);
 		m_SingleLightBuffer.SetBufferInPS(3, m_gfx);
 	}
+
+
+	void LightManager::SetShadowLightBuffer(uint32 lightSlot)
+	{
+		m_Lights[0].GetLightViewProjMatrix(m_ShadowStruct.lightView, m_ShadowStruct.lightProj);
+		m_ShadowStruct.lightView.Transpose();
+		m_ShadowStruct.lightProj.Transpose();
+		m_ShadowStruct.lightPosition = m_Lights[0].m_Core.m_LightPosition;
+		m_ShadowBuffer.UpdateConstantBuffer(&m_ShadowStruct, m_gfx);
+
+		m_ShadowBuffer.SetBufferInVS(0, m_gfx);
+		m_ShadowBuffer.SetBufferInPS(0, m_gfx);
+	}
+
 };

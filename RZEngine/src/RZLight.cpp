@@ -66,23 +66,25 @@ namespace rczEngine
 		m_Core.m_LightColor.m_w = intensity;
 	}
 
-	Matrix4 Light::GetLightViewProjMatrix()
+	void Light::GetLightViewProjMatrix(Matrix4 & view, Matrix4 & proj)
 	{
 		switch ((eLightType)(int)m_Core.m_Props.m_x)
 		{
 		default:
 		case eLightType::Point:
-			return Matrix4::LookAtMatrix(m_Core.m_LightPosition, Vector3(0, 1, 0), m_Core.m_LightDirection + m_Core.m_LightPosition) * Matrix4::PerpsProjectedSpace(Math::DegreesToRad(35), 1.0f, 1.0f, 100.0f);
+			view = Matrix4::LookAtMatrix(m_Core.m_LightPosition, Vector3(0, 1, 0), m_Core.m_LightDirection + m_Core.m_LightPosition);
+			proj = Matrix4::PerpsProjectedSpace(Math::DegreesToRad(35), 1.0f, 1.0f, 100.0f);
 			break;
 		case eLightType::Spot:
-			return Matrix4::LookAtMatrix(m_Core.m_LightPosition, Vector3(0, 1, 0), m_Core.m_LightDirection.GetNormalized() + m_Core.m_LightPosition) * Matrix4::PerpsProjectedSpace(Math::DegreesToRad(90), 1.0f, 1.0f, 100.0f);
+			view = Matrix4::LookAtMatrix(m_Core.m_LightPosition, Vector3(0, 1, 0), m_Core.m_LightDirection.GetNormalized() + m_Core.m_LightPosition);
+			proj = Matrix4::PerpsProjectedSpace(Math::DegreesToRad(90), 1.0f, 1.0f, 100.0f);
 			break;
 		case eLightType::Directional:
-			Vector4 eye = m_Core.m_LightDirection;
-			eye.Scale(-100);
-			return Matrix4::LookAtMatrix(eye, Vector3(0, 1, 0), m_Core.m_LightDirection) * Matrix4::OrthoProjectedSpace(512, 512, 1.0f, 5000.0f);
+			Vector4 eye = m_Core.m_LightDirection.GetNormalized();
+			eye.Scale(-3000);
+			view = Matrix4::LookAtMatrix(eye, Vector3(0, 1, 0), eye + m_Core.m_LightDirection.GetNormalized() * 3000);
+			proj = Matrix4::OrthoProjectedSpace(2000, 2000, 10.0f, 10000.0f);
 			break;
 		}
-
 	}
 }

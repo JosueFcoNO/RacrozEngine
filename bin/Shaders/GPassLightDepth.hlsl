@@ -1,7 +1,66 @@
+Texture2D AlbedoTexture : register(t0);
+Texture2D NormalTexture : register(t1);
+Texture2D MetallicTexture : register(t2);
+Texture2D RoughnessTexture : register(t3);
+Texture2D AOTexture : register(t4);
+Texture2D EMTexture : register(t10);
+
+sampler Sampler_ : register(s0);
+
 cbuffer cbChangeEveryFrame : register(b2)
 {
     matrix worldMatrix;
 	matrix previousWorldMatrix;
+};
+
+struct Light
+{
+    float4 LightColor;
+    float4 LightPosition;
+    float4 LightDirection;
+    float4 Props;
+};
+
+cbuffer cbLights : register(b3)
+{
+    int g_LightNumber;
+    int3 paddding;
+    Light g_Lights[8];
+};
+
+cbuffer cbMaterial : register(b4)
+{
+	float3 g_Albedo;
+	float OverrideAlbedo;
+
+	float3 g_Specular;
+	float OverrideMetallicSpecular;
+
+	float3 g_Emmisive;
+	float OverriveEmmisive;
+
+	float g_RoughGloss;
+	float g_Metallic;
+	float g_Opacity;
+	float g_TesselationFactor;
+
+	float OverrideOpacity;
+	float AOStrength;
+	float tileX;
+	float tileY;
+
+	float OverrideNormal;
+	float OverrideRoughGloss;
+	float g_TesselationScale = 1.0f;
+	float padd;
+
+	float pad3 = 0.0f;
+	float pad4 = 0.0f;
+	float pad5 = 0.0f;
+	float pad6 = 0.0f;
+
+	float pad7 = 0.0f;
+	float padding[3];
 };
 
 cbuffer cbCamera : register(b5)
@@ -28,16 +87,91 @@ struct VS_Input
 struct PS_Input
 {
 	float4 pos : SV_Position;
+	float2 tex0 : TEXCOORD;
+	float3 normal : NORMAL;
+	float3x3 TBN : TEXCOORD1;
+	float3 wpos : WSPOSITION;
+    float depth : TEXCOORD5;
+	float4 prevPos : TEXCOORD4;
+	float4 newPos  : TEXCOORD6;
+};
+
+struct PS_OUTPUT
+{
+    float4 Color : COLOR0;
 };
 
 PS_Input VS_Main(VS_Input vertex)
 {
 	PS_Input vsOut = (PS_Input)0;
+	vsOut.tex0 = vertex.tex0;
 
 	//Convierto mi vertice
     matrix m = mul(worldMatrix, ViewMatrix);
     m = mul(m, ProjectionMatrix);
 	vsOut.pos = mul(float4(vertex.pos, 1), m);
 
+	//Convierto mi vertice a la posición previa.
+	matrix mPrev = mul(previousWorldMatrix, PreviousViewMatrix);
+	mPrev = mul(mPrev, PreviousProjectionMatrix);
+	vsOut.prevPos = mul(float4(vertex.pos, 1), mPrev);
+	
+	vsOut.newPos = vsOut.pos;
+
+    vsOut.normal = mul(float4(vertex.normal, 1.0f), worldMatrix);
+
+	vsOut.TBN[0].xyz = vertex.tangent;
+	vsOut.TBN[1].xyz = vertex.binormal;
+	vsOut.TBN[2].xyz = vertex.normal;
+
+	vsOut.TBN = mul(vsOut.TBN, worldMatrix);
+
+	vsOut.wpos = mul(float4(vertex.pos,1), worldMatrix);
+
+    vsOut.depth = vsOut.pos.z;
+
 	return vsOut;
+}
+
+float2 OctWrap(float2 v)
+{
+    return (1.0 - abs(v.yx)) * (v.xy >= 0.0 ? 1.0 : -1.0);
+}
+ 
+float2 Encode(float3 n)
+{
+    n /= (abs(n.x) + abs(n.y) + abs(n.z));
+    n.xy = n.z >= 0.0 ? n.xy : OctWrap(n.xy);
+    n.xy = n.xy * 0.5 + 0.5;
+    return n.xy;
+}
+ 
+float3 Decode(float2 encN)
+{
+    encN = encN * 2.0 - 1.0;
+ 
+    float3 n;
+    n.z = 1.0 - abs(encN.x) - abs(encN.y);
+    n.xy = n.z >= 0.0 ? encN.xy : OctWrap(encN.xy);
+    n = normalize(n);
+    return n;
+}
+
+///Geometry Pass
+PS_OUTPUT PS_Main(PS_Input frag) : SV_TARGET
+{
+    PS_OUTPUT output = (PS_OUTPUT) 0;
+
+    float2 tex = frag.tex0;
+	tex.x *= tileX;
+	tex.y *= tileY;
+
+    ///Set the color to the first output color
+    float3 albedo = AlbedoTexture.Sample(Sampler_, tex)  * (1.0f - OverrideAlbedo) +
+		g_Albedo * OverrideAlbedo;
+
+	output.Color.xyz = frag.depth.xxx;
+	output.Color.a = 1;
+
+	return output;
 }

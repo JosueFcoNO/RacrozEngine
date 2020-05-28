@@ -138,7 +138,7 @@ namespace rczEngine
 			void ClearRenderTargetView(int32 renderTargetSlot, const float Red, const float Blue, const float Green, const float Alpha);
 
 			///Clears the depth stencyl view
-			void ClearDepthTargetView();
+			void ClearDepthTargetView(DepthStencyl* depth = nullptr);
 
 			DepthStencyl* GetDefaultDepthStencyl();
 

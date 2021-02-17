@@ -2,7 +2,7 @@ Texture2D PBRTexture : register(t0);
 Texture2D BloomTexture : register(t1);
 Texture2D AvgLuminanceTex : register(t2);
 
-sampler Sampler_ : register(s0);
+sampler Sampler_ : register(s2);
 
 cbuffer cbChangesSometimes : register(b0)
 {

@@ -1,6 +1,6 @@
 Texture2D InTexture : register(t0);
 
-sampler Sampler_ : register(s0);
+sampler Sampler_ : register(s2);
 
 cbuffer Blur_Settings : register(b0)
 {

@@ -2,7 +2,7 @@
 
 Texture2D PBRTexture : register(t0);
 
-sampler Sampler_ : register(s0);
+sampler Sampler_ : register(s2);
 
 cbuffer cbChangesSometimes : register(b0)
 {

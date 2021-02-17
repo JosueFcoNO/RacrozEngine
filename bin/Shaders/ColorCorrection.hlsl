@@ -135,22 +135,23 @@ PS_Output PS_Main(PS_Input Input)
     tCoord.x *= -1.0f;
 
     float4 FinalColor = FinalTexture.Sample(Sampler_, Input.Texcoord);
+	//if (Correction == 0)
+	//{
+	//	psout.ColorCorrection = Reinhard(FinalColor.xyz, Exposure);
+	//}
+    //else if (Correction == 1)
+    //{
+	//	//psout.ColorCorrection = ReinhardRemap(FinalColor.xyz, Exposure);
+    //}
+    //else if (Correction == 2 || true)
+    //{
+	//	psout.ColorCorrection = Burgess_Dawson(FinalColor.xyz, Exposure);
+    //} else
+    //{
+	//	psout.ColorCorrection.xyz = Uncharted2(FinalColor.xyz, Exposure);
+    //}
 
-	if (Correction == 0)
-	{
-		psout.ColorCorrection = Reinhard(FinalColor.xyz, Exposure);
-	}
-    else if (Correction == 1)
-    {
-		//psout.ColorCorrection = ReinhardRemap(FinalColor.xyz, Exposure);
-    }
-    else if (Correction == 2)
-    {
-		psout.ColorCorrection = Burgess_Dawson(FinalColor.xyz, Exposure);
-    } else
-    {
-		psout.ColorCorrection.xyz = Uncharted2(FinalColor.xyz, Exposure);
-    }
+	psout.ColorCorrection = Uncharted2(FinalColor.xyz, Exposure);
 
 	psout.ColorCorrection.a = 1.0f;
 

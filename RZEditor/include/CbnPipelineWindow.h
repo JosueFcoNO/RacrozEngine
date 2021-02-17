@@ -6,7 +6,16 @@ namespace rczEngine
 	{
 	public:
 
-		void SetRenderPipeline(StrPtr<RenderPipeline> pipeline) { m_LinkedRenderPipeline = pipeline; };
+		void SetRenderPipeline(StrPtr<RenderPipeline> pipeline) 
+		{ 
+			m_LinkedRenderPipeline = pipeline; 
+		
+			const auto pipeline2 = m_LinkedRenderPipeline.lock();
+			const auto passNum = pipeline2->GetPassesNum();
+
+			m_CurrentPass = passNum - 1;
+			m_CurrentRT = 0;
+		};
 
 	protected:
 		virtual void Render() override;

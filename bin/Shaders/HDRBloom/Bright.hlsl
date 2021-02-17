@@ -3,7 +3,7 @@
 Texture2D LuminanceTexture : register(t0);
 Texture2D EmmisiveTexture : register(t1);
 
-sampler Sampler_ : register(s0);
+sampler Sampler_ : register(s2);
 
 cbuffer cbChangesSometimes : register(b0)
 {

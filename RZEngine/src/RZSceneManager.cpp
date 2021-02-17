@@ -41,7 +41,7 @@ namespace rczEngine
 
 		StrGameObjectPtr defaultLight = DefaultScene->CreateActor("DirLight", NULL).lock();
 		m_ActiveScene->CreateComponent(CMP_LIGHT, defaultLight->GetID());
-		defaultLight->SetOrientation(0.25f, -1.0f, 0.25f);
+		defaultLight->SetOrientation(0.5f, -1.0f, 0.20f);
 
 		auto res = ResVault::Pointer();
 		StrGameObjectPtr defaultModel = DefaultScene->CreateActor("Sponza", NULL).lock();

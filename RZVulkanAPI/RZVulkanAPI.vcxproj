@@ -79,7 +79,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
     <IncludePath>$(SolutionDir)Plug-Ins/assimp-master/include/;$(SolutionDir)RZUtilityLib\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include\;$(VK_SDK_PATH)\Include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(SolutionDir)Plug-Ins\assimp-master\$(Platform)\$(Configuration)\;$(SolutionDir)Plug-Ins\FW1FontWrapper\$(Platform)\;$(VULKAN_SDK)\Lib\;$(LibraryPath)</LibraryPath>
@@ -93,7 +93,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
     <IncludePath>$(SolutionDir)Plug-Ins/assimp-master/include/;$(SolutionDir)RZUtilityLib\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include\;$(VK_SDK_PATH)\Include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(SolutionDir)Plug-Ins\assimp-master\$(Platform)\$(Configuration)\;$(SolutionDir)Plug-Ins\FW1FontWrapper\$(Platform)\;$(VULKAN_SDK)\Lib\;$(LibraryPath)</LibraryPath>

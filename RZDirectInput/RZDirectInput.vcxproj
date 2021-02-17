@@ -79,9 +79,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)Plug-Ins/GSL/include;$(SolutionDir)CbnUtilities\include;$(IncludePath);$(SolutionDir)RZEngine\include\;$(SolutionDir)RZfmodSound\include</IncludePath>
+    <IncludePath>$(SolutionDir)Plug-Ins/gsllib/include;$(SolutionDir)CbnUtilities\include;$(IncludePath);$(SolutionDir)RZEngine\include\;$(SolutionDir)RZfmodSound\include</IncludePath>
     <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -93,9 +93,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)Plug-Ins/GSL/include;$(SolutionDir)CbnUtilities\include;$(IncludePath);$(SolutionDir)RZEngine\include\;$(SolutionDir)RZfmodSound\include</IncludePath>
+    <IncludePath>$(SolutionDir)Plug-Ins/gsllib/include;$(SolutionDir)CbnUtilities\include;$(IncludePath);$(SolutionDir)RZEngine\include\;$(SolutionDir)RZfmodSound\include</IncludePath>
     <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

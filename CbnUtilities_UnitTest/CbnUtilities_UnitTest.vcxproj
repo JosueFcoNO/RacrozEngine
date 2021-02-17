@@ -87,16 +87,16 @@
     <TargetName>UtilityUnitTest</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(GSL)/include;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)CbnUtilities\include\</IncludePath>
+    <IncludePath>$(SolutionDir)Plug-Ins/gsllib/include;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)CbnUtilities\include\</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)\lib\$(Configuration)\$(Platform)\;</LibraryPath>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
     <TargetName>CbnUtility_UnitTest</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(GSL)/include;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)CbnUtilities\include\</IncludePath>
+    <IncludePath>$(SolutionDir)Plug-Ins/gsllib/include;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)CbnUtilities\include\</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)\lib\$(Configuration)\$(Platform)\;</LibraryPath>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
     <TargetName>CbnUtility_UnitTest</TargetName>
   </PropertyGroup>

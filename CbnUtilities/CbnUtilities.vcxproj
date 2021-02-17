@@ -153,7 +153,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>RZUtilityPCH.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>./include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)Plug-Ins/GSL/include</AdditionalIncludeDirectories>
       <EnablePREfast>true</EnablePREfast>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
@@ -177,7 +177,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>CbnUtilitiesPCH.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>./include/;$(GSL)/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)Plug-Ins/GSL/include</AdditionalIncludeDirectories>
       <EnablePREfast>true</EnablePREfast>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>

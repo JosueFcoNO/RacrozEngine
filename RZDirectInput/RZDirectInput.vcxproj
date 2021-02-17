@@ -81,7 +81,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(SolutionDir)CbnUtilities\include;$(IncludePath);$(SolutionDir)RZEngine\include\;$(SolutionDir)RZfmodSound\include</IncludePath>
+    <IncludePath>$(SolutionDir)Plug-Ins/GSL/include;$(SolutionDir)CbnUtilities\include;$(IncludePath);$(SolutionDir)RZEngine\include\;$(SolutionDir)RZfmodSound\include</IncludePath>
     <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -95,7 +95,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(SolutionDir)CbnUtilities\include;$(IncludePath);$(SolutionDir)RZEngine\include\;$(SolutionDir)RZfmodSound\include</IncludePath>
+    <IncludePath>$(SolutionDir)Plug-Ins/GSL/include;$(SolutionDir)CbnUtilities\include;$(IncludePath);$(SolutionDir)RZEngine\include\;$(SolutionDir)RZfmodSound\include</IncludePath>
     <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

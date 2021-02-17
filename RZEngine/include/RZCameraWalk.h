@@ -8,7 +8,7 @@ namespace rczEngine
 
 		virtual void Init()
 		{
-			InitCameraWalk(Vector3(0, 10, 10), Vector3(0, 0, 0), 0.1f, 5000.0f, (float)Gfx::GfxCore::Pointer()->GetWidth() / (float)Gfx::GfxCore::Pointer()->GetHeight());
+			InitCameraWalk(Vector3(-570, 40, -50), Vector3(-570, 140, -50) + Vector3(500, 0, 0), 0.25f, 5000.0f, (float)Gfx::GfxCore::Pointer()->GetWidth() / (float)Gfx::GfxCore::Pointer()->GetHeight());
 		}
 
 		void InitCameraWalk(Vector3 position, Vector3 target, float nearPlane, float farPlane, float aspectRatio)
@@ -23,21 +23,25 @@ namespace rczEngine
 		{
 			if (!m_Active) return;
 
-			if (Input::GetKeyHold(KEY_W)) m_zAxis = 1.5f;
-			else if (Input::GetKeyHold(KEY_S)) m_zAxis = -1.5f;
+			if (ImGui::GetIO().KeysDown['W']) m_zAxis = 1.5f;
+			else if (ImGui::GetIO().KeysDown['S']) m_zAxis = -1.5f;
 			else m_zAxis = 0.0f;
 
-			if (Input::GetKeyHold(KEY_D)) m_xAxis = -1.5f;
-			else if (Input::GetKeyHold(KEY_A)) m_xAxis = 1.5f;
+			if (ImGui::GetIO().KeysDown['D']) m_xAxis = -1.5f;
+			else if (ImGui::GetIO().KeysDown['A']) m_xAxis = 1.5f;
 			else m_xAxis = 0.0f;
 
-			if (Input::GetKeyDown(KEY_SPACE))
+			if (ImGui::GetIO().KeysDown['Q']) m_yAxis = -1.5f;
+			else if (ImGui::GetIO().KeysDown['E']) m_yAxis = 1.5f;
+			else m_yAxis = 0.0f;
+
+			if (ImGui::IsKeyDown(KEY_SPACE))
 			{
 				m_Jumping = true;
 				m_ySpeed = 5.0f;
 			}
 
-			m_Mouse = Input::GetKeyHold(KEY_LMENU);
+			m_Mouse = ImGui::IsMouseDown(ImGuiMouseButton_Middle);
 
 			m_CameraCore.MoveRight(-deltaTime*m_xAxis*Speed);
 
@@ -46,6 +50,9 @@ namespace rczEngine
 			VectorDir.Normalize();
 
 			m_CameraCore.MoveForward(deltaTime*m_zAxis*Speed);
+
+			m_CameraCore.MoveUp(deltaTime*m_yAxis*Speed);
+
 
 			if (m_Jumping)
 			{
@@ -57,16 +64,21 @@ namespace rczEngine
 				}
 			}
 
-			auto m = Input::Pointer()->GetMouseData();
+			auto m = ImGui::GetMouseDragDelta(ImGuiMouseButton_::ImGuiMouseButton_Middle);
+			//auto sx = Math::Sign(m.x);
+			//auto sy = Math::Sign(m.y);
+			//m.x = abs(m.x), 1.0f);
+			//m.y = abs(m.y), 1.0f);
 
 			if (m_Mouse)
 			{
-				//
-				m_CameraCore.Rotate(Vector3(m.dy*0.15f, -m.dx*0.15f, 0.0f));
+				m_CameraCore.Rotate(Vector3(m.y* 0.01f, -m.x * 0.01f, 0.0f));
 			}
 
 			m_Owner.lock()->SetPosition(m_CameraCore.GetPosition());
 		};
+
+		ImVec2 m_LastPos;
 
 		virtual void Serialize()
 		{
@@ -133,6 +145,7 @@ namespace rczEngine
 
 	private:
 		float m_xAxis = 0.0f;
+		float m_yAxis = 0.0f;
 		float m_zAxis = 0.0f;
 
 		float m_ySpeed = 0.0f;
@@ -140,7 +153,7 @@ namespace rczEngine
 		float m_SpinY = 0.0f;
 		float m_SpinX = 0.0f;
 
-		float Speed = 1.0f;
+		float Speed = 150.0f;
 
 		bool m_Jumping = false;
 		bool m_Mouse = false;

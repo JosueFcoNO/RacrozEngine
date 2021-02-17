@@ -10,14 +10,8 @@ namespace rczEngine
 			m_iFileIndex(0u),
 			m_fFlags(0u) 
 		{
-			try
-			{
-				m_strFileName = std::make_unique<String>();
-				m_File = std::make_unique<FileStream>();
-			}
-			catch (...)
-			{
-			}
+			m_strFileName = std::make_unique<String>();
+			m_File = std::make_unique<FileStream>();
 		};
 
 		///Opens a text File and returns true on success. Receives File name, and FileManager::f_File* flags
@@ -57,6 +51,4 @@ namespace rczEngine
 		uint32 m_iFileIndex;
 		uint32 m_fFlags;
 	};
-
-
 };

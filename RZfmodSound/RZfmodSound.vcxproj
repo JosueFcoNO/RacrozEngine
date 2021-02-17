@@ -81,8 +81,8 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(SolutionDir)CbnUtilities\include;$(IncludePath);$(fmod)\inc\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZfmodSound\include</IncludePath>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(fmod)lib\$(Platform)</LibraryPath>
+    <IncludePath>$(SolutionDir)Plug-Ins/GSL/include;$(SolutionDir)CbnUtilities\include;$(IncludePath);$(fmod)\inc\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZfmodSound\include</IncludePath>
+    <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(SolutionDir)Plug-Ins/fmod/lib\$(Platform)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -95,8 +95,8 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(SolutionDir)CbnUtilities\include;$(IncludePath);$(fmod)\inc\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZfmodSound\include</IncludePath>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(fmod)lib\$(Platform)</LibraryPath>
+    <IncludePath>$(SolutionDir)Plug-Ins/GSL/include;$(SolutionDir)CbnUtilities\include;$(IncludePath);$(fmod)\inc\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZfmodSound\include</IncludePath>
+    <LibraryPath>$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(SolutionDir)Plug-Ins/fmod/lib\$(Platform)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

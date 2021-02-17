@@ -54,7 +54,7 @@ namespace rczEngine
 
 		EventManager::Start();
 		EventManager::Pointer()->InitEventManager();
-
+		
 		ImGUIEditor::Start();
 		ImGUIEditor::Pointer()->InitEditor();
 
@@ -248,6 +248,9 @@ namespace rczEngine
 	void EditorCore::RunEditor()
 	{
 		m_EditorSettings.InitEditorSettings();
+
+		Math3DUnitTest();
+		m_State = eEditorStates::Project;
 
 		bool editor = true;
 		while (editor)

@@ -24,8 +24,10 @@ namespace rczEngine
 
 		CreateRenderTarget("PBR", width, height, Gfx::FORMAT_R32G32B32A32_FLOAT, 2);
 
+		const auto shadowMapRes = RacrozRenderer::Pointer()->m_ShadowMapRes;
+
 		CreateRenderTarget("ShadowMap", width, height, Gfx::FORMAT_R32G32B32A32_FLOAT, 1);
-		CreateRenderTarget("LightDepth", 1024, 1024, Gfx::FORMAT_R32_FLOAT, 1);
+		CreateRenderTarget("LightDepth", shadowMapRes, shadowMapRes, Gfx::FORMAT_R32_FLOAT, 1);
 
 		CreateRenderTarget("MotionBlur", width, height, Gfx::FORMAT_R32G32B32A32_FLOAT, 2);
 
@@ -89,6 +91,7 @@ namespace rczEngine
 
 		passShadow->AddTexture2D(m_Textures["LightDepth"], 0);
 		passShadow->AddTexture2D(m_Textures["Position"], 1);
+		passShadow->AddTexture2D(m_Textures["NormalsMR"], 2);
 
 		m_PassesOrder.push_back(name + "ShadowMap");
 

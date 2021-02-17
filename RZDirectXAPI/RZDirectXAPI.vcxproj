@@ -81,8 +81,8 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(Assimp)/include/;$(SolutionDir)CbnUtilities\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)Plug-Ins\VXGI\include;$(SolutionDir)Plug-Ins\nvapi-public;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Plug-Ins\nvapi-public\$(Platform);$(Assimp)\lib\$(Platform)\$(Configuration);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(SolutionDir)Plug-Ins\FW1FontWrapper\$(Platform)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Plug-Ins/GSL/include;$(SolutionDir)Plug-Ins/Assimp/include;$(SolutionDir)CbnUtilities\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)Plug-Ins\VXGI\include;$(SolutionDir)Plug-Ins\nvapi-public;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Plug-Ins\nvapi-public\$(Platform);$(SolutionDir)Plug-Ins/Assimp\lib\$(Platform)\$(Configuration);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(SolutionDir)Plug-Ins\FW1FontWrapper\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -95,8 +95,8 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)\include;$(Assimp)/include/;$(SolutionDir)CbnUtilities\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)Plug-Ins\VXGI\include;$(SolutionDir)Plug-Ins\nvapi-public;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Plug-Ins\nvapi-public\$(Platform);$(Assimp)\lib\$(Platform)\$(Configuration);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Plug-Ins/GSL/include;$(SolutionDir)Plug-Ins/Assimp/include;$(SolutionDir)CbnUtilities\include\;$(SolutionDir)RZCore\include\;$(SolutionDir)RZEngine\include\;$(SolutionDir)RZDirectInput\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)Plug-Ins\VXGI\include;$(SolutionDir)Plug-Ins\nvapi-public;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Plug-Ins\nvapi-public\$(Platform);$(SolutionDir)Plug-Ins/Assimp\lib\$(Platform)\$(Configuration);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -61,12 +61,12 @@ namespace rczEngine
 	{
 		UseDepth = true;
 
+		SetRenderTargetsInPipeline();
+		CullFront.SetThisRasterizerState(m_gfx);
+		RacrozRenderer::Pointer()->DrawObjectsByProperties(false, eComponentID::CMP_MODEL_RENDERER, eMaterialType::PBR_MetRough, eShadingType::PBR, eBlendType::Translucent, false, false, false, false);
+		//m_gfx->UnbindRenderTargets();
+		
 		//SetRenderTargetsInPipeline();
-		//CullFront.SetThisRasterizerState(m_gfx);
-		//RacrozRenderer::PrepareDrawableObjects(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_MetRough_Trans, false);
-		////m_gfx->UnbindRenderTargets();
-		//
-		////SetRenderTargetsInPipeline();
 		//CullBack.SetThisRasterizerState(m_gfx);
 		//RacrozRenderer::PrepareDrawableObjects(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_MetRough_Trans, false);
 

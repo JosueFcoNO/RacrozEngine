@@ -30,6 +30,7 @@ namespace rczEngine
 
 	bool Input::InitInput()
 	{
+		return false;
 		hinstance = OSLayer::Pointer()->GetInstance();
 		hwnd = OSLayer::Pointer()->GetWindowHandle();
 
@@ -79,19 +80,20 @@ namespace rczEngine
 	
 	void Input::RegainDevices()
 	{
-		m_KeyBoardDevice->Acquire();
-		m_MouseDevice->Acquire();
-
-		GetCursorPos(&m_point);
-		ScreenToClient(hwnd, &m_point);
-
-		m_MousePos.m_x = m_point.x;
-		m_MousePos.m_y = m_point.y;
+		//m_KeyBoardDevice->Acquire();
+		//m_MouseDevice->Acquire();
+		//
+		//GetCursorPos(&m_point);
+		//ScreenToClient(hwnd, &m_point);
+		//
+		//m_MousePos.m_x = m_point.x;
+		//m_MousePos.m_y = m_point.y;
 			
 	}
 
 	void Input::ReleaseDevices()
 	{
+		return;
 		m_KeyBoardDevice->Unacquire();
 		m_MouseDevice->Unacquire();
 	}
@@ -103,6 +105,7 @@ namespace rczEngine
 
 	void Input::UpdateKeyData()
 	{
+		return;
 		std::array<byte, 256> CurrentKeyState;
 		m_KeyBoardDevice->GetDeviceState(256, CurrentKeyState.data());
 
@@ -140,6 +143,7 @@ namespace rczEngine
 
 	void Input::UpdateMouseData()
 	{
+		return;
 		DIMOUSESTATE mousedata;
 
 		m_MouseDevice->GetDeviceState(sizeof(DIMOUSESTATE), &mousedata);
@@ -160,6 +164,8 @@ namespace rczEngine
 		m_MouseData.buttons[1] = mousedata.rgbButtons[1];
 		m_MouseData.buttons[2] = mousedata.rgbButtons[2];
 		m_MouseData.buttons[3] = mousedata.rgbButtons[3];
+
+		
 	}
 
 	

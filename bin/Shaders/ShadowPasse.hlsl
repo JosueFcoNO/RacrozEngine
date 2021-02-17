@@ -1,5 +1,6 @@
 Texture2D LightDepth : register(t0);
 Texture2D PositionDepth : register(t1);
+Texture2D Normals : register(t2);
 
 
 SamplerState LinearWrapSampler : register(s0);
@@ -74,7 +75,6 @@ PS_Output PS_Main(PS_Input Input)
     //Sample the albedoColor from the texture
     float4 positionDepth = PositionDepth.Sample(LinearWrapSampler, Input.Texcoord);
 
-
 	matrix m = mul(lightView, lightProj);
 	float4 ShadowCoord = mul(float4(positionDepth.xyz, 1), m);
 
@@ -100,18 +100,22 @@ PS_Output PS_Main(PS_Input Input)
 	//psout.Shadow = float4(lightDepthValue.xyz, 1);
 	//psout.Shadow = float4(depth.x, 0, lightDepthValue.x, 1);
 	//return psout;
+	float bias = 0.0005f;// max(0.05 * (1.0 - dot(normalize(normals), normalize(-g_Lights[0].LightDirection.xyz))), 0.005);
 
-	float bias = 0.005;// *tan(acos(dot(normalize(pos), frag.normal))); // cosTheta is dot( n,l ), clamped between 0 and 1
 
-	if (depth - bias > lightDepthValue.x)
+	float shadow = 0.0;
+	float texelSize = 1.0 / 3096.0;
+	for (int x = -1; x <= 1; ++x)
 	{
-		psout.Shadow = float4(0, 0, 0, 1);
-		return psout;
+		for (int y = -1; y <= 1; ++y)
+		{
+			float pcfDepth = LightDepth.Sample(LinearWrapSampler, uv + float2(x,y) * texelSize.xx);
+			shadow += depth - bias > pcfDepth ? 1.0 : 0.0;
+		}
 	}
+	shadow /= 9.0;
 
-
-
-	psout.Shadow = float4(1,1,1,1);
+	psout.Shadow = float4((1.0f - shadow).xxx, 1);
 	return psout;
 }
 

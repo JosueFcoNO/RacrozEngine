@@ -81,7 +81,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZEngine\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZComputeAPI/include;$(Assimp)\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(FBXSDK)include;$(SolutionDir)Plug-Ins\nvapi-public;$(SolutionDir)Plug-Ins\VXGI\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Plug-Ins/GSL/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZEngine\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZComputeAPI/include;$(SolutionDir)Plug-Ins/Assimp/include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(FBXSDK)include;$(SolutionDir)Plug-Ins\nvapi-public;$(SolutionDir)Plug-Ins\VXGI\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(GSL)/include;$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(FBXSDK)lib\$(Platform)\$(Configuration);$(SolutionDir)Plug-Ins\VXGI\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -95,7 +95,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(GSL)/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZEngine\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZComputeAPI/include;$(Assimp)\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(FBXSDK)include;$(SolutionDir)Plug-Ins\nvapi-public;$(SolutionDir)Plug-Ins\VXGI\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Plug-Ins/GSL/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZEngine\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZComputeAPI/include;$(SolutionDir)Plug-Ins/Assimp/include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(FBXSDK)include;$(SolutionDir)Plug-Ins\nvapi-public;$(SolutionDir)Plug-Ins\VXGI\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(GSL)/include;$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(FBXSDK)lib\$(Platform)\$(Configuration);$(SolutionDir)Plug-Ins\VXGI\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -186,6 +186,7 @@
     <ClInclude Include="include\CbnLightDepthPass.h" />
     <ClInclude Include="include\CbnPipelineDebug.h" />
     <ClInclude Include="include\CbnPipelineForward.h" />
+    <ClInclude Include="include\CbnShadowPass.h" />
     <ClInclude Include="include\CbnVoxelizePass.h" />
     <ClInclude Include="include\CbnVXGIImplement.h" />
     <ClInclude Include="include\RZAtmosScatterPass.h" />
@@ -222,6 +223,7 @@
     <ClCompile Include="src\CbnLightDepthPass.cpp" />
     <ClCompile Include="src\CbnPipelineDebug.cpp" />
     <ClCompile Include="src\CbnPipelineForward.cpp" />
+    <ClCompile Include="src\CbnShadowPass.cpp" />
     <ClCompile Include="src\CbnVoxelizePass.cpp" />
     <ClCompile Include="src\RZAtmosScatterPass.cpp" />
     <ClCompile Include="src\RZAvgLuminance.cpp" />

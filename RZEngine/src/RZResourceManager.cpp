@@ -226,7 +226,7 @@ namespace rczEngine
 			bool textures, animations;
 			QueryModel(filePath, bones, textures, animations);
 
-			if (bones)
+			if (bones && false)
 			{
 				loader->LoadSkinnedModel(gameobject, filePath);
 			}

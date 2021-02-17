@@ -424,6 +424,9 @@ namespace rczEngine
 
 		m_RSSolidCullNone.Init(Gfx::FILL_SOLID, Gfx::CULL_NONE);
 		m_RSSolidCullNone.CreateRasterizerState(m_gfx);
+
+		m_RSSolidCullFront.Init(Gfx::FILL_SOLID, Gfx::CULL_FRONT);
+		m_RSSolidCullFront.CreateRasterizerState(m_gfx);
 	}
 
 	void RacrozRenderer::InitSamplerStates()

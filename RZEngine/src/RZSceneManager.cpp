@@ -39,10 +39,33 @@ namespace rczEngine
 
 		CameraManager::Pointer()->SetActiveCamera(camera->GetComponentID(), Gfx::GfxCore::Pointer());
 
+		StrGameObjectPtr defaultLight = DefaultScene->CreateActor("DirLight", NULL).lock();
+		m_ActiveScene->CreateComponent(CMP_LIGHT, defaultLight->GetID());
+		defaultLight->SetOrientation(0.25f, -1.0f, 0.25f);
+
+		auto res = ResVault::Pointer();
+		StrGameObjectPtr defaultModel = DefaultScene->CreateActor("Sponza", NULL).lock();
+		m_ActiveScene->CreateComponent(CMP_MODEL_RENDERER, defaultModel->GetID());
+		res->LoadModel(defaultModel, "./Models/Sponza/Sponza.obj");
+
+		StrGameObjectPtr defaultModel2 = DefaultScene->CreateActor("Yoda", NULL).lock();
+		defaultModel2->SetScale(5, 5, 5);
+		defaultModel2->SetOrientation(0, 90, 0);
+		defaultModel2->SetPosition(0, 90,-20);
+		auto model = CastDynamicPtr<ModelRenderer>(m_ActiveScene->CreateComponent(CMP_MODEL_RENDERER, defaultModel2->GetID()));
+		res->LoadModel(defaultModel2, "./Models/Yoda/Yoda.obj");
+
+		auto mat = model->m_Materials["defaultMat"];
+		auto realmat = res->GetResource<Material>(mat);
+		realmat.lock()->SetAttributesMet(Vector4(1,1,1,1), 1.0f, 0.1f);
+
+		m_ActiveScene->CreateComponent(CMP_MOVE, defaultModel2->GetID());
+
+
 		DefaultScene->m_RootNode->SetScale(1.0f, 1.0f, 1.0f);
 		DefaultScene->m_RootNode->SetPosition(0, 0, 0);
 		DefaultScene->m_RootNode->SetOrientation(0, 0, 0);
-		
+
 		return DefaultScene;
 	}
 

@@ -142,6 +142,7 @@ namespace rczEngine
 		Gfx::RasterizerState m_RSWireframe;
 		Gfx::RasterizerState m_RSSolid;
 		Gfx::RasterizerState m_RSSolidCullNone;
+		Gfx::RasterizerState m_RSSolidCullFront;
 
 		GaussPass m_BlurPass;
 
@@ -205,6 +206,9 @@ namespace rczEngine
 		Gfx::HullShader m_TessHullShader;
 		Gfx::DomainShader m_TessDomainShader;
 		Gfx::VertexShader m_TessVertexShader;
+
+		int m_ShadowMapRes = 3096;
+		int m_ShadowMapSize = 3000;
 
 		////////////////////////////
 		/// Variables

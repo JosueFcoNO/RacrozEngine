@@ -34,9 +34,6 @@ namespace rczEngine
 					}
 
 					TempStringIndex += Separator.size();
-					/*TempStringIndex += sizeof(T.c_str());*/
-				
-
 			}
 
 			return TempVectorString;

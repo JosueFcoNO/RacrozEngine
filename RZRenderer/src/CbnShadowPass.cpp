@@ -13,6 +13,8 @@ namespace rczEngine
 	{
 		m_gfx->UnbindRenderTargets();
 
+		LightManager::Pointer()->SetLightsBuffers();
+
 		m_PShader.SetThisPixelShader(m_gfx);
 		SetRenderTargetsInPipeline();
 		SetTexturesInPipeline();

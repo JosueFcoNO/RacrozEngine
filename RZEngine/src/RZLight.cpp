@@ -82,8 +82,11 @@ namespace rczEngine
 		case eLightType::Directional:
 			Vector4 eye = m_Core.m_LightDirection.GetNormalized();
 			eye.Scale(-3000);
+			eye += CameraManager::Pointer()->GetActiveCamera().lock()->GetPosition();
+			const auto projsize = 4000;
+
 			view = Matrix4::LookAtMatrix(eye, Vector3(0, 1, 0), eye + m_Core.m_LightDirection.GetNormalized() * 3000);
-			proj = Matrix4::OrthoProjectedSpace(2000, 2000, 10.0f, 10000.0f);
+			proj = Matrix4::OrthoProjectedSpace(projsize, projsize, 10.0f, 10000.0f);
 			break;
 		}
 	}

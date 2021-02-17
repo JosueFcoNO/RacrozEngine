@@ -52,6 +52,4 @@ namespace rczEngine
 		//The hash of the file path. Used to compare Path objects and as handles.
 		size_t m_Hash;
 	};
-
-
 };

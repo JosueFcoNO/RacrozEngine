@@ -216,6 +216,9 @@
     <ClInclude Include="include\CbnLightDepthPass.h">
       <Filter>Archivos de encabezado\Passes\Shadows</Filter>
     </ClInclude>
+    <ClInclude Include="include\CbnShadowPass.h">
+      <Filter>Archivos de encabezado\Passes\Shadows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RZRendererPCH.cpp">
@@ -306,6 +309,9 @@
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
     <ClCompile Include="src\CbnLightDepthPass.cpp">
+      <Filter>Archivos de código fuente\Passes\Shadows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CbnShadowPass.cpp">
       <Filter>Archivos de código fuente\Passes\Shadows</Filter>
     </ClCompile>
   </ItemGroup>

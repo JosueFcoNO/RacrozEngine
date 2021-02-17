@@ -135,7 +135,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>RZCorePCH.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>./include/;$(GSL)include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZfmodSound\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)Plug-Ins/GSL/include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZfmodSound\include</AdditionalIncludeDirectories>
       <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
@@ -181,7 +181,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeaderFile>RZCorePCH.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>./include/;$(GSL)include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZfmodSound\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)Plug-Ins/GSL/include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZfmodSound\include</AdditionalIncludeDirectories>
       <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>

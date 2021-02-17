@@ -10,7 +10,6 @@ namespace rczEngine
 
 		void RenderLightPass(Light* light);
 
-	private:
 		///Sets the buffers, shaders, textures and render targets before rendering geomtry.
 		virtual void PreRenderPass();
 

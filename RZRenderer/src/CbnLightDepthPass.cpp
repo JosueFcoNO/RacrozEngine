@@ -9,8 +9,10 @@ namespace rczEngine
 		m_PShaderPath = L"Shaders/GPassLightDepth.hlsl";
 		m_gfx->CompileAndCreatePixelShader(m_PShader, m_PShaderPath.c_str());
 
+		const auto shadowMapRes = RacrozRenderer::Pointer()->m_ShadowMapRes;
+
 		m_DepthStencyl = std::make_shared<Gfx::DepthStencyl>();
-		Gfx::GfxCore::Pointer()->CreateDepthStencyl(*m_DepthStencyl, 1024, 1024);
+		Gfx::GfxCore::Pointer()->CreateDepthStencyl(*m_DepthStencyl, shadowMapRes, shadowMapRes);
 	}
 
 	void LightDepthPass::RenderLightPass(Light * light)
@@ -34,9 +36,11 @@ namespace rczEngine
 			gfx->ClearDepthTargetView(&(*m_DepthStencyl));
 			gfx->ClearRenderTargetView(0, 0, 0, 0, 1);
 
+			const auto res = RacrozRenderer::Pointer()->m_ShadowMapRes;
+
 			///Set the rasterizer state.
-			m_gfx->SetRSState(RacrozRenderer::Pointer()->m_RSSolidCullNone);
-			m_gfx->SetViewPort(1024, 1024);
+			//m_gfx->SetRSState(RacrozRenderer::Pointer()->m_RSSolidCullFront);
+			m_gfx->SetViewPort(res, res);
 			m_PShader.SetThisPixelShader(m_gfx);
 
 			auto activeScene = m_ActiveScene.get();

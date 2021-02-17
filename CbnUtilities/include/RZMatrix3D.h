@@ -80,7 +80,6 @@ namespace rczEngine
 		///Substracts the matrices
 		Matrix3& operator-=(const Matrix3& M) noexcept;
 
-
 		union {
 			Vector3 m_rows[3];
 			float m_matrix[3][3];
@@ -105,6 +104,4 @@ namespace rczEngine
 		return Zero;
 	};
 	};
-
-
 };

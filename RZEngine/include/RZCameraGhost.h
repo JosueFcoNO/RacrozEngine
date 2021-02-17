@@ -11,16 +11,16 @@ namespace rczEngine
 
 		virtual void Update(float deltaTime)
 		{
-			if (Input::GetKeyHold(KEY_W)) m_zAxis = 1.5f;
-			else if (Input::GetKeyHold(KEY_S)) m_zAxis = -1.5f;
+			if (ImGui::IsKeyDown(KEY_W)) m_zAxis = 1.5f;
+			else if (ImGui::IsKeyDown(KEY_S)) m_zAxis = -1.5f;
 			else m_zAxis = 0.0f;
 
-			if (Input::GetKeyHold(KEY_D)) m_xAxis = 1.5f;
-			else if (Input::GetKeyHold(KEY_A)) m_xAxis = -1.5f;
+			if (ImGui::IsKeyDown(KEY_D)) m_xAxis = 1.5f;
+			else if (ImGui::IsKeyDown(KEY_A)) m_xAxis = -1.5f;
 			else m_xAxis = 0.0f;
 
-			m_Orbiting = Input::GetKeyHold(KEY_LMENU);
-			m_Rotating = Input::GetKeyHold(KEY_LCONTROL);
+			m_Orbiting = ImGui::IsKeyDown(KEY_LMENU);
+			m_Rotating = ImGui::IsKeyDown(KEY_LCONTROL);
 
 			auto speed = 15;
 

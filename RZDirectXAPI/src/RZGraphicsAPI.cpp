@@ -79,7 +79,7 @@ namespace rczEngine
 
 			SwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 			SwapChainDesc.OutputWindow = OSLayer::Pointer()->GetWindowHandle();
-			SwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT::DXGI_SWAP_EFFECT_SEQUENTIAL;
+			SwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT::DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 
 			SwapChainDesc.SampleDesc.Count = SampleCount;
 			SwapChainDesc.SampleDesc.Quality = Quality;

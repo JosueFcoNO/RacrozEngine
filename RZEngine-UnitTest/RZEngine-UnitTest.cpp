@@ -40,7 +40,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	editor->InitEditor();
 	editor->RunEditor();
-	editor->DestroyEditor();
 
 	EditorCore::ShutDown();
 
@@ -91,8 +90,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			Input::Pointer()->RegainDevices();
 		break;
 	case WM_DESTROY:
+	{
 		Quit = true;
+		auto editor = EditorCore::Pointer();
+		editor->DestroyEditor();
 		break;
+	}
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}

@@ -252,8 +252,7 @@ namespace rczEngine
 		Math3DUnitTest();
 		m_State = eEditorStates::Project;
 
-		bool editor = true;
-		while (editor)
+		while (!m_Destroyed)
 		{
 			StartUIRender();
 
@@ -285,6 +284,9 @@ namespace rczEngine
 			// Bucle principal de mensajes:
 			if (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
 			{
+				if (msg.message == WM_CLOSE || msg.message == WM_QUIT || msg.message == WM_DESTROY)
+					return PostQuitMessage(0);
+
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
@@ -362,13 +364,6 @@ namespace rczEngine
 
 		SceneManager::Pointer()->GetActiveScene()->Update(deltaTime);
 
-		//auto cubepos = Vector3(2, 2, 0);
-		//auto cubeSize = Vector3(0.5f, 0.5f, 0.5f);
-		//auto cube = gDebugger->AddCube("Cube", cubepos, cubeSize, Color(1, 0, 0));
-		//Quaternion q = Quaternion::FromAxisAngle(Vector3(0, 5, 5).GetNormalized(), 10);
-		//q = Quaternion::FromAxisAngle(Vector3(0, 10, 10).GetNormalized(), 180 * deltaTime);
-		//cubepos = q.RotateVector(cubepos, 1);
-		//cube.lock()->SetCube(cubepos, Vector3(0.5f, 0.5f, 0.5f));
 	}
 
 	void EditorCore::Math3DUnitTest()
@@ -406,6 +401,8 @@ namespace rczEngine
 
 	void EditorCore::DestroyEditor()
 	{
+		m_Destroyed = true;
+
 		SceneManager::ShutDown();
 
 		ActorComponentFactory::ShutDown();

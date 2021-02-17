@@ -68,6 +68,8 @@ namespace rczEngine
 		HACCEL hAccelTable;
 		MSG msg;
 #endif
+
+		bool m_Destroyed = false;
 	};
 
 }

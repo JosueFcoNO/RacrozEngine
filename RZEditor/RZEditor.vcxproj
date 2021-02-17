@@ -79,9 +79,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)Plug-Ins/GSL/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZEngine\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZComputeAPI/include;$(SolutionDir)Plug-Ins/Assimp/include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)RZRenderer/include;$(FBXSDK)include;$(SolutionDir)Plug-Ins\VXGI\include;$(SolutionDir)Plug-Ins\nvapi-public;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Plug-Ins/gsllib/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZEngine\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZComputeAPI/include;$(SolutionDir)Plug-Ins/Assimp/include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)RZRenderer/include;$(FBXSDK)include;$(SolutionDir)Plug-Ins\VXGI\include;$(SolutionDir)Plug-Ins\nvapi-public;$(IncludePath)</IncludePath>
     <LibraryPath>$(GSL)/include;$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(FBXSDK)lib\$(Platform)\$(Configuration)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -93,9 +93,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)Plug-Ins/GSL/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZEngine\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZComputeAPI/include;$(SolutionDir)Plug-Ins/Assimp/include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)RZRenderer/include;$(FBXSDK)include;$(SolutionDir)Plug-Ins\VXGI\include;$(SolutionDir)Plug-Ins\nvapi-public;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Plug-Ins/gsllib/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZCore\include;$(SolutionDir)RZDirectXAPI\include;$(SolutionDir)RZEngine\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZComputeAPI/include;$(SolutionDir)Plug-Ins/Assimp/include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)RZRenderer/include;$(FBXSDK)include;$(SolutionDir)Plug-Ins\VXGI\include;$(SolutionDir)Plug-Ins\nvapi-public;$(IncludePath)</IncludePath>
     <LibraryPath>$(GSL)/include;$(LibraryPath);$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(FBXSDK)lib\$(Platform)\$(Configuration)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

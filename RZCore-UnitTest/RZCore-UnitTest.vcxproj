@@ -80,10 +80,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(GSL)/include;$(SolutionDir)CbnUtilities\include\;$(SolutionDir)RZCore\include\;$(IncludePath)</IncludePath>
+    <IncludePath>./include/;$(SolutionDir)Plug-Ins/gsllib/include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)RZCore\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(LibraryPath)</LibraryPath>
     <TargetName>CoreUnitTest</TargetName>
-    <OutDir>$(SolutionDir)\bin\$(Configuration)\$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)\bin\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -96,10 +96,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(GSL)/include;$(SolutionDir)CbnUtilities\include\;$(SolutionDir)RZCore\include\;$(IncludePath)</IncludePath>
+    <IncludePath>./include/;$(SolutionDir)Plug-Ins/gsllib/include;$(SolutionDir)CbnUtilities\include;$(SolutionDir)RZDirectInput\include;$(SolutionDir)RZfmodSound\include;$(SolutionDir)RZCore\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform)\;$(LibraryPath)</LibraryPath>
     <TargetName>CoreUnitTest</TargetName>
-    <OutDir>$(SolutionDir)\bin\$(Configuration)\$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)\bin\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Configuration)\$(Platform)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -125,6 +125,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -165,6 +166,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

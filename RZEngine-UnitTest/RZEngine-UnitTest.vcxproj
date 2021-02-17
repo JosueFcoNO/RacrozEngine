@@ -75,9 +75,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Plug-Ins/GSL/include;$(VC_IncludePath);$(SolutionDir)Plug-Ins/fmod/inc/;$(SolutionDir)Plug-Ins/Assimp/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZComputeAPI/include;$(WindowsSDK_IncludePath);$(SolutionDir)CbnUtilities/include/;$(SolutionDir)RZCore/include/;$(SolutionDir)RZDirectXAPI/include/;$(SolutionDir)RZEngine/include/;$(SolutionDir)/RZfmodSound/include/;$(SolutionDir)/RZDirectInput/include/;$(SolutionDir)/RZRenderer/include/;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)/RZEditor/include/;$(FBXSDK)include;$(SolutionDir)Plug-Ins\VXGI\include;$(SolutionDir)Plug-Ins\nvapi-public</IncludePath>
+    <IncludePath>$(SolutionDir)Plug-Ins/gsllib/include;$(VC_IncludePath);$(SolutionDir)Plug-Ins/fmod/inc/;$(SolutionDir)Plug-Ins/Assimp/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZComputeAPI/include;$(WindowsSDK_IncludePath);$(SolutionDir)CbnUtilities/include/;$(SolutionDir)RZCore/include/;$(SolutionDir)RZDirectXAPI/include/;$(SolutionDir)RZEngine/include/;$(SolutionDir)/RZfmodSound/include/;$(SolutionDir)/RZDirectInput/include/;$(SolutionDir)/RZRenderer/include/;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)/RZEditor/include/;$(FBXSDK)include;$(SolutionDir)Plug-Ins\VXGI\include;$(SolutionDir)Plug-Ins\nvapi-public</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)/lib/$(Configuration)/$(Platform);$(SolutionDir)\Plug-Ins\assimp-master\$(Platform)\$(Configuration)\;$(FBXSDK)lib\$(Platform)\$(Configuration);$(SolutionDir)Plug-Ins\VXGI\lib</LibraryPath>
-    <OutDir>$(SolutionDir)/bin/$(Configuration)\$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)/bin/</OutDir>
     <IntDir>$(SolutionDir)/intermediate/$(ProjectName)/$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
@@ -87,9 +87,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Plug-Ins/GSL/include;$(VC_IncludePath);$(SolutionDir)Plug-Ins/fmod/inc/;$(SolutionDir)Plug-Ins/Assimp/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZComputeAPI/include;$(WindowsSDK_IncludePath);$(SolutionDir)CbnUtilities/include/;$(SolutionDir)RZCore/include/;$(SolutionDir)RZDirectXAPI/include/;$(SolutionDir)RZEngine/include/;$(SolutionDir)/RZfmodSound/include/;$(SolutionDir)/RZDirectInput/include/;$(SolutionDir)/RZRenderer/include/;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)/RZEditor/include/;$(FBXSDK)include;$(SolutionDir)Plug-Ins\VXGI\include;$(SolutionDir)Plug-Ins\nvapi-public</IncludePath>
+    <IncludePath>$(SolutionDir)Plug-Ins/gsllib/include;$(VC_IncludePath);$(SolutionDir)Plug-Ins/fmod/inc/;$(SolutionDir)Plug-Ins/Assimp/include;$(SolutionDir)Plug-Ins\OpenCL\include;$(SolutionDir)RZComputeAPI/include;$(WindowsSDK_IncludePath);$(SolutionDir)CbnUtilities/include/;$(SolutionDir)RZCore/include/;$(SolutionDir)RZDirectXAPI/include/;$(SolutionDir)RZEngine/include/;$(SolutionDir)/RZfmodSound/include/;$(SolutionDir)/RZDirectInput/include/;$(SolutionDir)/RZRenderer/include/;$(SolutionDir)Plug-Ins/FW1FontWrapper/;$(SolutionDir)/RZEditor/include/;$(FBXSDK)include;$(SolutionDir)Plug-Ins\VXGI\include;$(SolutionDir)Plug-Ins\nvapi-public</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)/lib/$(Configuration)/$(Platform);$(Assimp)\lib\$(Platform)\$(Configuration);$(FBXSDK)lib\$(Platform)\$(Configuration);$(SolutionDir)Plug-Ins\VXGI\lib</LibraryPath>
-    <OutDir>$(SolutionDir)/bin/$(Configuration)\$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)/bin/</OutDir>
     <IntDir>$(SolutionDir)/intermediate/$(ProjectName)/$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

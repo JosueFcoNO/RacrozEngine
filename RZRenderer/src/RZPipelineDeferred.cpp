@@ -103,7 +103,7 @@ namespace rczEngine
 		auto passPBR = CreatePass(name + "PBR", ePasses::PBR, eRenderingPipelines::Deferred);
 
 		passPBR->AddRenderTarget(m_RTs["PBR"], 0);
-		passPBR->AddDepthStencyl(depth);
+		//passPBR->AddDepthStencyl(depth);
 
 		passPBR->AddTexture2D(m_Textures["ColorAO"], 0);
 		passPBR->AddTexture2D(m_Textures["NormalsMR"], 1);

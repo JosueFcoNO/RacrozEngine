@@ -21,7 +21,8 @@ namespace rczEngine
 		SetRasterizerState();
 
 		m_gfx->ClearRenderTargetView(0, 1, 1, 1, 1);
-		m_gfx->ClearDepthTargetView();
+		//m_gfx->ClearDepthTargetView();
+		UseDepth = false;
 
 		auto light = LightManager::Pointer()->GetLight(0);
 

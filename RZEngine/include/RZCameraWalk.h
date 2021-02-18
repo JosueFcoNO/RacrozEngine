@@ -8,7 +8,7 @@ namespace rczEngine
 
 		virtual void Init()
 		{
-			InitCameraWalk(Vector3(-570, 40, -50), Vector3(-570, 140, -50) + Vector3(500, 0, 0), 0.25f, 5000.0f, (float)Gfx::GfxCore::Pointer()->GetWidth() / (float)Gfx::GfxCore::Pointer()->GetHeight());
+			InitCameraWalk(Vector3(-800, 40, -50), Vector3(-800, 140, -50) + Vector3(500, 0, 0), 0.25f, 5000.0f, (float)Gfx::GfxCore::Pointer()->GetWidth() / (float)Gfx::GfxCore::Pointer()->GetHeight());
 		}
 
 		void InitCameraWalk(Vector3 position, Vector3 target, float nearPlane, float farPlane, float aspectRatio)

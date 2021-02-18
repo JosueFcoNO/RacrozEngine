@@ -26,14 +26,14 @@ namespace rczEngine
 		Transparent.CreateBlendState(m_gfx);
 
 		CullBack.Init();
-		CullBack.m_CullMode = Gfx::CULL_FRONT;
-		CullBack.m_FrontCounterClockwise = true;
+		CullBack.m_CullMode = Gfx::CULL_NONE;
+		CullBack.m_FrontCounterClockwise = false;
 		CullBack.CreateRasterizerState(m_gfx);
 
 
 		CullFront.Init();
 		CullFront.m_CullMode = Gfx::CULL_FRONT;
-		CullBack.m_FrontCounterClockwise = false;
+		CullBack.m_FrontCounterClockwise = true;
 		CullFront.CreateRasterizerState(m_gfx);
 
 		UseDepth = true;
@@ -62,13 +62,12 @@ namespace rczEngine
 		UseDepth = true;
 
 		SetRenderTargetsInPipeline();
-		CullFront.SetThisRasterizerState(m_gfx);
-		RacrozRenderer::Pointer()->DrawObjectsByProperties(false, eComponentID::CMP_MODEL_RENDERER, eMaterialType::PBR_MetRough, eShadingType::PBR, eBlendType::Translucent, false, false, false, false);
-		//m_gfx->UnbindRenderTargets();
+
+		//CullFront.SetThisRasterizerState(m_gfx);
+		//RacrozRenderer::Pointer()->DrawObjectsByProperties(false, eComponentID::CMP_MODEL_RENDERER, eMaterialType::PBR_MetRough, eShadingType::PBR, eBlendType::Translucent, false, false, false, false);
 		
-		//SetRenderTargetsInPipeline();
-		//CullBack.SetThisRasterizerState(m_gfx);
-		//RacrozRenderer::PrepareDrawableObjects(SceneManager::Pointer()->GetActiveScene().get(), CMP_MODEL_RENDERER, MAT_PBR_MetRough_Trans, false);
+		CullBack.SetThisRasterizerState(m_gfx);
+		RacrozRenderer::Pointer()->DrawObjectsByProperties(false, eComponentID::CMP_MODEL_RENDERER, eMaterialType::PBR_MetRough, eShadingType::PBR, eBlendType::Translucent, false, false, false, false);
 
 		m_gfx->SetRSStateDefault();
 		

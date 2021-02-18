@@ -151,7 +151,7 @@ PS_Output PS_Main(PS_Input Input)
 	//	psout.ColorCorrection.xyz = Uncharted2(FinalColor.xyz, Exposure);
     //}
 
-	psout.ColorCorrection = Uncharted2(FinalColor.xyz, Exposure);
+	psout.ColorCorrection = Burgess_Dawson(FinalColor.xyz, Exposure);
 
 	psout.ColorCorrection.a = 1.0f;
 

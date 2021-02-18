@@ -106,6 +106,10 @@ namespace rczEngine
 		if (!m_GIPrepared)
 		{
 			PrepareGI();
+			PrepareGI();
+			PrepareGI();
+			PrepareGI();
+
 		}
 
 		SetSamplerStates();

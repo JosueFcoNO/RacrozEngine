@@ -43,7 +43,7 @@ namespace rczEngine
 		SetTexturesInPipeline();
 		SetRasterizerState();
 
-		m_gfx->ClearDepthTargetView();
+		//m_gfx->ClearDepthTargetView();
 
 	}
 	

@@ -2,6 +2,8 @@
 
 My very own Game Engine, most of it W.I.P. It is more than anything a PBR 3D model viewer with a working scene graph and UI.
 
+Release Build: https://www.dropbox.com/s/dw4q1unje5xb1yk/RacrozEngineRelease.rar?dl=0
+
 Layered as:
 
 Utilities
